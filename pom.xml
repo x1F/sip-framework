@@ -79,10 +79,15 @@
         <commons-io.version>2.13.0</commons-io.version>
         <commons-exec.version>1.3</commons-exec.version>
         <asm.version>9.5</asm.version>      <!-- Spring is using 9.3, Cxf is using 9.5, when Spring upgrades to 9.5, then explicit dependency can be removed -->
-        <cxf.version>4.0.3</cxf.version>    <!-- keep in sync with camel-dependencies cxf-version property -->
-        <snakeyaml.version>2.2</snakeyaml.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <mockito-inline.version>5.2.0</mockito-inline.version>
+        <snakeyaml.version>2.2</snakeyaml.version>
+
+        <!-- CXF related dependencies -->
+        <!-- SIPX-96: Currently forced to a higher version than camel-cxf because of CVE-2024-28752. Camel 4.5 will update CXF to 4.0.4 -->
+        <cxf.version>4.0.4</cxf.version>    <!-- keep in sync with camel-dependencies cxf-version property -->
+        <woodstox-core.version>[6.6.2,)</woodstox-core.version> <!-- CXF 4.0.4 bundles 6.6.1 which brakes test-kit because of -> https://github.com/FasterXML/woodstox/issues/200  -->
+
         <!-- maven dependencies -->
         <maven-core.version>3.8.6</maven-core.version>
         <maven-project-dependecies.version>3.8.4</maven-project-dependecies.version>
@@ -116,6 +121,7 @@
         <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
         <sonar.coverage.exclusions>**/*Config*,**/util/exception/*</sonar.coverage.exclusions>
+
     </properties>
 
     <modules>
@@ -267,6 +273,39 @@
                 <groupId>com.thoughtworks.qdox</groupId>
                 <artifactId>qdox</artifactId>
                 <version>${qdox.version}</version>
+            </dependency>
+
+            <!-- CXF Dependencies -->
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-core</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+           <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-features-logging</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-transports-http</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-bindings-soap</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <!-- TODO: Remove this explicit dependency once CXF bundles woodstox-core 6.6.2 or higher -->
+                <groupId>com.fasterxml.woodstox</groupId>
+                <artifactId>woodstox-core</artifactId>
+                <version>${woodstox-core.version}</version>
             </dependency>
 
             <!--            additional dependencies-->

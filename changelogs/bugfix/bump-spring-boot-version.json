@@ -1,5 +1,5 @@
 {
   "author": "Nemikor",
   "pullrequestId": "252",
-  "message": "Bumped spring boot version to resolve security issues."
+  "message": "Bumped spring boot and CXF versions to resolve security issues."
 }
