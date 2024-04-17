@@ -52,4 +52,14 @@ public class ProcessOrchestrationDefinition
     conditionals.add(predicate);
     return def.elseIfCase(predicate);
   }
+
+  public CallLoopStatement<ProcessOrchestrationDefinition>.ProcessBranch<
+          CallLoopStatement<ProcessOrchestrationDefinition>>
+      doWhile(final CompositeProcessStepConditional predicate) {
+    final CallLoopStatement<ProcessOrchestrationDefinition> def =
+        new CallLoopStatement<>(self(), getCompositeProcess());
+    steps.add(def);
+    conditionals.add(predicate);
+    return def.doWhile(predicate);
+  }
 }
