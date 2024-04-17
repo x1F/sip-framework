@@ -5,6 +5,9 @@ import ${package}.scenarios.models.GeoCodingResponse;
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 
+/**
+ * Integration scenario which fetches geocoding data of a city
+ */
 @IntegrationScenario(
         scenarioId = GetCityGeocodingScenario.ID,
         requestModel = GeoCodingRequest.class,

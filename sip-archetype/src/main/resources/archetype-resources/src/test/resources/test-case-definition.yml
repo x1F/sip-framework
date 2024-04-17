@@ -1,3 +1,4 @@
+#if (${createDemoAdapter} != "y" && ${createDemoAdapter} != "Y")
 # Test case definition template
 # Before executing SIPBatchTest, it is necessary to add values for properties, which are needed to define a Test Case
 test-case-definitions:
@@ -43,29 +44,43 @@ test-case-definitions:
       # Id of endpoint that is mocked, matches endpoint with defined or default mocked behavior
       - endpointId:
         having:
-          # Add regex expression (java) which will be compared to he body
+          # Add regex expression (java) which will be compared to the body
           body:
           headers:
             # Add regex expression (java) which will be compared to the header value
             header-key:
-
+#end
 #if (${createDemoAdapter} == "y" || ${createDemoAdapter} == "Y")
+# Test case definition template
+test-case-definitions:
+  # Title of individual test
   - title: Weather By City
+    # Definition of test request which should be sent to the adapter (required)
     when-execute:
+      # Id of endpoint/connector under test
       connectorId: GetAirQualityByCityInboundConnector
       with:
+        # Add content that should be sent as request body to the adapter endpoint (plain text, JSON String)
         body:
         headers:
+          # Add request header keys and values
           city: Berlin
+    # Definition of mocked endpoint's behavior (optional)
     with-mocks:
+      # Id of processor with external endpoint
       - endpointId: sip-connector_GeoCodingOutboundConnector_externalEndpoint
         returning:
+          # Place response message that real endpoint is expected to return
           body: "{\"generationtime_ms\":0.99396706,\"results\":[{\"id\":2950159,\"name\":\"Berlin\",\"latitude\":52.52437,\"longitude\":13.41053,\"elevation\":74,\"feature_code\":\"PPLC\",\"country_code\":\"DE\",\"admin1_id\":2950157,\"admin2_id\":null,\"admin3_id\":6547383,\"admin4_id\":6547539,\"timezone\":\"Europe/Berlin\",\"population\":3426354,\"country_id\":2921044,\"postcodes\":[\"10967\",\"13347\"],\"country\":\"Germany\",\"admin1\":\"Land Berlin\",\"admin2\":null,\"admin3\":\"Berlin, Stadt\",\"admin4\":\"Berlin\"}]}"
       - endpointId: sip-connector_AirQualityOutboundConnector_externalEndpoint
         returning:
           body: "{\"requestedBy\":\"\",\"generationtime_ms\":0.0680685043334961,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbreviation\":\"GMT\",\"hourly_units\":{\"time\":\"iso8601\",\"pm10\":\"μg/m³\",\"pm2_5\":\"μg/m³\"},\"hourly\":{\"time\":[\"2024-03-25T00:00\",\"2024-03-25T01:00\",\"2024-03-25T02:00\"],\"pm10\":[4.8,4.7,5.1]}}"
+    # Validation of the response from test execution or request which an endpoint recieved (at least one is required)
     then-expect:
+      # Request validation
+      # Id of endpoint that is mocked, matches endpoint with defined or default mocked behavior
       - endpointId: sip-connector_AirQualityOutboundConnector_externalEndpoint
+        # Add regex expression (java) which will be compared to the body
         having:
           body: "AirQualityRequest\\(lat=52\\.52437, lon=13\\.41053\\)"
 #end

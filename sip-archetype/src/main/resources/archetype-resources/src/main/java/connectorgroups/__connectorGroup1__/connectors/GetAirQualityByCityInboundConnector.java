@@ -13,6 +13,10 @@ import org.apache.camel.model.rest.RestBindingMode;
 import org.apache.camel.model.rest.RestDefinition;
 import org.apache.camel.model.rest.RestParamType;
 
+/**
+ * Inbound connector which exposes GET /adapter/aircity/{city} endpoint.
+ * Marks the entrypoint into the adapter.
+ */
 @InboundConnector(
         connectorId = "GetAirQualityByCityInboundConnector",
         connectorGroup = "Group1",
@@ -23,6 +27,7 @@ public class GetAirQualityByCityInboundConnector extends RestInboundConnectorBas
 
     public static final String CITY = "city";
 
+    // define REST endpoint
     @Override
     protected void configureRest(RestDefinition restDefinition) {
 
@@ -38,6 +43,7 @@ public class GetAirQualityByCityInboundConnector extends RestInboundConnectorBas
                 .outType(AirQualityResponse.class);
     }
 
+    // define request/response transformation
     @Override
     public Orchestrator<ConnectorOrchestrationInfo> getOrchestrator() {
         return ConnectorOrchestrator.forConnector(this)

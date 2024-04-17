@@ -10,6 +10,9 @@ import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOr
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 
+/**
+ * Integration scenario which fetches air quality data of a city by its longitude and latitude
+ */
 @IntegrationScenario(
         scenarioId = GetAirQualityLatLonScenario.ID,
         requestModel = AirQualityRequest.class,
@@ -18,6 +21,7 @@ public class GetAirQualityLatLonScenario extends IntegrationScenarioBase {
 
     public static final String ID = "GetAirQualityLatLonScenario";
 
+    // define scenario orchestation
     @Override
     public Orchestrator<ScenarioOrchestrationInfo> getOrchestrator() {
         return ScenarioOrchestrator.forOrchestrationDslWithResponse(

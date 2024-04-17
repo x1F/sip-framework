@@ -16,6 +16,11 @@ import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.apache.camel.model.RouteDefinition;
 
+/**
+ * Outbound connector which calls
+ * GET https://geocoding-api.open-meteo.com/v1/search?name={city}&count=1
+ * The endpoint is used only for demo purposes
+ */
 @OutboundConnector(
         connectorGroup = "Group2",
         integrationScenario = GetCityGeocodingScenario.ID,
@@ -24,6 +29,7 @@ import org.apache.camel.model.RouteDefinition;
         connectorId = "GeoCodingOutboundConnector")
 public class GeoCodingOutboundConnector extends GenericOutboundConnectorBase {
 
+    // define external outbound endpoint
     @Override
     protected EndpointProducerBuilder defineOutgoingEndpoint() {
         return StaticEndpointBuilders.http("https", "geocoding-api.open-meteo.com/v1/search")
@@ -31,6 +37,14 @@ public class GeoCodingOutboundConnector extends GenericOutboundConnectorBase {
                 .bridgeEndpoint(true);
     }
 
+    // define unmarshalling method of response
+    @Override
+    protected Optional<UnmarshallerDefinition> defineResponseUnmarshalling() {
+        return Optional.of(
+                UnmarshallerDefinition.forDataFormat(new JacksonDataFormat(GeoCodingResponse.class)));
+    }
+
+    // define request/response transformation
     @Override
     public Orchestrator<ConnectorOrchestrationInfo> getOrchestrator() {
         return ConnectorOrchestrator.forConnector(this)
@@ -50,11 +64,5 @@ public class GeoCodingOutboundConnector extends GenericOutboundConnectorBase {
                     exchange.getMessage().setHeader(Exchange.HTTP_QUERY, "name=" + request.getCityName() + "&count=1");
                     exchange.getMessage().setBody("");
                 });
-    }
-
-    @Override
-    protected Optional<UnmarshallerDefinition> defineResponseUnmarshalling() {
-        return Optional.of(
-                UnmarshallerDefinition.forDataFormat(new JacksonDataFormat(GeoCodingResponse.class)));
     }
 }
