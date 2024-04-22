@@ -68,7 +68,7 @@ public abstract sealed class ForScenarioProvidersBaseDefinition<
 
   public ForLoopCallScenarioConsumerDefinition<S, M>.Branch<
           ForLoopCallScenarioConsumerDefinition<S, M>>
-      forLoop(final ScenarioStepIterations predicate) {
+      forLoop(final ScenarioStepIterations<M> predicate) {
     final var def =
         new ForLoopCallScenarioConsumerDefinition<S, M>(self(), getIntegrationScenario());
     nodes.add(def);

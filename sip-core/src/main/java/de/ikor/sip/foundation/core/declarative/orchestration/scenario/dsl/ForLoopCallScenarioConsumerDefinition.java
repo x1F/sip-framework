@@ -14,15 +14,15 @@ public final class ForLoopCallScenarioConsumerDefinition<R, M>
     implements CallableWithinProviderDefinition {
 
   @Getter(AccessLevel.PACKAGE)
-  private final List<BranchStatements> loopStatements = new ArrayList<>();
+  private final List<BranchStatements<M>> loopStatements = new ArrayList<>();
 
   ForLoopCallScenarioConsumerDefinition(
       final R dslReturnDefinition, final IntegrationScenarioDefinition integrationScenario) {
     super(dslReturnDefinition, integrationScenario);
   }
 
-  protected Branch<ForLoopCallScenarioConsumerDefinition<R, M>> forLoop(
-      final ScenarioStepIterations predicate) {
+  Branch<ForLoopCallScenarioConsumerDefinition<R, M>> forLoop(
+      final ScenarioStepIterations<M> predicate) {
     final var branch = new BranchStatements<>(predicate, new ArrayList<>());
     loopStatements.add(branch);
     return new Branch<>(branch.statements, self(), getIntegrationScenario());
@@ -33,7 +33,7 @@ public final class ForLoopCallScenarioConsumerDefinition<R, M>
   }
 
   record BranchStatements<M>(
-      ScenarioStepIterations predicate, List<CallableWithinProviderDefinition> statements) {}
+      ScenarioStepIterations<M> predicate, List<CallableWithinProviderDefinition> statements) {}
 
   public final class Branch<I> extends ScenarioDslDefinitionBase<Branch<I>, I, M>
       implements ScenarioConsumerCalls<Branch<I>, I, M> {
@@ -51,19 +51,7 @@ public final class ForLoopCallScenarioConsumerDefinition<R, M>
     }
 
     /**
-     * Defines an alternative conditional branch that is executed if the given <code>iterations
-     * </code> matches.
-     *
-     * @param predicate Predicate to test for execution of the branch
-     * @return The conditional branch
-     */
-    protected Branch<ForLoopCallScenarioConsumerDefinition<R, M>> forLoop(
-        final ScenarioStepIterations predicate) {
-      return ForLoopCallScenarioConsumerDefinition.this.forLoop(predicate);
-    }
-
-    /**
-     * Ends the condition and returns to the previous scope.
+     * Ends the loop and returns to the previous scope.
      *
      * @return Previous scope of the orchestration definition
      */

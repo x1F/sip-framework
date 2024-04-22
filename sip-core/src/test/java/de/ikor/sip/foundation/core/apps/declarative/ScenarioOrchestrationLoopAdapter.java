@@ -9,6 +9,7 @@ import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnecto
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationContext;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
@@ -43,31 +44,26 @@ public class ScenarioOrchestrationLoopAdapter {
     public Orchestrator<ScenarioOrchestrationInfo> getOrchestrator() {
       return ScenarioOrchestrator.forOrchestrationDslWithResponse(
           Object.class,
-          dsl -> {
-            dsl.forInboundConnectors(CallLoopInboundConnector.class)
-                .doWhile(
-                    context ->
-                        !"aaa".equals(context.getHeader(CONDITION_VALUE, String.class).get()))
-                .callOutboundConnector(InsideLoopOutboundConnector.class)
-                .andNoResponseHandling()
-                .endLoop()
-                .forLoop(context -> 2)
-                .callOutboundConnector(InsideLoopOutboundConnector.class)
-                .withRequestPreparation(
-                    context -> {
-                      var response = context.getOriginalRequest();
-                      return response;
-                    })
-                .andNoResponseHandling()
-                .endLoop()
-                .callOutboundConnector(AfterLoopOutboundConnector.class)
-                .withRequestPreparation(
-                    context -> {
-                      var response = context.getResponse();
-                      return response.get();
-                    })
-                .andNoResponseHandling();
-          });
+          dsl ->
+              dsl.forInboundConnectors(CallLoopInboundConnector.class)
+                  .doWhile(
+                      context ->
+                          !"aaa".equals(context.getHeader(CONDITION_VALUE, String.class).get()))
+                  .callOutboundConnector(InsideLoopOutboundConnector.class)
+                  .andNoResponseHandling()
+                  .endLoop()
+                  .forLoop(context -> 2)
+                  .callOutboundConnector(InsideLoopOutboundConnector.class)
+                  .withRequestPreparation(ScenarioOrchestrationContext::getOriginalRequest)
+                  .andNoResponseHandling()
+                  .endLoop()
+                  .callOutboundConnector(AfterLoopOutboundConnector.class)
+                  .withRequestPreparation(
+                      context -> {
+                        var response = context.getResponse();
+                        return response.get();
+                      })
+                  .andNoResponseHandling());
     }
   }
 

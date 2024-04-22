@@ -3,11 +3,11 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuild
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationContext;
 
 @FunctionalInterface
-public interface ScenarioStepIterations {
+public interface ScenarioStepIterations<M> {
 
   /**
    * @param context - Orchestration context for which the condition will be checked
    * @return - result of the check
    */
-  int determineIterations(ScenarioOrchestrationContext context);
+  int determineIterations(ScenarioOrchestrationContext<M> context);
 }
