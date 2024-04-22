@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.experimental.Delegate;
 
 /**
- * DSL class used for construction conditional calls after main condition
+ * DSL class used for construction while loop statements
  *
  * @param <R> DSL handle for the return DSL Verb/type.
  */
@@ -60,6 +60,11 @@ public final class CallWhileLoopStatement<R> extends ProcessDslBase<CallWhileLoo
           new ForProcessProvidersDelegate<>(statementsList, self(), getDslReturnDefinition());
     }
 
+    /**
+     * Ends current loop and returns to previous process building DSL
+     *
+     * @return previous process building DSL
+     */
     public R endLoop() {
       return CallWhileLoopStatement.this.endLoop();
     }

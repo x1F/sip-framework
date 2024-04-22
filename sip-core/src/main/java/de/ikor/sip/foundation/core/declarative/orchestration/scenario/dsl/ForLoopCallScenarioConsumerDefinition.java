@@ -8,7 +8,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Delegate;
 
-/** Class specifying consumer calls that are only executed conditionally */
+/** Class specifying consumer calls that are executed in a for loop */
 public final class ForLoopCallScenarioConsumerDefinition<R, M>
     extends ScenarioDslDefinitionBase<ForLoopCallScenarioConsumerDefinition<R, M>, R, M>
     implements CallableWithinProviderDefinition {

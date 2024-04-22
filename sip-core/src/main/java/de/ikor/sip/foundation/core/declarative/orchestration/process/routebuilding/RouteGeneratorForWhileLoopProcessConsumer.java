@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.model.ProcessorDefinition;
 
 /**
- * Class for generating Camel routes for conditional process consumer calls from a DSL
+ * Class for generating Camel routes for while loop process consumer calls from a DSL
  *
  * <p><em>For internal use only</em>
  */

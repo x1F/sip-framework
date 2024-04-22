@@ -1,17 +1,15 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 
-import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepIterations;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Delegate;
 
 /**
- * DSL class used for construction conditional calls after main condition
+ * DSL class used for construction of for loop statements and ending them
  *
  * @param <R> DSL handle for the return DSL Verb/type.
  */
@@ -19,12 +17,9 @@ public final class CallForLoopStatement<R> extends ProcessDslBase<CallForLoopSta
     implements CallableWithinProcessDefinition {
 
   @Getter(AccessLevel.PACKAGE)
-  private List<ProcessBranchStatements> loopProcess = new ArrayList<>();
+  private final List<ProcessBranchStatements> loopProcess = new ArrayList<>();
 
   private final CompositeProcessDefinition processDefinition;
-
-  @Getter(AccessLevel.PACKAGE)
-  private Optional<StepResultCloner<Object>> stepResultCloner = Optional.empty();
 
   CallForLoopStatement(R dslReturnDefinition, CompositeProcessDefinition compositeProcess) {
     super(dslReturnDefinition, compositeProcess);
@@ -59,6 +54,11 @@ public final class CallForLoopStatement<R> extends ProcessDslBase<CallForLoopSta
           new ForProcessProvidersDelegate<>(statementsList, self(), getDslReturnDefinition());
     }
 
+    /**
+     * End current for loop statement and return to previous process building DSL
+     *
+     * @return previous process building DSL
+     */
     public R endLoop() {
       return CallForLoopStatement.this.endLoop();
     }

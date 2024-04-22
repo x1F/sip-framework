@@ -9,7 +9,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Delegate;
 
-/** Class specifying consumer calls that are only executed conditionally */
+/** Class specifying consumer calls that are executed in a while loop */
 public final class WhileLoopCallScenarioConsumerDefinition<R, M>
     extends ScenarioDslDefinitionBase<WhileLoopCallScenarioConsumerDefinition<R, M>, R, M>
     implements CallableWithinProviderDefinition {

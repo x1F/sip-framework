@@ -54,6 +54,12 @@ public class ProcessOrchestrationDefinition
     return def.elseIfCase(predicate);
   }
 
+  /**
+   * Standard while loop defined in the DSL way
+   *
+   * @param predicate Predicate to check when to stop while loop
+   * @return DSL Handle
+   */
   public CallWhileLoopStatement<ProcessOrchestrationDefinition>.ProcessBranch<
           CallWhileLoopStatement<ProcessOrchestrationDefinition>>
       doWhile(final CompositeProcessStepConditional predicate) {
@@ -63,6 +69,12 @@ public class ProcessOrchestrationDefinition
     return def.doWhile(predicate);
   }
 
+  /**
+   * Standard for loop defined in the DSL way
+   *
+   * @param expression Expression to determine iteration number
+   * @return DSL Handle
+   */
   public CallForLoopStatement<ProcessOrchestrationDefinition>.ProcessBranch<
           CallForLoopStatement<ProcessOrchestrationDefinition>>
       forLoop(CompositeProcessStepIterations expression) {
