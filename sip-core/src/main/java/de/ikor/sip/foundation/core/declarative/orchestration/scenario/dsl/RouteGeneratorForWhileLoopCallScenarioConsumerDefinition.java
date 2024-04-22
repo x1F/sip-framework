@@ -11,30 +11,30 @@ import org.apache.camel.model.ProcessorDefinition;
 @SuppressWarnings("rawtypes")
 @Slf4j
 final class RouteGeneratorForWhileLoopCallScenarioConsumerDefinition<M> extends RouteGeneratorBase {
-  private final WhileLoopCallScenarioConsumerDefinition<?, M> loopDefinition;
+  private final WhileLoopCallScenarioConsumerDefinition<?, M> whileDefinition;
 
   private final Set<IntegrationScenarioConsumerDefinition> overallUnhandledConsumers;
 
   RouteGeneratorForWhileLoopCallScenarioConsumerDefinition(
       final ScenarioOrchestrationInfo orchestrationInfo,
-      final WhileLoopCallScenarioConsumerDefinition<?, M> loopDefinition,
+      final WhileLoopCallScenarioConsumerDefinition<?, M> whileDefinition,
       final Set<IntegrationScenarioConsumerDefinition> overallUnhandledConsumers) {
     super(orchestrationInfo);
-    this.loopDefinition = loopDefinition;
     this.overallUnhandledConsumers = overallUnhandledConsumers;
+    this.whileDefinition = whileDefinition;
   }
 
   <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {
-    if (loopDefinition.getLoopStatements().isEmpty()) {
+    if (whileDefinition.getLoopStatements().isEmpty()) {
       throw SIPFrameworkInitializationException.init(
-          "Empty doWhile statement attached in orchestration for integration-scenario %s",
+          "Empty doWhile statement attached in scenario orchestration for integration-scenario %s",
           getIntegrationScenarioId());
     }
 
-    for (final var branch : loopDefinition.getLoopStatements()) {
+    for (final var branch : whileDefinition.getLoopStatements()) {
       if (branch.statements().isEmpty()) {
 
-        var branchIndex = loopDefinition.getLoopStatements().indexOf(branch) + 1;
+        var branchIndex = whileDefinition.getLoopStatements().indexOf(branch) + 1;
         log.warn(
             "Orchestration for integration-scenario {} contains a doWhile-statement that does not specify any actions in branch #{}",
             getIntegrationScenarioId(),

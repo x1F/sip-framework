@@ -7,6 +7,9 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsu
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,23 +41,34 @@ final class RouteGeneratorForForLoopCallScenarioConsumerDefinition<M> extends Ro
           getIntegrationScenarioId());
     }
 
-    for (final var branch : loopDefinition.getLoopStatements()) {
-      if (branch.statements().isEmpty()) {
+    loopDefinition
+        .getLoopStatements()
+        .forEach(
+            withCounter(
+                (i, branchStatements) -> {
+                  if (branchStatements.statements().isEmpty()) {
+                    log.warn(
+                        "Orchestration for integration-scenario {} contains a forLoop-statement that does not specify any actions in branch #{}",
+                        getIntegrationScenarioId(),
+                        i + 1);
+                  }
 
-        var branchIndex = loopDefinition.getLoopStatements().indexOf(branch) + 1;
-        log.warn(
-            "Orchestration for integration-scenario {} contains a forLoop-statement that does not specify any actions in branch #{}",
-            getIntegrationScenarioId(),
-            branchIndex);
-      }
-      final var loopDef = routeDefinition.loop(new ForLoopIterationsExpression(branch.predicate()));
-      branch
-          .statements()
-          .forEach(
-              statement ->
-                  buildRouteForStatement(loopDef, (CallableWithinProviderDefinition) statement));
-      loopDef.end();
-    }
+                  final var loopDef =
+                      routeDefinition.loop(
+                          new ForLoopIterationsExpression(branchStatements.predicate()));
+                  branchStatements
+                      .statements()
+                      .forEach(
+                          statement ->
+                              buildRouteForStatement(
+                                  loopDef, (CallableWithinProviderDefinition) statement));
+                  loopDef.end();
+                }));
+  }
+
+  private static <T> Consumer<T> withCounter(BiConsumer<Integer, T> consumer) {
+    AtomicInteger counter = new AtomicInteger(0);
+    return item -> consumer.accept(counter.getAndIncrement(), item);
   }
 
   @RequiredArgsConstructor
