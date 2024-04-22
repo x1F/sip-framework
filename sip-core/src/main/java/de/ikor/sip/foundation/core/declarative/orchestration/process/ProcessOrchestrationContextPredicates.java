@@ -35,7 +35,7 @@ public class ProcessOrchestrationContextPredicates {
   }
 
   /**
-   * Tests the original request using the given predicate
+   * Tests the original request using the given iterations
    *
    * @param requestPredicate Predicate to test against the original request
    * @return {@code true} if the request matches
@@ -46,7 +46,7 @@ public class ProcessOrchestrationContextPredicates {
   }
 
   /**
-   * Tests the current response against the given predicate
+   * Tests the current response against the given iterations
    *
    * @see ScenarioOrchestrationContext#getResponse()
    * @param responsePredicate Predicate to test response against

@@ -1,9 +1,10 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import static de.ikor.sip.foundation.core.apps.declarative.ScenarioOrchestrationLoopAdapter.CONDITION_VALUE;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import de.ikor.sip.foundation.core.apps.declarative.ProcessOrchestrationLoopAdapter;
+import de.ikor.sip.foundation.core.apps.declarative.ScenarioOrchestrationLoopAdapter;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
 import org.apache.camel.FluentProducerTemplate;
@@ -19,12 +20,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 @CamelSpringBootTest
-@SpringBootTest(classes = {ProcessOrchestrationLoopAdapter.class})
+@SpringBootTest(classes = {ScenarioOrchestrationLoopAdapter.class})
 @DisableJmx(false)
 @MockEndpoints("log:*")
 @DirtiesContext
-class ProcessOrchestrationLoopTest {
-
+class ScenarioOrchestrationLoopTest {
   @Autowired private FluentProducerTemplate template;
 
   @EndpointInject("mock:log:AfterLoopOutboundConnector")
@@ -33,21 +33,16 @@ class ProcessOrchestrationLoopTest {
   @EndpointInject("mock:log:InsideLoopOutboundConnector")
   private MockEndpoint mockedInsideLoopOutboundConnector;
 
-  @EndpointInject("mock:log:LoggingOutboundConnector")
-  private MockEndpoint mockedLoggingOutboundConnector;
-
   @BeforeEach
   void setup() {
     mockedAfterLoopOutboundConnector.reset();
     mockedInsideLoopOutboundConnector.reset();
-    mockedLoggingOutboundConnector.reset();
   }
 
   @AfterEach
   void assertLoggers() throws InterruptedException {
     mockedAfterLoopOutboundConnector.assertIsSatisfied();
     mockedInsideLoopOutboundConnector.assertIsSatisfied();
-    mockedLoggingOutboundConnector.assertIsSatisfied();
   }
 
   @Test
@@ -56,20 +51,19 @@ class ProcessOrchestrationLoopTest {
     mockedAfterLoopOutboundConnector.expectedBodiesReceivedInAnyOrder(
         "CallLoopResponse[name=MyPartnerCode]");
     mockedInsideLoopOutboundConnector.expectedHeaderValuesReceivedInAnyOrder(
-        ProcessOrchestrationLoopAdapter.CONDITION_VALUE, "", "a", "aa");
-    mockedLoggingOutboundConnector.expectedMessageCount(2);
+        CONDITION_VALUE, "", "a", "aa", "aaa", "aaaa");
 
     // act
     Exchange exchangeFirstConnector =
         template.withBody("MyPartner").to(direct("CallLoopInboundConnector")).send();
-    ProcessOrchestrationLoopAdapter.FinalResponse responseFirstConnector =
+    ScenarioOrchestrationLoopAdapter.FinalResponse responseFirstConnector =
         exchangeFirstConnector
             .getMessage()
-            .getBody(ProcessOrchestrationLoopAdapter.FinalResponse.class);
+            .getBody(ScenarioOrchestrationLoopAdapter.FinalResponse.class);
 
     // assert
     assertThat(exchangeFirstConnector.getException()).isNull();
     assertThat(responseFirstConnector.name()).isEqualTo("MyPartnerCode");
-    assertThat(responseFirstConnector.condition()).isEqualTo("aaa");
+    assertThat(responseFirstConnector.condition()).isEqualTo("aaaaa");
   }
 }

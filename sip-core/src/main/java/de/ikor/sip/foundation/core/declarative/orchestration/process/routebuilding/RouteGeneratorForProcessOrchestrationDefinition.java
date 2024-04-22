@@ -69,8 +69,12 @@ public final class RouteGeneratorForProcessOrchestrationDefinition extends Route
         new RouteGeneratorForCallConditionalProcessConsumer(
                 getOrchestrationInfo(), ele, unhandledProcessConsumers)
             .generateRoute(routeDef);
-      } else if (element instanceof CallLoopStatement<?> ele) {
-        new RouteGeneratorForLoopProcessConsumer(
+      } else if (element instanceof CallWhileLoopStatement<?> ele) {
+        new RouteGeneratorForWhileLoopProcessConsumer(
+                getOrchestrationInfo(), ele, unhandledProcessConsumers)
+            .generateRoute(routeDef);
+      } else if (element instanceof CallForLoopStatement<?> ele) {
+        new RouteGeneratorForForLoopProcessConsumer(
                 getOrchestrationInfo(), ele, unhandledProcessConsumers)
             .generateRoute(routeDef);
       }

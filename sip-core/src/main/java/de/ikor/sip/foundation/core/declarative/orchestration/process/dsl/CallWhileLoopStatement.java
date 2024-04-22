@@ -15,7 +15,7 @@ import lombok.experimental.Delegate;
  *
  * @param <R> DSL handle for the return DSL Verb/type.
  */
-public final class CallLoopStatement<R> extends ProcessDslBase<CallLoopStatement<R>, R>
+public final class CallWhileLoopStatement<R> extends ProcessDslBase<CallWhileLoopStatement<R>, R>
     implements CallableWithinProcessDefinition {
 
   @Getter(AccessLevel.PACKAGE)
@@ -26,12 +26,13 @@ public final class CallLoopStatement<R> extends ProcessDslBase<CallLoopStatement
   @Getter(AccessLevel.PACKAGE)
   private Optional<StepResultCloner<Object>> stepResultCloner = Optional.empty();
 
-  CallLoopStatement(R dslReturnDefinition, CompositeProcessDefinition compositeProcess) {
+  CallWhileLoopStatement(R dslReturnDefinition, CompositeProcessDefinition compositeProcess) {
     super(dslReturnDefinition, compositeProcess);
     this.processDefinition = compositeProcess;
   }
 
-  ProcessBranch<CallLoopStatement<R>> doWhile(final CompositeProcessStepConditional predicate) {
+  ProcessBranch<CallWhileLoopStatement<R>> doWhile(
+      final CompositeProcessStepConditional predicate) {
     final var branch = new ProcessBranchStatements(predicate, new ArrayList<>());
     loopProcess.add(branch);
     return new ProcessBranch<>(branch.statements, self(), processDefinition);
@@ -60,7 +61,7 @@ public final class CallLoopStatement<R> extends ProcessDslBase<CallLoopStatement
     }
 
     public R endLoop() {
-      return CallLoopStatement.this.endLoop();
+      return CallWhileLoopStatement.this.endLoop();
     }
   }
 }

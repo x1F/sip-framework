@@ -54,7 +54,7 @@ public class RouteGeneratorInternalHelper {
     return element.getStepResultCloner();
   }
 
-  public static Optional<StepResultCloner> getStepResultCloner(CallLoopStatement element) {
+  public static Optional<StepResultCloner> getStepResultCloner(CallWhileLoopStatement element) {
     return element.getStepResultCloner();
   }
 
@@ -67,8 +67,13 @@ public class RouteGeneratorInternalHelper {
     return orchestrationDef.getSteps();
   }
 
-  public static List<CallLoopStatement.ProcessBranchStatements> getLoopProcess(
-      CallLoopStatement element) {
+  public static List<CallWhileLoopStatement.ProcessBranchStatements> getLoopProcess(
+      CallWhileLoopStatement element) {
+    return element.getLoopProcess();
+  }
+
+  public static List<CallForLoopStatement.ProcessBranchStatements> getForLoopProcess(
+      CallForLoopStatement element) {
     return element.getLoopProcess();
   }
 }

@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
+import de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding.ScenarioStepIterations;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationContext;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public abstract sealed class ForScenarioProvidersBaseDefinition<
 
   /**
    * Attaches and changes scope to a conditional branch that is only executed if the given <code>
-   * predicate</code> matches at runtime for an integration call of the underlying scenario.
+   * iterations</code> matches at runtime for an integration call of the underlying scenario.
    *
    * <p>This can be compared to a Java <code>if</code>-statement, and the returned branch allows to
    * attach additional (conditional) branches similar to <code>else if</code> and <code>else</code>.
@@ -54,6 +55,24 @@ public abstract sealed class ForScenarioProvidersBaseDefinition<
         new ConditionalCallScenarioConsumerDefinition<S, M>(self(), getIntegrationScenario());
     nodes.add(def);
     return def.elseIfCase(predicate);
+  }
+
+  public WhileLoopCallScenarioConsumerDefinition<S, M>.Branch<
+          WhileLoopCallScenarioConsumerDefinition<S, M>>
+      doWhile(final Predicate<ScenarioOrchestrationContext<M>> predicate) {
+    final var def =
+        new WhileLoopCallScenarioConsumerDefinition<S, M>(self(), getIntegrationScenario());
+    nodes.add(def);
+    return def.doWhile(predicate);
+  }
+
+  public ForLoopCallScenarioConsumerDefinition<S, M>.Branch<
+          ForLoopCallScenarioConsumerDefinition<S, M>>
+      forLoop(final ScenarioStepIterations predicate) {
+    final var def =
+        new ForLoopCallScenarioConsumerDefinition<S, M>(self(), getIntegrationScenario());
+    nodes.add(def);
+    return def.forLoop(predicate);
   }
 
   /**

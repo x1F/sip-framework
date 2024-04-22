@@ -18,15 +18,15 @@ import org.apache.camel.model.ProcessorDefinition;
  */
 @Slf4j
 @SuppressWarnings("rawtypes")
-final class RouteGeneratorForLoopProcessConsumer extends RouteGeneratorProcessBase {
+final class RouteGeneratorForWhileLoopProcessConsumer extends RouteGeneratorProcessBase {
 
-  private final CallLoopStatement<?> loopStatement;
+  private final CallWhileLoopStatement<?> loopStatement;
 
   private final Set<IntegrationScenarioDefinition> overallUnhandledConsumers;
 
-  RouteGeneratorForLoopProcessConsumer(
+  RouteGeneratorForWhileLoopProcessConsumer(
       final CompositeProcessOrchestrationInfo orchestrationInfo,
-      final CallLoopStatement<?> loopStatement,
+      final CallWhileLoopStatement<?> loopStatement,
       final Set<IntegrationScenarioDefinition> overallUnhandledConsumers) {
     super(orchestrationInfo);
     this.loopStatement = loopStatement;
@@ -34,7 +34,7 @@ final class RouteGeneratorForLoopProcessConsumer extends RouteGeneratorProcessBa
   }
 
   <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {
-    List<CallLoopStatement.ProcessBranchStatements> loopProcess =
+    List<CallWhileLoopStatement.ProcessBranchStatements> loopProcess =
         RouteGeneratorInternalHelper.getLoopProcess(loopStatement);
     if (loopProcess.isEmpty()) {
       throw SIPFrameworkInitializationException.init(

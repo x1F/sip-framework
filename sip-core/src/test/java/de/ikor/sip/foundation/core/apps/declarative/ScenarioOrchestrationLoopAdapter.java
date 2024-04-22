@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.core.apps.declarative;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
-import de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
@@ -10,9 +9,8 @@ import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnecto
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.ProcessOrchestrator;
-import de.ikor.sip.foundation.core.declarative.process.CompositeProcessBase;
+import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
@@ -22,10 +20,9 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 
 @SIPIntegrationAdapter
 @ComponentScan(excludeFilters = @Filter(SIPIntegrationAdapter.class))
-public class ProcessOrchestrationLoopAdapter {
+public class ScenarioOrchestrationLoopAdapter {
 
   public static final String CONDITION_VALUE = "condition-name";
-  private static final String ITERATIONS = "iterations";
   private final String GROUP_ID = "loop_group";
 
   public record CallLoopRequest(String name) {}
@@ -36,78 +33,40 @@ public class ProcessOrchestrationLoopAdapter {
 
   @IntegrationScenario(
       scenarioId = CallLoopScenario.ID,
-      requestModel = CallLoopRequest.class,
-      responseModel = FinalResponse.class)
+      requestModel = Object.class,
+      responseModel = Object.class)
   public class CallLoopScenario extends IntegrationScenarioBase {
 
     public static final String ID = "CallLoopScenario";
-  }
-
-  @IntegrationScenario(
-      scenarioId = InsideLoopScenario.ID,
-      requestModel = CallLoopRequest.class,
-      responseModel = CallLoopResponse.class)
-  public class InsideLoopScenario extends IntegrationScenarioBase {
-
-    public static final String ID = "InsideLoopScenario";
-  }
-
-  @IntegrationScenario(
-      scenarioId = LoggingScenario.ID,
-      requestModel = Object.class,
-      responseModel = Object.class)
-  public class LoggingScenario extends IntegrationScenarioBase {
-
-    public static final String ID = "logging-scenario";
-  }
-
-  @IntegrationScenario(
-      scenarioId = AfterLoopScenario.ID,
-      requestModel = CallLoopResponse.class,
-      responseModel = FinalResponse.class)
-  public class AfterLoopScenario extends IntegrationScenarioBase {
-
-    public static final String ID = "AfterLoopScenario";
-  }
-
-  @CompositeProcess(
-      processId = LoopUntilConditionIsMetOrchestrator.ID,
-      provider = CallLoopScenario.class,
-      consumers = {AfterLoopScenario.class, InsideLoopScenario.class, LoggingScenario.class})
-  public class LoopUntilConditionIsMetOrchestrator extends CompositeProcessBase {
-
-    private static final String ID = "LoopUntilConditionIsMetOrchestrator";
 
     @Override
-    public Orchestrator<CompositeProcessOrchestrationInfo> getOrchestrator() {
-      return ProcessOrchestrator.forOrchestrationDsl(
+    public Orchestrator<ScenarioOrchestrationInfo> getOrchestrator() {
+      return ScenarioOrchestrator.forOrchestrationDslWithResponse(
+          Object.class,
           dsl -> {
-            dsl.doWhile(
+            dsl.forInboundConnectors(CallLoopInboundConnector.class)
+                .doWhile(
                     context ->
                         !"aaa".equals(context.getHeader(CONDITION_VALUE, String.class).get()))
-                .callConsumer(InsideLoopScenario.class)
+                .callOutboundConnector(InsideLoopOutboundConnector.class)
+                .andNoResponseHandling()
+                .endLoop()
+                .forLoop(context -> 2)
+                .callOutboundConnector(InsideLoopOutboundConnector.class)
                 .withRequestPreparation(
                     context -> {
                       var response = context.getOriginalRequest();
                       return response;
                     })
-                .withNoResponseHandling()
+                .andNoResponseHandling()
                 .endLoop()
-                .forLoop(context -> context.getHeader(ITERATIONS, Integer.class).orElse(0))
-                .callConsumer(LoggingScenario.class)
+                .callOutboundConnector(AfterLoopOutboundConnector.class)
                 .withRequestPreparation(
                     context -> {
-                      var response = context.getLatestResponse().get();
-                      return response;
-                    })
-                .withNoResponseHandling()
-                .endLoop()
-                .callConsumer(AfterLoopScenario.class)
-                .withRequestPreparation(
-                    context -> {
-                      var response = context.getLatestResponse();
+                      var response = context.getResponse();
                       return response.get();
-                    });
+                    })
+                .andNoResponseHandling();
           });
     }
   }
@@ -117,7 +76,7 @@ public class ProcessOrchestrationLoopAdapter {
       connectorGroup = GROUP_ID,
       integrationScenario = CallLoopScenario.ID,
       requestModel = String.class,
-      responseModel = CallLoopResponse.class)
+      responseModel = Object.class)
   public class CallLoopInboundConnector extends GenericInboundConnectorBase {
 
     public static final String ID = "CallLoopInboundConnector";
@@ -136,7 +95,6 @@ public class ProcessOrchestrationLoopAdapter {
                       e -> {
                         String partnerName = e.getMessage().getBody(String.class);
                         e.getMessage().setHeader(CONDITION_VALUE, "");
-                        e.getMessage().setHeader(ITERATIONS, 2);
                         e.getMessage().setBody(new CallLoopRequest(partnerName));
                       }));
     }
@@ -145,9 +103,9 @@ public class ProcessOrchestrationLoopAdapter {
   @OutboundConnector(
       connectorId = AfterLoopOutboundConnector.ID,
       connectorGroup = GROUP_ID,
-      integrationScenario = AfterLoopScenario.ID,
-      requestModel = CallLoopResponse.class,
-      responseModel = FinalResponse.class)
+      integrationScenario = CallLoopScenario.ID,
+      requestModel = Object.class,
+      responseModel = Object.class)
   public class AfterLoopOutboundConnector extends GenericOutboundConnectorBase {
 
     public static final String ID = "AfterLoopOutboundConnector";
@@ -174,9 +132,9 @@ public class ProcessOrchestrationLoopAdapter {
   @OutboundConnector(
       connectorId = InsideLoopOutboundConnector.ID,
       connectorGroup = GROUP_ID,
-      integrationScenario = InsideLoopScenario.ID,
-      requestModel = CallLoopRequest.class,
-      responseModel = CallLoopResponse.class)
+      integrationScenario = CallLoopScenario.ID,
+      requestModel = Object.class,
+      responseModel = Object.class)
   public class InsideLoopOutboundConnector extends GenericOutboundConnectorBase {
 
     public static final String ID = "InsideLoopOutboundConnector";
@@ -206,14 +164,14 @@ public class ProcessOrchestrationLoopAdapter {
   @OutboundConnector(
       connectorId = "out-logging-connector",
       connectorGroup = GROUP_ID,
-      integrationScenario = LoggingScenario.ID,
-      requestModel = CallLoopResponse.class,
-      responseModel = CallLoopResponse.class)
+      integrationScenario = CallLoopScenario.ID,
+      requestModel = Object.class,
+      responseModel = Object.class)
   public class LoggingOutboundConnector extends GenericOutboundConnectorBase {
 
     @Override
     protected EndpointProducerBuilder defineOutgoingEndpoint() {
-      return StaticEndpointBuilders.log("LoggingOutboundConnector").plain(true);
+      return StaticEndpointBuilders.log("Logging").plain(true);
     }
   }
 }
