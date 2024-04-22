@@ -33,8 +33,8 @@ final class RouteGeneratorForForLoopCallScenarioConsumerDefinition<M> extends Ro
 
   <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {
     if (loopDefinition.getLoopStatements().isEmpty()) {
-      SIPFrameworkInitializationException.init(
-          "Empty conditional statement attached in orchestration for integration-scenario %s",
+      throw SIPFrameworkInitializationException.init(
+          "Empty forLoop statement attached in orchestration for integration-scenario %s",
           getIntegrationScenarioId());
     }
 
@@ -43,11 +43,11 @@ final class RouteGeneratorForForLoopCallScenarioConsumerDefinition<M> extends Ro
 
         var branchIndex = loopDefinition.getLoopStatements().indexOf(branch) + 1;
         log.warn(
-            "Orchestration for integration-scenario {} contains a conditional-statement that does not specify any actions in branch #{}",
+            "Orchestration for integration-scenario {} contains a forLoop-statement that does not specify any actions in branch #{}",
             getIntegrationScenarioId(),
             branchIndex);
       }
-      final var loopDef = routeDefinition.loop(new IterationsExpression(branch.predicate()));
+      final var loopDef = routeDefinition.loop(new ForLoopIterationsExpression(branch.predicate()));
       branch
           .statements()
           .forEach(
@@ -58,18 +58,17 @@ final class RouteGeneratorForForLoopCallScenarioConsumerDefinition<M> extends Ro
   }
 
   @RequiredArgsConstructor
-  class IterationsExpression extends ExpressionAdapter {
+  static class ForLoopIterationsExpression extends ExpressionAdapter {
     private final ScenarioStepIterations predicate;
 
     @Override
     public Object evaluate(Exchange exchange) {
       return handleIterations(exchange, predicate);
     }
-  }
 
-  public static int handleIterations(
-      final Exchange exchange, final ScenarioStepIterations iterations) {
-    return new IterationsHandler(iterations).executeIterations(exchange);
+    private int handleIterations(final Exchange exchange, final ScenarioStepIterations iterations) {
+      return new IterationsHandler(iterations).executeIterations(exchange);
+    }
   }
 
   @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -81,17 +80,16 @@ final class RouteGeneratorForForLoopCallScenarioConsumerDefinition<M> extends Ro
       final ScenarioOrchestrationContext context = retrieveOrchestrationContext(exchange);
       return iterations.determineIterations(context);
     }
-  }
 
-  private static ScenarioOrchestrationContext retrieveOrchestrationContext(
-      final Exchange exchange) {
-    final var context =
-        Objects.requireNonNull(
-            exchange.getProperty(
-                ScenarioOrchestrationContext.PROPERTY_NAME, ScenarioOrchestrationContext.class),
-            "Orchestration context for scenario-orchestration could not be retrieved from exchange");
-    context.setExchange(exchange);
-    return context;
+    private ScenarioOrchestrationContext retrieveOrchestrationContext(final Exchange exchange) {
+      final var context =
+          Objects.requireNonNull(
+              exchange.getProperty(
+                  ScenarioOrchestrationContext.PROPERTY_NAME, ScenarioOrchestrationContext.class),
+              "Orchestration context for scenario-orchestration could not be retrieved from exchange");
+      context.setExchange(exchange);
+      return context;
+    }
   }
 
   @SuppressWarnings("unchecked")
@@ -103,7 +101,7 @@ final class RouteGeneratorForForLoopCallScenarioConsumerDefinition<M> extends Ro
           .generateRoute(routeDefinition);
     } else {
       throw SIPFrameworkInitializationException.init(
-          "Unhandled statement type '%s' used in conditional-branch of orchestration for integration-scenario %s",
+          "Unhandled statement type '%s' used in forLoop-branch of orchestration for integration-scenario %s",
           statement.getClass().getName(), getIntegrationScenarioId());
     }
   }

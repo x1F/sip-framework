@@ -27,7 +27,7 @@ final class RouteGeneratorForConditionalCallScenarioConsumerDefinition<M>
 
   <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {
     if (conditionalDefinition.getConditionalStatements().isEmpty()) {
-      SIPFrameworkInitializationException.init(
+      throw SIPFrameworkInitializationException.init(
           "Empty conditional statement attached in orchestration for integration-scenario %s",
           getIntegrationScenarioId());
     }

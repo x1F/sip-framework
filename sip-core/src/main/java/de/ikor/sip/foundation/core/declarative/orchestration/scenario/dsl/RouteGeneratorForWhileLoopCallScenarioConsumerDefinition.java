@@ -26,8 +26,8 @@ final class RouteGeneratorForWhileLoopCallScenarioConsumerDefinition<M> extends 
 
   <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {
     if (loopDefinition.getLoopStatements().isEmpty()) {
-      SIPFrameworkInitializationException.init(
-          "Empty conditional statement attached in orchestration for integration-scenario %s",
+      throw SIPFrameworkInitializationException.init(
+          "Empty doWhile statement attached in orchestration for integration-scenario %s",
           getIntegrationScenarioId());
     }
 
@@ -36,7 +36,7 @@ final class RouteGeneratorForWhileLoopCallScenarioConsumerDefinition<M> extends 
 
         var branchIndex = loopDefinition.getLoopStatements().indexOf(branch) + 1;
         log.warn(
-            "Orchestration for integration-scenario {} contains a conditional-statement that does not specify any actions in branch #{}",
+            "Orchestration for integration-scenario {} contains a doWhile-statement that does not specify any actions in branch #{}",
             getIntegrationScenarioId(),
             branchIndex);
       }
@@ -58,7 +58,7 @@ final class RouteGeneratorForWhileLoopCallScenarioConsumerDefinition<M> extends 
           .generateRoute(routeDefinition);
     } else {
       throw SIPFrameworkInitializationException.init(
-          "Unhandled statement type '%s' used in conditional-branch of orchestration for integration-scenario %s",
+          "Unhandled statement type '%s' used in doWhile-branch of orchestration for integration-scenario %s",
           statement.getClass().getName(), getIntegrationScenarioId());
     }
   }

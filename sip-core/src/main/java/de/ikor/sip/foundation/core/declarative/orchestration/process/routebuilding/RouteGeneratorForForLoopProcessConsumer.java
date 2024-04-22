@@ -56,7 +56,7 @@ final class RouteGeneratorForForLoopProcessConsumer extends RouteGeneratorProces
   }
 
   @RequiredArgsConstructor
-  class IterationsExpression extends ExpressionAdapter {
+  static class IterationsExpression extends ExpressionAdapter {
     private final Optional<CompositeProcessStepIterations> iterations;
 
     @Override
