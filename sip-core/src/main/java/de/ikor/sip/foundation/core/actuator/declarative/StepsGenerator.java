@@ -37,6 +37,14 @@ public class StepsGenerator {
     if (callableWithinProcessDefinition instanceof CallProcessConsumer<?, ?>) {
       steps.add(createBaseStep(callableWithinProcessDefinition));
     }
+    if (callableWithinProcessDefinition
+        instanceof CallWhileLoopStatement<?> callWhileLoopStatement) {
+      fillWhileLoopSteps(
+          steps, RouteGeneratorInternalHelper.getLoopProcess(callWhileLoopStatement));
+    }
+    if (callableWithinProcessDefinition instanceof CallForLoopStatement<?> callForLoopStatement) {
+      fillForLoopSteps(steps, RouteGeneratorInternalHelper.getForLoopProcess(callForLoopStatement));
+    }
     return steps.stream();
   }
 
@@ -49,10 +57,25 @@ public class StepsGenerator {
 
   private void fillUnconditionalSteps(
       List<StepDto> steps, List<CallableWithinProcessDefinition> unconditionalStatements) {
+    if (unconditionalStatements == null || unconditionalStatements.isEmpty()) return;
     List<StepDto> unconditionalNestedSteps = new ArrayList<>();
     unconditionalStatements.forEach(
         statement -> unconditionalNestedSteps.add(createBaseStep(statement)));
     steps.add(StepDto.builder().conditioned(true).nested(unconditionalNestedSteps).build());
+  }
+
+  private void fillWhileLoopSteps(
+      List<StepDto> steps,
+      List<CallWhileLoopStatement.ProcessBranchStatements> conditionalStatements) {
+    conditionalStatements.forEach(
+        conditionalStatement -> fillUnconditionalSteps(steps, conditionalStatement.statements()));
+  }
+
+  private void fillForLoopSteps(
+      List<StepDto> steps,
+      List<CallForLoopStatement.ProcessBranchStatements> conditionalStatements) {
+    conditionalStatements.forEach(
+        conditionalStatement -> fillUnconditionalSteps(steps, conditionalStatement.statements()));
   }
 
   private StepDto createBaseStep(CallableWithinProcessDefinition statement) {
