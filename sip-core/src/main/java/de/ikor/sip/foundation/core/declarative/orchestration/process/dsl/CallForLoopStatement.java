@@ -59,7 +59,7 @@ public final class CallForLoopStatement<R> extends ProcessDslBase<CallForLoopSta
      *
      * @return previous process building DSL
      */
-    public R endLoop() {
+    public R endForLoop() {
       return CallForLoopStatement.this.endLoop();
     }
   }

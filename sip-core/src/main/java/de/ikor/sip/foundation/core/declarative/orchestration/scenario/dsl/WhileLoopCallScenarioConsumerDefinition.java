@@ -62,7 +62,7 @@ public final class WhileLoopCallScenarioConsumerDefinition<R, M>
      *
      * @return Previous scope of the orchestration definition
      */
-    public R endLoop() {
+    public R endDoWhile() {
       return WhileLoopCallScenarioConsumerDefinition.this.endLoop();
     }
   }

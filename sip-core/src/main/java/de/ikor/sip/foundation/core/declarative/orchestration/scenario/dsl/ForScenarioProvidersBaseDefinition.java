@@ -34,7 +34,7 @@ public abstract sealed class ForScenarioProvidersBaseDefinition<
 
   /**
    * Attaches and changes scope to a conditional branch that is only executed if the given <code>
-   * iterations</code> matches at runtime for an integration call of the underlying scenario.
+   * predicate</code> matches at runtime for an integration call of the underlying scenario.
    *
    * <p>This can be compared to a Java <code>if</code>-statement, and the returned branch allows to
    * attach additional (conditional) branches similar to <code>else if</code> and <code>else</code>.
@@ -57,6 +57,18 @@ public abstract sealed class ForScenarioProvidersBaseDefinition<
     return def.elseIfCase(predicate);
   }
 
+  /**
+   * Attaches and changes scope to a do while branch that will loop executions of the underlying
+   * scenario until the given <code>predicate</code> no longer matches at runtime.
+   *
+   * <p>This can be compared to a Java <code>while</code>-statement.
+   *
+   * <p>To leave the do while statement and return to the current scope, use {@link
+   * WhileLoopCallScenarioConsumerDefinition.Branch#endDoWhile()}.
+   *
+   * @param predicate Predicate to test for execution of branch statements
+   * @return The do while branch
+   */
   public WhileLoopCallScenarioConsumerDefinition<S, M>.Branch<
           WhileLoopCallScenarioConsumerDefinition<S, M>>
       doWhile(final Predicate<ScenarioOrchestrationContext<M>> predicate) {
@@ -66,6 +78,18 @@ public abstract sealed class ForScenarioProvidersBaseDefinition<
     return def.doWhile(predicate);
   }
 
+  /**
+   * Attaches and changes scope to a for loop branch that will loop executions of the underlying
+   * scenario for the provided amount of time.
+   *
+   * <p>This can be compared to a Java <code>for</code>-statement.
+   *
+   * <p>To leave the for loop statement and return to the current scope, use {@link
+   * ForLoopCallScenarioConsumerDefinition.Branch#endForLoop()}.
+   *
+   * @param predicate Predicate to determine number of loop iterations
+   * @return The for loop branch
+   */
   public ForLoopCallScenarioConsumerDefinition<S, M>.Branch<
           ForLoopCallScenarioConsumerDefinition<S, M>>
       forLoop(final ScenarioStepIterations<M> predicate) {

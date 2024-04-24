@@ -92,7 +92,7 @@ public class ProcessOrchestrationLoopAdapter {
                       return response;
                     })
                 .withNoResponseHandling()
-                .endLoop()
+                .endDoWhile()
                 .forLoop(context -> context.getHeader(ITERATIONS, Integer.class).orElse(0))
                 .callConsumer(LoggingScenario.class)
                 .withRequestPreparation(
@@ -101,7 +101,7 @@ public class ProcessOrchestrationLoopAdapter {
                       return response;
                     })
                 .withNoResponseHandling()
-                .endLoop()
+                .endForLoop()
                 .callConsumer(AfterLoopScenario.class)
                 .withRequestPreparation(
                     context -> {

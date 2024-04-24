@@ -51,12 +51,12 @@ public class ScenarioOrchestrationLoopAdapter {
                           !"aaa".equals(context.getHeader(CONDITION_VALUE, String.class).get()))
                   .callOutboundConnector(InsideLoopOutboundConnector.class)
                   .andNoResponseHandling()
-                  .endLoop()
+                  .endDoWhile()
                   .forLoop(context -> 2)
                   .callOutboundConnector(InsideLoopOutboundConnector.class)
                   .withRequestPreparation(ScenarioOrchestrationContext::getOriginalRequest)
                   .andNoResponseHandling()
-                  .endLoop()
+                  .endForLoop()
                   .callOutboundConnector(AfterLoopOutboundConnector.class)
                   .withRequestPreparation(
                       context -> {

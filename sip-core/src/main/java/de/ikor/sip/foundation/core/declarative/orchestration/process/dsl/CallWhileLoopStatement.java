@@ -65,7 +65,7 @@ public final class CallWhileLoopStatement<R> extends ProcessDslBase<CallWhileLoo
      *
      * @return previous process building DSL
      */
-    public R endLoop() {
+    public R endDoWhile() {
       return CallWhileLoopStatement.this.endLoop();
     }
   }

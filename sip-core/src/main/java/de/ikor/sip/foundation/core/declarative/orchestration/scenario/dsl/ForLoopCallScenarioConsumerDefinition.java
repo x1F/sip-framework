@@ -55,7 +55,7 @@ public final class ForLoopCallScenarioConsumerDefinition<R, M>
      *
      * @return Previous scope of the orchestration definition
      */
-    public R endLoop() {
+    public R endForLoop() {
       return ForLoopCallScenarioConsumerDefinition.this.endLoop();
     }
   }
