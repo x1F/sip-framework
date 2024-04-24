@@ -32,7 +32,7 @@ public class AirQualityProcess extends CompositeProcessBase {
                 dsl -> {
                     // fetch longitude and latitude of a city
                     dsl.callConsumer(GetCityGeocodingScenario.class)
-                            // set response to be fetched data from GetCityGeocodingScenario
+                            // mark no response handling is needed
                             .withNoResponseHandling()
                             // fetch air quality based on longitude and latitude of a city
                             .callConsumer(GetAirQualityLatLonScenario.class)
@@ -49,6 +49,7 @@ public class AirQualityProcess extends CompositeProcessBase {
                                                 .lon(result.getLongitude())
                                                 .build();
                                     })
+                            // define response handling for GetAirQualityLatLonScenario consumer
                             .withResponseHandling(
                                     (latestResponse, context) -> {
                                         log.debug(String.valueOf(latestResponse));
