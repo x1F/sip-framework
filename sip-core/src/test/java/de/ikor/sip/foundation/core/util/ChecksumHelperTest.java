@@ -13,7 +13,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-public class ChecksumHelperTest {
+class ChecksumHelperTest {
 
   private static List<Resource> RESOURCES;
 
@@ -27,12 +27,12 @@ public class ChecksumHelperTest {
   }
 
   @Test
-  public void GIVEN_list_of_static_resources_VERIFY_all_exist_and_are_readable() {
+  void GIVEN_list_of_static_resources_VERIFY_all_exist_and_are_readable() {
     assertThat(RESOURCES).allSatisfy(resource -> assertThat(resource.isReadable()).isTrue());
   }
 
   @Test
-  public void GIVEN_list_of_static_resources_WHEN_changing_order_VERIFY_checksum_remains_equal()
+  void GIVEN_list_of_static_resources_WHEN_changing_order_VERIFY_checksum_remains_equal()
       throws IOException {
     final var reverse = Lists.reverse(RESOURCES);
 
@@ -43,15 +43,12 @@ public class ChecksumHelperTest {
         ChecksumHelper.calcualteReproducibleHashForResources(
             reverse, MessageDigestAlgorithms.MD5, Optional.empty());
 
-    assertThat(RESOURCES).allMatch(resource -> reverse.contains(resource));
-    assertThat(RESOURCES).isNotEqualTo(reverse);
-
-    assertThat(checksumOriginal).isNotBlank();
-    assertThat(checksumOriginal).isEqualTo(checksumReverse);
+    assertThat(RESOURCES).allMatch(resource -> reverse.contains(resource)).isNotEqualTo(reverse);
+    assertThat(checksumOriginal).isNotBlank().isEqualTo(checksumReverse);
   }
 
   @Test
-  public void GIVEN_a_static_resource_WHEN_making_small_modifications_VERIFY_checksums_differ()
+  void GIVEN_a_static_resource_WHEN_making_small_modifications_VERIFY_checksums_differ()
       throws IOException {
 
     final var initialResource = RESOURCES.stream().findFirst().orElseThrow();
@@ -74,15 +71,12 @@ public class ChecksumHelperTest {
             MessageDigestAlgorithms.MD5,
             Optional.empty());
 
-    assertThat(checksumInitial).isNotBlank();
-    assertThat(checksumInitial).isEqualTo(checksumEqualContent);
-
-    assertThat(checksumModifiedContent).isNotBlank();
-    assertThat(checksumModifiedContent).isNotEqualTo(checksumInitial);
+    assertThat(checksumInitial).isNotBlank().isEqualTo(checksumEqualContent);
+    assertThat(checksumModifiedContent).isNotBlank().isNotEqualTo(checksumInitial);
   }
 
   @Test
-  public void GIVEN_non_existant_resource_VERIFY_exception_is_triggered() throws IOException {
+  void GIVEN_non_existant_resource_VERIFY_exception_is_triggered() throws IOException {
     final var resources = new ArrayList<>(RESOURCES);
     resources.add(new ClassPathResource("does/not/exist.here"));
 

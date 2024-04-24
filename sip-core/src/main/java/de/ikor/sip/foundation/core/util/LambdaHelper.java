@@ -24,6 +24,7 @@ public class LambdaHelper {
      * @param o2 Second object to be compared
      * @return Comparison result (see {@link Comparator#compare(Object, Object)})
      */
+    @SuppressWarnings("java:S112")
     int compareWithException(T o1, T o2) throws Exception;
 
     /**

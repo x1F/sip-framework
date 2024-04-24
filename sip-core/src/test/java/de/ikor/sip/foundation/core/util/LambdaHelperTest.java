@@ -10,14 +10,14 @@ import lombok.experimental.StandardException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class LambdaHelperTest {
+class LambdaHelperTest {
 
   @StandardException
   static class CheckedException extends Exception {}
   ;
 
   @Test
-  public void GIVEN_string_comparator_WHEN_wrapping_as_lambda_VERIFY_order_is_equal() {
+  void GIVEN_string_comparator_WHEN_wrapping_as_lambda_VERIFY_order_is_equal() {
 
     final var elements = List.of("one", "two", "three");
     final LambdaHelper.ThrowingComparator<String> lambdaCompare =
@@ -39,13 +39,13 @@ public class LambdaHelperTest {
                 })
             .toList();
 
-    assertThat(orderedByLambda).containsExactlyInAnyOrderElementsOf(elements);
-    assertThat(orderedByLambda).isEqualTo(orderedByInner);
+    assertThat(orderedByLambda)
+        .containsExactlyInAnyOrderElementsOf(elements)
+        .isEqualTo(orderedByInner);
   }
 
   @Test
-  public void
-      GIVEN_string_comparator_WHEN_wrapping_as_lambda_VERIFY_exception_is_wrapped_as_cause() {
+  void GIVEN_string_comparator_WHEN_wrapping_as_lambda_VERIFY_exception_is_wrapped_as_cause() {
     final var elements = List.of("one", "two", "three");
     final LambdaHelper.ThrowingComparator<String> lambdaThrowing =
         (first, second) -> comparatorThatThrowsChecked(first, second, true);
@@ -56,8 +56,7 @@ public class LambdaHelperTest {
   }
 
   @Test
-  public void
-      GIVEN_string_comparator_WHEN_wrapping_as_lambda_VERIFY_runtimeexception_is_passed_through() {
+  void GIVEN_string_comparator_WHEN_wrapping_as_lambda_VERIFY_runtimeexception_is_passed_through() {
     final var elements = new String[] {"one", "two", null};
     final LambdaHelper.ThrowingComparator<String> lambdaNpe =
         (first, second) -> comparatorThatThrowsChecked(first, second, false);
