@@ -10,7 +10,7 @@ public class LambdaHelper {
 
   /**
    * A {@link java.util.Comparator} that allows to be used with implementations throwing checked
-   * expceptions.
+   * exceptions.
    *
    * @param <T> Type to compare
    */

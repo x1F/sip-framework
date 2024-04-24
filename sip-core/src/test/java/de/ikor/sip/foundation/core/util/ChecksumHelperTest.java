@@ -63,22 +63,22 @@ public class ChecksumHelperTest {
     final var checksumInitial =
         ChecksumHelper.calcualteReproducibleHashForResources(
             Collections.singleton(initialResource), MessageDigestAlgorithms.MD5, Optional.empty());
-    final var checksumDifferentEqualContent =
+    final var checksumEqualContent =
         ChecksumHelper.calcualteReproducibleHashForResources(
             Collections.singleton(differentResourceEqualContent),
             MessageDigestAlgorithms.MD5,
             Optional.empty());
-    final var checksumDifferentModifiedContent =
+    final var checksumModifiedContent =
         ChecksumHelper.calcualteReproducibleHashForResources(
             Collections.singleton(differentResourceModifiedContent),
             MessageDigestAlgorithms.MD5,
             Optional.empty());
 
     assertThat(checksumInitial).isNotBlank();
-    assertThat(checksumInitial).isEqualTo(checksumDifferentEqualContent);
+    assertThat(checksumInitial).isEqualTo(checksumEqualContent);
 
-    assertThat(checksumDifferentModifiedContent).isNotBlank();
-    assertThat(checksumDifferentModifiedContent).isNotEqualTo(checksumInitial);
+    assertThat(checksumModifiedContent).isNotBlank();
+    assertThat(checksumModifiedContent).isNotEqualTo(checksumInitial);
   }
 
   @Test
