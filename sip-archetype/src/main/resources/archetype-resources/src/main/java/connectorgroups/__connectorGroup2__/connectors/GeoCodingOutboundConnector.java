@@ -1,4 +1,4 @@
-package ${package}.connectorgroups.${connectorGroup1}.connectors;
+package ${package}.connectorgroups.${connectorGroup2}.connectors;
 
 import ${package}.scenarios.definitions.GetCityGeocodingScenario;
 import ${package}.scenarios.models.GeoCodingRequest;

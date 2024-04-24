@@ -8,24 +8,24 @@ import lombok.Data;
 @Data
 @JsonIgnoreProperties
 public class GeoCodingResult {
-    Integer id;
-    String name;
-    BigDecimal latitude;
-    BigDecimal longitude;
-    Integer elevation;
-    String feature_code;
-    String country_code;
-    Integer admin1_id;
-    Integer admin2_id;
-    Integer admin3_id;
-    Integer admin4_id;
-    String timezone;
-    Integer population;
-    Integer country_id;
-    List postcodes;
-    String country;
-    String admin1;
-    String admin2;
-    String admin3;
-    String admin4;
+    private Integer id;
+    private String name;
+    private BigDecimal latitude;
+    private BigDecimal longitude;
+    private Integer elevation;
+    private String feature_code;
+    private String country_code;
+    private Integer admin1_id;
+    private Integer admin2_id;
+    private Integer admin3_id;
+    private Integer admin4_id;
+    private String timezone;
+    private Integer population;
+    private Integer country_id;
+    private List postcodes;
+    private String country;
+    private String admin1;
+    private String admin2;
+    private String admin3;
+    private String admin4;
 }

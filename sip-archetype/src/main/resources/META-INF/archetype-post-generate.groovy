@@ -24,6 +24,7 @@ def filePaths = [packagePath + "/connectorgroups/" + connectorGroup1 + "/connect
                  packagePath + "/scenarios/definitions",
                  packagePath + "/scenarios/processes",
                  packagePath + "/scenarios/models",
+                 packagePath + "/config"
 ]
 
 

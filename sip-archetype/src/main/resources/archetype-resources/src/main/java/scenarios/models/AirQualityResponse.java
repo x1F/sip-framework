@@ -8,13 +8,13 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AirQualityResponse {
 
-    String requestedBy = "";
-    BigDecimal generationtime_ms;
-    Integer utc_offset_seconds;
-    String timezone;
-    String timezone_abbreviation;
+    private String requestedBy = "";
+    private BigDecimal generationtime_ms;
+    private Integer utc_offset_seconds;
+    private String timezone;
+    private String timezone_abbreviation;
 
-    AirQualityHourlyUnits hourly_units;
+    private AirQualityHourlyUnits hourly_units;
 
-    AirQualityHourlyData hourly;
+    private AirQualityHourlyData hourly;
 }

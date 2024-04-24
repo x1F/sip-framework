@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class AirQualityHourlyUnits {
-    String time;
-    String pm10;
-    String pm2_5;
+    private String time;
+    private String pm10;
+    private String pm2_5;
 }

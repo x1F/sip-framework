@@ -11,11 +11,14 @@ import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.ProcessOrchestrator;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessBase;
+import de.ikor.sip.foundation.core.util.exception.SIPAdapterException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Process which orchestrates fetching data.
  * It will first fetch geo coding data for a city and after get the air quality based on fetched data
  */
+@Slf4j
 @CompositeProcess(
         processId = "AirQualityProcessr",
         consumers = {GetCityGeocodingScenario.class, GetAirQualityLatLonScenario.class},
@@ -30,18 +33,17 @@ public class AirQualityProcess extends CompositeProcessBase {
                     // fetch longitude and latitude of a city
                     dsl.callConsumer(GetCityGeocodingScenario.class)
                             // set response to be fetched data from GetCityGeocodingScenario
-                            .withResponseHandling(
-                                    (latestResponse, context) -> {
-                                        GeoCodingResponse response = (GeoCodingResponse) latestResponse;
-                                    })
+                            .withNoResponseHandling()
                             // fetch air quality based on longitude and latitude of a city
                             .callConsumer(GetAirQualityLatLonScenario.class)
                             // prepare request before invoking GetAirQualityLatLonScenario
                             .withRequestPreparation(
                                     context -> {
                                         GeoCodingResponse response =
-                                                (GeoCodingResponse) context.getLatestResponse().get();
-                                        GeoCodingResult result = response.getResults().get(0);
+                                                context.<GeoCodingResponse>getLatestResponse().get();
+                                        GeoCodingResult result = response.getResults().stream().findFirst()
+                                                .orElseThrow(() ->
+                                                        new SIPAdapterException("Invalid value was provided for city"));
                                         return AirQualityRequest.builder()
                                                 .lat(result.getLatitude())
                                                 .lon(result.getLongitude())
@@ -49,7 +51,7 @@ public class AirQualityProcess extends CompositeProcessBase {
                                     })
                             .withResponseHandling(
                                     (latestResponse, context) -> {
-                                        System.out.println(latestResponse);
+                                        log.debug(String.valueOf(latestResponse));
                                     });
                 });
     }

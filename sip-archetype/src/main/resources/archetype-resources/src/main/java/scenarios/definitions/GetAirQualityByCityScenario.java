@@ -20,7 +20,9 @@ public class GetAirQualityByCityScenario extends IntegrationScenarioBase {
 
     public static final String ID = "GetAirQualityByCityScenario";
 
-    // define scenario orchestation
+    // Define scenario orchestation
+    // This code block is given only as an example, it can be omitted.
+    // n:1 (shown below) or n:n without a response are bound automatically by the framework
     @Override
     public Orchestrator<ScenarioOrchestrationInfo> getOrchestrator() {
         return ScenarioOrchestrator.forOrchestrationDslWithResponse(
