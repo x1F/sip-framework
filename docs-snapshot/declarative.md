@@ -289,5 +289,87 @@ Then, annotate the class with @CompositeProcess and fill in the required fields:
         provider = DemoScenario.class)  
   public class DemoProcess extends CompositeProcessBase {
     public static final String ID = "demo-process";
+
+    @Override
+    public Orchestrator<CompositeProcessOrchestrationInfo> getOrchestrator() {
+        return ProcessOrchestrator.forOrchestrationDsl(
+                dsl -> {
+                    dsl.callConsumer(DemoScenarioConsumer1.class)
+                        .withRequestPreparation(
+                                context -> {
+                                  ResponseModel response = context.<ResponseModel>getLatestResponse()
+                                                  .orElseThrow(() -> new SIPAdapterException("Invalid response"));
+                                  return ResponseModel2.builder()
+                                          .field1(response.getValue1())
+                                          .field2(response.getValue2())
+                                          .build();
+                                })
+                        .withResponseHandling(
+                                (latestResponse, context) -> {
+                                  log.debug(String.valueOf(latestResponse));
+                                })
+                        .callConsumer(DemoScenarioConsumer2.class)
+                        .withNoResponseHandling();
+                });
+    }
+  }
+```
+
+It is also possible to use conditional statements or loops in process orchestration. 
+
+**Conditionals**
+- *ifCase* opens the conditional statement in the DSL. It accepts a predicate as a parameter, 
+which needs to be evaluated into a boolean from the given context. 
+Inside of it one or more consumer calls may be defined.
+- *elseIfCase* may be used after statements from *ifCase*. It also accepts a predicate as a parameter.
+- *elseCase* does not take a parameter, 
+it will be executed if the previous conditions from *ifCase* or *elseIfCase* are not met.
+- *endCases* is used to finish the condition statements and return to previous scope.
+
+```java
+public class DemoProcess extends CompositeProcessBase {
+    @Override
+    public Orchestrator<CompositeProcessOrchestrationInfo> getOrchestrator() {
+        return ProcessOrchestrator.forOrchestrationDsl(
+                dsl -> { dsl
+                          .ifCase(hasHeader("headerName"))
+                              .callConsumer(DemoScenarioConsumer1.class)
+                              .withNoResponseHandling()
+                          .elseIfCase(context -> context.getLatestResponse().get().isOk())
+                              .callConsumer(DemoScenarioConsumer2.class)
+                              .withNoResponseHandling()
+                          .elseCase()
+                              .callConsumer(DemoScenarioConsumer3.class)
+                              .withNoResponseHandling()
+                          .endCases;
+                });
+    }
+  }
+```
+
+**Loops**
+- *doWhile* is used to enter looping statement equivalent to 'while' from DSL. It enables looping until the condition 
+passed as a predicate is no longer true. The same predicates as in *ifCase* can be used.  
+To end the loop 'endDoWhile' should be used, which will return to the previous scope.
+- *forLoop* is used to enter looping statement equivalent to 'for' from DSL. It accepts a predicate 
+which should be evaluated into an integer marking the number of iterations. To return to previous scope and end the loop
+*endForLoop* should be used.
+
+```java
+public class DemoProcess extends CompositeProcessBase {
+    @Override
+    public Orchestrator<CompositeProcessOrchestrationInfo> getOrchestrator() {
+        return ProcessOrchestrator.forOrchestrationDsl(
+                dsl -> { dsl
+                          .doWhile(hasHeader("headerName"))
+                              .callConsumer(DemoScenarioConsumer1.class)
+                              .withNoResponseHandling()
+                          .endDoWhile()
+                          .forLoop(context -> context.getLatestResponse().get().getIterationNumber())
+                              .callConsumer(DemoScenarioConsumer2.class)
+                              .withNoResponseHandling()
+                          .endForLoop;
+                });
+    }
   }
 ```
