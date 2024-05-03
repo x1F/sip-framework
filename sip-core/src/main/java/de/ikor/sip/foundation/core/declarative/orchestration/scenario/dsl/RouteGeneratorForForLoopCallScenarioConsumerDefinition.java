@@ -58,10 +58,7 @@ final class RouteGeneratorForForLoopCallScenarioConsumerDefinition<M> extends Ro
                           new ForLoopIterationsExpression(branchStatements.predicate()));
                   branchStatements
                       .statements()
-                      .forEach(
-                          statement ->
-                              buildRouteForStatement(
-                                  loopDef, (CallableWithinProviderDefinition) statement));
+                      .forEach(statement -> buildRouteForStatement(loopDef, statement));
                   loopDef.end();
                 }));
   }
