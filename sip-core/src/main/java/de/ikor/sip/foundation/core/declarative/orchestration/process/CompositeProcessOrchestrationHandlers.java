@@ -45,6 +45,11 @@ public class CompositeProcessOrchestrationHandlers {
     return new ConditionalHandler(stepResultCloner, conditional).executeCondition(exchange);
   }
 
+  public static int handleIterations(
+      final Exchange exchange, final Optional<CompositeProcessStepIterations> iterations) {
+    return new IterationsHandler(iterations).determineIterations(exchange);
+  }
+
   public static ConsumerResponseHandler handleResponseFromConsumer(
       final IntegrationScenarioDefinition consumer,
       final Optional<StepResultCloner<Object>> stepResultCloner,
@@ -134,6 +139,20 @@ public class CompositeProcessOrchestrationHandlers {
         return conditional.get().determineCondition(context);
       }
       return true;
+    }
+  }
+
+  @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+  static class IterationsHandler {
+    private final Optional<CompositeProcessStepIterations> iterations;
+
+    @Handler
+    public int determineIterations(final Exchange exchange) {
+      final CompositeProcessOrchestrationContext context = retrieveOrchestrationContext(exchange);
+      if (iterations.isPresent()) {
+        return iterations.get().determineIterations(context);
+      }
+      return 0;
     }
   }
 

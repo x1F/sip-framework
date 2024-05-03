@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.EndOfDsl;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepConditional;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepIterations;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,5 +52,35 @@ public class ProcessOrchestrationDefinition
     steps.add(def);
     conditionals.add(predicate);
     return def.elseIfCase(predicate);
+  }
+
+  /**
+   * Standard while loop defined in the DSL way
+   *
+   * @param predicate Predicate to check when to stop while loop
+   * @return DSL Handle
+   */
+  public CallWhileLoopStatement<ProcessOrchestrationDefinition>.ProcessBranch<
+          CallWhileLoopStatement<ProcessOrchestrationDefinition>>
+      doWhile(final CompositeProcessStepConditional predicate) {
+    final CallWhileLoopStatement<ProcessOrchestrationDefinition> def =
+        new CallWhileLoopStatement<>(self(), getCompositeProcess());
+    steps.add(def);
+    return def.doWhile(predicate);
+  }
+
+  /**
+   * Standard for loop defined in the DSL way
+   *
+   * @param expression Expression to determine iteration number
+   * @return DSL Handle
+   */
+  public CallForLoopStatement<ProcessOrchestrationDefinition>.ProcessBranch<
+          CallForLoopStatement<ProcessOrchestrationDefinition>>
+      forLoop(CompositeProcessStepIterations expression) {
+    final CallForLoopStatement<ProcessOrchestrationDefinition> def =
+        new CallForLoopStatement<>(self(), getCompositeProcess());
+    steps.add(def);
+    return def.forLoop(expression);
   }
 }

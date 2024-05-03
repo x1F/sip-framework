@@ -2,10 +2,7 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuild
 
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallNestedCondition;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumer;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorInternalHelper;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.*;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.HashSet;
@@ -70,6 +67,14 @@ public final class RouteGeneratorForProcessOrchestrationDefinition extends Route
             .generateRoute(routeDef);
       } else if (element instanceof CallNestedCondition<?> ele) {
         new RouteGeneratorForCallConditionalProcessConsumer(
+                getOrchestrationInfo(), ele, unhandledProcessConsumers)
+            .generateRoute(routeDef);
+      } else if (element instanceof CallWhileLoopStatement<?> ele) {
+        new RouteGeneratorForWhileLoopProcessConsumer(
+                getOrchestrationInfo(), ele, unhandledProcessConsumers)
+            .generateRoute(routeDef);
+      } else if (element instanceof CallForLoopStatement<?> ele) {
+        new RouteGeneratorForForLoopProcessConsumer(
                 getOrchestrationInfo(), ele, unhandledProcessConsumers)
             .generateRoute(routeDef);
       }

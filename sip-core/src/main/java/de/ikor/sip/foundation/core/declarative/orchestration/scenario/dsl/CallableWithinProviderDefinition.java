@@ -5,4 +5,7 @@ package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
  * orchestration DSL
  */
 sealed interface CallableWithinProviderDefinition
-    permits CallScenarioConsumerBaseDefinition, ConditionalCallScenarioConsumerDefinition {}
+    permits CallScenarioConsumerBaseDefinition,
+        ConditionalCallScenarioConsumerDefinition,
+        ForLoopCallScenarioConsumerDefinition,
+        WhileLoopCallScenarioConsumerDefinition {}

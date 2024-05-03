@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
+import de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding.ScenarioStepIterations;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationContext;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
@@ -54,6 +55,48 @@ public abstract sealed class ForScenarioProvidersBaseDefinition<
         new ConditionalCallScenarioConsumerDefinition<S, M>(self(), getIntegrationScenario());
     nodes.add(def);
     return def.elseIfCase(predicate);
+  }
+
+  /**
+   * Attaches and changes scope to a do while branch that will loop executions of the underlying
+   * scenario until the given <code>predicate</code> no longer matches at runtime.
+   *
+   * <p>This can be compared to a Java <code>while</code>-statement.
+   *
+   * <p>To leave the do while statement and return to the current scope, use {@link
+   * WhileLoopCallScenarioConsumerDefinition.Branch#endDoWhile()}.
+   *
+   * @param predicate Predicate to test for execution of branch statements
+   * @return The do while branch
+   */
+  public WhileLoopCallScenarioConsumerDefinition<S, M>.Branch<
+          WhileLoopCallScenarioConsumerDefinition<S, M>>
+      doWhile(final Predicate<ScenarioOrchestrationContext<M>> predicate) {
+    final var def =
+        new WhileLoopCallScenarioConsumerDefinition<S, M>(self(), getIntegrationScenario());
+    nodes.add(def);
+    return def.doWhile(predicate);
+  }
+
+  /**
+   * Attaches and changes scope to a for loop branch that will loop executions of the underlying
+   * scenario for the provided amount of time.
+   *
+   * <p>This can be compared to a Java <code>for</code>-statement.
+   *
+   * <p>To leave the for loop statement and return to the current scope, use {@link
+   * ForLoopCallScenarioConsumerDefinition.Branch#endForLoop()}.
+   *
+   * @param predicate Predicate to determine number of loop iterations
+   * @return The for loop branch
+   */
+  public ForLoopCallScenarioConsumerDefinition<S, M>.Branch<
+          ForLoopCallScenarioConsumerDefinition<S, M>>
+      forLoop(final ScenarioStepIterations<M> predicate) {
+    final var def =
+        new ForLoopCallScenarioConsumerDefinition<S, M>(self(), getIntegrationScenario());
+    nodes.add(def);
+    return def.forLoop(predicate);
   }
 
   /**

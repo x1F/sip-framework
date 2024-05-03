@@ -6,8 +6,10 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsu
 /** Interface containing various methods to trigger a call to an integration-scenario consumer. * */
 sealed interface ScenarioConsumerCalls<S extends ScenarioConsumerCalls<S, R, M>, R, M>
     permits ConditionalCallScenarioConsumerDefinition.Branch,
+        ForLoopCallScenarioConsumerDefinition.Branch,
         ForScenarioProvidersBaseDefinition,
-        ScenarioConsumerCallsDelegate {
+        ScenarioConsumerCallsDelegate,
+        WhileLoopCallScenarioConsumerDefinition.Branch {
 
   /**
    * Specifies that the outbound connector with the given <code>connectorId</code> should be called.

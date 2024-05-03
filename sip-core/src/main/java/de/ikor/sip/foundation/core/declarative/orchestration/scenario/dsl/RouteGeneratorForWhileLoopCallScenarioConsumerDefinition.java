@@ -10,53 +10,43 @@ import org.apache.camel.model.ProcessorDefinition;
 
 @SuppressWarnings("rawtypes")
 @Slf4j
-final class RouteGeneratorForConditionalCallScenarioConsumerDefinition<M>
-    extends RouteGeneratorBase {
-  private final ConditionalCallScenarioConsumerDefinition<?, M> conditionalDefinition;
+final class RouteGeneratorForWhileLoopCallScenarioConsumerDefinition<M> extends RouteGeneratorBase {
+  private final WhileLoopCallScenarioConsumerDefinition<?, M> whileDefinition;
 
   private final Set<IntegrationScenarioConsumerDefinition> overallUnhandledConsumers;
 
-  RouteGeneratorForConditionalCallScenarioConsumerDefinition(
+  RouteGeneratorForWhileLoopCallScenarioConsumerDefinition(
       final ScenarioOrchestrationInfo orchestrationInfo,
-      final ConditionalCallScenarioConsumerDefinition<?, M> conditionalDefinition,
+      final WhileLoopCallScenarioConsumerDefinition<?, M> whileDefinition,
       final Set<IntegrationScenarioConsumerDefinition> overallUnhandledConsumers) {
     super(orchestrationInfo);
-    this.conditionalDefinition = conditionalDefinition;
     this.overallUnhandledConsumers = overallUnhandledConsumers;
+    this.whileDefinition = whileDefinition;
   }
 
   <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {
-    if (conditionalDefinition.getConditionalStatements().isEmpty()) {
+    if (whileDefinition.getLoopStatements().isEmpty()) {
       throw SIPFrameworkInitializationException.init(
-          "Empty conditional statement attached in orchestration for integration-scenario %s",
+          "Empty doWhile statement attached in scenario orchestration for integration-scenario %s",
           getIntegrationScenarioId());
     }
 
-    final var choiceDef = routeDefinition.choice();
-    for (final var branch : conditionalDefinition.getConditionalStatements()) {
+    for (final var branch : whileDefinition.getLoopStatements()) {
       if (branch.statements().isEmpty()) {
-        var branchIndex = conditionalDefinition.getConditionalStatements().indexOf(branch) + 1;
+
+        var branchIndex = whileDefinition.getLoopStatements().indexOf(branch) + 1;
         log.warn(
-            "Orchestration for integration-scenario {} contains a conditional-statement that does not specify any actions in branch #{}",
+            "Orchestration for integration-scenario {} contains a doWhile-statement that does not specify any actions in branch #{}",
             getIntegrationScenarioId(),
             branchIndex);
       }
-      choiceDef
-          .when()
-          .method(ScenarioOrchestrationHandlers.handleContextPredicate(branch.predicate()));
-      branch.statements().forEach(statement -> buildRouteForStatement(choiceDef, statement));
-      choiceDef.endChoice();
+      final var whileDef =
+          routeDefinition
+              .loopDoWhile()
+              .method(ScenarioOrchestrationHandlers.handleContextPredicate(branch.predicate()));
+      branch.statements().forEach(statement -> buildRouteForStatement(whileDef, statement));
+      whileDef.end();
     }
-
-    if (!conditionalDefinition.getUnconditionalStatements().isEmpty()) {
-      choiceDef.otherwise();
-      conditionalDefinition
-          .getUnconditionalStatements()
-          .forEach(statement -> buildRouteForStatement(choiceDef, statement));
-      choiceDef.endChoice();
-    }
-
-    choiceDef.end();
   }
 
   @SuppressWarnings("unchecked")
@@ -68,7 +58,7 @@ final class RouteGeneratorForConditionalCallScenarioConsumerDefinition<M>
           .generateRoute(routeDefinition);
     } else {
       throw SIPFrameworkInitializationException.init(
-          "Unhandled statement type '%s' used in conditional-branch of orchestration for integration-scenario %s",
+          "Unhandled statement type '%s' used in doWhile-branch of orchestration for integration-scenario %s",
           statement.getClass().getName(), getIntegrationScenarioId());
     }
   }

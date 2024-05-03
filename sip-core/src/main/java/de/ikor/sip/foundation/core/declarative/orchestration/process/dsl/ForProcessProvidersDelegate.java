@@ -25,6 +25,12 @@ public final class ForProcessProvidersDelegate<S extends ProcessConsumerCalls<S,
   @Getter(AccessLevel.PACKAGE)
   private final R returningNode;
 
+  /**
+   * Define a consumer of the request from process orchestration
+   *
+   * @param consumerClass class which will consume the request
+   * @return DSL to prepare request or handle response
+   */
   @Override
   public CallProcessConsumer<? extends CallProcessConsumer<?, ?>, S> callConsumer(
       Class<? extends IntegrationScenarioDefinition> consumerClass) {
