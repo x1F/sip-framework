@@ -1,3 +1,4 @@
+#if (${createDemoAdapter} != "y" && ${createDemoAdapter} != "Y")
 # Test case definition template
 # Before executing SIPBatchTest, it is necessary to add values for properties, which are needed to define a Test Case
 test-case-definitions:
@@ -43,8 +44,53 @@ test-case-definitions:
       # Id of endpoint that is mocked, matches endpoint with defined or default mocked behavior
       - endpointId:
         having:
-          # Add regex expression (java) which will be compared to he body
+          # Add regex expression (java) which will be compared to the body
           body:
           headers:
             # Add regex expression (java) which will be compared to the header value
             header-key:
+#end
+#if (${createDemoAdapter} == "y" || ${createDemoAdapter} == "Y")
+# Test case definition template
+test-case-definitions:
+  # Title of the test
+  - title: Nobel Prize
+    # Definition of test request which should be sent to the adapter (required)
+    when-execute:
+      # Id of connector under test (endpointId may also be used)
+      connectorId: GetNobelPrizeDetailsInConnector
+      with:
+        # Add content that should be sent as request body to the adapter endpoint (plain text, JSON String)
+        body:
+        headers:
+          # Add request header keys and values
+          category: peace
+          year: 2014
+
+    # Definition of mocked endpoint's behavior (optional)
+    with-mocks:
+      # Id of processor with external endpoint
+      - endpointId: sip-connector_GetNobelPrizeByYearAndCategoryOutConnector_externalEndpoint
+        returning:
+          # Place response message that real endpoint is expected to return
+          body: "[{\"awardYear\":\"2013\",\"category\":{\"en\":\"Peace\",\"no\":\"Fred\",\"se\":\"Fred\"},\"categoryFullName\":{\"en\":\"The Nobel Peace Prize\",\"no\":\"Nobels fredspris\",\"se\":\"Nobels fredspris\"},\"dateAwarded\":\"2013-10-11\",\"prizeAmount\":8000000,\"prizeAmountAdjusted\":9476854,\"links\":{\"rel\":\"nobelPrize\",\"href\":\"\",\"action\":\"Get\",\"types\":\"\"},\"laureates\":[{\"id\":\"893\",\"orgName\":{\"en\":\"Organisation for the Prohibition of Chemical Weapons\",\"no\":\"Organisasjonen for forbud mot kjemiske v\u00e5pen\"},\"acronym\":\"OPCW\",\"portion\":\"1\",\"sortOrder\":\"1\",\"motivation\":{\"en\":\"for its extensive efforts to eliminate chemical weapons\",\"no\":\"for dens omfattende arbeid for \u00e5 avskaffe kjemiske v\u00e5pen\"},\"links\":{\"rel\":\"laureate\",\"href\":\"\",\"action\":\"Get\",\"types\":\"\"}}],\"meta\":{\"terms\":\"\",\"license\":\"\",\"disclaimer\":\"\"}}]"
+      - endpointId: sip-connector_GetLaureateByIdOutConnector_externalEndpoint
+        returning:
+          body: "[{\"id\":\"893\",\"orgName\":{\"en\":\"Organisation for the Prohibition of Chemical Weapons\",\"no\":\"Organisasjonen for forbud mot kjemiske våpen\",\"se\":\"Organisationen för förbud mot kemiska vapen\"},\"nativeName\":\"Organisation for the Prohibition of Chemical Weapons\",\"acronym\":\"OPCW\",\"fileName\":\"opcw\",\"founded\":{\"date\":\"1997-00-00\",\"place\":{\"locationString\":{\"en\":\"\",\"no\":\"\",\"se\":\"\"}}},\"wikipedia\":{\"slug\":\"Organisation_for_the_Prohibition_of_Chemical_Weapons\",\"english\":\"\"},\"wikidata\":{\"id\":\"Q842490\",\"url\":\"\"},\"sameAs\":[\"\",\"\"],\"links\":[{\"rel\":\"laureate\",\"href\":\"\",\"action\":\"GET\",\"types\":\"application/json\"},{\"rel\":\"external\",\"href\":\"\",\"title\":\" - Facts\",\"action\":\"GET\",\"types\":\"text/html\",\"class\":[\"laureate facts\"]}],\"nobelPrizes\":[{\"awardYear\":\"2013\",\"category\":{\"en\":\"Peace\",\"no\":\"Fred\",\"se\":\"Fred\"},\"categoryFullName\":{\"en\":\"The Nobel Peace Prize\",\"no\":\"Nobels fredspris\",\"se\":\"Nobels fredspris\"},\"sortOrder\":\"1\",\"portion\":\"1\",\"dateAwarded\":\"2013-10-11\",\"prizeStatus\":\"received\",\"motivation\":{\"en\":\"for its extensive efforts to eliminate chemical weapons\",\"no\":\"for dens omfattende arbeid for å avskaffe kjemiske våpen\"},\"prizeAmount\":8000000,\"prizeAmountAdjusted\":9476854,\"links\":[{\"rel\":\"nobelPrize\",\"href\":\"\",\"action\":\"GET\",\"types\":\"application/json\"},{\"rel\":\"external\",\"href\":\"\",\"title\":\" - Facts\",\"action\":\"GET\",\"types\":\"text/html\",\"class\":[\"laureate facts\"]},{\"rel\":\"external\",\"href\":\"\",\"title\":\"The Nobel Peace Prize 2013\",\"action\":\"GET\",\"types\":\"text/html\",\"class\":[\"prize summary\"]}]}],\"meta\":{\"terms\":\"\",\"license\":\"\",\"disclaimer\":\"\"}}]"
+
+    # Validation of the response from test execution or request which an endpoint received (at least one is required)
+    then-expect:
+      # ------------
+      # Request validation
+      # Id of connector under test, an equivalent of endpoint under test defined in with-mocks phase
+      - connectorId: GetLaureateByIdOutConnector
+        having:
+          # Add regex expression (java) which will be compared to the request body to endpoint
+          body: 893
+      # Id of endpoint under test, matches endpoint under test defined in with-mocks phase
+      - endpointId: sip-connector_GetNobelPrizeByYearAndCategoryOutConnector_externalEndpoint
+        having:
+          # Add regex expression (java) which will be compared to the request headers to endpoint
+          headers:
+            CamelHttpPath: "pea/2014"
+#end
