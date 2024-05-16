@@ -33,7 +33,7 @@ public class GetNobelPrizeDetailsInConnector extends RestInboundConnectorBase {
 
     private final NobelPrizeMapper nobelPrizeMapper;
 
-    // define REST endpoint
+    // Define REST endpoint
     @Override
     protected void configureRest(RestDefinition restDefinition) {
         restDefinition.get("/nobelprize/{category}/{year}")
@@ -50,9 +50,9 @@ public class GetNobelPrizeDetailsInConnector extends RestInboundConnectorBase {
                 .endParam();
     }
 
-    // define request/response transformation
+    // Define request/response transformation.
     // Default empty transformers exist,
-    // overriding this method is used to replace them when custom transformation is required
+    // overriding this method is used to replace them when custom transformation is required.
     @Override
     public Orchestrator<ConnectorOrchestrationInfo> getOrchestrator() {
         return ConnectorOrchestrator.forConnector(this)
@@ -63,12 +63,12 @@ public class GetNobelPrizeDetailsInConnector extends RestInboundConnectorBase {
     private void setRequest(RouteDefinition routeDefinition) {
         routeDefinition.process(
                 exchange -> {
+                    NobelPrizeCategory category = exchange.getMessage().getHeader("category", NobelPrizeCategory.class);
+                    String year = exchange.getMessage().getHeader("year", String.class);
                     NobelPrizeRequest nobelPrizeRequest =
                             NobelPrizeRequest.builder()
-                                    .category(exchange.getMessage()
-                                            .getHeader("category", NobelPrizeCategory.class)
-                                            .getValue())
-                                    .year(exchange.getMessage().getHeader("year", String.class))
+                                    .category(category.getValue())
+                                    .year(year)
                                     .build();
                     exchange.getMessage().setBody(nobelPrizeRequest);
                 });

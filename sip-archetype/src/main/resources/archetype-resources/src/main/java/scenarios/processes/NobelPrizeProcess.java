@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Process which orchestrates fetching data.
+ * Composite process which orchestrates fetching data.
  * It will first fetch nobel prize data for a certain year and category.
  * After that it will get details for each Laureate and aggregate it into the common model
  */
@@ -47,6 +47,9 @@ public class NobelPrizeProcess extends CompositeProcessBase {
                                                 nobelPrize.getLaureates().stream()
                                                         .map(LaureateBasic::getId)
                                                         .collect(Collectors.toList()));
+                                        // Set the response of the whole process.
+                                        // Optional.empty() is set as step result cloner
+                                        // since the same reference is used in this case.
                                         context.setProcessResponse(nobelPrizeCommonModel, Optional.empty());
                                     })
                             .doWhile(

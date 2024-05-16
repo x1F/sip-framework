@@ -46,6 +46,8 @@ After executing given Maven command, you will be requested to insert additional 
 - **package** (optional) is used to override previous package naming and provide full package name. This can be skipped by leaving value empty.
   It is strongly recommended to follow package naming convention, otherwise your project will be created but it will have
   package naming errors.
+- **createDemoAdapter** should be set to 'y' or 'Y' when the inclusion of a demo adapter is desired.
+    It will generate example classes using declarative structure, including process and scenario orchestration.
 
 
 _Note_: All the parameters can be provided via command line if needed:
@@ -57,9 +59,7 @@ mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArti
 After a successful build, a project with the following structure will be created:
 
 - SIPApplication.java
-- common
-  - config
-  - util
+- config
 - connectorgroups
   - {connectorGroup1}
     - config
@@ -78,6 +78,7 @@ After a successful build, a project with the following structure will be created
 - scenarios
   - models
   - definitions
+  - processes
     
 
 More about packages and internal SIP structure can be found [here](./README.md).

@@ -47,8 +47,9 @@ public class GetLaureateByIdOutConnector extends GenericOutboundConnectorBase {
   private void setRequest(RouteDefinition routeDefinition) {
     routeDefinition.process(
         exchange -> {
-          exchange.getMessage().setHeader(HTTP_PATH, exchange.getMessage().getBody(Integer.class));
-          // required by Nobel Prize API
+          Integer laureateId = exchange.getMessage().getBody(Integer.class);
+          exchange.getMessage().setHeader(HTTP_PATH, laureateId);
+          // Required by Nobel Prize API, otherwise the response is compressed and cannot be processed
           exchange.getMessage().setHeader("Accept-Encoding", "deflate");
         });
   }

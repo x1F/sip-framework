@@ -50,10 +50,10 @@ public class GetNobelPrizeByYearAndCategoryOutConnector extends GenericOutboundC
         .process(
             exchange -> {
                 NobelPrizeRequest nobelPrizeRequest = exchange.getMessage().getBody(NobelPrizeRequest.class);
-                exchange.getMessage()
-                  .setHeader(HTTP_PATH,
-                          nobelPrizeRequest.getCategory() + "/" + nobelPrizeRequest.getYear());
+                String path = nobelPrizeRequest.getCategory() + "/" + nobelPrizeRequest.getYear();
+                exchange.getMessage().setHeader(HTTP_PATH, path);
                 exchange.getMessage().setBody("");
+                // Required by Nobel Prize API, otherwise the response is compressed and cannot be processed
                 exchange.getMessage().setHeader("Accept-Encoding", "deflate");
             });
   }

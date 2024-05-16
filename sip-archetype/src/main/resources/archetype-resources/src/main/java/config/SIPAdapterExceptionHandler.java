@@ -16,7 +16,7 @@ public class SIPAdapterExceptionHandler extends RouteConfigurationBuilder {
                 .onException(SIPAdapterException.class, IllegalArgumentException.class)
                 .process(exchange -> {
                     String message = exchange
-                            .getProperty(Exchange.EXCEPTION_CAUGHT, SIPAdapterException.class)
+                            .getProperty(Exchange.EXCEPTION_CAUGHT, Exception.class)
                             .getMessage();
                     exchange.getMessage().setBody(message);
                     exchange.getMessage().setHeader(Exchange.HTTP_RESPONSE_CODE, 400);
