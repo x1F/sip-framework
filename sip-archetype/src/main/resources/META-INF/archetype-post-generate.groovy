@@ -34,7 +34,6 @@ def modelDirs = [packagePath + "/scenarios/models/common",
 ]
 if (generateOptionalFile != "y" && generateOptionalFile != "Y") {
     filePaths.each { element ->
-        println element
         def sourceDir = new File(projectRoot, element)
         if (sourceDir.exists()) {
             def files = sourceDir.listFiles()
@@ -42,13 +41,11 @@ if (generateOptionalFile != "y" && generateOptionalFile != "Y") {
             files.each { file ->
                 if (file.isFile() && !file.getName().contains(".keep")) {
                     file.delete()
-                    println "Deleted file: ${file.name}"
                 }
             }
         }
     }
     modelDirs.each { element ->
-        println element
         def sourceDir = new File(projectRoot, element)
         if (sourceDir.exists()) {
             def files = sourceDir.listFiles()
@@ -56,11 +53,36 @@ if (generateOptionalFile != "y" && generateOptionalFile != "Y") {
             files.each { file ->
                 if (file.isFile() && !file.getName().contains(".keep")) {
                     file.delete()
-                    println "Deleted file: ${file.name}"
                 }
             }
             sourceDir.delete()
         }
     }
     Files.deleteIfExists projectPath.resolve("src/test/java/" + basePackage + "/TestKitTest.java")
+}
+else {
+    filePaths.each { element ->
+        def sourceDir = new File(projectRoot, element)
+        if (sourceDir.exists()) {
+            def files = sourceDir.listFiles()
+            // Iterate over each file and delete it
+            files.each { file ->
+                if (file.isFile() && file.getName().contains(".keep")) {
+                    file.delete()
+                }
+            }
+        }
+    }
+    modelDirs.each { element ->
+        def sourceDir = new File(projectRoot, element)
+        if (sourceDir.exists()) {
+            def files = sourceDir.listFiles()
+            // Iterate over each file and delete it
+            files.each { file ->
+                if (file.isFile() && file.getName().contains(".keep")) {
+                    file.delete()
+                }
+            }
+        }
+    }
 }
