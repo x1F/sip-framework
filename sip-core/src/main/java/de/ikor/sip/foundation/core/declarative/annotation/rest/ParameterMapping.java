@@ -38,13 +38,13 @@ import java.lang.annotation.Target;
  *     protected void configureRest(final RestDefinition definition) {
  *       definition
  *           .post("/api/{first}/{second}")
- *           .type(ApiModel.class) *
+ *           .type(ApiModel.class);
  *     }
  *
  *     @ParameterMapping
- *     public void mapParameters(ApiModel model, @PathParameter("first") Integer pathFirst, @PathParameter("second") String pathSecond) { *
+ *     public void mapParameters(ApiModel model, @PathParameter("first") Integer pathFirst, @PathParameter("second") String pathSecond) {
  *          model.setFirst(pathFirst);
- *          model.setSecond(PthSecond); *
+ *          model.setSecond(pathSecond);
  *     }
  * }
  *
