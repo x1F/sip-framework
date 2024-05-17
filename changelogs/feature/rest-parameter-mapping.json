@@ -1,0 +1,5 @@
+{
+  "author": "MartinBuchheim",
+  "pullrequestId": "258",
+  "message": "Improved handling / mapping of query- and path-parameters for inbound REST connectors"
+}
