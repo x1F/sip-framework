@@ -125,14 +125,7 @@ public class DeclarativeHelper {
    */
   public static boolean doesUriContainPlaceholders(String uri) {
     Matcher dollarMatcher = DOLLAR_PLACEHOLDER_PATTERN.matcher(uri);
-    if (dollarMatcher.find()) {
-      return true;
-    }
     Matcher doubleCurlyMatcher = DOUBLE_CURLY_PLACEHOLDER_PATTERN.matcher(uri);
-    if (doubleCurlyMatcher.find()) {
-      return true;
-    }
-
-    return false;
+    return dollarMatcher.find() || doubleCurlyMatcher.find();
   }
 }
