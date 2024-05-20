@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import lombok.experimental.UtilityClass;
 import org.apache.camel.Endpoint;
 import org.apache.camel.builder.EndpointConsumerBuilder;
@@ -29,7 +28,9 @@ import org.mapstruct.factory.Mappers;
 public class DeclarativeHelper {
 
   public static final String CONNECTOR_ID_FORMAT = "%s-%s-%s";
-  private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\$\\{([^}]+)}");
+  private static final Pattern DOLLAR_PLACEHOLDER_PATTERN = Pattern.compile("\\$\\{[^}]+\\}");
+  private static final Pattern DOUBLE_CURLY_PLACEHOLDER_PATTERN =
+      Pattern.compile("\\{\\{[^}]+\\}\\}");
 
   public static String formatConnectorId(
       ConnectorType type, String scenarioID, String connectorGroupID) {
@@ -118,11 +119,20 @@ public class DeclarativeHelper {
 
   /**
    * Checks whether provided string URI contains any placeholders
+   *
    * @param uri URI to be checked
    * @return true if URI contains placeholders
    */
   public static boolean doesUriContainPlaceholders(String uri) {
-    Matcher matcher = PLACEHOLDER_PATTERN.matcher(uri);
-    return matcher.find();
+    Matcher dollarMatcher = DOLLAR_PLACEHOLDER_PATTERN.matcher(uri);
+    if (dollarMatcher.find()) {
+      return true;
+    }
+    Matcher doubleCurlyMatcher = DOUBLE_CURLY_PLACEHOLDER_PATTERN.matcher(uri);
+    if (doubleCurlyMatcher.find()) {
+      return true;
+    }
+
+    return false;
   }
 }
