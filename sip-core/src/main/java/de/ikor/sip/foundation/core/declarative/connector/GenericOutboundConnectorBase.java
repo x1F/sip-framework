@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.doesUriContainPlaceholders;
 import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
 
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
@@ -7,6 +8,7 @@ import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import java.util.Optional;
+
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.commons.lang3.StringUtils;
@@ -34,9 +36,14 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
           formatConnectorId(getConnectorType(), getScenarioId(), getConnectorGroupId()));
 
   @Override
-  public final void defineOutboundEndpoints(final RouteDefinition routeDefinition) {
+  public void defineOutboundEndpoints(final RouteDefinition routeDefinition) {
     defineRequestMarshalling().ifPresent(marshaller -> marshaller.accept(routeDefinition));
-    routeDefinition.to(defineOutgoingEndpoint()).id(routeDefinition.getRouteId());
+    EndpointProducerBuilder endpoint = defineOutgoingEndpoint();
+    if (doesUriContainPlaceholders(endpoint.getUri())) {
+      routeDefinition.toD(endpoint).id(routeDefinition.getRouteId());
+    } else {
+      routeDefinition.to(endpoint).id(routeDefinition.getRouteId());
+    }
     defineResponseUnmarshalling().ifPresent(unmarshaller -> unmarshaller.accept(routeDefinition));
   }
 
