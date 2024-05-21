@@ -251,10 +251,10 @@ This is illustrated in the example below.
       responseModel = OutboundConnectorResponse.class)
   public class DemoOutboundConnector extends GenericOutboundConnectorBase {
 
-    // external endpoint definition
+    // external endpoint definition with dynamic endpoint
     @Override
     protected EndpointProducerBuilder defineOutgoingEndpoint() {
-      return StaticEndpointBuilders.http("localhost:8080/update");
+      return StaticEndpointBuilders.http("localhost:8080/update/${header.id}");
     }
 
     @Override
@@ -265,7 +265,11 @@ This is illustrated in the example below.
     }
 
     protected void defineRequestRoute(final RouteDefinition definition) {
-        definition.process(exchange -> System.out.println("Processing and transformation before external system call"));
+        definition.process(exchange -> {
+            System.out.println("Processing and transformation before external system call");
+            // will be evaluated in endpoint uri to invoke http://localhost:8080/update/randomId
+            exchange.getMessage().setHeader("id", "randomId");
+        });
     }
 
     protected void defineResponseRoute(final RouteDefinition definition) {
