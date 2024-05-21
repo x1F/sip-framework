@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import ${package}.scenarios.models.common.Translation;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -16,5 +17,5 @@ public class NobelPrize {
   private Integer prizeAmount;
   private Integer prizeAmountAdjusted;
   private Translation topMotivation;
-  private List<LaureateBasic> laureates;
+  private List<LaureateBasic> laureates = new ArrayList<>();
 }
