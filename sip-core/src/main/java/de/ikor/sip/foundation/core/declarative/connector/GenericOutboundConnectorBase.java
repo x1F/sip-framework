@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.doesUriContainPlaceholders;
 import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
 
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
@@ -36,7 +37,12 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
   @Override
   public final void defineOutboundEndpoints(final RouteDefinition routeDefinition) {
     defineRequestMarshalling().ifPresent(marshaller -> marshaller.accept(routeDefinition));
-    routeDefinition.to(defineOutgoingEndpoint()).id(routeDefinition.getRouteId());
+    EndpointProducerBuilder endpoint = defineOutgoingEndpoint();
+    if (doesUriContainPlaceholders(endpoint.getUri())) {
+      routeDefinition.toD(endpoint).id(routeDefinition.getRouteId());
+    } else {
+      routeDefinition.to(endpoint).id(routeDefinition.getRouteId());
+    }
     defineResponseUnmarshalling().ifPresent(unmarshaller -> unmarshaller.accept(routeDefinition));
   }
 

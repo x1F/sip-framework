@@ -17,6 +17,8 @@ import java.util.Random;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class DeclarativeHelperTest {
 
@@ -147,5 +149,23 @@ class DeclarativeHelperTest {
                     DeclarativeHelper.isPrimaryEndpoint(
                         ConnectorType.OUT, RouteRole.EXTERNAL_SOAP_SERVICE_PROXY.getExternalName()))
                 .isFalse());
+  }
+
+  @ParameterizedTest
+  @ValueSource(
+      strings = {
+        "http:localhost/{{address}}",
+        "http:localhost/${address}",
+        "http:localhost/{{address}}/${path}",
+        "http:localhost/${path}/{{address}}"
+      })
+  void WHEN_CheckingURIWithPlaceholders_THEN_true(String uri) {
+    assertThat(DeclarativeHelper.doesUriContainPlaceholders(uri)).isTrue();
+  }
+
+  @Test
+  void WHEN_CheckingURI_WITH_NoPlaceholder_THEN_EvaluateAsFalse() {
+    String uri = "http:localhost";
+    assertThat(DeclarativeHelper.doesUriContainPlaceholders(uri)).isFalse();
   }
 }
