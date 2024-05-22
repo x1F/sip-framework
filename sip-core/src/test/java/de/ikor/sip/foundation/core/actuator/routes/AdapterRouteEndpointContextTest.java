@@ -23,14 +23,14 @@ class AdapterRouteEndpointContextTest {
 
   @Test
   void When_callingAdapterRoutesEndpoint_Then_httpSuccessReceived() throws Exception {
-    mvcBean.perform(get("/actuator/adapter-routes")).andExpect(status().is2xxSuccessful());
+    mvcBean.perform(get("/actuator/adapterroutes")).andExpect(status().is2xxSuccessful());
   }
 
   @Test
   void When_callingAdapterRouteEndpoint_With_ValidRoute_Then_httpSuccessReceived()
       throws Exception {
     mvcBean
-        .perform(get("/actuator/adapter-routes/" + CoreTestApplication.TEST_ROUTE_ID))
+        .perform(get("/actuator/adapterroutes/" + CoreTestApplication.TEST_ROUTE_ID))
         .andExpect(status().is2xxSuccessful());
   }
 
@@ -38,7 +38,7 @@ class AdapterRouteEndpointContextTest {
   void When_callingAdapterRouteEndpoint_With_InvalidRoute_Then_httpNotFoundReceived()
       throws Exception {
     mvcBean
-        .perform(get("/actuator/adapter-routes/" + NON_EXISTENT_ROUTE_ID))
+        .perform(get("/actuator/adapterroutes/" + NON_EXISTENT_ROUTE_ID))
         .andExpect(status().isNotFound());
   }
 
@@ -46,21 +46,21 @@ class AdapterRouteEndpointContextTest {
   void When_callingAdapterRouteResetEndpoint_With_InvalidRoute_Then_httpNotFoundReceived()
       throws Exception {
     mvcBean
-        .perform(post("/actuator/adapter-routes/" + NON_EXISTENT_ROUTE_ID + "/reset"))
+        .perform(post("/actuator/adapterroutes/" + NON_EXISTENT_ROUTE_ID + "/reset"))
         .andExpect(status().isNotFound());
   }
 
   @Test
   void When_callingFilteredDetails_With_ValidRoute_Then_httpSuccessReceived() throws Exception {
     mvcBean
-        .perform(get("/actuator/adapter-routes/summary?ids=" + CoreTestApplication.TEST_ROUTE_ID))
+        .perform(get("/actuator/adapterroutes/summary?ids=" + CoreTestApplication.TEST_ROUTE_ID))
         .andExpect(status().is2xxSuccessful());
   }
 
   @Test
   void When_callingFilteredDetails_With_InvalidRoute_Then_httpSuccessReceived() throws Exception {
     mvcBean
-        .perform(get("/actuator/adapter-routes/summary?ids=" + NON_EXISTENT_ROUTE_ID))
+        .perform(get("/actuator/adapterroutes/summary?ids=" + NON_EXISTENT_ROUTE_ID))
         .andExpect(status().isNotFound());
   }
 }
