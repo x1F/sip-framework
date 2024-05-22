@@ -232,6 +232,8 @@ Same as inbound, the behaviour is defined through overridden method implementati
 *EndpointProducerBuilder defineOutgoingEndpoint()* is used to define the endpoint, 
 which executes the call to an external system.
 StaticEndpointBuilders can be used to provide the endpoint definition. **Apache Camel** is used in the Outbound endpoints as well.
+If the URI of the endpoint contains placeholder values in format of ${placeholder} or {{placeholder}}
+the endpoint will automatically be converted into a dynamic endpoint (toD).
 
 Defining processing and transformation is done in *Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator()*.
 Here an Orchestrator needs to be returned, which is available from ConnectorOrchestrator
@@ -249,10 +251,10 @@ This is illustrated in the example below.
       responseModel = OutboundConnectorResponse.class)
   public class DemoOutboundConnector extends GenericOutboundConnectorBase {
 
-    // external endpoint definition
+    // external endpoint definition with dynamic endpoint
     @Override
     protected EndpointProducerBuilder defineOutgoingEndpoint() {
-      return StaticEndpointBuilders.http("localhost:8080/update");
+      return StaticEndpointBuilders.http("localhost:8080/update/${header.id}");
     }
 
     @Override
@@ -263,7 +265,11 @@ This is illustrated in the example below.
     }
 
     protected void defineRequestRoute(final RouteDefinition definition) {
-        definition.process(exchange -> System.out.println("Processing and transformation before external system call"));
+        definition.process(exchange -> {
+            System.out.println("Processing and transformation before external system call");
+            // will be evaluated in endpoint uri to invoke http://localhost:8080/update/randomId
+            exchange.getMessage().setHeader("id", "randomId");
+        });
     }
 
     protected void defineResponseRoute(final RouteDefinition definition) {
