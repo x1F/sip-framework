@@ -87,10 +87,4 @@ test-case-definitions:
         having:
           # Add regex expression (java) which will be compared to the request body to endpoint
           body: 893
-      # Id of endpoint under test, matches endpoint under test defined in with-mocks phase
-      - endpointId: sip-connector_GetNobelPrizeByYearAndCategoryOutConnector_externalEndpoint
-        having:
-          # Add regex expression (java) which will be compared to the request headers to endpoint
-          headers:
-            CamelHttpPath: "pea/2014"
 #end

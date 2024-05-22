@@ -9,14 +9,12 @@ import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
-import org.apache.camel.Exchange;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.model.RouteDefinition;
 
 import java.util.Optional;
 
-import static org.apache.camel.Exchange.HTTP_PATH;
 import static org.apache.camel.builder.Builder.constant;
 
 /**
@@ -34,7 +32,7 @@ public class GetNobelPrizeByYearAndCategoryOutConnector extends GenericOutboundC
   // Define external endpoint
   @Override
   protected EndpointProducerBuilder defineOutgoingEndpoint() {
-    return StaticEndpointBuilders.http("https", "api.nobelprize.org/2.0/nobelPrize")
+    return StaticEndpointBuilders.http("https", "api.nobelprize.org/2.0/nobelPrize/${body.category}/${body.year}")
         .bridgeEndpoint(true);
   }
 
@@ -49,10 +47,6 @@ public class GetNobelPrizeByYearAndCategoryOutConnector extends GenericOutboundC
         .setHeader("Accept-Charset", constant("UTF-8"))
         .process(
             exchange -> {
-                NobelPrizeRequest nobelPrizeRequest = exchange.getMessage().getBody(NobelPrizeRequest.class);
-                String path = nobelPrizeRequest.getCategory() + "/" + nobelPrizeRequest.getYear();
-                exchange.getMessage().setHeader(HTTP_PATH, path);
-                exchange.getMessage().setBody("");
                 // Required by Nobel Prize API, otherwise the response is compressed and cannot be processed
                 exchange.getMessage().setHeader("Accept-Encoding", "deflate");
             });

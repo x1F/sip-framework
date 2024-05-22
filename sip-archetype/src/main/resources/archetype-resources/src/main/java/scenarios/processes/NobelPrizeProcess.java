@@ -9,7 +9,6 @@ import ${package}.scenarios.models.nobelprize.LaureateBasic;
 import ${package}.scenarios.models.nobelprize.NobelPrize;
 import de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationContext;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.ProcessOrchestrator;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessBase;

@@ -8,15 +8,12 @@ import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
-import org.apache.camel.Exchange;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.apache.camel.model.RouteDefinition;
 
 import java.util.Optional;
-
-import static org.apache.camel.Exchange.HTTP_PATH;
 
 /**
  * Outbound connector which calls the public Nobel Prize API:
@@ -34,7 +31,7 @@ public class GetLaureateByIdOutConnector extends GenericOutboundConnectorBase {
   // Define external outbound endpoint
   @Override
   protected EndpointProducerBuilder defineOutgoingEndpoint() {
-    return StaticEndpointBuilders.http("https", "api.nobelprize.org/2.0/laureate")
+    return StaticEndpointBuilders.http("https", "api.nobelprize.org/2.0/laureate/${body}")
         .bridgeEndpoint(true);
   }
 
@@ -47,8 +44,6 @@ public class GetLaureateByIdOutConnector extends GenericOutboundConnectorBase {
   private void setRequest(RouteDefinition routeDefinition) {
     routeDefinition.process(
         exchange -> {
-          Integer laureateId = exchange.getMessage().getBody(Integer.class);
-          exchange.getMessage().setHeader(HTTP_PATH, laureateId);
           // Required by Nobel Prize API, otherwise the response is compressed and cannot be processed
           exchange.getMessage().setHeader("Accept-Encoding", "deflate");
         });
