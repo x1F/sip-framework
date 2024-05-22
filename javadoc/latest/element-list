@@ -19,6 +19,7 @@ de.ikor.sip.foundation.core.configuration
 de.ikor.sip.foundation.core.configuration.errorhandler
 de.ikor.sip.foundation.core.declarative
 de.ikor.sip.foundation.core.declarative.annonation
+de.ikor.sip.foundation.core.declarative.annotation.rest
 de.ikor.sip.foundation.core.declarative.connector
 de.ikor.sip.foundation.core.declarative.connectorgroup
 de.ikor.sip.foundation.core.declarative.model
