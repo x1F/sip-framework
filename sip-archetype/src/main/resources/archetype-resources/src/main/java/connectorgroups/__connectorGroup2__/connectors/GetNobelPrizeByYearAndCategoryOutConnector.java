@@ -15,6 +15,7 @@ import org.apache.camel.model.RouteDefinition;
 
 import java.util.Optional;
 
+import static org.apache.camel.Exchange.HTTP_PATH;
 import static org.apache.camel.builder.Builder.constant;
 
 /**
@@ -47,6 +48,9 @@ public class GetNobelPrizeByYearAndCategoryOutConnector extends GenericOutboundC
         .setHeader("Accept-Charset", constant("UTF-8"))
         .process(
             exchange -> {
+                // Due to Apache Camel restrictions the old http path should be removed,
+                // otherwise it will be appended in the next request
+                exchange.getMessage().removeHeader(HTTP_PATH);
                 // Required by Nobel Prize API, otherwise the response is compressed and cannot be processed
                 exchange.getMessage().setHeader("Accept-Encoding", "deflate");
             });

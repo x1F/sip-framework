@@ -26,7 +26,7 @@ import java.util.StringJoiner;
         connectorId = "GetNobelPrizeDetailsInConnector",
         connectorGroup = "fe",
         requestModel = String.class,
-        responseModel = Object.class,
+        responseModel = NobelPrizeCommonModel.class,
         integrationScenario = GetNobelPrizeAndLaureateDetails.ID)
 @RequiredArgsConstructor
 public class GetNobelPrizeDetailsInConnector extends RestInboundConnectorBase {
