@@ -135,19 +135,19 @@ SIP Core provides a possibility to manipulate adapter lifecycle in runtime by co
 All registered routes with basic info can be listed by using the following URI:
 
 ```
-GET /actuator/adapter-routes
+GET /actuator/adapterroutes
 ```
 
 Getting only routes with sip middle component consumer (including all outbound connectors):
 
 ```
-GET /actuator/adapter-routes/sipmc
+GET /actuator/adapterroutes/sipmc
 ```
 
 More detailed info view for only one exact route can be seen by providing route id into following URI:
 
 ```
-GET /actuator/adapter-routes/{routeId}
+GET /actuator/adapterroutes/{routeId}
 ```
 
 The following operations (case sensitive) can be executed per route, for all route or on sipmc:
@@ -161,14 +161,14 @@ The following operations (case sensitive) can be executed per route, for all rou
 To execute an operation on all routes, use following URIs:
 
 ```
-POST /actuator/adapter-routes/{operation}
+POST /actuator/adapterroutes/{operation}
 ```
 
 There is a possibility to execute a route lifecycle operation on an exact route, by providing route id and operation.
 This can be achieved by using following URI:
 
 ```
-POST /actuator/adapter-routes/{routeId}/{operation}
+POST /actuator/adapterroutes/{routeId}/{operation}
 ```
 
 It is also possible to execute desired operation on integration scenarios level via sip middle component. 
@@ -176,7 +176,7 @@ By specifying the operation in the following URI,
 it will be executed for all outgoing connectors inside the adapter, and any other consumer using sipmc:
 
 ```
-POST /actuator/adapter-routes/sipmc/{operation}
+POST /actuator/adapterroutes/sipmc/{operation}
 ```
 
 **Warning:**
