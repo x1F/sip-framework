@@ -315,15 +315,22 @@ public class DemoScenario extends IntegrationScenarioBase {
 ```
 
 Following example showcases the use of an integration scenario orchestration, with additional features for request preparation and response handling.
-Before calling the outbound connector, the request can be modified by calling `withRequestPreparation()`. Even if the method call comes after
+In this example you can see that there are 4 participants in this integration scenario (`DemoConnector`, `FirstDemoOutboundConnector`, `SecondDemoOutboundConnector`, `ThirdDemoOutboundConnector`).
+There is a simple condition in the beginning that checks the size of an item list.  
+
+In case the item list size is greater than 10:
+- First `FirstDemoOutboundConnector` is called and the response will not be handled
+- Afterward `SecondDemoOutboundConnector` will be called without any response handling
+
+In case the item list size is smaller than 10:
+- Before calling the third outbound connector, the request can be modified by calling `withRequestPreparation()`. Even if the method call comes after
 `callOutboundConnector()` it is executed before the request is sent. 
 In this example, if the date in the original `DemoCDMRequest` is before the current time, the estimated delivery date is set to two days from now.
-
-Moreover, the snippet demonstrates response handling, allowing modifications to the response before it is sent back to the initial caller by calling `andHandleResponse()`. 
+- Moreover, the snippet demonstrates response handling, allowing modifications to the response before it is sent back to the initial caller by calling `andHandleResponse()`. 
 The response handling step accesses the latest step's response and modifies its message to "demo".
 
 These enhancements illustrate the flexibility of the DSL in managing complex integration scenarios, providing hooks to alter the request 
-and response as needed, thereby enabling dynamic and context-aware processing within the orchestration flow.
+and response as needed, thereby enabling dynamic and context-aware processing within the orchestration flow. You can even use loops in this orchestration as explained in section **Loops**.
 ```java
 @IntegrationScenario(
         scenarioId = DemoScenario.ID,
@@ -336,20 +343,26 @@ public class DemoScenario extends IntegrationScenarioBase {
   public Orchestrator<ScenarioOrchestrationInfo> getOrchestrator() {
     return ScenarioOrchestrator.forOrchestrationDslWithResponse(DemoCDMRequest.class,
         dsl -> dsl.forInboundConnectors(DemoConnector.class)
-            .callOutboundConnector(DemoOutboundConnector.class)
-            .withRequestPreparation(scenarioOrchestrationContext -> {
-              DemoCDMRequest demoCDMRequest = scenarioOrchestrationContext.getOriginalRequest(DemoCDMRequest.class);
-              if (demoCDMRequest.getDate().isBefore(Instant.now())) {
-                demoCDMRequest.setEstimatedDelivery(Instant.now().plus(Period.ofDays(2)));
-              }
-              return demoCDMRequest;
-            })
-            .andHandleResponse((demoCDMResponse, scenarioOrchestrationContext) -> {
-              scenarioOrchestrationContext.getResponseForLatestStep().ifPresent(demoCDMResponseOrchestrationStepResponse -> {
-                demoCDMResponseOrchestrationStepResponse.result().setMessage("demo");
-              });
-            })
-    );
+            .ifCase(context -> context.getOriginalRequest(DemoCDMRequest.class).getItems().size() > 10)
+              .callOutboundConnector(FirstDemoOutboundConnector.class)
+              .andNoResponseHandling()
+              .callOutboundConnector(SecondDemoOutboundConnector.class)
+              .andNoResponseHandling()
+            .elseCase()
+              .callOutboundConnector(ThirdDemoOutboundConnector.class)
+              .withRequestPreparation(scenarioOrchestrationContext -> {
+                DemoCDMRequest demoCDMRequest = scenarioOrchestrationContext.getOriginalRequest(DemoCDMRequest.class);
+                if (demoCDMRequest.getDate().isBefore(Instant.now())) {
+                  demoCDMRequest.setEstimatedDelivery(Instant.now().plus(Period.ofDays(2)));
+                }
+                return demoCDMRequest;
+              })
+              .andHandleResponse((demoCDMResponse, scenarioOrchestrationContext) -> {
+                scenarioOrchestrationContext.getResponseForLatestStep().ifPresent(demoCDMResponseOrchestrationStepResponse -> {
+                  demoCDMResponseOrchestrationStepResponse.result().setMessage("demo");
+                });
+              })
+            .endCases());
   }
 }
 ```
