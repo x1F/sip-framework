@@ -64,6 +64,12 @@ under the License.
             <defaultValue>${useSoapDefault}</defaultValue>
         </requiredProperty>
         <requiredProperty key="archetypeVersion"> </requiredProperty>
+        <requiredProperty key="createDemoAdapterDefault">
+            <defaultValue>n</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="createDemoAdapter">
+            <defaultValue>${createDemoAdapterDefault}</defaultValue>
+        </requiredProperty>
     </requiredProperties>
 
     <fileSets>
