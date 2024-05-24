@@ -54,9 +54,9 @@ and custom code defined by the developer.
 Custom behaviour supplied by the developer in different places in the adapter is called "orchestration".
 
 There are 3 points of orchestration:
-* Connectors - Behavior of the connector that influences request and (optional) response flow. This orchestration can be written in **Camel and Java**.
-* Integration scenario - Execution order of Connectors, control flow, and response aggregation. This orchestration can be written in custom **SIP Orchestration DSL and Java**. 
-* Composite process - Execution order of integration scenarios, control flow and mappings. This orchestration can be written in custom **SIP Orchestration DSL and Java**.
+* `Connectors` - Behavior of the connector that influences request and (optional) response flow. This orchestration can be written in **Camel and Java**.
+* `Integration scenario` - Execution order of Connectors, control flow, and response aggregation. This orchestration can be written in custom **SIP Orchestration DSL and Java**. 
+* `Composite process` - Execution order of integration scenarios, control flow and mappings. This orchestration can be written in custom **SIP Orchestration DSL and Java**.
 
 
 ## Configuration
@@ -86,13 +86,13 @@ Then, annotate it with @IntegrationScenario and fill in the required fields:
   (By default it will look for file in _document/structure/integration-scenarios/{scenarioId}.md_)
 
 ```java
-  @IntegrationScenario(
-        scenarioId = DemoScenario.ID, 
-        requestModel = DemoCDMRequest.class, 
-        responseModel = DemoCDMResponse.class)
-  public class DemoScenario extends IntegrationScenarioBase {
-    public static final String ID = "Demo scenario";
-  }
+@IntegrationScenario(
+      scenarioId = DemoScenario.ID, 
+      requestModel = DemoCDMRequest.class, 
+      responseModel = DemoCDMResponse.class)
+public class DemoScenario extends IntegrationScenarioBase {
+  public static final String ID = "Demo scenario";
+}
 ```
 
 ### Connector Groups
@@ -107,10 +107,10 @@ Fields that are available are:
   (By default it will look for file in _document/structure/connector-groups/{groupId}.md_)
 
 ```java
-  @ConnectorGroup(groupId = DemoConnectorGroup.ID)
-  public class DemoConnectorGroup extends ConnectorGroupBase {
-    public static final String ID = "SIP1";
-  }
+@ConnectorGroup(groupId = DemoConnectorGroup.ID)
+public class DemoConnectorGroup extends ConnectorGroupBase {
+  public static final String ID = "SIP1";
+}
 ```
 
 ### Connectors
@@ -153,29 +153,29 @@ This is illustrated in the example below.
       integrationScenario = DemoScenario.ID,
       requestModel = InboundConnectorRequest.class,
       responseModel = InboundConnectorResponse.class)
-  public class DemoConnector extends GenericInboundConnectorBase {
+public class DemoConnector extends GenericInboundConnectorBase {
 
-    // Input endpoint
-    @Override
-    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
-      return StaticEndpointBuilders.direct("entry-point");
-    }
-
-    @Override
-    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
-      return ConnectorOrchestrator.forConnector(this)
-          .setRequestRouteTransformer(this::defineRequestRoute)
-          .setResponseRouteTransformer(this::defineResponseRoute);
-    }
-
-    protected void defineRequestRoute(final RouteDefinition definition) {
-      definition.process(exchange -> System.out.println("Processing and transformation pre-orchestration"));
-    }
-
-    protected void defineResponseRoute(final RouteDefinition definition) {
-        definition.process(exchange -> System.out.println("Processing and transformation post-orchestration"));
-    }
+  // Input endpoint
+  @Override
+  protected EndpointConsumerBuilder defineInitiatingEndpoint() {
+    return StaticEndpointBuilders.direct("entry-point");
   }
+
+  @Override
+  protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+    return ConnectorOrchestrator.forConnector(this)
+        .setRequestRouteTransformer(this::defineRequestRoute)
+        .setResponseRouteTransformer(this::defineResponseRoute);
+  }
+
+  protected void defineRequestRoute(final RouteDefinition definition) {
+    definition.process(exchange -> System.out.println("Processing and transformation pre-orchestration"));
+  }
+
+  protected void defineResponseRoute(final RouteDefinition definition) {
+      definition.process(exchange -> System.out.println("Processing and transformation post-orchestration"));
+  }
+}
 ```
 
 **Rest connector**
@@ -192,24 +192,24 @@ and append the rest DSL to RestDefinition to define the input endpoint.
       connectorGroup = DemoConnectorGroup.ID,
       integrationScenario = RestDSLScenario.ID,
       requestModel = String.class)
-  public class RestConnectorTestBase extends RestConnectorBase {
+public class RestConnectorTestBase extends RestConnectorBase {
 
-    // Input endpoint defined via Rest DSl
-    @Override
-    protected void configureRest(RestDefinition definition) {
-      definition.post("user");
-    }
-
-    @Override
-    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
-      return ConnectorOrchestrator.forConnector(this)
-          .setRequestRouteTransformer(this::defineRequestRoute);
-    }
-
-    protected void defineRequestRoute(final RouteDefinition definition) {
-        definition.process(exchange -> System.out.println("Processing and transformation pre-orchestration"));
-    }
+  // Input endpoint defined via Rest DSl
+  @Override
+  protected void configureRest(RestDefinition definition) {
+    definition.post("user");
   }
+
+  @Override
+  protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+    return ConnectorOrchestrator.forConnector(this)
+        .setRequestRouteTransformer(this::defineRequestRoute);
+  }
+
+  protected void defineRequestRoute(final RouteDefinition definition) {
+      definition.process(exchange -> System.out.println("Processing and transformation pre-orchestration"));
+  }
+}
 ```
 
 **Outbound**
@@ -249,33 +249,122 @@ This is illustrated in the example below.
       integrationScenario = DemoScenario.ID,
       requestModel = OutboundConnectorRequest.class,
       responseModel = OutboundConnectorResponse.class)
-  public class DemoOutboundConnector extends GenericOutboundConnectorBase {
+public class DemoOutboundConnector extends GenericOutboundConnectorBase {
 
-    // external endpoint definition with dynamic endpoint
-    @Override
-    protected EndpointProducerBuilder defineOutgoingEndpoint() {
-      return StaticEndpointBuilders.http("localhost:8080/update/${header.id}");
-    }
-
-    @Override
-    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
-      return ConnectorOrchestrator.forConnector(this)
-          .setRequestRouteTransformer(this::defineRequestRoute)
-          .setResponseRouteTransformer(this::defineResponseRoute);
-    }
-
-    protected void defineRequestRoute(final RouteDefinition definition) {
-        definition.process(exchange -> {
-            System.out.println("Processing and transformation before external system call");
-            // will be evaluated in endpoint uri to invoke http://localhost:8080/update/randomId
-            exchange.getMessage().setHeader("id", "randomId");
-        });
-    }
-
-    protected void defineResponseRoute(final RouteDefinition definition) {
-        definition.process(exchange -> System.out.println("Processing and transformation after external system call"));
-    }
+  // external endpoint definition with dynamic endpoint
+  @Override
+  protected EndpointProducerBuilder defineOutgoingEndpoint() {
+    return StaticEndpointBuilders.http("localhost:8080/update/${header.id}");
   }
+
+  @Override
+  protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+    return ConnectorOrchestrator.forConnector(this)
+        .setRequestRouteTransformer(this::defineRequestRoute)
+        .setResponseRouteTransformer(this::defineResponseRoute);
+  }
+
+  protected void defineRequestRoute(final RouteDefinition definition) {
+      definition.process(exchange -> {
+          System.out.println("Processing and transformation before external system call");
+          // will be evaluated in endpoint uri to invoke http://localhost:8080/update/randomId
+          exchange.getMessage().setHeader("id", "randomId");
+      });
+  }
+
+  protected void defineResponseRoute(final RouteDefinition definition) {
+      definition.process(exchange -> System.out.println("Processing and transformation after external system call"));
+  }
+}
+```
+
+### Integration Scenario Orchestration
+The integration scenario is defined with the `@IntegrationScenario` annotation, which specifies the `scenarioId`, `requestModel`, and `responseModel`. 
+In this example, the `scenarioId` is set to "Demo scenario," and the request and response models are `DemoCDMRequest` and `DemoCDMResponse` respectively.
+
+The `DemoScenario` class extends `IntegrationScenarioBase`, indicating that it is part of a framework for defining integration scenarios. 
+The class overrides the `getOrchestrator` method, which is responsible for setting up the orchestration logic. 
+This method returns an orchestrator configured using the DSL provided by `ScenarioOrchestrator`.
+
+Within the `getOrchestrator` method, `ScenarioOrchestrator.forOrchestrationDslWithResponse` is used to create an orchestrator that handles the orchestration flow with a response. 
+The DSL is used to define the sequence of actions: it specifies that the scenario should start by handling requests from the `DemoConnector` 
+(an inbound connector) and then proceed to call the `DemoOutboundConnector` (an outbound connector). 
+The call to `andNoResponseHandling()` indicates that no additional response handling is required after the outbound connector is called.
+
+This example is simplified and mainly serves to illustrate the use of the DSL for defining an integration scenario. 
+In a real-world application, more complex logic and additional connectors might be involved. 
+However, with only two connectors participating, such detailed orchestration might not be necessary. 
+The primary purpose here is to showcase the structure and capabilities of the DSL in managing integration scenarios
+
+```java
+@IntegrationScenario(
+        scenarioId = DemoScenario.ID,
+        requestModel = DemoCDMRequest.class,
+        responseModel = DemoCDMResponse.class)
+public class DemoScenario extends IntegrationScenarioBase {
+  public static final String ID = "Demo scenario";
+
+  @Override
+  public Orchestrator<ScenarioOrchestrationInfo> getOrchestrator() {
+    return ScenarioOrchestrator.forOrchestrationDslWithResponse(DemoCDMRequest.class,
+        dsl -> dsl.forInboundConnectors(DemoConnector.class)
+            .callOutboundConnector(DemoOutboundConnector.class)
+            .andNoResponseHandling());
+  }
+}
+```
+
+Following example showcases the use of an integration scenario orchestration, with additional features for request preparation and response handling.
+In this example you can see that there are 4 participants in this integration scenario (`DemoConnector`, `FirstDemoOutboundConnector`, `SecondDemoOutboundConnector`, `ThirdDemoOutboundConnector`).
+There is a simple condition in the beginning that checks the size of an item list.  
+
+In case the item list size is greater than 10:
+- First `FirstDemoOutboundConnector` is called and the response will not be handled
+- Afterward `SecondDemoOutboundConnector` will be called without any response handling
+
+In case the item list size is smaller than 10:
+- Before calling the third outbound connector, the request can be modified by calling `withRequestPreparation()`. Even if the method call comes after
+`callOutboundConnector()` it is executed before the request is sent. 
+In this example, if the date in the original `DemoCDMRequest` is before the current time, the estimated delivery date is set to two days from now.
+- Moreover, the snippet demonstrates response handling, allowing modifications to the response before it is sent back to the initial caller by calling `andHandleResponse()`. 
+The response handling step accesses the latest step's response and modifies its message to "demo".
+
+These enhancements illustrate the flexibility of the DSL in managing complex integration scenarios, providing hooks to alter the request 
+and response as needed, thereby enabling dynamic and context-aware processing within the orchestration flow. You can even use loops in this orchestration as explained in section **Loops**.
+```java
+@IntegrationScenario(
+        scenarioId = DemoScenario.ID,
+        requestModel = DemoCDMRequest.class,
+        responseModel = DemoCDMResponse.class)
+public class DemoScenario extends IntegrationScenarioBase {
+  public static final String ID = "Demo scenario";
+
+  @Override
+  public Orchestrator<ScenarioOrchestrationInfo> getOrchestrator() {
+    return ScenarioOrchestrator.forOrchestrationDslWithResponse(DemoCDMRequest.class,
+        dsl -> dsl.forInboundConnectors(DemoConnector.class)
+            .ifCase(context -> context.getOriginalRequest(DemoCDMRequest.class).getItems().size() > 10)
+              .callOutboundConnector(FirstDemoOutboundConnector.class)
+              .andNoResponseHandling()
+              .callOutboundConnector(SecondDemoOutboundConnector.class)
+              .andNoResponseHandling()
+            .elseCase()
+              .callOutboundConnector(ThirdDemoOutboundConnector.class)
+              .withRequestPreparation(scenarioOrchestrationContext -> {
+                DemoCDMRequest demoCDMRequest = scenarioOrchestrationContext.getOriginalRequest(DemoCDMRequest.class);
+                if (demoCDMRequest.getDate().isBefore(Instant.now())) {
+                  demoCDMRequest.setEstimatedDelivery(Instant.now().plus(Period.ofDays(2)));
+                }
+                return demoCDMRequest;
+              })
+              .andHandleResponse((demoCDMResponse, scenarioOrchestrationContext) -> {
+                scenarioOrchestrationContext.getResponseForLatestStep().ifPresent(demoCDMResponseOrchestrationStepResponse -> {
+                  demoCDMResponseOrchestrationStepResponse.result().setMessage("demo");
+                });
+              })
+            .endCases());
+  }
+}
 ```
 
 ### Composite Processes
@@ -291,34 +380,34 @@ Then, annotate the class with @CompositeProcess and fill in the required fields:
   (By default it will look for file in _document/structure/processes/<composite-process-id>.md_)
 
 ```java
-  @CompositeProcess(processId = "demo-process", consumers = {DemoScenarioConsumer1.class, DemoScenarioConsumer2.class},
-        provider = DemoScenario.class)  
-  public class DemoProcess extends CompositeProcessBase {
-    public static final String ID = "demo-process";
+@CompositeProcess(processId = "demo-process", consumers = {DemoScenarioConsumer1.class, DemoScenarioConsumer2.class},
+      provider = DemoScenario.class)  
+public class DemoProcess extends CompositeProcessBase {
+  public static final String ID = "demo-process";
 
-    @Override
-    public Orchestrator<CompositeProcessOrchestrationInfo> getOrchestrator() {
-        return ProcessOrchestrator.forOrchestrationDsl(
-                dsl -> {
-                    dsl.callConsumer(DemoScenarioConsumer1.class)
-                        .withRequestPreparation(
-                                context -> {
-                                  ResponseModel response = context.<ResponseModel>getLatestResponse()
-                                                  .orElseThrow(() -> new SIPAdapterException("Invalid response"));
-                                  return ResponseModel2.builder()
-                                          .field1(response.getValue1())
-                                          .field2(response.getValue2())
-                                          .build();
-                                })
-                        .withResponseHandling(
-                                (latestResponse, context) -> {
-                                  log.debug(String.valueOf(latestResponse));
-                                })
-                        .callConsumer(DemoScenarioConsumer2.class)
-                        .withNoResponseHandling();
-                });
-    }
+  @Override
+  public Orchestrator<CompositeProcessOrchestrationInfo> getOrchestrator() {
+      return ProcessOrchestrator.forOrchestrationDsl(
+              dsl -> {
+                  dsl.callConsumer(DemoScenarioConsumer1.class)
+                      .withRequestPreparation(
+                              context -> {
+                                ResponseModel response = context.<ResponseModel>getLatestResponse()
+                                                .orElseThrow(() -> new SIPAdapterException("Invalid response"));
+                                return ResponseModel2.builder()
+                                        .field1(response.getValue1())
+                                        .field2(response.getValue2())
+                                        .build();
+                              })
+                      .withResponseHandling(
+                              (latestResponse, context) -> {
+                                log.debug(String.valueOf(latestResponse));
+                              })
+                      .callConsumer(DemoScenarioConsumer2.class)
+                      .withNoResponseHandling();
+              });
   }
+}
 ```
 
 It is also possible to use conditional statements or loops in process orchestration. 
