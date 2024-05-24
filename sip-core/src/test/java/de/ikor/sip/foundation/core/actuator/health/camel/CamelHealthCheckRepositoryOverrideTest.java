@@ -31,7 +31,7 @@ class CamelHealthCheckRepositoryOverrideTest {
   void When_suspendingRoute_Verify_statusDown() throws Exception {
     // arrange
     mvcBean
-        .perform(post("/actuator/adapter-routes/" + TEST_ROUTE_ID + "/suspend"))
+        .perform(post("/actuator/adapterroutes/" + TEST_ROUTE_ID + "/suspend"))
         .andExpect(status().is2xxSuccessful());
 
     // act
@@ -47,7 +47,7 @@ class CamelHealthCheckRepositoryOverrideTest {
 
     // cleanup
     mvcBean
-        .perform(post("/actuator/adapter-routes/" + TEST_ROUTE_ID + "/resume"))
+        .perform(post("/actuator/adapterroutes/" + TEST_ROUTE_ID + "/resume"))
         .andExpect(status().is2xxSuccessful());
   }
 }

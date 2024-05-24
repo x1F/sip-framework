@@ -30,7 +30,7 @@ import org.springframework.web.server.ResponseStatusException;
  * plenty of details about each one of them.
  */
 @Component
-@RestControllerEndpoint(id = "adapter-routes")
+@RestControllerEndpoint(id = "adapterroutes")
 @Slf4j
 public class AdapterRouteEndpoint {
   private final CamelContext camelContext;
