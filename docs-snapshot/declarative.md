@@ -436,7 +436,7 @@ public class DemoProcess extends CompositeProcessBase {
                           .elseCase()
                               .callConsumer(DemoScenarioConsumer3.class)
                               .withNoResponseHandling()
-                          .endCases;
+                          .endCases();
                 });
     }
   }
@@ -463,7 +463,7 @@ public class DemoProcess extends CompositeProcessBase {
                           .forLoop(context -> context.getLatestResponse().get().getIterationNumber())
                               .callConsumer(DemoScenarioConsumer2.class)
                               .withNoResponseHandling()
-                          .endForLoop;
+                          .endForLoop();
                 });
     }
   }
