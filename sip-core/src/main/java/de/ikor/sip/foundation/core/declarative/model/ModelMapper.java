@@ -1,15 +1,19 @@
 package de.ikor.sip.foundation.core.declarative.model;
 
+import de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
+import org.apache.camel.Exchange;
 
 /**
- * Interface for mappers between to data types
+ * Interface for mappers between two data types
  *
  * @param <S> Source Type
  * @param <T> Target Type
  */
 @SuppressWarnings("unchecked")
-public interface ModelMapper<S, T> {
+@FunctionalInterface
+public interface ModelMapper<S, T> extends ConnectorProcessor {
 
   String MAPPING_METHOD_NAME = "mapToTargetModel";
 
@@ -20,6 +24,20 @@ public interface ModelMapper<S, T> {
    * @return Element mapped to target type
    */
   T mapToTargetModel(S sourceModel);
+
+  /**
+   * Maps the given <code>sourceModel</code> to the target type.
+   *
+   * <p>The default implementation simply forwards the mapping to {@link #mapToTargetModel(Object)}
+   * and omits the given <code>excchange</code>.
+   *
+   * @param sourceModel Element to map
+   * @param exchange Current exchange
+   * @return Element mapped to target type
+   */
+  default T mapToTargetModel(S sourceModel, Exchange exchange) {
+    return mapToTargetModel(sourceModel);
+  }
 
   /**
    * Derives the source-class from the generic type
@@ -37,5 +55,21 @@ public interface ModelMapper<S, T> {
    */
   default Class<T> getTargetModelClass() {
     return (Class<T>) DeclarativeHelper.getMappingMethod(getClass()).getReturnType();
+  }
+
+  @Override
+  default void process(Exchange exchange) throws SIPFrameworkException {
+    try {
+      final var bodyUnmapped = exchange.getMessage().getMandatoryBody(getSourceModelClass());
+      final var bodyMapped = mapToTargetModel(bodyUnmapped, exchange);
+      exchange.getMessage().setBody(bodyMapped, getTargetModelClass());
+    } catch (Exception e) {
+      throw SIPFrameworkException.init(
+          e,
+          "Failed to apply model-mapper implementation in class %s from source-type %s to target-type %s",
+          getClass().getName(),
+          getSourceModelClass().getSimpleName(),
+          getTargetModelClass().getSimpleName());
+    }
   }
 }

@@ -84,7 +84,7 @@ public abstract class RestInboundConnectorBase extends InboundConnectorBase
   /**
    * Configures the REST endpoint used within this connector.
    *
-   * <p>Note that while {@link RestDefinition} supports specifing multiple verbs/endpoints, all of
+   * <p>Note that while {@link RestDefinition} supports specifying multiple verbs/endpoints, all of
    * those will be mapped to the single integration scenario that this connector is linked with
    * though {@link #getScenarioId()}.
    *
