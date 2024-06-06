@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "263",
+  "message": "Add sip.core.errorhandler.default.enabled configuration parameter which can disable SIPDefaultErrorHandler."
+}
