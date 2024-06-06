@@ -38,6 +38,9 @@ sip.core:
         initial-delay: 5000
   declarativestructure:
     enabled: true
+  errorhandler:
+    default:
+      enabled: true
 server:
   servlet:
     context-path:
