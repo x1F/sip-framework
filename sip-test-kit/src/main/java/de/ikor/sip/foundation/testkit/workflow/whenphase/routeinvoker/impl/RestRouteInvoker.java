@@ -21,6 +21,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /** Invoker class for triggering Camel REST route */
 @Slf4j
@@ -38,16 +40,16 @@ public class RestRouteInvoker implements RouteInvoker {
   @Override
   public Optional<Exchange> invoke(Exchange inputExchange) {
     Endpoint endpoint = TestKitHelper.resolveEndpoint(inputExchange, camelContext);
+    MultiValueMap<String, String> headers = prepareHeaders(inputExchange);
     HttpEntity<String> testRequest =
-        new HttpEntity<>(
-            inputExchange.getMessage().getBody(String.class), prepareHeaders(inputExchange));
+        new HttpEntity<>(inputExchange.getMessage().getBody(String.class), headers);
     log.trace("sip.testkit.workflow.whenphase.routeinvoker.rest.request_{}", testRequest);
 
     ResponseEntity<String> response =
         restTemplateBuilder
             .build()
             .exchange(
-                createUri(endpoint),
+                createUri(endpoint, headers),
                 resolveHttpMethod(endpoint),
                 testRequest,
                 new ParameterizedTypeReference<>() {});
@@ -61,12 +63,14 @@ public class RestRouteInvoker implements RouteInvoker {
     return endpoint instanceof RestEndpoint;
   }
 
-  private String createUri(Endpoint endpoint) {
+  private String createUri(Endpoint endpoint, MultiValueMap<String, String> headers) {
+    String resolvedUrl =
+        UriComponentsBuilder.fromUriString(((RestEndpoint) endpoint).getPath())
+            .buildAndExpand(headers.toSingleValueMap())
+            .toUriString();
     return String.format(
         "http://localhost:%s%s/%s",
-        environment.getProperty("local.server.port"),
-        resolveContextPath(),
-        ((RestEndpoint) endpoint).getPath());
+        environment.getProperty("local.server.port"), resolveContextPath(), resolvedUrl);
   }
 
   private String resolveContextPath() {
