@@ -128,12 +128,13 @@ public abstract non-sealed class ConnectorBase
 
   @Override
   public final String[] getConfigurationIds() {
-    if (declarativeConfigurationAnnotation.isPresent()) {
-      return Arrays.stream(declarativeConfigurationAnnotation.get().configurations())
-          .map(ClassUtils::getShortName)
-          .toArray(String[]::new);
-    }
-    return new String[0];
+    return declarativeConfigurationAnnotation
+        .map(
+            declarativeConfiguration ->
+                Arrays.stream(declarativeConfiguration.configurations())
+                    .map(ClassUtils::getShortName)
+                    .toArray(String[]::new))
+        .orElseGet(() -> new String[0]);
   }
 
   @Override
