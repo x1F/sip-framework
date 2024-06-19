@@ -75,14 +75,13 @@ public class DeclarativeReflectionUtils {
         .newInstance(params);
   }
 
-  public static Optional<Method> getMethod(final Class<?> clazz) {
-    try {
-      return Optional.of(clazz.getMethod("myMethod"));
-    } catch (NoSuchMethodException e) {
-      return Optional.empty();
-    }
-  }
-
+  /**
+   * Find all methods inside class which are annotated with {@link ConnectorErrorHandler} and have
+   * {@link DeclarativeOnExceptionDefinition} as return type
+   *
+   * @param clazz source class
+   * @return list of methods which match the condition
+   */
   public static List<Method> findAnnotatedMethodsWithReturnType(Class<?> clazz) {
     List<Method> matchingMethods = new ArrayList<>();
     for (Method method : clazz.getDeclaredMethods()) {

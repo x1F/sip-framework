@@ -177,7 +177,7 @@ public class AdapterBuilder extends RouteBuilder {
 
     // Build scenario handoff and response-route
     String routeConfigurationIds =
-        mapConfigIds(
+        joinConfigurationIds(
             scenarioHandoffRouteId,
             inboundConnector.getConfigurationIds(),
             scenarioDefinition.getConfigurationIds());
@@ -234,12 +234,14 @@ public class AdapterBuilder extends RouteBuilder {
         var exceptions = method.getAnnotation(ConnectorErrorHandler.class).exceptions();
         var onExceptionDefinition = handoffRouteDefinition.onException(exceptions);
         try {
-          var res = method.invoke(inboundConnector);
-          if (res instanceof DeclarativeOnExceptionDefinition configurationDefinition) {
+          var result = method.invoke(inboundConnector);
+          if (result instanceof DeclarativeOnExceptionDefinition configurationDefinition) {
             configurationDefinition.define(onExceptionDefinition);
           }
         } catch (Exception e) {
-          throw new SIPFrameworkInitializationException(e);
+          throw SIPFrameworkInitializationException.init(
+              "Failed to initialize method with onException handler for connector %s",
+              inboundConnector.getId());
         }
         onExceptionDefinition.end();
       }
@@ -263,7 +265,7 @@ public class AdapterBuilder extends RouteBuilder {
         routesRegistry.generateRouteIdForConnector(RouteRole.SCENARIO_TAKEOVER, outboundConnector);
 
     String configIds =
-        mapConfigIds(
+        joinConfigurationIds(
             outboundConnector.getId(),
             outboundConnector.getConfigurationIds(),
             scenarioDefinition.getConfigurationIds());
@@ -423,8 +425,12 @@ public class AdapterBuilder extends RouteBuilder {
     Map<IntegrationScenarioDefinition, EndpointProducerBuilder> consumerEndpoints;
   }
 
-  private String mapConfigIds(String connectorId, String[] ids, String[] scenarioIds) {
+  private String joinConfigurationIds(
+      String connectorId, Object[] connectorLevelIds, Object[] scenarioIds) {
     return StringUtils.joinWith(
-        ",", connectorId, StringUtils.joinWith(",", ids), StringUtils.joinWith(",", scenarioIds));
+        ",",
+        connectorId,
+        StringUtils.joinWith(",", connectorLevelIds),
+        StringUtils.joinWith(",", scenarioIds));
   }
 }

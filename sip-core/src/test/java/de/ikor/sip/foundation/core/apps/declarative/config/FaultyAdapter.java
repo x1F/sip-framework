@@ -24,23 +24,30 @@ import org.springframework.context.annotation.Configuration;
 public class FaultyAdapter {
   public static final String MESSAGE_IN = "in";
   public static final String MESSAGE_OUT = "out";
+
+  public static final String MESSAGE_SCENARIO = "scenario";
   public static final String FAULTY_DIRECT_URI = "trigger-config";
+  public static final String CUSTOM_DECLARATIVE_CONFIG = "CustomDeclarativeConfig";
+  public static final String SCENARIO_DECLARATIVE_CONFIG = "ScenarioDeclarativeConfig";
 
   @IntegrationScenario(
       scenarioId = ConfiguredScenario.ID,
       requestModel = String.class,
       responseModel = String.class)
+  @DeclarativeConfiguration(
+      configurations = {ScenarioDeclarativeConfig.class, CustomDeclarativeConfig.class})
   public class ConfiguredScenario extends IntegrationScenarioBase {
     public static final String ID = "ConfiguredScenario";
   }
 
   @InboundConnector(
-      connectorId = "ConfiguredInConnector",
+      connectorId = ConfiguredInConnector.ID,
       connectorGroup = "in",
       integrationScenario = ConfiguredScenario.ID,
       requestModel = String.class)
   @DeclarativeConfiguration(configurations = CustomDeclarativeConfig.class)
   public class ConfiguredInConnector extends GenericInboundConnectorBase {
+    public static final String ID = "ConfiguredInConnector";
 
     @Override
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
@@ -51,7 +58,11 @@ public class FaultyAdapter {
     protected void defineRequestRoute(final RouteDefinition definition) {
       definition.process(
           exchange -> {
-            if (exchange.getMessage().getBody(String.class).equals(MESSAGE_IN)) {
+            String body = exchange.getMessage().getBody(String.class);
+            if (body.equals(MESSAGE_IN)) {
+              throw new RuntimeException("test");
+            }
+            if (body.equals(MESSAGE_SCENARIO)) {
               throw new SIPAdapterException("test");
             }
           });
@@ -62,11 +73,13 @@ public class FaultyAdapter {
       return StaticEndpointBuilders.direct(FAULTY_DIRECT_URI);
     }
 
-    @ConnectorErrorHandler(exceptions = SIPAdapterException.class)
+    @ConnectorErrorHandler(exceptions = RuntimeException.class)
     public DeclarativeOnExceptionDefinition define() {
       return route ->
           route
-              .process(exchange -> exchange.getMessage().setBody("Handled in Connector"))
+              .process(
+                  exchange ->
+                      exchange.getMessage().setBody("Handled in " + ConfiguredInConnector.ID))
               .handled(true);
     }
   }
@@ -87,7 +100,7 @@ public class FaultyAdapter {
                   definition.process(
                       exchange -> {
                         if (exchange.getMessage().getBody(String.class).equals(MESSAGE_OUT)) {
-                          throw new SIPAdapterException("test");
+                          throw new RuntimeException("test");
                         }
                       }));
     }
@@ -104,8 +117,23 @@ public class FaultyAdapter {
     @Override
     public void define(RouteConfigurationDefinition definition) {
       definition
+          .onException(RuntimeException.class)
+          .process(
+              exchange -> exchange.getMessage().setBody("Handled by " + CUSTOM_DECLARATIVE_CONFIG))
+          .handled(true);
+    }
+  }
+
+  @Configuration
+  public class ScenarioDeclarativeConfig implements DeclarativeConfigurationDefinition {
+
+    @Override
+    public void define(RouteConfigurationDefinition definition) {
+      definition
           .onException(SIPAdapterException.class)
-          .process(exchange -> exchange.getMessage().setBody("Handled by CustomDeclarativeConfig"))
+          .process(
+              exchange ->
+                  exchange.getMessage().setBody("Handled by " + SCENARIO_DECLARATIVE_CONFIG))
           .handled(true);
     }
   }
