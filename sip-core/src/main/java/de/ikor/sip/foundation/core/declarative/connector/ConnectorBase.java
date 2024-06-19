@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistryApi;
+import de.ikor.sip.foundation.core.declarative.annonation.DeclarativeConfiguration;
 import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
 import de.ikor.sip.foundation.core.declarative.annonation.UseResponseModelMapper;
 import de.ikor.sip.foundation.core.declarative.model.FindAutomaticModelMapper;
@@ -12,6 +13,9 @@ import de.ikor.sip.foundation.core.declarative.orchestration.connector.Connector
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import lombok.AccessLevel;
@@ -22,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.util.ClassUtils;
 
 /**
  * Base class for connector definitions.
@@ -32,6 +37,12 @@ import org.springframework.context.ApplicationContextAware;
  */
 public abstract non-sealed class ConnectorBase
     implements ConnectorDefinition, ApplicationContextAware {
+
+  private final Optional<DeclarativeConfiguration> declarativeConfigurationAnnotation =
+      DeclarativeReflectionUtils.getAnnotationIfPresent(DeclarativeConfiguration.class, this);
+
+  private final List<Method> onExceptionHandlers =
+      DeclarativeReflectionUtils.findAnnotatedMethodsWithReturnType(this.getClass());
 
   @Getter(AccessLevel.PROTECTED)
   private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -113,5 +124,20 @@ public abstract non-sealed class ConnectorBase
   public final void setApplicationContext(final ApplicationContext applicationContext)
       throws BeansException {
     this.applicationContext = applicationContext;
+  }
+
+  @Override
+  public final String[] getConfigurationIds() {
+    if (declarativeConfigurationAnnotation.isPresent()) {
+      return Arrays.stream(declarativeConfigurationAnnotation.get().configurations())
+          .map(ClassUtils::getShortName)
+          .toArray(String[]::new);
+    }
+    return new String[0];
+  }
+
+  @Override
+  public final List<Method> getOnExceptionHandler() {
+    return onExceptionHandlers;
   }
 }

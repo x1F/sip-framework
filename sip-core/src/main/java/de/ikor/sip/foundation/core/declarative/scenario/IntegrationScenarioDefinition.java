@@ -57,4 +57,11 @@ public interface IntegrationScenarioDefinition
   default boolean hasResponseFlow() {
     return getResponseModelClass().isPresent();
   }
+
+  /**
+   * Returns an array of configuration ids which should be applied to the given scenario routes
+   *
+   * @return configuration ids
+   */
+  String[] getConfigurationIds();
 }
