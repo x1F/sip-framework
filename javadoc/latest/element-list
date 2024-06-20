@@ -16,7 +16,6 @@ de.ikor.sip.foundation.core.actuator.routes
 de.ikor.sip.foundation.core.actuator.routes.annotations
 de.ikor.sip.foundation.core.annotation
 de.ikor.sip.foundation.core.configuration
-de.ikor.sip.foundation.core.configuration.errorhandler
 de.ikor.sip.foundation.core.declarative
 de.ikor.sip.foundation.core.declarative.annonation
 de.ikor.sip.foundation.core.declarative.annotation.rest
