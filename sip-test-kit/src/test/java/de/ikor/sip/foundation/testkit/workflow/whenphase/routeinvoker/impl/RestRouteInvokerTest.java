@@ -6,6 +6,8 @@ import static org.mockito.Mockito.*;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
@@ -124,6 +126,29 @@ class RestRouteInvokerTest {
         .exchange(
             anyString(),
             eq(HttpMethod.POST),
+            any(),
+            ArgumentMatchers.<ParameterizedTypeReference<String>>any());
+  }
+
+  @Test
+  void GIVEN_EndpointWithPathParams_WHEN_executeTask_THEN_ParamsResolved() {
+    // arrange
+    when(restEndpoint.getMethod()).thenReturn("get");
+    when(restEndpoint.getPath()).thenReturn("test/{headerKey}");
+    Map<String, Object> headers = new HashMap<>();
+    headers.put(RouteInvoker.TEST_NAME_HEADER, "test");
+    headers.put(ProcessorProxy.TEST_MODE_HEADER, "true");
+    headers.put("headerKey", "headerValue");
+    when(exchange.getMessage().getHeaders()).thenReturn(headers);
+    // act
+    Optional<Exchange> target = restRouteInvoker.invoke(exchange);
+
+    // assert
+    assertThat(target).isPresent();
+    verify(restTemplate)
+        .exchange(
+            contains("headerValue"),
+            eq(HttpMethod.GET),
             any(),
             ArgumentMatchers.<ParameterizedTypeReference<String>>any());
   }

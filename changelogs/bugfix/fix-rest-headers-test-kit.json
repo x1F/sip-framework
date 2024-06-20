@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "264",
+  "message": "Fix an issue where REST headers were not taken from test case definition. Enable resolving path parameters of rest endpoints using headers."
+}
