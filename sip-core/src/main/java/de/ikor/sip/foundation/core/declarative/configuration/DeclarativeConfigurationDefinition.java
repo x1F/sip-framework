@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.configuration;
 
+import org.apache.camel.model.OutputDefinition;
 import org.apache.camel.model.RouteConfigurationDefinition;
 
 /** Functional interface providing a hook to {@link RouteConfigurationDefinition} */
@@ -10,5 +11,5 @@ public interface DeclarativeConfigurationDefinition {
    *
    * @param definition {@link RouteConfigurationDefinition}
    */
-  void define(RouteConfigurationDefinition definition);
+  OutputDefinition define(RouteConfigurationDefinition definition);
 }

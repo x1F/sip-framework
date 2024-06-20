@@ -14,8 +14,7 @@ import de.ikor.sip.foundation.core.util.exception.SIPAdapterException;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
-import org.apache.camel.model.RouteConfigurationDefinition;
-import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.model.*;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -115,8 +114,8 @@ public class FaultyAdapter {
   public class CustomDeclarativeConfig implements DeclarativeConfigurationDefinition {
 
     @Override
-    public void define(RouteConfigurationDefinition definition) {
-      definition
+    public OutputDefinition<?> define(RouteConfigurationDefinition definition) {
+      return definition
           .onException(RuntimeException.class)
           .process(
               exchange -> exchange.getMessage().setBody("Handled by " + CUSTOM_DECLARATIVE_CONFIG))
@@ -128,8 +127,8 @@ public class FaultyAdapter {
   public class ScenarioDeclarativeConfig implements DeclarativeConfigurationDefinition {
 
     @Override
-    public void define(RouteConfigurationDefinition definition) {
-      definition
+    public OutputDefinition<?> define(RouteConfigurationDefinition definition) {
+      return definition
           .onException(SIPAdapterException.class)
           .process(
               exchange ->

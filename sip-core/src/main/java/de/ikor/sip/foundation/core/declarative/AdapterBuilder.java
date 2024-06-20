@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import static de.ikor.sip.foundation.core.declarative.configuration.DeclarativeConfigurationBuilder.ERROR_HANDLER;
 import static de.ikor.sip.foundation.core.declarative.validator.CDMValidator.*;
 
 import de.ikor.sip.foundation.core.declarative.annonation.ConnectorErrorHandler;
@@ -227,7 +228,7 @@ public class AdapterBuilder extends RouteBuilder {
     requestRouteDefinition.to(StaticEndpointBuilders.direct(scenarioHandoffRouteId));
   }
 
-  private static void appendOnException(
+  private void appendOnException(
       ConnectorDefinition inboundConnector, RouteDefinition handoffRouteDefinition) {
     if (!inboundConnector.getOnExceptionHandler().isEmpty()) {
       for (Method method : inboundConnector.getOnExceptionHandler()) {
@@ -237,13 +238,16 @@ public class AdapterBuilder extends RouteBuilder {
           var result = method.invoke(inboundConnector);
           if (result instanceof DeclarativeOnExceptionDefinition configurationDefinition) {
             configurationDefinition.define(onExceptionDefinition);
+            onExceptionDefinition.process(
+                exchange ->
+                    exchange.setProperty(ERROR_HANDLER, inboundConnector.getClass().getName()));
+            onExceptionDefinition.end();
           }
         } catch (Exception e) {
           throw SIPFrameworkInitializationException.init(
               "Failed to initialize method with onException handler for connector %s",
               inboundConnector.getId());
         }
-        onExceptionDefinition.end();
       }
     }
   }
