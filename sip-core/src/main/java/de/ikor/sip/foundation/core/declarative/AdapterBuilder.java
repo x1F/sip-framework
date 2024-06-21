@@ -179,13 +179,14 @@ public class AdapterBuilder extends RouteBuilder {
     // Build scenario handoff and response-route
     String routeConfigurationIds =
         joinConfigurationIds(
-            scenarioHandoffRouteId,
+            inboundConnector.getId(),
             inboundConnector.getConfigurationIds(),
             scenarioDefinition.getConfigurationIds());
     final var handoffRouteDefinition =
         from(StaticEndpointBuilders.direct(scenarioHandoffRouteId))
             .routeId(scenarioHandoffRouteId)
             .routeConfigurationId(routeConfigurationIds);
+    appendOnException(inboundConnector, handoffRouteDefinition);
     handoffRouteDefinition
         .process(
             new CDMValidator(
@@ -194,7 +195,6 @@ public class AdapterBuilder extends RouteBuilder {
                 scenarioDefinition.getRequestModelClass(),
                 TO_CDM_EXCEPTION_MESSAGE))
         .to(handoffToEndpoint);
-    appendOnException(inboundConnector, handoffRouteDefinition);
     scenarioDefinition
         .getResponseModelClass()
         .ifPresent(
@@ -229,24 +229,24 @@ public class AdapterBuilder extends RouteBuilder {
   }
 
   private void appendOnException(
-      ConnectorDefinition inboundConnector, RouteDefinition handoffRouteDefinition) {
-    if (!inboundConnector.getOnExceptionHandler().isEmpty()) {
-      for (Method method : inboundConnector.getOnExceptionHandler()) {
+      ConnectorDefinition connectorDefinition, RouteDefinition routeDefinition) {
+    if (!connectorDefinition.getOnExceptionHandler().isEmpty()) {
+      for (Method method : connectorDefinition.getOnExceptionHandler()) {
         var exceptions = method.getAnnotation(ConnectorErrorHandler.class).exceptions();
-        var onExceptionDefinition = handoffRouteDefinition.onException(exceptions);
+        var onExceptionDefinition = routeDefinition.onException(exceptions);
         try {
-          var result = method.invoke(inboundConnector);
+          var result = method.invoke(connectorDefinition);
           if (result instanceof DeclarativeOnExceptionDefinition configurationDefinition) {
             configurationDefinition.define(onExceptionDefinition);
             onExceptionDefinition.process(
                 exchange ->
-                    exchange.setProperty(ERROR_HANDLER, inboundConnector.getClass().getName()));
+                    exchange.setProperty(ERROR_HANDLER, connectorDefinition.getClass().getName()));
             onExceptionDefinition.end();
           }
         } catch (Exception e) {
           throw SIPFrameworkInitializationException.init(
               "Failed to initialize method with onException handler for connector %s",
-              inboundConnector.getId());
+              connectorDefinition.getId());
         }
       }
     }
