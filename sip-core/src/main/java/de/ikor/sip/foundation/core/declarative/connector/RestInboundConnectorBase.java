@@ -1,5 +1,8 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.appendOnException;
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.joinConfigurationIds;
+
 import de.ikor.sip.foundation.core.declarative.AdapterBuilder;
 import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
@@ -115,7 +118,14 @@ public abstract class RestInboundConnectorBase extends InboundConnectorBase
     final var routeId =
         routeRegistry.generateRouteIdForConnector(RouteRole.CONNECTOR_REST_PARAMETER_MAPPING, this);
     final var mapperInterceptor = StaticEndpointBuilders.direct(routeId);
-    final var routeDef = defs.from(mapperInterceptor).routeId(routeId);
+    String routeConfigurationIds =
+        joinConfigurationIds(
+            this.getId(),
+            this.getConfigurationIds(),
+            this.getScenario().get().getConfigurationIds());
+    final var routeDef =
+        defs.from(mapperInterceptor).routeId(routeId).routeConfigurationId(routeConfigurationIds);
+    appendOnException(this, routeDef);
     mappingMethods.forEach(method -> routeDef.process(buildParameterMappingProcessor(method)));
     routeDef.to(targetToDefinition);
     return mapperInterceptor;

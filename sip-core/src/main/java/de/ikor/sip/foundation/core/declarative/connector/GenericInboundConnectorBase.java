@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
-import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.resolveForbiddenEndpoint;
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.*;
 
 import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
@@ -31,10 +31,17 @@ public abstract class GenericInboundConnectorBase extends InboundConnectorBase
       final RoutesDefinition definition,
       final EndpointProducerBuilder targetToDefinition,
       final RoutesRegistry routeRegistry) {
+    String routeConfigurationIds =
+        joinConfigurationIds(
+            this.getId(),
+            this.getConfigurationIds(),
+            this.getScenario().get().getConfigurationIds());
     final var routeDef =
         definition
             .from(resolveForbiddenEndpoint(defineInitiatingEndpoint()))
-            .routeId(routeRegistry.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, this));
+            .routeId(routeRegistry.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, this))
+            .routeConfigurationId(routeConfigurationIds);
+    appendOnException(this, routeDef);
     defineRequestUnmarshalling().ifPresent(unmarshaller -> unmarshaller.accept(routeDef));
     routeDef.to(targetToDefinition);
     defineResponseMarshalling().ifPresent(marshaller -> marshaller.accept(routeDef));

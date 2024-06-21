@@ -1,11 +1,9 @@
 package de.ikor.sip.foundation.core.declarative;
 
-import static de.ikor.sip.foundation.core.declarative.configuration.DeclarativeConfigurationBuilder.ERROR_HANDLER;
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.appendOnException;
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.joinConfigurationIds;
 import static de.ikor.sip.foundation.core.declarative.validator.CDMValidator.*;
 
-import de.ikor.sip.foundation.core.declarative.annonation.ConnectorErrorHandler;
-import de.ikor.sip.foundation.core.declarative.configuration.DeclarativeOnExceptionDefinition;
-import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
@@ -17,7 +15,6 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefin
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import de.ikor.sip.foundation.core.declarative.validator.CDMValidator;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +32,6 @@ import org.apache.camel.model.OptionalIdentifiedDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
 import org.apache.camel.model.rest.RestsDefinition;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -228,30 +224,6 @@ public class AdapterBuilder extends RouteBuilder {
     requestRouteDefinition.to(StaticEndpointBuilders.direct(scenarioHandoffRouteId));
   }
 
-  private void appendOnException(
-      ConnectorDefinition connectorDefinition, RouteDefinition routeDefinition) {
-    if (!connectorDefinition.getOnExceptionHandler().isEmpty()) {
-      for (Method method : connectorDefinition.getOnExceptionHandler()) {
-        var exceptions = method.getAnnotation(ConnectorErrorHandler.class).exceptions();
-        var onExceptionDefinition = routeDefinition.onException(exceptions);
-        try {
-          var result = method.invoke(connectorDefinition);
-          if (result instanceof DeclarativeOnExceptionDefinition configurationDefinition) {
-            configurationDefinition.define(onExceptionDefinition);
-            onExceptionDefinition.process(
-                exchange ->
-                    exchange.setProperty(ERROR_HANDLER, connectorDefinition.getClass().getName()));
-            onExceptionDefinition.end();
-          }
-        } catch (Exception e) {
-          throw SIPFrameworkInitializationException.init(
-              "Failed to initialize method with onException handler for connector %s",
-              connectorDefinition.getId());
-        }
-      }
-    }
-  }
-
   private void buildOutboundConnector(
       final OutboundConnectorDefinition outboundConnector,
       final IntegrationScenarioDefinition scenarioDefinition,
@@ -427,14 +399,5 @@ public class AdapterBuilder extends RouteBuilder {
     RoutesDefinition routesDefinition;
     Map<IntegrationScenarioDefinition, EndpointConsumerBuilder> providerEndpoints;
     Map<IntegrationScenarioDefinition, EndpointProducerBuilder> consumerEndpoints;
-  }
-
-  private String joinConfigurationIds(
-      String connectorId, Object[] connectorLevelIds, Object[] scenarioIds) {
-    return StringUtils.joinWith(
-        ",",
-        connectorId,
-        StringUtils.joinWith(",", connectorLevelIds),
-        StringUtils.joinWith(",", scenarioIds));
   }
 }

@@ -1,7 +1,12 @@
 package de.ikor.sip.foundation.core.declarative.utils;
 
+import static de.ikor.sip.foundation.core.declarative.configuration.DeclarativeConfigurationBuilder.ERROR_HANDLER;
+
 import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
+import de.ikor.sip.foundation.core.declarative.annonation.ConnectorErrorHandler;
+import de.ikor.sip.foundation.core.declarative.configuration.DeclarativeOnExceptionDefinition;
+import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -17,6 +22,8 @@ import lombok.experimental.UtilityClass;
 import org.apache.camel.Endpoint;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.endpoint.dsl.JmsEndpointBuilderFactory;
+import org.apache.camel.model.RouteDefinition;
+import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.factory.Mappers;
 
 /**
@@ -127,5 +134,38 @@ public class DeclarativeHelper {
     Matcher dollarMatcher = DOLLAR_PLACEHOLDER_PATTERN.matcher(uri);
     Matcher doubleCurlyMatcher = DOUBLE_CURLY_PLACEHOLDER_PATTERN.matcher(uri);
     return dollarMatcher.find() || doubleCurlyMatcher.find();
+  }
+
+  public static String joinConfigurationIds(
+      String connectorId, Object[] connectorLevelIds, Object[] scenarioIds) {
+    return StringUtils.joinWith(
+        ",",
+        connectorId,
+        StringUtils.joinWith(",", connectorLevelIds),
+        StringUtils.joinWith(",", scenarioIds));
+  }
+
+  public static void appendOnException(
+      ConnectorDefinition connectorDefinition, RouteDefinition routeDefinition) {
+    if (!connectorDefinition.getOnExceptionHandler().isEmpty()) {
+      for (Method method : connectorDefinition.getOnExceptionHandler()) {
+        var exceptions = method.getAnnotation(ConnectorErrorHandler.class).exceptions();
+        var onExceptionDefinition = routeDefinition.onException(exceptions);
+        try {
+          var result = method.invoke(connectorDefinition);
+          if (result instanceof DeclarativeOnExceptionDefinition configurationDefinition) {
+            configurationDefinition.define(onExceptionDefinition);
+            onExceptionDefinition.process(
+                exchange ->
+                    exchange.setProperty(ERROR_HANDLER, connectorDefinition.getClass().getName()));
+            onExceptionDefinition.end();
+          }
+        } catch (Exception e) {
+          throw SIPFrameworkInitializationException.init(
+              "Failed to initialize method with onException handler for connector %s",
+              connectorDefinition.getId());
+        }
+      }
+    }
   }
 }
