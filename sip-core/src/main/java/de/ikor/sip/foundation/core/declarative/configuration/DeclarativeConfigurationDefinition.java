@@ -11,5 +11,6 @@ public interface DeclarativeConfigurationDefinition {
    *
    * @param definition {@link RouteConfigurationDefinition}
    */
+  @SuppressWarnings("rawtypes")
   OutputDefinition define(RouteConfigurationDefinition definition);
 }
