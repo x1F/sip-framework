@@ -85,8 +85,7 @@ public class DeclarativeReflectionUtils {
   public static List<Method> findAnnotatedMethodsWithReturnType(Class<?> clazz) {
     List<Method> matchingMethods = new ArrayList<>();
     for (Method method : clazz.getDeclaredMethods()) {
-      if (method.isAnnotationPresent(
-              ConnectorErrorHandler.class.asSubclass(java.lang.annotation.Annotation.class))
+      if (method.isAnnotationPresent(ConnectorErrorHandler.class)
           && method.getReturnType().equals(DeclarativeOnExceptionDefinition.class)) {
         matchingMethods.add(method);
       }
