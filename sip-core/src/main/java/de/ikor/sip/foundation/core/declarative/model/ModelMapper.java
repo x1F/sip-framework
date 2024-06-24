@@ -57,6 +57,16 @@ public interface ModelMapper<S, T> extends ConnectorProcessor {
     return (Class<T>) DeclarativeHelper.getMappingMethod(getClass()).getReturnType();
   }
 
+  /**
+   * Maps from source to target model using the {@link ConnectorProcessor} API.
+   *
+   * <p>The default implementation uses {@link #mapToTargetModel(Object, Exchange)} to map the
+   * current message body to the target type.
+   *
+   * @see ConnectorProcessor
+   * @param exchange Current message exchange
+   * @throws SIPFrameworkException Mapping failure
+   */
   @Override
   default void process(Exchange exchange) throws SIPFrameworkException {
     try {

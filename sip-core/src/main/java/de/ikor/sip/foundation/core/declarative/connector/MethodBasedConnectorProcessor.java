@@ -1,8 +1,12 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
+import de.ikor.sip.foundation.core.declarative.annotation.connector.HeaderParameter;
+import de.ikor.sip.foundation.core.declarative.annotation.rest.PathParameter;
+import de.ikor.sip.foundation.core.declarative.annotation.rest.QueryParameter;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,10 +21,9 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.springframework.util.function.ThrowingFunction;
 
-/** Class that wraps */
 @ToString(onlyExplicitlyIncluded = true)
 @Slf4j
-public class ConnectorProcessorMethodWrapper implements ConnectorProcessor {
+public class MethodBasedConnectorProcessor implements ConnectorProcessor {
 
   @Getter @ToString.Include protected final ConnectorDefinition connector;
   @Getter @ToString.Include protected final Method processorMethod;
@@ -28,28 +31,38 @@ public class ConnectorProcessorMethodWrapper implements ConnectorProcessor {
   @Getter protected final Class<?> returnType;
   protected final List<Function<Exchange, Object>> parameterFetchers;
 
-  protected ConnectorProcessorMethodWrapper(
+  public MethodBasedConnectorProcessor(
       final ConnectorDefinition connector, final Method processorMethod) {
     this.connector = connector;
     this.processorMethod = processorMethod;
     this.returnType = processorMethod.getReturnType();
     Set<Class<?>> bodyTypes = new HashSet<>();
     parameterFetchers =
-        Arrays.stream(processorMethod.getParameterTypes())
+        Arrays.stream(processorMethod.getParameters())
             .map(param -> getFetcherForParameter(param, bodyTypes))
             .toList();
     this.requestedBodyTypes = Collections.unmodifiableSet(bodyTypes);
   }
 
   protected Function<Exchange, Object> getFetcherForParameter(
-      final Class<?> type, final Set<Class<?>> bodyTypes) {
+      final Parameter parameter, final Set<Class<?>> bodyTypes) {
+    final var type = parameter.getType();
     if (Exchange.class.isAssignableFrom(type)) {
       return exchange -> exchange;
     } else if (Message.class.isAssignableFrom(type)) {
       return Exchange::getMessage;
+    } else if (parameter.isAnnotationPresent(HeaderParameter.class)) {
+      final var headerName = parameter.getAnnotation(HeaderParameter.class).value();
+      return exchange -> exchange.getMessage().getHeader(headerName, type);
+    } else if (parameter.isAnnotationPresent(PathParameter.class)) {
+      final var headerName = parameter.getAnnotation(PathParameter.class).value();
+      return exchange -> exchange.getMessage().getHeader(headerName, type);
+    } else if (parameter.isAnnotationPresent(QueryParameter.class)) {
+      final var headerName = parameter.getAnnotation(QueryParameter.class).value();
+      return exchange -> exchange.getMessage().getHeader(headerName, type);
     } else {
       bodyTypes.add(type);
-      if (type.isAnnotationPresent(Nullable.class)) {
+      if (parameter.isAnnotationPresent(Nullable.class)) {
         return exchange -> exchange.getMessage().getBody(type);
       } else {
         return ThrowingFunction.of(exchange -> exchange.getMessage().getMandatoryBody(type));

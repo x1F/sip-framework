@@ -71,13 +71,13 @@ public abstract class RestInboundConnectorBase extends InboundConnectorBase
     var rest = definition.rest();
     var endpointCounter = 0;
     configureRest(rest);
-    final var verbsTarget =
-        bindParameterMapperMethods(definition.getCamelContext(), targetToDefinition, routeRegistry);
+    /*final var verbsTarget =
+    bindParameterMapperMethods(definition.getCamelContext(), targetToDefinition, routeRegistry);*/
     for (VerbDefinition verb : rest.getVerbs()) {
       verb.setId(
           routeRegistry.generateRouteIdForConnector(
               RouteRole.EXTERNAL_ENDPOINT, this, ++endpointCounter));
-      verb.setTo(new ToDefinition(verbsTarget));
+      verb.setTo(new ToDefinition(targetToDefinition));
     }
   }
 

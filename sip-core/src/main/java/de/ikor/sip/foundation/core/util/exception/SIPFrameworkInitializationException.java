@@ -32,6 +32,7 @@ public class SIPFrameworkInitializationException extends SIPFrameworkException {
 
   /**
    * Throws the specified initialization exception if the given <code>expression</code> is true
+   *
    * @param expression expression result
    * @param messagePattern exception message in form of a string pattern
    * @param args arguments for message pattern
