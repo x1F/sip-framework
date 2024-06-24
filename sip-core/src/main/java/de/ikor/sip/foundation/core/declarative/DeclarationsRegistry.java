@@ -8,7 +8,6 @@ import de.ikor.sip.foundation.core.declarative.connector.*;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupBase;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.DefaultConnectorGroup;
-import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.declarative.model.RequestMappingRouteTransformer;
 import de.ikor.sip.foundation.core.declarative.model.ResponseMappingRouteTransformer;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
@@ -40,13 +39,11 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   private final List<CompositeProcessDefinition> processes;
   private final List<IntegrationScenarioDefinition> scenarios;
   private final List<ConnectorDefinition> connectors;
-  private final Map<MapperPair, ModelMapper<Object, Object>> globalModelMappersRegistry;
 
   public DeclarationsRegistry(
       List<ConnectorGroupDefinition> autowiredConnectorGroups,
       List<IntegrationScenarioDefinition> autowiredScenarios,
       List<ConnectorDefinition> autowiredConnectors,
-      List<ModelMapper<?, ?>> modelMappers,
       List<CompositeProcessDefinition> compositeProcessDefinitions,
       ApplicationContext applicationContext) {
 
@@ -63,39 +60,10 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
     this.processes = compositeProcessDefinitions.stream().filter(not(isDisabled())).toList();
 
-    this.globalModelMappersRegistry = checkAndInitializeGlobalModelMappers(modelMappers);
-
     createMissingConnectorGroups();
     checkForDuplicateDeclarativeElements();
-    checkForUnusedMappers();
     checkAnnotatedClassForMissingParents();
     checkForUnusedScenarios();
-  }
-
-  private void checkForUnusedMappers() {
-    connectors.forEach(
-        connectorDefinition -> {
-          if (connectorDefinition instanceof ConnectorBase base) {
-            base.getRequestMapper()
-                .ifPresent(
-                    mapper -> {
-                      if (isRequestMappingOverridden(connectorDefinition, mapper)) {
-                        throw SIPFrameworkInitializationException.init(
-                            "Request mapping in connector '%s' is defined in annotation, but overridden by request route transformation",
-                            connectorDefinition.getId());
-                      }
-                    });
-            base.getResponseMapper()
-                .ifPresent(
-                    mapper -> {
-                      if (isResponseMappingOverridden(connectorDefinition, mapper)) {
-                        throw SIPFrameworkInitializationException.init(
-                            "Response mapping in connector '%s' is defined in annotation, but overridden by response route transformation",
-                            connectorDefinition.getId());
-                      }
-                    });
-          }
-        });
   }
 
   private boolean isRequestMappingOverridden(
@@ -139,42 +107,6 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
                     parentClass.getSimpleName());
               }
             });
-  }
-
-  @SuppressWarnings("unchecked")
-  private Map<MapperPair, ModelMapper<Object, Object>> checkAndInitializeGlobalModelMappers(
-      final List<ModelMapper<?, ?>> mappers) {
-    final Map<MapperPair, ModelMapper<Object, Object>> modelMappers = new HashMap<>(mappers.size());
-    mappers.stream()
-        .filter(modelMapper -> modelMapper.getClass().isAnnotationPresent(GlobalMapper.class))
-        .forEach(
-            mapper -> {
-              final MapperPair mapperPair =
-                  MapperPair.builder()
-                      .sourceClass(mapper.getSourceModelClass())
-                      .targetClass(mapper.getTargetModelClass())
-                      .build();
-              if (modelMappers.containsKey(mapperPair)) {
-                final var duplicate = modelMappers.get(mapperPair);
-                throw SIPFrameworkInitializationException.init(
-                    "ModelMapper implementations %s and %s share the same source and target model classes",
-                    mapper.getClass().getName(), duplicate.getClass().getName());
-              }
-              modelMappers.put(mapperPair, (ModelMapper<Object, Object>) mapper);
-            });
-    return modelMappers;
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  public <C, S> Optional<ModelMapper<C, S>> getGlobalModelMapperForModels(
-      final Class<C> sourceModelClass, final Class<S> targetModelClass) {
-    final var mapperPair =
-        MapperPair.builder().sourceClass(sourceModelClass).targetClass(targetModelClass).build();
-    if (globalModelMappersRegistry.containsKey(mapperPair)) {
-      return Optional.of((ModelMapper<C, S>) globalModelMappersRegistry.get(mapperPair));
-    }
-    return Optional.empty();
   }
 
   private void createMissingConnectorGroups() {

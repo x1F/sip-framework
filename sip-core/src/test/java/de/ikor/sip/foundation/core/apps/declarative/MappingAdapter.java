@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.apps.declarative;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
+import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.BackendTypes;
 import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.BackendTypes.BackendResourceRequest;
 import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.CommonDomainTypes.ResourceRequest;
 import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.CommonDomainTypes.ResourceResponse;
@@ -67,7 +68,7 @@ public class MappingAdapter {
       connectorGroup = "Backend",
       integrationScenario = MapDomainModelsScenario.ID,
       requestModel = BackendResourceRequest.class)
-  @UseRequestModelMapper
+  @UseRequestModelMapper(BackendTypes.BackendRequestModelMapper.class)
   public class LoggerConsumerWithReponse extends GenericOutboundConnectorBase {
 
     @Override
