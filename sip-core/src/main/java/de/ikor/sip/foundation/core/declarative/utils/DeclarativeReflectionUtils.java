@@ -3,10 +3,8 @@ package de.ikor.sip.foundation.core.declarative.utils;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
@@ -51,13 +49,6 @@ public class DeclarativeReflectionUtils {
     } else {
       return traverseHierarchyTree(clazz.getSuperclass(), superClass);
     }
-  }
-
-  public static List<Method> getAnnotatedMethods(
-      final Class<?> clazz, final Class<? extends Annotation> annotation) {
-    return Arrays.stream(clazz.getMethods())
-        .filter(method -> method.isAnnotationPresent(annotation))
-        .toList();
   }
 
   @SneakyThrows

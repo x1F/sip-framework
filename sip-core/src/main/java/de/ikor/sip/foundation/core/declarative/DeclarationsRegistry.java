@@ -8,9 +8,6 @@ import de.ikor.sip.foundation.core.declarative.connector.*;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupBase;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.DefaultConnectorGroup;
-import de.ikor.sip.foundation.core.declarative.model.RequestMappingRouteTransformer;
-import de.ikor.sip.foundation.core.declarative.model.ResponseMappingRouteTransformer;
-import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessBase;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
@@ -23,7 +20,6 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
@@ -64,22 +60,6 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
     checkForDuplicateDeclarativeElements();
     checkAnnotatedClassForMissingParents();
     checkForUnusedScenarios();
-  }
-
-  private boolean isRequestMappingOverridden(
-      ConnectorDefinition connectorDefinition,
-      RequestMappingRouteTransformer<Object, Object> mapper) {
-    return connectorDefinition.getOrchestrator()
-            instanceof ConnectorOrchestrator connectorOrchestrator
-        && (!mapper.equals(connectorOrchestrator.getRequestRouteTransformer()));
-  }
-
-  private boolean isResponseMappingOverridden(
-      ConnectorDefinition connectorDefinition,
-      ResponseMappingRouteTransformer<Object, Object> mapper) {
-    return connectorDefinition.getOrchestrator()
-            instanceof ConnectorOrchestrator connectorOrchestrator
-        && (!mapper.equals(connectorOrchestrator.getResponseRouteTransformer()));
   }
 
   private void checkAnnotatedClassForMissingParents() {
@@ -319,7 +299,4 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   private Predicate<Object> isDisabled() {
     return elem -> elem.getClass().isAnnotationPresent(Disabled.class);
   }
-
-  @Builder
-  record MapperPair(Class<?> sourceClass, Class<?> targetClass) {}
 }

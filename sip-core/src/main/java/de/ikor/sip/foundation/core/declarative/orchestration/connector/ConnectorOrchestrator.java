@@ -31,10 +31,10 @@ public class ConnectorOrchestrator implements Orchestrator<ConnectorOrchestratio
   private Consumer<RouteDefinition> requestRouteTransformer = null;
   private Consumer<RouteDefinition> responseRouteTransformer = this::defaultResponseTransformer;
 
-  @Deprecated
   /**
    * @deprecated Use {@link ConnectorProcessorChainOrchestrator} based approach instead
    */
+  @Deprecated
   public static ConnectorOrchestrator forConnector(final ConnectorDefinition relatedConnector) {
     return new ConnectorOrchestrator(() -> relatedConnector);
   }

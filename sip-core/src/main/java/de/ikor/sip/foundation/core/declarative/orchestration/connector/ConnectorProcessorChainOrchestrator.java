@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -51,9 +52,16 @@ public final class ConnectorProcessorChainOrchestrator
 
     buildProcessorRegistryForConnector(connector, context);
 
+    var orderedRequestProcessors = orderProcessorsByAnnotations(requestExtensionsRegistry.values());
+    log.info(
+        "Order of request-processors for connector {}: {}",
+        connector.getClass().getSimpleName(),
+        orderedRequestProcessors.stream()
+            .map(ConnectorProcessor::getProcessorName)
+            .collect(Collectors.joining(" => ")));
     var requestRoute = info.getRequestRouteDefinition();
-    for (var processorEntry : requestExtensionsRegistry.values()) {
-      requestRoute = requestRoute.process(processorEntry.getProcessor());
+    for (var processor : orderedRequestProcessors) {
+      requestRoute = requestRoute.process(processor);
     }
 
     if (info.getResponseRouteDefinition().isPresent()) {
@@ -61,11 +69,152 @@ public final class ConnectorProcessorChainOrchestrator
       if (responseExtensionsRegistry.isEmpty()) {
         responseRoute.process(exchange -> {});
       } else {
-        for (var processorEntry : responseExtensionsRegistry.values()) {
-          responseRoute = responseRoute.process(processorEntry.getProcessor());
+        var orderedResponseProcessors =
+            orderProcessorsByAnnotations(responseExtensionsRegistry.values());
+        log.info(
+            "Order of response-processors for connector {}: {}",
+            connector.getClass().getSimpleName(),
+            orderedResponseProcessors.stream()
+                .map(ConnectorProcessor::getProcessorName)
+                .collect(Collectors.joining(" => ")));
+        for (var processor : orderedResponseProcessors) {
+          responseRoute = responseRoute.process(processor);
         }
       }
     }
+  }
+
+  private List<ConnectorProcessor> orderProcessorsByAnnotations(
+      final Collection<ConnectorProcessorRegistryEntry> unordered) {
+
+    final List<ConnectorProcessor> orderedProcessors = new ArrayList<>(unordered.size());
+    final List<ConnectorProcessorRegistryEntry> absoluteOrderedEntries = new ArrayList<>();
+    final List<ConnectorProcessorRegistryEntry> relativeOrderedEntries = new LinkedList<>();
+    final List<ConnectorProcessorRegistryEntry> unorderedEntries = new ArrayList<>();
+
+    for (var entry : unordered) {
+      if (entry.getPlacementBeforeProcessor().isPresent()
+          || entry.getPlacementAfterProcessor().isPresent()) {
+        relativeOrderedEntries.add(entry);
+      } else if (entry.getPlacementAbsolute().isPresent()) {
+        absoluteOrderedEntries.add(entry);
+      } else {
+        unorderedEntries.add(entry);
+      }
+    }
+
+    // first, sort the list with entries that have absolute ordering
+    absoluteOrderedEntries.sort(Comparator.comparing(o -> o.getPlacementAbsolute().orElseThrow()));
+    orderedProcessors.addAll(
+        absoluteOrderedEntries.stream()
+            .map(ConnectorProcessorRegistryEntry::getProcessor)
+            .toList());
+
+    // second, add all unordered elements to the end, so they can still be referred to by relative
+    // orderings
+    orderedProcessors.addAll(
+        unorderedEntries.stream().map(ConnectorProcessorRegistryEntry::getProcessor).toList());
+
+    // place elements with a relative placement on elements inside the ordered list accordingly
+    var placeableRelations =
+        relativeOrderedEntries.stream()
+            .filter(e -> hasProcessorRelativeRelationToList(e, orderedProcessors))
+            .toList();
+    while (!placeableRelations.isEmpty()) {
+      relativeOrderedEntries.removeAll(placeableRelations);
+      placeableRelations.forEach(e -> placeRelativeOrderedProcessorInList(e, orderedProcessors));
+      placeableRelations =
+          relativeOrderedEntries.stream()
+              .filter(e -> hasProcessorRelativeRelationToList(e, orderedProcessors))
+              .toList();
+    }
+
+    // sort and attach any remaining items to the end of the ordered list
+    relativeOrderedEntries.sort(ConnectorProcessorChainOrchestrator::compareRelativeOrderedEntries);
+    orderedProcessors.addAll(
+        relativeOrderedEntries.stream()
+            .map(ConnectorProcessorRegistryEntry::getProcessor)
+            .toList());
+
+    return orderedProcessors;
+  }
+
+  private void placeRelativeOrderedProcessorInList(
+      final ConnectorProcessorRegistryEntry entry, final List<ConnectorProcessor> orderedList) {
+    if (entry.getPlacementBeforeProcessor().isPresent()) {
+      var indexBefore = orderedList.indexOf(entry.getPlacementBeforeProcessor().get());
+      if (indexBefore > -1) {
+        orderedList.add(indexBefore, entry.getProcessor());
+        return;
+      }
+    }
+    if (entry.getPlacementAfterProcessor().isPresent()) {
+      var indexBefore = orderedList.indexOf(entry.getPlacementAfterProcessor().get());
+      if (indexBefore > -1) {
+        orderedList.add(indexBefore + 1, entry.getProcessor());
+        return;
+      }
+    }
+    throw SIPFrameworkInitializationException.init(
+        "Failed to find correct relative placement position for connector processor '%s'",
+        entry.getProcessor().getProcessorName());
+  }
+
+  private boolean hasProcessorRelativeRelationToList(
+      ConnectorProcessorRegistryEntry entry, List<ConnectorProcessor> orderedList) {
+    Set<ConnectorProcessor> lookup = new HashSet<>();
+    entry.getPlacementAfterProcessor().ifPresent(lookup::add);
+    entry.getPlacementBeforeProcessor().ifPresent(lookup::add);
+    return orderedList.stream().anyMatch(lookup::contains);
+  }
+
+  private static int compareRelativeOrderedEntries(
+      final ConnectorProcessorRegistryEntry first, final ConnectorProcessorRegistryEntry second) {
+
+    var firstProc = first.getProcessor();
+    var secondProc = second.getProcessor();
+    var firstBefore = first.getPlacementBeforeProcessor();
+    var firstAfter = first.getPlacementAfterProcessor();
+    var secondBefore = second.getPlacementBeforeProcessor();
+    var secondAfter = second.getPlacementAfterProcessor();
+
+    firstBefore.ifPresent(
+        f ->
+            secondBefore.ifPresent(
+                s ->
+                    SIPFrameworkInitializationException.throwOn(
+                        f.equals(secondProc) && s.equals(firstProc),
+                        "Unresolvable placement: connector-processor '%s' demands placement before '%s', and vice versa",
+                        firstProc.getProcessorName(),
+                        secondProc.getProcessorName())));
+
+    firstAfter.ifPresent(
+        f ->
+            secondAfter.ifPresent(
+                s ->
+                    SIPFrameworkInitializationException.throwOn(
+                        f.equals(secondProc) && s.equals(firstProc),
+                        "Unresolvable placement: connector-processor '%s' demands placement after '%s', and vice versa",
+                        firstProc.getProcessorName(),
+                        secondProc.getProcessorName())));
+
+    if (firstBefore.isPresent() && firstBefore.get().equals(secondProc)) {
+      return -1;
+    }
+
+    if (firstAfter.isPresent() && firstAfter.get().equals(secondProc)) {
+      return 1;
+    }
+
+    if (secondBefore.isPresent() && secondBefore.get().equals(firstProc)) {
+      return -1;
+    }
+
+    if (secondAfter.isPresent() && secondAfter.get().equals(firstProc)) {
+      return 1;
+    }
+
+    return 0;
   }
 
   private void buildProcessorRegistryForConnector(
