@@ -4,8 +4,8 @@ import static de.ikor.sip.foundation.core.declarative.configuration.DeclarativeC
 
 import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
-import de.ikor.sip.foundation.core.declarative.annonation.ConnectorErrorHandler;
-import de.ikor.sip.foundation.core.declarative.configuration.DeclarativeOnExceptionDefinition;
+import de.ikor.sip.foundation.core.declarative.annonation.ConnectorExceptionHandler;
+import de.ikor.sip.foundation.core.declarative.configuration.ConnectorOnExceptionDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
@@ -136,6 +136,14 @@ public class DeclarativeHelper {
     return dollarMatcher.find() || doubleCurlyMatcher.find();
   }
 
+  /**
+   * Create a string of configuration id with provided parameters
+   *
+   * @param connectorId id of the connector
+   * @param connectorLevelIds ids of configurations defined on the connector
+   * @param scenarioIds ids of configurations defined on the integration scenario
+   * @return string with comma separated id values
+   */
   public static String joinConfigurationIds(
       String connectorId, Object[] connectorLevelIds, Object[] scenarioIds) {
     return StringUtils.joinWith(
@@ -145,15 +153,21 @@ public class DeclarativeHelper {
         StringUtils.joinWith(",", scenarioIds));
   }
 
+  /**
+   * Append onException handler to the provided routeDefinition
+   *
+   * @param connectorDefinition {@link ConnectorDefinition}
+   * @param routeDefinition {@link RouteDefinition}
+   */
   public static void appendOnException(
       ConnectorDefinition connectorDefinition, RouteDefinition routeDefinition) {
     if (!connectorDefinition.getOnExceptionHandler().isEmpty()) {
       for (Method method : connectorDefinition.getOnExceptionHandler()) {
-        var exceptions = method.getAnnotation(ConnectorErrorHandler.class).exceptions();
+        var exceptions = method.getAnnotation(ConnectorExceptionHandler.class).value();
         var onExceptionDefinition = routeDefinition.onException(exceptions);
         try {
           var result = method.invoke(connectorDefinition);
-          if (result instanceof DeclarativeOnExceptionDefinition configurationDefinition) {
+          if (result instanceof ConnectorOnExceptionDefinition configurationDefinition) {
             configurationDefinition.define(onExceptionDefinition);
             onExceptionDefinition.process(
                 exchange ->

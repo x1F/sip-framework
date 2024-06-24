@@ -2,8 +2,8 @@ package de.ikor.sip.foundation.core.apps.declarative.config;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
 import de.ikor.sip.foundation.core.declarative.annonation.*;
-import de.ikor.sip.foundation.core.declarative.configuration.DeclarativeConfigurationDefinition;
-import de.ikor.sip.foundation.core.declarative.configuration.DeclarativeOnExceptionDefinition;
+import de.ikor.sip.foundation.core.declarative.configuration.ConfigurationDefinition;
+import de.ikor.sip.foundation.core.declarative.configuration.ConnectorOnExceptionDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Configuration;
 
 @SIPIntegrationAdapter
 @ComponentScan(excludeFilters = @ComponentScan.Filter(SIPIntegrationAdapter.class))
-public class FaultyAdapter {
+public class ConfigurationHandlersAdapter {
   public static final String MESSAGE_IN = "in";
   public static final String MESSAGE_OUT = "out";
 
@@ -33,8 +33,7 @@ public class FaultyAdapter {
       scenarioId = ConfiguredScenario.ID,
       requestModel = String.class,
       responseModel = String.class)
-  @DeclarativeConfiguration(
-      configurations = {ScenarioDeclarativeConfig.class, CustomDeclarativeConfig.class})
+  @ConfigurationHandler({ScenarioDeclarativeConfig.class, CustomDeclarativeConfig.class})
   public class ConfiguredScenario extends IntegrationScenarioBase {
     public static final String ID = "ConfiguredScenario";
   }
@@ -44,7 +43,7 @@ public class FaultyAdapter {
       connectorGroup = "in",
       integrationScenario = ConfiguredScenario.ID,
       requestModel = String.class)
-  @DeclarativeConfiguration(configurations = CustomDeclarativeConfig.class)
+  @ConfigurationHandler(CustomDeclarativeConfig.class)
   public class ConfiguredInConnector extends GenericInboundConnectorBase {
     public static final String ID = "ConfiguredInConnector";
 
@@ -72,8 +71,8 @@ public class FaultyAdapter {
       return StaticEndpointBuilders.direct(FAULTY_DIRECT_URI);
     }
 
-    @ConnectorErrorHandler(exceptions = RuntimeException.class)
-    public DeclarativeOnExceptionDefinition define() {
+    @ConnectorExceptionHandler(RuntimeException.class)
+    public ConnectorOnExceptionDefinition define() {
       return route ->
           route
               .process(
@@ -88,7 +87,7 @@ public class FaultyAdapter {
       connectorGroup = "out",
       integrationScenario = ConfiguredScenario.ID,
       requestModel = String.class)
-  @DeclarativeConfiguration(configurations = CustomDeclarativeConfig.class)
+  @ConfigurationHandler(CustomDeclarativeConfig.class)
   public class ConfiguredOutConnector extends GenericOutboundConnectorBase {
 
     @Override
@@ -111,7 +110,7 @@ public class FaultyAdapter {
   }
 
   @Configuration
-  public class CustomDeclarativeConfig implements DeclarativeConfigurationDefinition {
+  public class CustomDeclarativeConfig implements ConfigurationDefinition {
 
     @Override
     public OutputDefinition<?> define(RouteConfigurationDefinition definition) {
@@ -124,7 +123,7 @@ public class FaultyAdapter {
   }
 
   @Configuration
-  public class ScenarioDeclarativeConfig implements DeclarativeConfigurationDefinition {
+  public class ScenarioDeclarativeConfig implements ConfigurationDefinition {
 
     @Override
     public OutputDefinition<?> define(RouteConfigurationDefinition definition) {

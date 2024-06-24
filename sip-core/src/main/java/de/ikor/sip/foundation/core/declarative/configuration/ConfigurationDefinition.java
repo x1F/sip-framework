@@ -5,9 +5,10 @@ import org.apache.camel.model.RouteConfigurationDefinition;
 
 /** Functional interface providing a hook to {@link RouteConfigurationDefinition} */
 @FunctionalInterface
-public interface DeclarativeConfigurationDefinition {
+public interface ConfigurationDefinition {
   /**
-   * Define route configuration
+   * Define route configuration handler (onException, onCompletion, intercept). There should be only
+   * one per implementation.
    *
    * @param definition {@link RouteConfigurationDefinition}
    */

@@ -11,11 +11,11 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ConnectorErrorHandler {
+public @interface ConnectorExceptionHandler {
   /**
    * Array of Exception which should be handled by the annotated method
    *
    * @return array of Exceptions
    */
-  Class<? extends Throwable>[] exceptions();
+  Class<? extends Throwable>[] value();
 }

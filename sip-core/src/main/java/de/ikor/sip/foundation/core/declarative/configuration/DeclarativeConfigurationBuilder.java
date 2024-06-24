@@ -7,15 +7,13 @@ import org.apache.camel.model.OnExceptionDefinition;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ClassUtils;
 
-/**
- * Builds Apache Camel route configurations defined with {@link DeclarativeConfigurationDefinition}
- */
+/** Builds Apache Camel route configurations defined with {@link ConfigurationDefinition} */
 @Configuration
 @RequiredArgsConstructor
 public class DeclarativeConfigurationBuilder extends RouteConfigurationBuilder {
 
   public static final String ERROR_HANDLER = "errorHandler";
-  private final List<DeclarativeConfigurationDefinition> definitions;
+  private final List<ConfigurationDefinition> definitions;
 
   @Override
   public void configuration() throws Exception {

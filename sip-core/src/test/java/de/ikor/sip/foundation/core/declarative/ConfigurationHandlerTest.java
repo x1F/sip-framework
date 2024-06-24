@@ -1,11 +1,11 @@
 package de.ikor.sip.foundation.core.declarative;
 
-import static de.ikor.sip.foundation.core.apps.declarative.config.FaultyAdapter.*;
+import static de.ikor.sip.foundation.core.apps.declarative.config.ConfigurationHandlersAdapter.*;
 import static de.ikor.sip.foundation.core.declarative.configuration.DeclarativeConfigurationBuilder.ERROR_HANDLER;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import de.ikor.sip.foundation.core.apps.declarative.config.FaultyAdapter;
+import de.ikor.sip.foundation.core.apps.declarative.config.ConfigurationHandlersAdapter;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
 import org.apache.camel.FluentProducerTemplate;
@@ -19,11 +19,11 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @CamelSpringBootTest
 @SpringBootTest(
-    classes = {FaultyAdapter.class},
+    classes = {ConfigurationHandlersAdapter.class},
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @MockEndpoints("log:message*")
 @DirtiesContext
-class DeclarativeConfigurationTest {
+class ConfigurationHandlerTest {
 
   @EndpointInject("mock:log:message")
   private MockEndpoint mockedLogger;
@@ -34,9 +34,9 @@ class DeclarativeConfigurationTest {
   void when_ExceptionIsThrown_with_ConnectorLevelHandler_then_HandledInConnector() {
     Exchange exchange = template.withBody(MESSAGE_IN).to(direct(FAULTY_DIRECT_URI)).send();
     assertThat(exchange.getMessage().getBody(String.class))
-        .contains(FaultyAdapter.ConfiguredInConnector.ID);
+        .contains(ConfigurationHandlersAdapter.ConfiguredInConnector.ID);
     assertThat(exchange.getProperty(ERROR_HANDLER, String.class))
-        .contains(FaultyAdapter.ConfiguredInConnector.class.getSimpleName());
+        .contains(ConfigurationHandlersAdapter.ConfiguredInConnector.class.getSimpleName());
   }
 
   @Test
@@ -44,7 +44,7 @@ class DeclarativeConfigurationTest {
     Exchange exchange = template.withBody(MESSAGE_OUT).to(direct(FAULTY_DIRECT_URI)).send();
     assertThat(exchange.getMessage().getBody(String.class)).contains(CUSTOM_DECLARATIVE_CONFIG);
     assertThat(exchange.getProperty(ERROR_HANDLER, String.class))
-        .contains(FaultyAdapter.CustomDeclarativeConfig.class.getSimpleName());
+        .contains(ConfigurationHandlersAdapter.CustomDeclarativeConfig.class.getSimpleName());
   }
 
   @Test
@@ -52,6 +52,6 @@ class DeclarativeConfigurationTest {
     Exchange exchange = template.withBody(MESSAGE_SCENARIO).to(direct(FAULTY_DIRECT_URI)).send();
     assertThat(exchange.getMessage().getBody(String.class)).contains(SCENARIO_DECLARATIVE_CONFIG);
     assertThat(exchange.getProperty(ERROR_HANDLER, String.class))
-        .contains(FaultyAdapter.ScenarioDeclarativeConfig.class.getSimpleName());
+        .contains(ConfigurationHandlersAdapter.ScenarioDeclarativeConfig.class.getSimpleName());
   }
 }

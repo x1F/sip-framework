@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistryApi;
-import de.ikor.sip.foundation.core.declarative.annonation.DeclarativeConfiguration;
+import de.ikor.sip.foundation.core.declarative.annonation.ConfigurationHandler;
 import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
 import de.ikor.sip.foundation.core.declarative.annonation.UseResponseModelMapper;
 import de.ikor.sip.foundation.core.declarative.model.FindAutomaticModelMapper;
@@ -38,8 +38,8 @@ import org.springframework.util.ClassUtils;
 public abstract non-sealed class ConnectorBase
     implements ConnectorDefinition, ApplicationContextAware {
 
-  private final Optional<DeclarativeConfiguration> declarativeConfigurationAnnotation =
-      DeclarativeReflectionUtils.getAnnotationIfPresent(DeclarativeConfiguration.class, this);
+  private final Optional<ConfigurationHandler> declarativeConfigurationAnnotation =
+      DeclarativeReflectionUtils.getAnnotationIfPresent(ConfigurationHandler.class, this);
 
   private final List<Method> onExceptionHandlers =
       DeclarativeReflectionUtils.findAnnotatedMethodsWithReturnType(this.getClass());
@@ -130,8 +130,8 @@ public abstract non-sealed class ConnectorBase
   public final String[] getConfigurationIds() {
     return declarativeConfigurationAnnotation
         .map(
-            declarativeConfiguration ->
-                Arrays.stream(declarativeConfiguration.configurations())
+            configurationHandler ->
+                Arrays.stream(configurationHandler.value())
                     .map(ClassUtils::getShortName)
                     .toArray(String[]::new))
         .orElseGet(() -> new String[0]);

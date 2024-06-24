@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.utils;
 
-import de.ikor.sip.foundation.core.declarative.annonation.ConnectorErrorHandler;
-import de.ikor.sip.foundation.core.declarative.configuration.DeclarativeOnExceptionDefinition;
+import de.ikor.sip.foundation.core.declarative.annonation.ConnectorExceptionHandler;
+import de.ikor.sip.foundation.core.declarative.configuration.ConnectorOnExceptionDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -76,8 +76,8 @@ public class DeclarativeReflectionUtils {
   }
 
   /**
-   * Find all methods inside class which are annotated with {@link ConnectorErrorHandler} and have
-   * {@link DeclarativeOnExceptionDefinition} as return type
+   * Find all methods inside class which are annotated with {@link ConnectorExceptionHandler} and
+   * have {@link ConnectorOnExceptionDefinition} as return type
    *
    * @param clazz source class
    * @return list of methods which match the condition
@@ -85,8 +85,8 @@ public class DeclarativeReflectionUtils {
   public static List<Method> findAnnotatedMethodsWithReturnType(Class<?> clazz) {
     List<Method> matchingMethods = new ArrayList<>();
     for (Method method : clazz.getDeclaredMethods()) {
-      if (method.isAnnotationPresent(ConnectorErrorHandler.class)
-          && method.getReturnType().equals(DeclarativeOnExceptionDefinition.class)) {
+      if (method.isAnnotationPresent(ConnectorExceptionHandler.class)
+          && method.getReturnType().equals(ConnectorOnExceptionDefinition.class)) {
         matchingMethods.add(method);
       }
     }

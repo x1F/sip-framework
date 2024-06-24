@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.scenario;
 
-import de.ikor.sip.foundation.core.declarative.annonation.DeclarativeConfiguration;
+import de.ikor.sip.foundation.core.declarative.annonation.ConfigurationHandler;
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.AutoMagicScenarioOrchestrator;
@@ -24,8 +24,8 @@ public abstract class IntegrationScenarioBase implements IntegrationScenarioDefi
   private final IntegrationScenario scenarioAnnotation =
       DeclarativeReflectionUtils.getAnnotationOrThrow(IntegrationScenario.class, this);
 
-  private final Optional<DeclarativeConfiguration> declarativeConfigurationAnnotation =
-      DeclarativeReflectionUtils.getAnnotationIfPresent(DeclarativeConfiguration.class, this);
+  private final Optional<ConfigurationHandler> declarativeConfigurationAnnotation =
+      DeclarativeReflectionUtils.getAnnotationIfPresent(ConfigurationHandler.class, this);
 
   /**
    * Returns the orchestrator for this scenario.
@@ -74,8 +74,8 @@ public abstract class IntegrationScenarioBase implements IntegrationScenarioDefi
   public final String[] getConfigurationIds() {
     return declarativeConfigurationAnnotation
         .map(
-            declarativeConfiguration ->
-                Arrays.stream(declarativeConfiguration.configurations())
+            configurationHandler ->
+                Arrays.stream(configurationHandler.value())
                     .map(ClassUtils::getShortName)
                     .toArray(String[]::new))
         .orElseGet(() -> new String[0]);
