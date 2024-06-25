@@ -42,10 +42,12 @@ class ConnectorProcessorExtensionsTest {
   }
 
   @Test
-  void GIVEN_valid_request_WHEN_calling_rest_with_param_mappings_VERIFY_result_object_is_mapped() {
+  void
+      GIVEN_processor_ordering_specified_WHEN_sending_valid_request_VERIFY_expected_response_order() {
 
-    final var expectedOrder =
+    final var expectedRequestOrder =
         List.of("start", "external", "method", "first", "second", "RestStringAttachmentMapper");
+    final var expectedResponseOrder = List.of("first", "second", "third", "fourth", "end");
     var response =
         producerTemplate.requestBody(
             "direct:" + ConnectorProcessorExtensionsAdapter.INBOUND_DIRECT_OK,
@@ -53,6 +55,7 @@ class ConnectorProcessorExtensionsTest {
             String.class);
 
     assertThat(response).isNotBlank();
-    assertThat(response.split(" ")).containsSequence(expectedOrder);
+    assertThat(response.split(" ")).containsSequence(expectedRequestOrder);
+    assertThat(response.split(" ")).containsSequence(expectedResponseOrder);
   }
 }

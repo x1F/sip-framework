@@ -3,10 +3,7 @@ package de.ikor.sip.foundation.core.apps.declarative;
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
 import de.ikor.sip.foundation.core.apps.declarative.connectorextensions.RestStringAttachmentMapper;
 import de.ikor.sip.foundation.core.declarative.annonation.*;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecuteAfter;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecuteBefore;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecuteOrder;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.RequestProcessor;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.*;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
@@ -83,6 +80,35 @@ public class ConnectorProcessorExtensionsAdapter {
     @Override
     protected EndpointProducerBuilder defineOutgoingEndpoint() {
       return StaticEndpointBuilders.log("message");
+    }
+
+    @ResponseProcessor
+    public String attachFirstString(String body) {
+      return body + " first";
+    }
+
+    @ResponseProcessor
+    @ExecuteBefore(processorName = "attachThirdString")
+    public String attachSecondString(String body) {
+      return body + " second";
+    }
+
+    @ResponseProcessor
+    @ExecuteAfter(processorName = "attachSecondString")
+    public String attachThirdString(String body) {
+      return body + " third";
+    }
+
+    @ResponseProcessor
+    @ExecuteAfter(processorName = "attachThirdString")
+    public String attachFourthString(String body) {
+      return body + " fourth";
+    }
+
+    @ResponseProcessor
+    @ExecuteOrder(last = true)
+    public String attachLastString(String body) {
+      return body + " end";
     }
   }
 }

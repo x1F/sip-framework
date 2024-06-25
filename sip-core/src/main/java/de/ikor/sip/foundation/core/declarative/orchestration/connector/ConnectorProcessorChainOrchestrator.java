@@ -128,6 +128,7 @@ public final class ConnectorProcessorChainOrchestrator
     // sort unordered elements into buckets
     firstEntry.ifPresent(unordered::remove);
     lastEntry.ifPresent(unordered::remove);
+
     for (var entry : unordered) {
       if (entry.getPlacementBeforeProcessor().isPresent()
           || entry.getPlacementAfterProcessor().isPresent()) {
