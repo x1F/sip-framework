@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.annotation.rest;
 
 import de.ikor.sip.foundation.core.declarative.annotation.connector.ConnectorRequestProcessor;
+import de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -9,25 +10,17 @@ import java.lang.annotation.Target;
 /**
  * Marks a method within a {@link
  * de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase} that is used to map
- * path- and query-parameters to the request-model.
+ * path- and query-parameters to the request-model. *
  *
- * <p>To use, create a public method using this annotation within your implementation of the
- * connector class. You can use any number of parameters for that method, and the framework will
- * automatically assign the corresponding data using a best-effort transformation the declared type.
- * The following rules apply:
+ * <p>The parameter mapping functionality is based on {@link
+ * de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor} extensions as described in
+ * the @{@link ConnectorRequestProcessor}. Hence, this annotation is merely an alias of latter
+ * annotation. Likewise, @{@link QueryParameter} and {@link PathParameter} annotations are aliases
+ * for @{@link de.ikor.sip.foundation.core.declarative.annotation.connector.HeaderParameter}, as
+ * these parameters are placed in the message as headers by Camel.
  *
- * <ul>
- *   <li>Parameters annotated with @{@link PathParameter} will be filled with the respectively named
- *       path parameter
- *   <li>Parameters annotated with @{@link QueryParameter} will be filled with the respectively
- *       named query parameter
- *   <li>Parameters of type {@link org.apache.camel.Exchange} will receive the exchange
- *   <li>Parameters of type {@link org.apache.camel.Message} will receive the message
- *   <li>Parameters of any other type will receive the message body in the declared type
- * </ul>
- *
- * If the provided data from the request can not be converted to the declared parameter type, the
- * REST request will return a server error.
+ * <p>Note that parameter-mapping using this approach only works if you don't overload {@link
+ * RestInboundConnectorBase#defineTransformationOrchestrator()} in your connector.
  *
  * <p>Example:
  *
@@ -51,6 +44,7 @@ import java.lang.annotation.Target;
  *
  * }</pre>
  *
+ * @see ConnectorRequestProcessor
  * @see PathParameter
  * @see QueryParameter
  * @see de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase

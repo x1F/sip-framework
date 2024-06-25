@@ -7,8 +7,12 @@ import java.lang.annotation.Target;
 
 /**
  * Indicates a REST query-parameter to be assigned to the annotated parameter of a mapping-function
- * annotated with @{@link ParameterMapping}
+ * annotated with @{@link ParameterMapping}.
  *
+ * <p>This annotation is an alias for @{@link
+ * de.ikor.sip.foundation.core.declarative.annotation.connector.HeaderParameter}.
+ *
+ * @see de.ikor.sip.foundation.core.declarative.annotation.connector.HeaderParameter
  * @see ParameterMapping
  * @see PathParameter
  */

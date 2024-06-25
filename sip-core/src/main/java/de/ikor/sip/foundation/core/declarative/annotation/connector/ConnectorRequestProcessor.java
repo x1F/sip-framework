@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  *         <li>Parameters of type {@link org.apache.camel.Exchange} or {@link
  *             org.apache.camel.Message} will receive their current respective instance
  *         <li>Parameters annotated with @{@link HeaderParameter} will receive the content of the
- *             header with the specified name, if it exists
+ *             header with the specified name, if it exists.
  *         <li>For any other parameter types, the framework will attempt a mandatory conversion (if
  *             necessary) of the current body to the declared type
  *         <li>Parameters can be annotated @{@link javax.annotation.Nullable} to declare that <code>
