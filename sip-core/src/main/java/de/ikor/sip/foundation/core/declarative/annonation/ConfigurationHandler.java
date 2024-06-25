@@ -10,9 +10,12 @@ import org.springframework.stereotype.Component;
 /**
  * Annotation used on classes extending {@link
  * de.ikor.sip.foundation.core.declarative.connector.ConnectorBase} or {@link
- * de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase} It provides information
- * which {@link ConfigurationDefinition} classes should be applied to the respective Scenarios or
- * Connectors
+ * de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase}
+ *
+ * <p>It marks which {@link ConfigurationDefinition} classes should be applied to the respective
+ * Scenarios or Connectors
+ *
+ * @see ConfigurationDefinition
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
