@@ -135,7 +135,7 @@ public abstract non-sealed class ConnectorBase
         .warn(
             "Connector {} is overloading deprecated defineTransformationOrchestrator() method. Consider using connector-processor extensions instead.",
             getClass().getName());
-    final var transformationOrchestrator = defineTransformationOrchestrator();
+    @Deprecated final var transformationOrchestrator = defineTransformationOrchestrator();
 
     if (transformationOrchestrator
         instanceof @SuppressWarnings("deprecation") ConnectorOrchestrator connectorOrchestrator) {

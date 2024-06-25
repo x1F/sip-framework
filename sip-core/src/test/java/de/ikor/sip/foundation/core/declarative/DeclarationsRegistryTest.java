@@ -243,7 +243,7 @@ class DeclarationsRegistryTest {
               return null;
             },
             null);
-    ConnectorOrchestrator connectorOrchestrator = mock(ConnectorOrchestrator.class);
+    @Deprecated ConnectorOrchestrator connectorOrchestrator = mock(ConnectorOrchestrator.class);
     when(connector.getId()).thenReturn("mockConnector");
     when(connectorOrchestrator.getRequestRouteTransformer()).thenReturn(routeTransformer);
     when(connector.getOrchestrator()).thenReturn(connectorOrchestrator);
