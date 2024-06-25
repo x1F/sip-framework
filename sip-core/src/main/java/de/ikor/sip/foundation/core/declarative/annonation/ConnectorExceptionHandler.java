@@ -7,13 +7,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Method level annotation used on methods in Connectors which handle specific exceptions
- * provided as parameters in annotation.
+ * Method level annotation used on methods in Connectors which handle specific exceptions provided
+ * as parameters in annotation.
  *
- * <p>Must be used on public methods which have {@link ConnectorOnExceptionDefinition} as return type.</p>
- * <p>Exception handler defined on this level will take priority over other.</p>
+ * <p>Must be used on public methods which have {@link ConnectorOnExceptionDefinition} as return
+ * type.
  *
- * <p>Example:</p>
+ * <p>Exception handler defined on this level will take priority over other.
+ *
+ * <p>Example:
+ *
  * <pre>{@code
  * @ConnectorExceptionHandler(RuntimeException.class)
  * public ConnectorOnExceptionDefinition define() {
@@ -21,6 +24,7 @@ import java.lang.annotation.Target;
  *        onException
  *           .setBody(simple("message"))
  *           .handled(true);
+ * }
  * }</pre>
  */
 @Target(ElementType.METHOD)
