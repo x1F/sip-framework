@@ -72,6 +72,7 @@ public class MappingAdapter {
   public class LoggerConsumerWithReponse extends GenericOutboundConnectorBase {
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       ConnectorOrchestrator orchestrator =
           (ConnectorOrchestrator) super.defineTransformationOrchestrator();

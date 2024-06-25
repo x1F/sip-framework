@@ -47,10 +47,12 @@ class StreamHelperTest {
             StreamHelper.findAtMostOne(
                 elements.stream(), e -> e.startsWith("fi"), IllegalStateException::new))
         .hasValue("fine");
+
+    var stream = elements.stream();
     Assertions.assertThatExceptionOfType(IllegalStateException.class)
         .isThrownBy(
             () ->
                 StreamHelper.findAtMostOne(
-                    elements.stream(), e -> e.startsWith("f"), IllegalStateException::new));
+                    stream, e -> e.startsWith("f"), IllegalStateException::new));
   }
 }

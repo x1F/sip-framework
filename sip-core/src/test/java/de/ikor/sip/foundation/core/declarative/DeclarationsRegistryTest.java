@@ -243,7 +243,6 @@ class DeclarationsRegistryTest {
               return null;
             },
             null);
-    Optional<RequestMappingRouteTransformer<Object, Object>> mapper = Optional.of(routeTransformer);
     ConnectorOrchestrator connectorOrchestrator = mock(ConnectorOrchestrator.class);
     when(connector.getId()).thenReturn("mockConnector");
     when(connectorOrchestrator.getRequestRouteTransformer()).thenReturn(routeTransformer);

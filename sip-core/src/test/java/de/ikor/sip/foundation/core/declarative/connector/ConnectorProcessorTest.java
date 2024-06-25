@@ -6,7 +6,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-public class ConnectorProcessorTest {
+class ConnectorProcessorTest {
 
   @Test
   void GIVEN_connector_processor_none_entry_VERIFY_all_api_methods_tigger_error()

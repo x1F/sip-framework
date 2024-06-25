@@ -34,7 +34,6 @@ public class ConnectorOrchestrator implements Orchestrator<ConnectorOrchestratio
   /**
    * @deprecated Use {@link ConnectorProcessorChainOrchestrator} based approach instead
    */
-  @Deprecated
   public static ConnectorOrchestrator forConnector(final ConnectorDefinition relatedConnector) {
     return new ConnectorOrchestrator(() -> relatedConnector);
   }

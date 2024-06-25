@@ -11,7 +11,7 @@ import org.apache.camel.Message;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class ModelMapperTest {
+class ModelMapperTest {
 
   static final ModelMapper<Integer, String> MAPPER =
       new ModelMapper<Integer, String>() {

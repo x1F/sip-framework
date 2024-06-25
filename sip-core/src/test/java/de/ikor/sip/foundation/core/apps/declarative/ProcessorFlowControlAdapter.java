@@ -99,6 +99,7 @@ public class ProcessorFlowControlAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return super.defineTransformationOrchestrator();
     }
