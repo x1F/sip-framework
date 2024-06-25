@@ -5,8 +5,8 @@ import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.ConnectorRequestProcessor;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.RunBeforeConnectorProcessor;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.RequestProcessor;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecuteBefore;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.ParameterMapping;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.PathParameter;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor;
@@ -85,15 +85,15 @@ public class ProcessorFlowControlAdapter {
       mappedInput.setCurrentInput(mappedInput.getCurrentInput() + additional + stuff);
     }
 
-    @ConnectorRequestProcessor
-    @RunBeforeConnectorProcessor(RequestMapper.class)
+    @RequestProcessor
+    @ExecuteBefore(RequestMapper.class)
     public void processInputToUpper(Exchange exc, Message msg, String input) {
       msg.setHeader("INPUT_WAS_UPPERCASED", true);
       msg.setBody(input.toUpperCase());
     }
 
-    @ConnectorRequestProcessor
-    @RunBeforeConnectorProcessor(processorName = "processInputToUpper")
+    @RequestProcessor
+    @ExecuteBefore(processorName = "processInputToUpper")
     public SeparateProcessorImplementation processInputMore() {
       return new SeparateProcessorImplementation();
     }
@@ -104,8 +104,8 @@ public class ProcessorFlowControlAdapter {
     }
   }
 
-  @ConnectorRequestProcessor(ProcessorFlowInboundConnector.class)
-  @RunBeforeConnectorProcessor(processorName = "processInputToUpper")
+  @RequestProcessor(ProcessorFlowInboundConnector.class)
+  @ExecuteBefore(processorName = "processInputToUpper")
   public static class SeparateProcessorImplementation implements ConnectorProcessor {
     @Override
     public void process(final Exchange exchange) throws Exception {}

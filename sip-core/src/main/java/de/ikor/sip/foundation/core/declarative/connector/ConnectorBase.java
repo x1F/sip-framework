@@ -3,6 +3,8 @@ package de.ikor.sip.foundation.core.declarative.connector;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistryApi;
 import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
 import de.ikor.sip.foundation.core.declarative.annonation.UseResponseModelMapper;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.RequestProcessor;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ResponseProcessor;
 import de.ikor.sip.foundation.core.declarative.model.RequestMappingRouteTransformer;
 import de.ikor.sip.foundation.core.declarative.model.ResponseMappingRouteTransformer;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
@@ -101,9 +103,9 @@ public abstract non-sealed class ConnectorBase
    * It is only suitable if the connectors and the common domain model share the same type.
    *
    * @deprecated Use new connector-processor extensions via @{@link
-   *     de.ikor.sip.foundation.core.declarative.annotation.connector.ConnectorRequestProcessor}
+   *     RequestProcessor}
    *     and @{@link
-   *     de.ikor.sip.foundation.core.declarative.annotation.connector.ConnectorResponseProcessor}
+   *     ResponseProcessor}
    *     instead
    * @return Orchestrator for the transformation between connector and common domain models.
    */

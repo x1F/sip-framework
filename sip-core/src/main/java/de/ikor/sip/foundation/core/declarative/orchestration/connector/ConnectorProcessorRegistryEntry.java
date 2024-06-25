@@ -1,8 +1,8 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.connector;
 
-import de.ikor.sip.foundation.core.declarative.annotation.connector.ConnectorProcessorOrder;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.RunAfterConnectorProcessor;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.RunBeforeConnectorProcessor;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecuteOrder;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecuteAfter;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecuteBefore;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor;
 import de.ikor.sip.foundation.core.util.StreamHelper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -28,16 +28,16 @@ class ConnectorProcessorRegistryEntry {
   @Getter(lazy = true)
   Optional<ConnectorProcessor> placementBeforeProcessor =
       resolveRelativePlacedProcessor(
-          RunBeforeConnectorProcessor.class,
-          RunBeforeConnectorProcessor::value,
-          RunBeforeConnectorProcessor::processorName);
+          ExecuteBefore.class,
+          ExecuteBefore::value,
+          ExecuteBefore::processorName);
 
   @Getter(lazy = true)
   Optional<ConnectorProcessor> placementAfterProcessor =
       resolveRelativePlacedProcessor(
-          RunAfterConnectorProcessor.class,
-          RunAfterConnectorProcessor::value,
-          RunAfterConnectorProcessor::processorName);
+          ExecuteAfter.class,
+          ExecuteAfter::value,
+          ExecuteAfter::processorName);
 
   private <T extends Annotation> Optional<ConnectorProcessor> resolveRelativePlacedProcessor(
       final Class<T> annotationClass,
@@ -51,7 +51,7 @@ class ConnectorProcessorRegistryEntry {
       if (!ConnectorProcessor.None.class.equals(relativeProcessorClass)) {
         return Optional.of(findUniqueConnectorForClass(relativeProcessorClass));
       }
-      if (!Strings.isNotBlank(relativeProcessorName)) {
+      if (Strings.isNotBlank(relativeProcessorName)) {
         final var element = processorRegistry.get(relativeProcessorName);
         SIPFrameworkInitializationException.throwOn(
             null == element,
@@ -88,8 +88,8 @@ class ConnectorProcessorRegistryEntry {
   }
 
   private Optional<Integer> readAbsolutePosition() {
-    return definingElement.isAnnotationPresent(ConnectorProcessorOrder.class)
-        ? Optional.of(definingElement.getAnnotation(ConnectorProcessorOrder.class).value())
+    return definingElement.isAnnotationPresent(ExecuteOrder.class)
+        ? Optional.of(definingElement.getAnnotation(ExecuteOrder.class).value())
         : Optional.empty();
   }
 }

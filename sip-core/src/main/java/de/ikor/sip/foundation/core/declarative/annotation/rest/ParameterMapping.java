@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.annotation.rest;
 
-import de.ikor.sip.foundation.core.declarative.annotation.connector.ConnectorRequestProcessor;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.RequestProcessor;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.HeaderParameter;
 import de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -14,9 +15,9 @@ import java.lang.annotation.Target;
  *
  * <p>The parameter mapping functionality is based on {@link
  * de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor} extensions as described in
- * the @{@link ConnectorRequestProcessor}. Hence, this annotation is merely an alias of latter
+ * the @{@link RequestProcessor}. Hence, this annotation is merely an alias of latter
  * annotation. Likewise, @{@link QueryParameter} and {@link PathParameter} annotations are aliases
- * for @{@link de.ikor.sip.foundation.core.declarative.annotation.connector.HeaderParameter}, as
+ * for @{@link HeaderParameter}, as
  * these parameters are placed in the message as headers by Camel.
  *
  * <p>Note that parameter-mapping using this approach only works if you don't overload {@link
@@ -44,12 +45,12 @@ import java.lang.annotation.Target;
  *
  * }</pre>
  *
- * @see ConnectorRequestProcessor
+ * @see RequestProcessor
  * @see PathParameter
  * @see QueryParameter
  * @see de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@ConnectorRequestProcessor
+@RequestProcessor
 public @interface ParameterMapping {}

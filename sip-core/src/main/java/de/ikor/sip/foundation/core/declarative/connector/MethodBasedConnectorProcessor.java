@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
-import de.ikor.sip.foundation.core.declarative.annotation.connector.HeaderParameter;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.HeaderParameter;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.PathParameter;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.QueryParameter;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
@@ -13,7 +13,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
-import javax.annotation.Nullable;
+
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;

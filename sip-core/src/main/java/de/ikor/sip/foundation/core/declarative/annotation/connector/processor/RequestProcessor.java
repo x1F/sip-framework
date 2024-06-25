@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.annotation.connector;
+package de.ikor.sip.foundation.core.declarative.annotation.connector.processor;
 
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import java.lang.annotation.ElementType;
@@ -31,25 +31,25 @@ import java.lang.annotation.Target;
  *             header with the specified name, if it exists.
  *         <li>For any other parameter types, the framework will attempt a mandatory conversion (if
  *             necessary) of the current body to the declared type
- *         <li>Parameters can be annotated @{@link javax.annotation.Nullable} to declare that <code>
+ *         <li>Parameters can be annotated @{{@link jakarta.annotation.Nullable}} to declare that <code>
  *             null</code> is permitted
  *         <li>If the method declares a non-void return type, the returned object of the method call
  *             will be set as the new body on the current message
  *       </ul>
  * </ul>
  *
- * <p>For ordering of multiple processors, {@link ConnectorProcessorOrder} can be used for absolute
- * ordering, while {@link RunAfterConnectorProcessor} or {@link RunBeforeConnectorProcessor} can be
+ * <p>For ordering of multiple processors, {@link ExecuteOrder} can be used for absolute
+ * ordering, while {@link ExecuteAfter} or {@link ExecuteBefore} can be
  * used for relative ordering.
  *
  * @see de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor
- * @see ConnectorResponseProcessor
- * @see RunAfterConnectorProcessor
- * @see RunBeforeConnectorProcessor
+ * @see ResponseProcessor
+ * @see ExecuteAfter
+ * @see ExecuteBefore
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ConnectorRequestProcessor {
+public @interface RequestProcessor {
 
   /**
    * @return Optional link to the connector this processor should belong to (only necessary if

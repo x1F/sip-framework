@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.annotation.connector;
+package de.ikor.sip.foundation.core.declarative.annotation.connector.processor;
 
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import java.lang.annotation.ElementType;
@@ -10,14 +10,14 @@ import java.lang.annotation.Target;
  * Annotation that is used to mark a processor that should be attached to the response-flow of a
  * Connector.
  *
- * <p>Usage of this annotation is identical to {@link ConnectorRequestProcessor}, so please check
+ * <p>Usage of this annotation is identical to {@link RequestProcessor}, so please check
  * there for more detailed instructions.
  *
- * @see ConnectorRequestProcessor
+ * @see RequestProcessor
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ConnectorResponseProcessor {
+public @interface ResponseProcessor {
 
   /**
    * @return Optional link to the connector this processor should belong to (only necessary if

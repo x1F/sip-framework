@@ -4,15 +4,7 @@ import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.ParameterMapping;
-import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Function;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
+
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.ToDefinition;
 import org.apache.camel.model.rest.RestDefinition;
@@ -33,28 +25,6 @@ import org.apache.camel.model.rest.VerbDefinition;
  */
 public abstract class RestInboundConnectorBase extends InboundConnectorBase
     implements InboundConnectorDefinition<RestsDefinition> {
-
-  @AllArgsConstructor(access = AccessLevel.PRIVATE)
-  private class RestParameterMappingProcessor implements Processor {
-
-    final Method mappingMethod;
-    final List<Function<Exchange, Object>> parameterFetchers;
-
-    @Override
-    public void process(final Exchange exchange) {
-      try {
-        var args = parameterFetchers.stream().map(fetcher -> fetcher.apply(exchange)).toArray();
-        mappingMethod.invoke(RestInboundConnectorBase.this, args);
-      } catch (Exception e) {
-        throw SIPFrameworkException.init(
-            e,
-            "Failed to invoke REST parameter-mapper %s in class %s: %s",
-            mappingMethod.getName(),
-            RestInboundConnectorBase.this.getClass(),
-            e.getMessage());
-      }
-    }
-  }
 
   @Override
   public final void defineInboundEndpoints(
@@ -88,9 +58,4 @@ public abstract class RestInboundConnectorBase extends InboundConnectorBase
     return RestsDefinition.class;
   }
 
-  private List<Method> initializeParameterMapperMethods() {
-    return Arrays.stream(getClass().getMethods())
-        .filter(method -> method.isAnnotationPresent(ParameterMapping.class))
-        .toList();
-  }
 }

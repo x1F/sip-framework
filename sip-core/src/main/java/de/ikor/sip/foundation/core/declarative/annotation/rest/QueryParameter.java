@@ -1,5 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.annotation.rest;
 
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.HeaderParameter;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -10,9 +12,9 @@ import java.lang.annotation.Target;
  * annotated with @{@link ParameterMapping}.
  *
  * <p>This annotation is an alias for @{@link
- * de.ikor.sip.foundation.core.declarative.annotation.connector.HeaderParameter}.
+ * HeaderParameter}.
  *
- * @see de.ikor.sip.foundation.core.declarative.annotation.connector.HeaderParameter
+ * @see HeaderParameter
  * @see ParameterMapping
  * @see PathParameter
  */

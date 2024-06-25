@@ -3,8 +3,8 @@ package de.ikor.sip.foundation.core.declarative.orchestration.connector;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
 import de.ikor.sip.foundation.core.declarative.annonation.UseResponseModelMapper;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.ConnectorRequestProcessor;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.ConnectorResponseProcessor;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.RequestProcessor;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ResponseProcessor;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.ParameterMapping;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor;
@@ -34,6 +34,10 @@ import org.springframework.context.ApplicationContext;
 public final class ConnectorProcessorChainOrchestrator
     implements Orchestrator<ConnectorOrchestrationInfo> {
 
+
+  public static final String PROCESSOR_ID_REQUEST = "%s-processor-request-%s";
+  public static final String PROCESSOR_ID_RESPONSE = "%s-processor-response-%s";
+
   final Supplier<ConnectorDefinition> relatedConnector;
   final Supplier<ApplicationContext> applicationContext;
   final DeclarationsRegistry declarationsRegistry;
@@ -61,7 +65,8 @@ public final class ConnectorProcessorChainOrchestrator
             .collect(Collectors.joining(" => ")));
     var requestRoute = info.getRequestRouteDefinition();
     for (var processor : orderedRequestProcessors) {
-      requestRoute = requestRoute.process(processor);
+      String processorId = String.format(PROCESSOR_ID_REQUEST, connector.getId(), processor.getProcessorName());
+      requestRoute = requestRoute.process(processor).id(processorId);
     }
 
     if (info.getResponseRouteDefinition().isPresent()) {
@@ -78,7 +83,8 @@ public final class ConnectorProcessorChainOrchestrator
                 .map(ConnectorProcessor::getProcessorName)
                 .collect(Collectors.joining(" => ")));
         for (var processor : orderedResponseProcessors) {
-          responseRoute = responseRoute.process(processor);
+          String processorId = String.format(PROCESSOR_ID_RESPONSE, connector.getId(), processor.getProcessorName());
+          responseRoute = responseRoute.process(processor).id(processorId);
         }
       }
     }
@@ -184,7 +190,7 @@ public final class ConnectorProcessorChainOrchestrator
                 s ->
                     SIPFrameworkInitializationException.throwOn(
                         f.equals(secondProc) && s.equals(firstProc),
-                        "Unresolvable placement: connector-processor '%s' demands placement before '%s', and vice versa",
+                        "Unsatisfiable placement: connector-processor '%s' demands placement before '%s', and vice versa",
                         firstProc.getProcessorName(),
                         secondProc.getProcessorName())));
 
@@ -194,7 +200,7 @@ public final class ConnectorProcessorChainOrchestrator
                 s ->
                     SIPFrameworkInitializationException.throwOn(
                         f.equals(secondProc) && s.equals(firstProc),
-                        "Unresolvable placement: connector-processor '%s' demands placement after '%s', and vice versa",
+                        "Unsatisfiable placement: connector-processor '%s' demands placement after '%s', and vice versa",
                         firstProc.getProcessorName(),
                         secondProc.getProcessorName())));
 
@@ -256,26 +262,26 @@ public final class ConnectorProcessorChainOrchestrator
 
   private void registerBeanBasedProcessors(
       final ConnectorDefinition connector, final ApplicationContext context) {
-    context.getBeansWithAnnotation(ConnectorRequestProcessor.class).values().stream()
+    context.getBeansWithAnnotation(RequestProcessor.class).values().stream()
         .filter(
             bean ->
                 isProcessorBeanForThisConnector(
                     connector,
                     bean,
-                    ConnectorRequestProcessor.class,
-                    ConnectorRequestProcessor::value,
-                    ConnectorRequestProcessor::connectorId))
+                    RequestProcessor.class,
+                    RequestProcessor::value,
+                    RequestProcessor::connectorId))
         .flatMap(StreamHelper.typeFilter(ConnectorProcessor.class))
         .forEach(bean -> registerBeanBasedProcessor(bean, requestExtensionsRegistry));
-    context.getBeansWithAnnotation(ConnectorResponseProcessor.class).values().stream()
+    context.getBeansWithAnnotation(ResponseProcessor.class).values().stream()
         .filter(
             bean ->
                 isProcessorBeanForThisConnector(
                     connector,
                     bean,
-                    ConnectorResponseProcessor.class,
-                    ConnectorResponseProcessor::value,
-                    ConnectorResponseProcessor::connectorId))
+                    ResponseProcessor.class,
+                    ResponseProcessor::value,
+                    ResponseProcessor::connectorId))
         .flatMap(StreamHelper.typeFilter(ConnectorProcessor.class))
         .forEach(bean -> registerBeanBasedProcessor(bean, responseExtensionsRegistry));
   }
@@ -285,12 +291,12 @@ public final class ConnectorProcessorChainOrchestrator
     Arrays.stream(connectorMethods)
         .filter(
             method ->
-                method.isAnnotationPresent(ConnectorRequestProcessor.class)
+                method.isAnnotationPresent(RequestProcessor.class)
                     || method.isAnnotationPresent(ParameterMapping.class))
         .forEach(
             method -> registerMethodBasedProcessor(connector, method, requestExtensionsRegistry));
     Arrays.stream(connectorMethods)
-        .filter(method -> method.isAnnotationPresent(ConnectorResponseProcessor.class))
+        .filter(method -> method.isAnnotationPresent(ResponseProcessor.class))
         .forEach(
             method -> registerMethodBasedProcessor(connector, method, responseExtensionsRegistry));
   }
@@ -302,7 +308,7 @@ public final class ConnectorProcessorChainOrchestrator
       final Map<String, ConnectorProcessorRegistryEntry> registry) {
     final var processor =
         ConnectorProcessor.class.isAssignableFrom(method.getReturnType())
-            ? (ConnectorProcessor) method.invoke(method.getDeclaringClass(), null)
+            ? (ConnectorProcessor) method.invoke(connector, null)
             : new MethodBasedConnectorProcessor(connector, method);
     final var registryEntry = new ConnectorProcessorRegistryEntry(processor, method, registry);
     storeInRegistry(registryEntry, registry);
@@ -321,7 +327,7 @@ public final class ConnectorProcessorChainOrchestrator
       if (!ConnectorDefinition.None.class.equals(connectorClass)) {
         return targetConnector.getClass().equals(connectorClass);
       }
-      if (!Strings.isNotBlank(connectorId)) {
+      if (Strings.isNotBlank(connectorId)) {
         return targetConnector.getId().equals(connectorId);
       }
       throw SIPFrameworkInitializationException.init(
