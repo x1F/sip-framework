@@ -4,7 +4,6 @@ import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.ParameterMapping;
-
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.ToDefinition;
 import org.apache.camel.model.rest.RestDefinition;
@@ -57,5 +56,4 @@ public abstract class RestInboundConnectorBase extends InboundConnectorBase
   public final Class<RestsDefinition> getEndpointDefinitionTypeClass() {
     return RestsDefinition.class;
   }
-
 }

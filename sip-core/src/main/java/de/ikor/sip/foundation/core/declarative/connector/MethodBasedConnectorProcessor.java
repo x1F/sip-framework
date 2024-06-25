@@ -4,6 +4,7 @@ import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.He
 import de.ikor.sip.foundation.core.declarative.annotation.rest.PathParameter;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.QueryParameter;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
+import jakarta.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -13,8 +14,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
-
-import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;

@@ -25,12 +25,14 @@ public @interface ExecuteOrder {
   int value() default -1;
 
   /**
-   * @return Whether this should be the first processor for this connector
+   * @return Whether this should be the first processor for this connector. Can only be declared
+   *     once per Connector.
    */
   boolean first() default false;
 
   /**
-   * @return Whether if this should be the last processor for this connector
+   * @return Whether if this should be the last processor for this connector. Can only be declared
+   *     once per Connector.
    */
   boolean last() default false;
 }

@@ -3,10 +3,10 @@ package de.ikor.sip.foundation.core.apps.declarative;
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
 import de.ikor.sip.foundation.core.apps.declarative.connectorextensions.RestStringAttachmentMapper;
 import de.ikor.sip.foundation.core.declarative.annonation.*;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecuteOrder;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.RequestProcessor;
 import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecuteAfter;
 import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecuteBefore;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecuteOrder;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.RequestProcessor;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
@@ -23,7 +23,6 @@ import org.springframework.context.annotation.ComponentScan;
 public class ConnectorProcessorExtensionsAdapter {
 
   public static final String INBOUND_DIRECT_OK = "inbound-direct-ok";
-  public static final String METHOD_PROCESSOR_ATTACHEMENT_STRING = "method-processor";
 
   @IntegrationScenario(
       scenarioId = ConnectorExtensionsScenario.ID,
@@ -68,7 +67,7 @@ public class ConnectorProcessorExtensionsAdapter {
 
         @Override
         public void process(Exchange exchange) throws Exception {
-          exchange.getMessage().setBody(exchange.getMessage().getBody(String.class) + " " + METHOD_PROCESSOR_ATTACHEMENT_STRING);
+          exchange.getMessage().setBody(exchange.getMessage().getBody(String.class) + " method");
         }
       };
     }
@@ -77,6 +76,7 @@ public class ConnectorProcessorExtensionsAdapter {
   @OutboundConnector(
       connectorGroup = "test",
       requestModel = String.class,
+      responseModel = String.class,
       integrationScenario = ConnectorExtensionsScenario.ID)
   public class RestParamMappingOutboundConnector extends GenericOutboundConnectorBase {
 

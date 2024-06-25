@@ -87,13 +87,13 @@ public abstract non-sealed class ConnectorBase
   }
 
   private Orchestrator<ConnectorOrchestrationInfo> initConnectorOrchestrator() {
-    return buildDeprecatedTransformationOverloadOrchestrator()
-        .orElseGet(
-            () ->
-                ConnectorProcessorChainOrchestrator.builder()
-                    .relatedConnector(() -> this)
-                    .applicationContext(this::getApplicationContext)
-                    .build());
+    if (isDeprecatedTransformationOrchestrationOverloaded()) {
+      return buildDeprecatedTransformationOverloadOrchestrator();
+    }
+    return ConnectorProcessorChainOrchestrator.builder()
+        .relatedConnector(() -> this)
+        .applicationContext(this::getApplicationContext)
+        .build();
   }
 
   /**
@@ -102,20 +102,12 @@ public abstract non-sealed class ConnectorBase
    * {@link ConnectorOrchestrator} which does not contain any additional model transformation logic.
    * It is only suitable if the connectors and the common domain model share the same type.
    *
-   * @deprecated Use new connector-processor extensions via @{@link
-   *     RequestProcessor}
-   *     and @{@link
-   *     ResponseProcessor}
-   *     instead
+   * @deprecated Use new connector-processor extensions via @{@link RequestProcessor} and @{@link
+   *     ResponseProcessor} instead
    * @return Orchestrator for the transformation between connector and common domain models.
    */
   @Deprecated
   protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
-    return defineStandardDeprecatedTransformationOrchestrator();
-  }
-
-  private Orchestrator<ConnectorOrchestrationInfo>
-      defineStandardDeprecatedTransformationOrchestrator() {
     final var orchestrator = ConnectorOrchestrator.forConnector(this);
     requestMappingRouteTransformer.ifPresent(orchestrator::setRequestRouteTransformer);
     responseMappingRouteTransformer.ifPresent(orchestrator::setResponseRouteTransformer);
@@ -137,43 +129,41 @@ public abstract non-sealed class ConnectorBase
     return false;
   }
 
-  private Optional<Orchestrator<ConnectorOrchestrationInfo>>
+  private Orchestrator<ConnectorOrchestrationInfo>
       buildDeprecatedTransformationOverloadOrchestrator() {
-    if (isDeprecatedTransformationOrchestrationOverloaded()) {
-      final var transformationOrchestrator = defineTransformationOrchestrator();
-      getLogger()
-          .warn(
-              "Connector {} is overloading deprecated defineTransformationOrchestrator() method. Consider using connector-processor extensions instead.",
-              getClass().getName());
+    getLogger()
+        .warn(
+            "Connector {} is overloading deprecated defineTransformationOrchestrator() method. Consider using connector-processor extensions instead.",
+            getClass().getName());
+    final var transformationOrchestrator = defineTransformationOrchestrator();
 
-      if (transformationOrchestrator instanceof ConnectorOrchestrator connectorOrchestrator) {
-        requestMappingRouteTransformer.ifPresent(
-            transformer ->
-                SIPFrameworkInitializationException.throwOn(
-                    !transformer.equals(connectorOrchestrator.getRequestRouteTransformer()),
-                    "Connector %s specifies custom request-transformation in it's orchestrator, and at the same time has annotation @%s present, which is not allowed.",
-                    getClass().getName(),
-                    UseRequestModelMapper.class.getSimpleName()));
-        responseMappingRouteTransformer.ifPresent(
-            transformer ->
-                SIPFrameworkInitializationException.throwOn(
-                    !transformer.equals(connectorOrchestrator.getResponseRouteTransformer()),
-                    "Connector %s specifies custom response-transformation in it's orchestrator, and at the same time has annotation @%s present, which is not allowed.",
-                    getClass().getName(),
-                    UseResponseModelMapper.class.getSimpleName()));
-      } else {
-        TRANSFORM_OVERLOAD_PROHIBITED_ANNOTATIONS.stream()
-            .filter(annotation -> getClass().isAnnotationPresent(annotation))
-            .findAny()
-            .ifPresent(
-                annotation -> {
-                  throw SIPFrameworkInitializationException.init(
-                      "Connector %s is overloading method defineTransformationOrchestrator() and at the same time has annotation @%s present, which is not supported.",
-                      getClass().getName(), annotation.getSimpleName());
-                });
-      }
-      return Optional.of(transformationOrchestrator);
+    if (transformationOrchestrator
+        instanceof @SuppressWarnings("deprecation") ConnectorOrchestrator connectorOrchestrator) {
+      requestMappingRouteTransformer.ifPresent(
+          transformer ->
+              SIPFrameworkInitializationException.throwIf(
+                  !transformer.equals(connectorOrchestrator.getRequestRouteTransformer()),
+                  "Connector %s specifies custom request-transformation in it's orchestrator, and at the same time has annotation @%s present, which is not allowed.",
+                  getClass().getName(),
+                  UseRequestModelMapper.class.getSimpleName()));
+      responseMappingRouteTransformer.ifPresent(
+          transformer ->
+              SIPFrameworkInitializationException.throwIf(
+                  !transformer.equals(connectorOrchestrator.getResponseRouteTransformer()),
+                  "Connector %s specifies custom response-transformation in it's orchestrator, and at the same time has annotation @%s present, which is not allowed.",
+                  getClass().getName(),
+                  UseResponseModelMapper.class.getSimpleName()));
+    } else {
+      TRANSFORM_OVERLOAD_PROHIBITED_ANNOTATIONS.stream()
+          .filter(annotation -> getClass().isAnnotationPresent(annotation))
+          .findAny()
+          .ifPresent(
+              annotation -> {
+                throw SIPFrameworkInitializationException.init(
+                    "Connector %s is overloading method defineTransformationOrchestrator() and at the same time has annotation @%s present, which is not supported.",
+                    getClass().getName(), annotation.getSimpleName());
+              });
     }
-    return Optional.empty();
+    return transformationOrchestrator;
   }
 }

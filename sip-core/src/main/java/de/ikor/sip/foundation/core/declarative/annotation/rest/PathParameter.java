@@ -11,8 +11,7 @@ import org.springframework.core.annotation.AliasFor;
  * Indicates a REST path-parameter to be assigned to the annotated parameter of a mapping-function
  * annotated with @{@link ParameterMapping}
  *
- * <p>This annotation is an alias for @{@link
- * HeaderParameter}.
+ * <p>This annotation is an alias for @{@link HeaderParameter}.
  *
  * @see HeaderParameter
  * @see ParameterMapping

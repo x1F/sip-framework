@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.core.declarative.orchestration.connector;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
 import de.ikor.sip.foundation.core.declarative.annonation.UseResponseModelMapper;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecuteOrder;
 import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.RequestProcessor;
 import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ResponseProcessor;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.ParameterMapping;
@@ -34,7 +35,6 @@ import org.springframework.context.ApplicationContext;
 public final class ConnectorProcessorChainOrchestrator
     implements Orchestrator<ConnectorOrchestrationInfo> {
 
-
   public static final String PROCESSOR_ID_REQUEST = "%s-processor-request-%s";
   public static final String PROCESSOR_ID_RESPONSE = "%s-processor-response-%s";
 
@@ -56,16 +56,15 @@ public final class ConnectorProcessorChainOrchestrator
 
     buildProcessorRegistryForConnector(connector, context);
 
-    var orderedRequestProcessors = orderProcessorsByAnnotations(requestExtensionsRegistry.values());
-    log.info(
-        "Order of request-processors for connector {}: {}",
-        connector.getClass().getSimpleName(),
-        orderedRequestProcessors.stream()
-            .map(ConnectorProcessor::getProcessorName)
-            .collect(Collectors.joining(" => ")));
+    final var orderedRequestProcessors =
+        orderProcessorsByAnnotations(requestExtensionsRegistry.values());
+    logListOrder(
+        String.format("Order of request-processors for connector %s: ", connector.getId()),
+        orderedRequestProcessors);
     var requestRoute = info.getRequestRouteDefinition();
     for (var processor : orderedRequestProcessors) {
-      String processorId = String.format(PROCESSOR_ID_REQUEST, connector.getId(), processor.getProcessorName());
+      String processorId =
+          String.format(PROCESSOR_ID_REQUEST, connector.getId(), processor.getProcessorName());
       requestRoute = requestRoute.process(processor).id(processorId);
     }
 
@@ -76,28 +75,59 @@ public final class ConnectorProcessorChainOrchestrator
       } else {
         var orderedResponseProcessors =
             orderProcessorsByAnnotations(responseExtensionsRegistry.values());
-        log.info(
-            "Order of response-processors for connector {}: {}",
-            connector.getClass().getSimpleName(),
-            orderedResponseProcessors.stream()
-                .map(ConnectorProcessor::getProcessorName)
-                .collect(Collectors.joining(" => ")));
+        logListOrder(
+            String.format("Order of response-processors for connector %s: ", connector.getId()),
+            orderedResponseProcessors);
         for (var processor : orderedResponseProcessors) {
-          String processorId = String.format(PROCESSOR_ID_RESPONSE, connector.getId(), processor.getProcessorName());
+          String processorId =
+              String.format(PROCESSOR_ID_RESPONSE, connector.getId(), processor.getProcessorName());
           responseRoute = responseRoute.process(processor).id(processorId);
         }
       }
     }
   }
 
+  private static void logListOrder(
+      String prefix, List<ConnectorProcessor> orderedRequestProcessors) {
+    if (!orderedRequestProcessors.isEmpty()) {
+      log.info(
+          "{} {}",
+          prefix,
+          orderedRequestProcessors.stream()
+              .map(ConnectorProcessor::getProcessorName)
+              .collect(Collectors.joining(" => ")));
+    }
+  }
+
   private List<ConnectorProcessor> orderProcessorsByAnnotations(
       final Collection<ConnectorProcessorRegistryEntry> unordered) {
 
+    final var originalProcessorSize = unordered.size();
     final List<ConnectorProcessor> orderedProcessors = new ArrayList<>(unordered.size());
     final List<ConnectorProcessorRegistryEntry> absoluteOrderedEntries = new ArrayList<>();
     final List<ConnectorProcessorRegistryEntry> relativeOrderedEntries = new LinkedList<>();
     final List<ConnectorProcessorRegistryEntry> unorderedEntries = new ArrayList<>();
+    final Optional<ConnectorProcessorRegistryEntry> firstEntry =
+        StreamHelper.findAtMostOne(
+            unordered.stream(),
+            ConnectorProcessorRegistryEntry::isPlacedFirst,
+            () ->
+                SIPFrameworkInitializationException.init(
+                    "More than one connector processor is ordered as first via @%s for connector %s",
+                    ExecuteOrder.class.getSimpleName(), relatedConnector.get().getClass()));
+    ;
+    final Optional<ConnectorProcessorRegistryEntry> lastEntry =
+        StreamHelper.findAtMostOne(
+            unordered.stream(),
+            ConnectorProcessorRegistryEntry::isPlacedLast,
+            () ->
+                SIPFrameworkInitializationException.init(
+                    "More than one connector processor is ordered as last via @%s for connector %s",
+                    ExecuteOrder.class.getSimpleName(), relatedConnector.get().getClass()));
 
+    // sort unordered elements into buckets
+    firstEntry.ifPresent(unordered::remove);
+    lastEntry.ifPresent(unordered::remove);
     for (var entry : unordered) {
       if (entry.getPlacementBeforeProcessor().isPresent()
           || entry.getPlacementAfterProcessor().isPresent()) {
@@ -141,6 +171,17 @@ public final class ConnectorProcessorChainOrchestrator
         relativeOrderedEntries.stream()
             .map(ConnectorProcessorRegistryEntry::getProcessor)
             .toList());
+
+    // Add first and last entries last, to make absolutely sure the list does not shift any more
+    firstEntry.ifPresent(entry -> orderedProcessors.add(0, entry.getProcessor()));
+    lastEntry.ifPresent(entry -> orderedProcessors.add(entry.getProcessor()));
+
+    // validate
+    SIPFrameworkInitializationException.throwIf(
+        orderedProcessors.size() != originalProcessorSize,
+        "Number of ordered connector-processors (%d) differs from expected amount of given registry-entries (%d)",
+        orderedProcessors.size(),
+        originalProcessorSize);
 
     return orderedProcessors;
   }
@@ -188,7 +229,7 @@ public final class ConnectorProcessorChainOrchestrator
         f ->
             secondBefore.ifPresent(
                 s ->
-                    SIPFrameworkInitializationException.throwOn(
+                    SIPFrameworkInitializationException.throwIf(
                         f.equals(secondProc) && s.equals(firstProc),
                         "Unsatisfiable placement: connector-processor '%s' demands placement before '%s', and vice versa",
                         firstProc.getProcessorName(),
@@ -198,7 +239,7 @@ public final class ConnectorProcessorChainOrchestrator
         f ->
             secondAfter.ifPresent(
                 s ->
-                    SIPFrameworkInitializationException.throwOn(
+                    SIPFrameworkInitializationException.throwIf(
                         f.equals(secondProc) && s.equals(firstProc),
                         "Unsatisfiable placement: connector-processor '%s' demands placement after '%s', and vice versa",
                         firstProc.getProcessorName(),
@@ -349,7 +390,7 @@ public final class ConnectorProcessorChainOrchestrator
       final ConnectorProcessorRegistryEntry registryEntry,
       final Map<String, ConnectorProcessorRegistryEntry> registry) {
     String processorName = registryEntry.getProcessor().getProcessorName();
-    SIPFrameworkInitializationException.throwOn(
+    SIPFrameworkInitializationException.throwIf(
         registry.containsKey(processorName),
         "A ConnectorProcessor with name '%s' is used more than once for Connector '%s'",
         processorName,

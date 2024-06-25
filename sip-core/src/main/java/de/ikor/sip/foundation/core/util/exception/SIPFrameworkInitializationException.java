@@ -37,7 +37,7 @@ public class SIPFrameworkInitializationException extends SIPFrameworkException {
    * @param messagePattern exception message in form of a string pattern
    * @param args arguments for message pattern
    */
-  public static void throwOn(boolean expression, String messagePattern, Object... args) {
+  public static void throwIf(boolean expression, String messagePattern, Object... args) {
     if (expression) {
       throw init(messagePattern, args);
     }

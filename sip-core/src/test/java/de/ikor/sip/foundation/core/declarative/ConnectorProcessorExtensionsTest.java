@@ -1,7 +1,9 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import de.ikor.sip.foundation.core.apps.declarative.ConnectorProcessorExtensionsAdapter;
-import de.ikor.sip.foundation.core.apps.declarative.RestParamMappingAdapter;
+import java.util.List;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -15,8 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @CamelSpringBootTest
 @SpringBootTest(
@@ -44,9 +44,15 @@ class ConnectorProcessorExtensionsTest {
   @Test
   void GIVEN_valid_request_WHEN_calling_rest_with_param_mappings_VERIFY_result_object_is_mapped() {
 
-    var response = producerTemplate.requestBody("direct:" + ConnectorProcessorExtensionsAdapter.INBOUND_DIRECT_OK, "start");
+    final var expectedOrder =
+        List.of("start", "external", "method", "first", "second", "RestStringAttachmentMapper");
+    var response =
+        producerTemplate.requestBody(
+            "direct:" + ConnectorProcessorExtensionsAdapter.INBOUND_DIRECT_OK,
+            "start",
+            String.class);
 
-    assertThat(response).isNotNull();
+    assertThat(response).isNotBlank();
+    assertThat(response.split(" ")).containsSequence(expectedOrder);
   }
-
 }

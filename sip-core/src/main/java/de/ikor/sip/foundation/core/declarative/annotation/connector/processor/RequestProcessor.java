@@ -31,16 +31,16 @@ import java.lang.annotation.Target;
  *             header with the specified name, if it exists.
  *         <li>For any other parameter types, the framework will attempt a mandatory conversion (if
  *             necessary) of the current body to the declared type
- *         <li>Parameters can be annotated @{{@link jakarta.annotation.Nullable}} to declare that <code>
+ *         <li>Parameters can be annotated @{{@link jakarta.annotation.Nullable}} to declare that
+ *             <code>
  *             null</code> is permitted
  *         <li>If the method declares a non-void return type, the returned object of the method call
  *             will be set as the new body on the current message
  *       </ul>
  * </ul>
  *
- * <p>For ordering of multiple processors, {@link ExecuteOrder} can be used for absolute
- * ordering, while {@link ExecuteAfter} or {@link ExecuteBefore} can be
- * used for relative ordering.
+ * <p>For ordering of multiple processors, {@link ExecuteOrder} can be used for absolute ordering,
+ * while {@link ExecuteAfter} or {@link ExecuteBefore} can be used for relative ordering.
  *
  * @see de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor
  * @see ResponseProcessor

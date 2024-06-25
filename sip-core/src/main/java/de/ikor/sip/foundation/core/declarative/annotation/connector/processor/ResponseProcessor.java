@@ -10,8 +10,8 @@ import java.lang.annotation.Target;
  * Annotation that is used to mark a processor that should be attached to the response-flow of a
  * Connector.
  *
- * <p>Usage of this annotation is identical to {@link RequestProcessor}, so please check
- * there for more detailed instructions.
+ * <p>Usage of this annotation is identical to {@link RequestProcessor}, so please check there for
+ * more detailed instructions.
  *
  * @see RequestProcessor
  */
