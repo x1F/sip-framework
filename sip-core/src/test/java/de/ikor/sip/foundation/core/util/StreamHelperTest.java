@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Collections;
 import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class StreamHelperTest {
@@ -32,5 +33,24 @@ class StreamHelperTest {
 
     // assert
     assertThat(elementsFiltered).isEmpty();
+  }
+
+  @Test
+  void GIVEN_at_most_one_call_WHEN_multiple_matches_found_VERIFY_defined_exception_thrown() {
+    final var elements = List.of("fine", "wine", "in", "fancy", "bottles");
+
+    Assertions.assertThat(
+            StreamHelper.findAtMostOne(
+                elements.stream(), e -> e.startsWith("x"), IllegalStateException::new))
+        .isEmpty();
+    Assertions.assertThat(
+            StreamHelper.findAtMostOne(
+                elements.stream(), e -> e.startsWith("fi"), IllegalStateException::new))
+        .hasValue("fine");
+    Assertions.assertThatExceptionOfType(IllegalStateException.class)
+        .isThrownBy(
+            () ->
+                StreamHelper.findAtMostOne(
+                    elements.stream(), e -> e.startsWith("f"), IllegalStateException::new));
   }
 }

@@ -106,7 +106,7 @@ public abstract non-sealed class ConnectorBase
    *     ResponseProcessor} instead
    * @return Orchestrator for the transformation between connector and common domain models.
    */
-  @Deprecated
+  @Deprecated(since = "3.4.0")
   protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
     final var orchestrator = ConnectorOrchestrator.forConnector(this);
     requestMappingRouteTransformer.ifPresent(orchestrator::setRequestRouteTransformer);

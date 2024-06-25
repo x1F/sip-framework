@@ -78,7 +78,6 @@ class ConnectorProcessorRegistryEntry {
     final var annotation =
         DeclarativeReflectionUtils.getAnnotationIfPresent(annotationClass, definingElement);
     if (annotation.isPresent()) {
-      // final var annotation = definingElement.getAnnotation(annotationClass);
       final Class<? extends ConnectorProcessor> relativeProcessorClass =
           procClassFetcher.apply(annotation.orElseThrow());
       final String relativeProcessorName = procNameFetcher.apply(annotation.orElseThrow());

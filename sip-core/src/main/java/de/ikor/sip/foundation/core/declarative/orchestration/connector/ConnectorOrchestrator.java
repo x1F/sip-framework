@@ -25,7 +25,7 @@ import org.apache.camel.model.RouteDefinition;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 @Accessors(chain = true)
-@Deprecated
+@Deprecated(since = "3.4.0")
 public class ConnectorOrchestrator implements Orchestrator<ConnectorOrchestrationInfo> {
   private final Supplier<ConnectorDefinition> relatedConnector;
   private Consumer<RouteDefinition> requestRouteTransformer = null;

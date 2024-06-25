@@ -69,7 +69,7 @@ public final class ConnectorProcessorChainOrchestrator
     }
 
     if (info.getResponseRouteDefinition().isPresent()) {
-      var responseRoute = info.getResponseRouteDefinition().get();
+      var responseRoute = info.getResponseRouteDefinition().orElseThrow();
       if (responseExtensionsRegistry.isEmpty()) {
         responseRoute.process(exchange -> {});
       } else {
@@ -115,7 +115,7 @@ public final class ConnectorProcessorChainOrchestrator
                 SIPFrameworkInitializationException.init(
                     "More than one connector processor is ordered as first via @%s for connector %s",
                     ExecuteOrder.class.getSimpleName(), relatedConnector.get().getClass()));
-    ;
+
     final Optional<ConnectorProcessorRegistryEntry> lastEntry =
         StreamHelper.findAtMostOne(
             unordered.stream(),
