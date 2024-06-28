@@ -151,11 +151,11 @@ Camel's [component reference documentation](https://camel.apache.org/components/
       responseModel = InboundConnectorResponse.class)
 public class DemoConnector extends GenericInboundConnectorBase {
 
-  // Input endpoint
   @Override
   protected EndpointConsumerBuilder defineInitiatingEndpoint() {
     return StaticEndpointBuilders.file("/folder/to/watch");
   }
+  
 }
 ```
 
@@ -195,6 +195,7 @@ public class RestConnectorTestBase extends RestConnectorBase {
   public void attachParameters(User user, @PathParameters("userid") String userId, @QueryParameter("overwriteIfExists") boolean allowOverwrite) {
       user.setId(userid);
   }
+  
 }
 ```
 
@@ -243,21 +244,25 @@ Any class implementing `ModelMapper` is automatically a `ConnectorProcessor` as 
 
 ```java
 public class SysUserMapper implements ModelMapper<SystemUser, User> {
+    
     @Override
     public User mapToTargetModel(SystemUser sourceUser) {
         var user = new User();
         // do the mapping
         return user;
     }
+    
 }
 
 @InboundConnector(requestModel = SystemUser.class)
 @UseRequestModelMapper(SysUserMapper.class)
 public class SysUserInboundConnector extends GenericInboundConnectorBase {
+    
   @Override
   protected EndpointConsumerBuilder defineInitiatingEndpoint() {
     return StaticEndpointBuilders.jms("jms:queue:newuser");
   }
+  
 }
 ```
 
@@ -279,6 +284,7 @@ Note that for variants 2 and 3, any necessary type conversions are processed thr
 ```java
 @InboundConnector(requestModel = UserRequest.class, responseModel = User.class)
 public class UserRequestInboundConnector extends RestConnectorBase {
+    
   @Override
   protected void configureRest(RestDefinition definition) {
     definition
@@ -305,6 +311,7 @@ public class UserRequestInboundConnector extends RestConnectorBase {
           VipObfuscator.INSTANCE.obfuscatePersonalData(retrievedUser);
       }
   }
+  
 }
 ```
 
@@ -322,11 +329,13 @@ or should not be modified.
 @Component
 @RequestProcessor(ClosedSourceInboundConnector.class)
 class MessagePeek implements ConnectorProcessor {
+    
   @Override
   public void process(final Exchange exchange) throws Exception {
     String body = exchange.getMessage().getBody(String.class);
     // do something useful
   }
+  
 }
 ```
  
@@ -470,6 +479,7 @@ The primary purpose here is to showcase the structure and capabilities of the DS
         requestModel = DemoCDMRequest.class,
         responseModel = DemoCDMResponse.class)
 public class DemoScenario extends IntegrationScenarioBase {
+    
   public static final String ID = "Demo scenario";
 
   @Override
@@ -505,6 +515,7 @@ and response as needed, thereby enabling dynamic and context-aware processing wi
         requestModel = DemoCDMRequest.class,
         responseModel = DemoCDMResponse.class)
 public class DemoScenario extends IntegrationScenarioBase {
+    
   public static final String ID = "Demo scenario";
 
   @Override
@@ -591,6 +602,7 @@ it will be executed if the previous conditions from *ifCase* or *elseIfCase* are
 
 ```java
 public class DemoProcess extends CompositeProcessBase {
+    
     @Override
     public Orchestrator<CompositeProcessOrchestrationInfo> getOrchestrator() {
         return ProcessOrchestrator.forOrchestrationDsl(
@@ -607,6 +619,7 @@ public class DemoProcess extends CompositeProcessBase {
                           .endCases();
                 });
     }
+    
   }
 ```
 
@@ -620,6 +633,7 @@ which should be evaluated into an integer marking the number of iterations. To r
 
 ```java
 public class DemoProcess extends CompositeProcessBase {
+    
     @Override
     public Orchestrator<CompositeProcessOrchestrationInfo> getOrchestrator() {
         return ProcessOrchestrator.forOrchestrationDsl(
@@ -634,5 +648,6 @@ public class DemoProcess extends CompositeProcessBase {
                           .endForLoop();
                 });
     }
+    
   }
 ```
