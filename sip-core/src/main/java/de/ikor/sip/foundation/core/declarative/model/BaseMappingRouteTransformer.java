@@ -1,17 +1,15 @@
 package de.ikor.sip.foundation.core.declarative.model;
 
-import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.apache.camel.CamelContext;
+import lombok.experimental.Delegate;
 import org.apache.camel.model.RouteDefinition;
 
 /**
@@ -23,7 +21,8 @@ import org.apache.camel.model.RouteDefinition;
  * @param <T> Target model type
  */
 @Accessors(chain = true)
-abstract sealed class BaseMappingRouteTransformer<S, T> implements Consumer<RouteDefinition>
+abstract sealed class BaseMappingRouteTransformer<S, T>
+    implements Consumer<RouteDefinition>, ConnectorProcessor
     permits RequestMappingRouteTransformer, ResponseMappingRouteTransformer {
 
   @Getter(AccessLevel.PROTECTED)
@@ -32,13 +31,17 @@ abstract sealed class BaseMappingRouteTransformer<S, T> implements Consumer<Rout
   @Getter(AccessLevel.PROTECTED)
   private final Supplier<IntegrationScenarioDefinition> scenario;
 
-  @Setter private Optional<ModelMapper<S, T>> mapper = Optional.empty();
+  @Delegate(types = ConnectorProcessor.class)
+  @Getter
+  private final ModelMapper<S, T> mapper;
 
   protected BaseMappingRouteTransformer(
       final Supplier<ConnectorDefinition> connector,
-      final Supplier<IntegrationScenarioDefinition> scenario) {
+      final Supplier<IntegrationScenarioDefinition> scenario,
+      ModelMapper<S, T> mapper) {
     this.connector = connector;
     this.scenario = scenario;
+    this.mapper = mapper;
   }
 
   @Override
@@ -47,11 +50,7 @@ abstract sealed class BaseMappingRouteTransformer<S, T> implements Consumer<Rout
   }
 
   private void buildTransformerRoute(final RouteDefinition routeDefinition) {
-    final var modelMapper =
-        retrieveUsableMapper(
-                routeDefinition.getCamelContext(), getSourceModelClass(), getTargetModelClass())
-            .orElseThrow(this::getExceptionForMissingMapper);
-
+    final var modelMapper = getMapper();
     if (notCompatibleTypes(modelMapper.getSourceModelClass(), getSourceModelClass()))
       throw newExceptionForIncompatibleTypes(
           modelMapper, "source", modelMapper.getSourceModelClass(), getSourceModelClass());
@@ -60,17 +59,6 @@ abstract sealed class BaseMappingRouteTransformer<S, T> implements Consumer<Rout
           modelMapper, "target", modelMapper.getTargetModelClass(), getTargetModelClass());
 
     routeDefinition.transform().method(modelMapper, ModelMapper.MAPPING_METHOD_NAME);
-  }
-
-  protected Optional<ModelMapper<S, T>> retrieveUsableMapper(
-      final CamelContext context, final Class<S> sourceModel, final Class<T> targetModel) {
-    if (mapper.isPresent()) {
-      return mapper;
-    }
-    return context
-        .getRegistry()
-        .findSingleByType(DeclarationsRegistry.class)
-        .getGlobalModelMapperForModels(sourceModel, targetModel);
   }
 
   protected abstract Class<S> getSourceModelClass();

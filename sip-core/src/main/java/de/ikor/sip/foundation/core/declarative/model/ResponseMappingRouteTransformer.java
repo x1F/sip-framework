@@ -13,19 +13,23 @@ public final class ResponseMappingRouteTransformer<S, T> extends BaseMappingRout
 
   protected ResponseMappingRouteTransformer(
       final Supplier<ConnectorDefinition> connector,
-      final Supplier<IntegrationScenarioDefinition> scenario) {
-    super(connector, scenario);
+      final Supplier<IntegrationScenarioDefinition> scenario,
+      final ModelMapper<S, T> mapper) {
+    super(connector, scenario, mapper);
   }
 
   public static <S, T> ResponseMappingRouteTransformer<S, T> forConnectorWithScenario(
-      final ConnectorDefinition connector, final Supplier<IntegrationScenarioDefinition> scenario) {
-    return forConnectorWithScenario(() -> connector, scenario);
+      final ConnectorDefinition connector,
+      final Supplier<IntegrationScenarioDefinition> scenario,
+      final ModelMapper<S, T> mapper) {
+    return forConnectorWithScenario(() -> connector, scenario, mapper);
   }
 
   public static <S, T> ResponseMappingRouteTransformer<S, T> forConnectorWithScenario(
       final Supplier<ConnectorDefinition> connector,
-      final Supplier<IntegrationScenarioDefinition> scenario) {
-    return new ResponseMappingRouteTransformer<>(connector, scenario);
+      final Supplier<IntegrationScenarioDefinition> scenario,
+      final ModelMapper<S, T> mapper) {
+    return new ResponseMappingRouteTransformer<>(connector, scenario, mapper);
   }
 
   @Override

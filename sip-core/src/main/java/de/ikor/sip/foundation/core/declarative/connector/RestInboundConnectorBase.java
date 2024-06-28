@@ -1,27 +1,10 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
-import de.ikor.sip.foundation.core.declarative.AdapterBuilder;
 import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.ParameterMapping;
-import de.ikor.sip.foundation.core.declarative.annotation.rest.PathParameter;
-import de.ikor.sip.foundation.core.declarative.annotation.rest.QueryParameter;
-import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Function;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
-import org.apache.camel.Message;
-import org.apache.camel.Processor;
 import org.apache.camel.builder.EndpointProducerBuilder;
-import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.model.ToDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 import org.apache.camel.model.rest.RestsDefinition;
@@ -34,34 +17,13 @@ import org.apache.camel.model.rest.VerbDefinition;
  * specify the connector. The configuration of the REST endpoint is done by overriding the {@link
  * #configureRest(RestDefinition)}.
  *
- * @see ConnectorBase#defineTransformationOrchestrator() Infos on attaching transformation between
- *     domain models of connector and integration scenario
+ * <p>For details on how to handle REST parameter-mappings, refer to {@link ParameterMapping}.
+ *
+ * @see ParameterMapping
  * @see InboundConnector
  */
 public abstract class RestInboundConnectorBase extends InboundConnectorBase
     implements InboundConnectorDefinition<RestsDefinition> {
-
-  @AllArgsConstructor(access = AccessLevel.PRIVATE)
-  private class RestParameterMappingProcessor implements Processor {
-
-    final Method mappingMethod;
-    final List<Function<Exchange, Object>> parameterFetchers;
-
-    @Override
-    public void process(final Exchange exchange) {
-      try {
-        var args = parameterFetchers.stream().map(fetcher -> fetcher.apply(exchange)).toArray();
-        mappingMethod.invoke(RestInboundConnectorBase.this, args);
-      } catch (Exception e) {
-        throw SIPFrameworkException.init(
-            e,
-            "Failed to invoke REST parameter-mapper %s in class %s: %s",
-            mappingMethod.getName(),
-            RestInboundConnectorBase.this.getClass(),
-            e.getMessage());
-      }
-    }
-  }
 
   @Override
   public final void defineInboundEndpoints(
@@ -71,20 +33,18 @@ public abstract class RestInboundConnectorBase extends InboundConnectorBase
     var rest = definition.rest();
     var endpointCounter = 0;
     configureRest(rest);
-    final var verbsTarget =
-        bindParameterMapperMethods(definition.getCamelContext(), targetToDefinition, routeRegistry);
     for (VerbDefinition verb : rest.getVerbs()) {
       verb.setId(
           routeRegistry.generateRouteIdForConnector(
               RouteRole.EXTERNAL_ENDPOINT, this, ++endpointCounter));
-      verb.setTo(new ToDefinition(verbsTarget));
+      verb.setTo(new ToDefinition(targetToDefinition));
     }
   }
 
   /**
    * Configures the REST endpoint used within this connector.
    *
-   * <p>Note that while {@link RestDefinition} supports specifing multiple verbs/endpoints, all of
+   * <p>Note that while {@link RestDefinition} supports specifying multiple verbs/endpoints, all of
    * those will be mapped to the single integration scenario that this connector is linked with
    * though {@link #getScenarioId()}.
    *
@@ -95,56 +55,5 @@ public abstract class RestInboundConnectorBase extends InboundConnectorBase
   @Override
   public final Class<RestsDefinition> getEndpointDefinitionTypeClass() {
     return RestsDefinition.class;
-  }
-
-  private List<Method> initializeParameterMapperMethods() {
-    return Arrays.stream(getClass().getMethods())
-        .filter(method -> method.isAnnotationPresent(ParameterMapping.class))
-        .toList();
-  }
-
-  private EndpointProducerBuilder bindParameterMapperMethods(
-      final CamelContext camelContext,
-      final EndpointProducerBuilder targetToDefinition,
-      final RoutesRegistry routeRegistry) {
-    final var mappingMethods = initializeParameterMapperMethods();
-    if (mappingMethods.isEmpty()) {
-      return targetToDefinition;
-    }
-    final var defs = camelContext.getRegistry().mandatoryFindSingleByType(AdapterBuilder.class);
-    final var routeId =
-        routeRegistry.generateRouteIdForConnector(RouteRole.CONNECTOR_REST_PARAMETER_MAPPING, this);
-    final var mapperInterceptor = StaticEndpointBuilders.direct(routeId);
-    final var routeDef = defs.from(mapperInterceptor).routeId(routeId);
-    mappingMethods.forEach(method -> routeDef.process(buildParameterMappingProcessor(method)));
-    routeDef.to(targetToDefinition);
-    return mapperInterceptor;
-  }
-
-  private RestParameterMappingProcessor buildParameterMappingProcessor(final Method mappingMethod) {
-    final List<Function<Exchange, Object>> parameterFetchers = new ArrayList<>();
-    for (var param : mappingMethod.getParameters()) {
-      if (param.isAnnotationPresent(PathParameter.class)) {
-        parameterFetchers.add(
-            exchange ->
-                exchange
-                    .getMessage()
-                    .getHeader(param.getAnnotation(PathParameter.class).value(), param.getType()));
-      } else if (param.isAnnotationPresent(QueryParameter.class)) {
-        parameterFetchers.add(
-            exchange ->
-                exchange
-                    .getMessage()
-                    .getHeader(param.getAnnotation(QueryParameter.class).value(), param.getType()));
-      } else if (param.getType().equals(Exchange.class)) {
-        parameterFetchers.add(exchange -> exchange);
-      } else if (param.getType().equals(Message.class)) {
-        parameterFetchers.add(Exchange::getMessage);
-      } else {
-        parameterFetchers.add(exchange -> exchange.getMessage().getBody(param.getType()));
-      }
-    }
-    return new RestParameterMappingProcessor(
-        mappingMethod, Collections.unmodifiableList(parameterFetchers));
   }
 }
