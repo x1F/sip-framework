@@ -39,7 +39,7 @@ import java.lang.annotation.Target;
  *       </ul>
  * </ul>
  *
- * <p>For ordering of multiple processors, {@link ExecuteOrder} can be used for absolute ordering,
+ * <p>For ordering of multiple processors, {@link ExecutionOrder} can be used for absolute ordering,
  * while {@link ExecuteAfter} or {@link ExecuteBefore} can be used for relative ordering.
  *
  * @see de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor
