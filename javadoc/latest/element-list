@@ -18,6 +18,7 @@ de.ikor.sip.foundation.core.annotation
 de.ikor.sip.foundation.core.configuration
 de.ikor.sip.foundation.core.declarative
 de.ikor.sip.foundation.core.declarative.annonation
+de.ikor.sip.foundation.core.declarative.annotation.connector.processor
 de.ikor.sip.foundation.core.declarative.annotation.rest
 de.ikor.sip.foundation.core.declarative.connector
 de.ikor.sip.foundation.core.declarative.connectorgroup
