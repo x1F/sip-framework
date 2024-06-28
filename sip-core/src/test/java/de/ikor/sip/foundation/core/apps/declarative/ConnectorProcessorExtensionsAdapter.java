@@ -54,7 +54,7 @@ public class ConnectorProcessorExtensionsAdapter {
     }
 
     @RequestProcessor
-    @ExecuteOrder(1)
+    @ExecutionOrder(1)
     public ConnectorProcessor attachProcessor() {
       return new ConnectorProcessor() {
         @Override
@@ -106,7 +106,7 @@ public class ConnectorProcessorExtensionsAdapter {
     }
 
     @ResponseProcessor
-    @ExecuteOrder(last = true)
+    @ExecutionOrder(last = true)
     public String attachLastString(String body) {
       return body + " end";
     }

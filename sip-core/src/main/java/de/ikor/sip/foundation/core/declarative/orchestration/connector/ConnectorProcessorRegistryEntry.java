@@ -2,7 +2,7 @@ package de.ikor.sip.foundation.core.declarative.orchestration.connector;
 
 import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecuteAfter;
 import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecuteBefore;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecuteOrder;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecutionOrder;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import de.ikor.sip.foundation.core.util.StreamHelper;
@@ -51,22 +51,22 @@ class ConnectorProcessorRegistryEntry {
   }
 
   private boolean resolvePlacedFirst() {
-    return DeclarativeReflectionUtils.getAnnotationIfPresent(ExecuteOrder.class, definingElement)
-        .map(ExecuteOrder::first)
+    return DeclarativeReflectionUtils.getAnnotationIfPresent(ExecutionOrder.class, definingElement)
+        .map(ExecutionOrder::first)
         .orElse(false);
   }
 
   private boolean resolvePlacedLast() {
-    return DeclarativeReflectionUtils.getAnnotationIfPresent(ExecuteOrder.class, definingElement)
-        .map(ExecuteOrder::last)
+    return DeclarativeReflectionUtils.getAnnotationIfPresent(ExecutionOrder.class, definingElement)
+        .map(ExecutionOrder::last)
         .orElse(false);
   }
 
   private Optional<Integer> resolveAbsolutePosition() {
     final var annotation =
-        DeclarativeReflectionUtils.getAnnotationIfPresent(ExecuteOrder.class, definingElement);
+        DeclarativeReflectionUtils.getAnnotationIfPresent(ExecutionOrder.class, definingElement);
     if (annotation.isPresent() && annotation.get().value() > -1) {
-      return annotation.map(ExecuteOrder::value);
+      return annotation.map(ExecutionOrder::value);
     }
     return Optional.empty();
   }

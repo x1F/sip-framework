@@ -3,7 +3,7 @@ package de.ikor.sip.foundation.core.declarative.orchestration.connector;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
 import de.ikor.sip.foundation.core.declarative.annonation.UseResponseModelMapper;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecuteOrder;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecutionOrder;
 import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.RequestProcessor;
 import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ResponseProcessor;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.ParameterMapping;
@@ -114,7 +114,7 @@ public final class ConnectorProcessorChainOrchestrator
             () ->
                 SIPFrameworkInitializationException.init(
                     "More than one connector processor is ordered as first via @%s for connector %s",
-                    ExecuteOrder.class.getSimpleName(), relatedConnector.get().getClass()));
+                    ExecutionOrder.class.getSimpleName(), relatedConnector.get().getClass()));
 
     final Optional<ConnectorProcessorRegistryEntry> lastEntry =
         StreamHelper.findAtMostOne(
@@ -123,7 +123,7 @@ public final class ConnectorProcessorChainOrchestrator
             () ->
                 SIPFrameworkInitializationException.init(
                     "More than one connector processor is ordered as last via @%s for connector %s",
-                    ExecuteOrder.class.getSimpleName(), relatedConnector.get().getClass()));
+                    ExecutionOrder.class.getSimpleName(), relatedConnector.get().getClass()));
 
     // sort unordered elements into buckets
     firstEntry.ifPresent(unordered::remove);
