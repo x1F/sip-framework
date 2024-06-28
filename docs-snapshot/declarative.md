@@ -210,7 +210,7 @@ As outbound connectors are otherwise defined identically to inbound ones, additi
 
 #### Connector Orchestration
 
-Connector orchestration allows to define any number of processing steps that need to be completed within the scope of a [Connector](#connectors).
+Connector orchestration allows to define any number of processing steps that need to be completed within the scope of a connector.
 Typical tasks include:
 * Mapping between various data models (such as from the system specific model to the common domain model)
 * Attaching data from the message header to the model (such as query- or path-parameters)
@@ -348,7 +348,7 @@ The placement of processors without any ordering annotation is non-deterministic
 The `@ExecutionOrder` annotation can be utilized to provide absolute ordering for a connector processor. The annotation supports three variants:
 1. By supplying the order-number of this processor's execution. The processors will be executed in the order from the lowest to the highest number. A continuous numbering is not required. If there are multiple processors with the same ordering number, their execution order is non-deterministic.
 2. By setting `@ExecutionOrder(first = true)`. This processor will always be executed before any other. This may only be specified once per connector.
-3. By setting `@ExecutionOrder(last = true)`. This processor will always be last before any other. This may only be specified once per connector.
+3. By setting `@ExecutionOrder(last = true)`. This processor will always be last after any other. This may only be specified once per connector.
 
 ```java
 @InboundConnector(requestModel = String.class)
