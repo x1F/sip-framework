@@ -408,8 +408,8 @@ public class StringManipulatingInboundProcessor extends GenericInboundConnectorB
 #### DEPRECATED: Orchestration via defineTransformationOrchestrator()
 
 > [!WARNING]   
-> Overriding defineTransformationOrchestrator() is deprecated since 3.4.0, and support might be removed in the future. 
-> This approach is also mutually exclusive with the Connector Processor features described above, so either
+> This variant of connector orchestration is deprecated since 3.4.0, and support might be removed in the future. 
+> This approach is also mutually exclusive with the [Connector Processor](#defining-and-attaching-connector-processors) features described above, so either
 > one or the other can be used for any connector.
 
 Overriding `defineTransformationOrchestrator()` in the connector class allows to return a custom `Orchestrator`
