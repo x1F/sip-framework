@@ -374,7 +374,7 @@ public class StringManipulatingInboundProcessor extends GenericInboundConnectorB
     public ConnectorProcessor authorizeRequest() { /* ... */ }
     
     @ExecutionOrder(2)
-    public String fileToUpper(String fileContent) { return request.toUpperCase(); }
+    public String fileToUpper(String fileContent) { return fileContent.toUpperCase(); }
     
     @ExecutionOrder(1)
     public void verifyReadable(File file) { if (!file.canRead()) throw new IllegalArgumentException();  }
