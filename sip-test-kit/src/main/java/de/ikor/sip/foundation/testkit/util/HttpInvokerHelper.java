@@ -2,6 +2,8 @@ package de.ikor.sip.foundation.testkit.util;
 
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
@@ -23,13 +25,32 @@ public class HttpInvokerHelper {
    */
   public static MultiValueMap<String, String> prepareHeaders(Exchange exchange) {
     MultiValueMap<String, String> headers = new HttpHeaders();
-    headers.add(
+    Map<String, Object> existingHeaders = exchange.getMessage().getHeaders();
+
+    existingHeaders.forEach(
+        (key, value) -> {
+          if (value instanceof List) {
+            ((List<?>) value).forEach(val -> headers.add(key, val.toString()));
+          } else {
+            headers.add(key, value.toString());
+          }
+        });
+    addHeaderIfAbsent(
+        headers,
         RouteInvoker.TEST_NAME_HEADER,
         exchange.getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER, String.class));
-    headers.add(
+    addHeaderIfAbsent(
+        headers,
         ProcessorProxy.TEST_MODE_HEADER,
         exchange.getMessage().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class));
     return headers;
+  }
+
+  private static void addHeaderIfAbsent(
+      MultiValueMap<String, String> headers, String headerName, String headerValue) {
+    if (!headers.containsKey(headerName) && headerValue != null) {
+      headers.add(headerName, headerValue);
+    }
   }
 
   /**
