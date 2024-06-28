@@ -16,7 +16,6 @@ import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
-import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.declarative.model.RequestMappingRouteTransformer;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
@@ -29,7 +28,6 @@ import java.util.Map;
 import java.util.Optional;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 
@@ -46,7 +44,6 @@ class DeclarationsRegistryTest {
   private final List<ConnectorGroupDefinition> connectorGroups = new ArrayList<>();
   private final List<IntegrationScenarioDefinition> scenarios = new ArrayList<>();
   private final List<ConnectorDefinition> connectors = new ArrayList<>();
-  private final List<ModelMapper<?, ?>> modelMappers = new ArrayList<>();
 
   private final ApplicationContext applicationContext = mock(ApplicationContext.class);
 
@@ -67,9 +64,6 @@ class DeclarationsRegistryTest {
       return null;
     }
   }
-
-  @BeforeEach
-  void setup() {}
 
   @Test
   void WHEN_checkForUnusedScenarios_THEN_expectSIPFrameworkInitializationException() {
@@ -243,7 +237,7 @@ class DeclarationsRegistryTest {
               return null;
             },
             null);
-    @Deprecated ConnectorOrchestrator connectorOrchestrator = mock(ConnectorOrchestrator.class);
+    ConnectorOrchestrator connectorOrchestrator = mock(ConnectorOrchestrator.class);
     when(connector.getId()).thenReturn("mockConnector");
     when(connectorOrchestrator.getRequestRouteTransformer()).thenReturn(routeTransformer);
     when(connector.getOrchestrator()).thenReturn(connectorOrchestrator);
