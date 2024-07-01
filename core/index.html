@@ -53,7 +53,7 @@
                 </li>
               </ul>
               <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="./">Core</a>
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Core</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#description">Description</a>
     </li>
@@ -130,6 +130,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/latest/index.html">JavaDoc Latest Development</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/3.4.0/index.html">JavaDoc 3.4.0</a>
                 </li>
               </ul>
               <ul>
@@ -321,11 +325,11 @@ By default, it is named <code>sip.core.metrics.health</code>, but can be changed
 <h3 id="adapter-lifecycle-manipulation-in-runtime">Adapter lifecycle manipulation in runtime<a class="headerlink" href="#adapter-lifecycle-manipulation-in-runtime" title="Permanent link">&para;</a></h3>
 <p>SIP Core provides a possibility to manipulate adapter lifecycle in runtime by controlling registered Camel routes.</p>
 <p>All registered routes with basic info can be listed by using the following URI:</p>
-<pre class="highlight"><code>GET /actuator/adapter-routes</code></pre>
+<pre class="highlight"><code>GET /actuator/adapterroutes</code></pre>
 <p>Getting only routes with sip middle component consumer (including all outbound connectors):</p>
-<pre class="highlight"><code>GET /actuator/adapter-routes/sipmc</code></pre>
+<pre class="highlight"><code>GET /actuator/adapterroutes/sipmc</code></pre>
 <p>More detailed info view for only one exact route can be seen by providing route id into following URI:</p>
-<pre class="highlight"><code>GET /actuator/adapter-routes/{routeId}</code></pre>
+<pre class="highlight"><code>GET /actuator/adapterroutes/{routeId}</code></pre>
 <p>The following operations (case sensitive) can be executed per route, for all route or on sipmc:</p>
 <ul>
 <li>start</li>
@@ -335,14 +339,14 @@ By default, it is named <code>sip.core.metrics.health</code>, but can be changed
 <li>reset</li>
 </ul>
 <p>To execute an operation on all routes, use following URIs:</p>
-<pre class="highlight"><code>POST /actuator/adapter-routes/{operation}</code></pre>
+<pre class="highlight"><code>POST /actuator/adapterroutes/{operation}</code></pre>
 <p>There is a possibility to execute a route lifecycle operation on an exact route, by providing route id and operation.
 This can be achieved by using following URI:</p>
-<pre class="highlight"><code>POST /actuator/adapter-routes/{routeId}/{operation}</code></pre>
+<pre class="highlight"><code>POST /actuator/adapterroutes/{routeId}/{operation}</code></pre>
 <p>It is also possible to execute desired operation on integration scenarios level via sip middle component. 
 By specifying the operation in the following URI, 
 it will be executed for all outgoing connectors inside the adapter, and any other consumer using sipmc:</p>
-<pre class="highlight"><code>POST /actuator/adapter-routes/sipmc/{operation}</code></pre>
+<pre class="highlight"><code>POST /actuator/adapterroutes/sipmc/{operation}</code></pre>
 <p><strong>Warning:</strong>
 When using suspend or stop operation on route that has middle component as a consumer, default value (30 seconds)
 timeout will be used. Keep in mind that if route is not started for next 30 seconds after sending data to middle

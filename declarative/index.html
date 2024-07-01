@@ -57,7 +57,7 @@
                 </li>
               </ul>
               <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="./">Declarative Structure</a>
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Declarative Structure</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#description">Description</a>
     </li>
@@ -86,8 +86,34 @@
     <li class="toctree-l3"><a class="reference internal" href="#connector-groups">Connector Groups</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#connectors">Connectors</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#inbound-connectors">Inbound Connectors</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#composite-processes">Composite Processes</a>
+    <li class="toctree-l4"><a class="reference internal" href="#outbound-connectors">Outbound Connectors</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#orchestration_1">Orchestration</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#connector-orchestration">Connector Orchestration</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#implementing-connector-processors">Implementing Connector Processors</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#deprecated-orchestration-via-definetransformationorchestrator">DEPRECATED: Orchestration via defineTransformationOrchestrator()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#integration-scenario_1">Integration Scenario</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#composite-processes">Composite Processes</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configuration-and-exception-handling">Configuration and exception handling</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#scenario-and-connector-level-handlers">Scenario and connector level handlers</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#connector-level-exception-handlers">Connector level exception handlers</a>
     </li>
         </ul>
     </li>
@@ -136,6 +162,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/latest/index.html">JavaDoc Latest Development</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/3.4.0/index.html">JavaDoc 3.4.0</a>
                 </li>
               </ul>
               <ul>
@@ -232,8 +262,45 @@
 <li><a href="#how-to-build">How to build</a><ul>
 <li><a href="#integration-scenarios">Integration Scenarios</a></li>
 <li><a href="#connector-groups">Connector Groups</a></li>
-<li><a href="#connectors">Connectors</a></li>
-<li><a href="#composite-processes">Composite Processes</a></li>
+<li><a href="#connectors">Connectors</a><ul>
+<li><a href="#inbound-connectors">Inbound Connectors</a><ul>
+<li><a href="#defining-the-endpoint">Defining the Endpoint</a></li>
+<li><a href="#rest-connector">REST Connector</a></li>
+</ul>
+</li>
+<li><a href="#outbound-connectors">Outbound Connectors</a></li>
+</ul>
+</li>
+<li><a href="#orchestration_1">Orchestration</a><ul>
+<li><a href="#connector-orchestration">Connector Orchestration</a></li>
+<li><a href="#implementing-connector-processors">Implementing Connector Processors</a><ul>
+<li><a href="#defining-and-attaching-connector-processors">Defining and Attaching Connector Processors</a><ul>
+<li><a href="#using-model-mappers">Using model mappers</a></li>
+<li><a href="#annotating-methods-inside-a-connector-class">Annotating methods inside a connector class</a></li>
+<li><a href="#attaching-a-processor-bean-to-a-connector">Attaching a processor bean to a connector</a></li>
+</ul>
+</li>
+<li><a href="#ordering-connector-processors">Ordering Connector Processors</a><ul>
+<li><a href="#absolute-ordering">Absolute ordering</a></li>
+<li><a href="#relative-ordering">Relative ordering</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#deprecated-orchestration-via-definetransformationorchestrator">DEPRECATED: Orchestration via defineTransformationOrchestrator()</a></li>
+<li><a href="#integration-scenario_1">Integration Scenario</a></li>
+<li><a href="#composite-processes">Composite Processes</a><ul>
+<li><a href="#conditionals">Conditionals</a></li>
+<li><a href="#loops">Loops</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#configuration-and-exception-handling">Configuration and exception handling</a><ul>
+<li><a href="#scenario-and-connector-level-handlers">Scenario and connector level handlers</a></li>
+<li><a href="#connector-level-exception-handlers">Connector level exception handlers</a></li>
 </ul>
 </li>
 </ul>
@@ -268,7 +335,7 @@ They can be either <em>Inbound</em> or <em>Outbound</em>, with Inbound having Re
 <h3 id="composite-process">Composite Process<a class="headerlink" href="#composite-process" title="Permanent link">&para;</a></h3>
 <p>Combines multiple Integration Scenarios into one flow. 
 Its purpose is to allow reuse of the integration scenarios and provide mappings between different CDMs, 
-define order of execution and conditional execution.</p>
+define order of execution, conditional execution and looping.</p>
 <h3 id="orchestration">Orchestration<a class="headerlink" href="#orchestration" title="Permanent link">&para;</a></h3>
 <p>SIP Framework allows custom code to be added to multiple predefined points in the adapter
 that can control the behaviour of the specific declarative element. 
@@ -276,9 +343,9 @@ At the end SIP framework builds the adapter using predefined SIP constructs (map
 and custom code defined by the developer. 
 Custom behaviour supplied by the developer in different places in the adapter is called "orchestration".</p>
 <p>There are 3 points of orchestration:
-* Connectors - Behavior of the connector that influences request and (optional) response flow. This orchestration can be written in <strong>Camel and Java</strong>.
-* Integration scenario - Execution order of Connectors, control flow, and response aggregation. This orchestration can be written in custom <strong>SIP Orchestration DSL and Java</strong>. 
-* Composite process - Execution order of integration scenarios, control flow and mappings. This orchestration can be written in custom <strong>SIP Orchestration DSL and Java</strong>.</p>
+* <code>Connectors</code> - Behavior of the connector that influences request and (optional) response flow. This orchestration can be written in <strong>Camel and Java</strong>.
+* <code>Integration scenario</code> - Execution order of Connectors, control flow, and response aggregation. This orchestration can be written in custom <strong>SIP Orchestration DSL and Java</strong>. 
+* <code>Composite process</code> - Execution order of integration scenarios, control flow and mappings. This orchestration can be written in custom <strong>SIP Orchestration DSL and Java</strong>.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p>To enable or disable declarative adapter building the following configuration property is used:</p>
 <pre class="highlight"><code class="language-yaml">sip:
@@ -288,8 +355,8 @@ Custom behaviour supplied by the developer in different places in the adapter is
 <h2 id="how-to-build">How to build<a class="headerlink" href="#how-to-build" title="Permanent link">&para;</a></h2>
 <p>Building one adapter requires implementation of previously mentioned concepts.</p>
 <h3 id="integration-scenarios">Integration Scenarios<a class="headerlink" href="#integration-scenarios" title="Permanent link">&para;</a></h3>
-<p>In order to create a scenario first we need to create a class which extends IntegrationScenarioBase. 
-Then, annotate it with @IntegrationScenario and fill in the required fields:</p>
+<p>In order to create a scenario first we need to create a class which extends <code>IntegrationScenarioBase</code>. 
+Then, annotate it with <code>@IntegrationScenario</code> and fill in the required fields:</p>
 <ul>
 <li><em>scenarioId</em> - unique identifier of a scenario, used in connectors to link them</li>
 <li><em>requestModel</em> - represents the common domain model, that both integration sides communicate through</li>
@@ -297,15 +364,15 @@ Then, annotate it with @IntegrationScenario and fill in the required fields:</p>
 <li><em>pathToDocumentationResource</em> (optional) - provides path to scenario documentation files
   (By default it will look for file in <em>document/structure/integration-scenarios/{scenarioId}.md</em>)</li>
 </ul>
-<pre class="highlight"><code class="language-java">  @IntegrationScenario(
-        scenarioId = DemoScenario.ID, 
-        requestModel = DemoCDMRequest.class, 
-        responseModel = DemoCDMResponse.class)
-  public class DemoScenario extends IntegrationScenarioBase {
-    public static final String ID = "Demo scenario";
-  }</code></pre>
+<pre class="highlight"><code class="language-java">@IntegrationScenario(
+      scenarioId = DemoScenario.ID, 
+      requestModel = DemoCDMRequest.class, 
+      responseModel = DemoCDMResponse.class)
+public class DemoScenario extends IntegrationScenarioBase {
+  public static final String ID = "Demo scenario";
+}</code></pre>
 <h3 id="connector-groups">Connector Groups<a class="headerlink" href="#connector-groups" title="Permanent link">&para;</a></h3>
-<p>Similar to scenarios, we first need to extend ConnectorGroupBase and also annotate the class with @ConnectorGroup.
+<p>Similar to scenarios, we first need to extend <code>ConnectorGroupBase</code> and also annotate the class with <code>@ConnectorGroup</code>.
 Defining connector group is optional. If a connector group is not represented in code, but is used in a connector, 
 it will be automatically generated by the framework with the ID declared in the connector.
 Fields that are available are:</p>
@@ -314,16 +381,16 @@ Fields that are available are:</p>
 <li><em>pathToDocumentationResource</em> (optional) - provides path to documentation files.
   (By default it will look for file in <em>document/structure/connector-groups/{groupId}.md</em>)</li>
 </ul>
-<pre class="highlight"><code class="language-java">  @ConnectorGroup(groupId = DemoConnectorGroup.ID)
-  public class DemoConnectorGroup extends ConnectorGroupBase {
-    public static final String ID = "SIP1";
-  }</code></pre>
+<pre class="highlight"><code class="language-java">@ConnectorGroup(groupId = DemoConnectorGroup.ID)
+public class DemoConnectorGroup extends ConnectorGroupBase {
+  public static final String ID = "SIP1";
+}</code></pre>
 <h3 id="connectors">Connectors<a class="headerlink" href="#connectors" title="Permanent link">&para;</a></h3>
-<p><strong>Inbound</strong></p>
+<h4 id="inbound-connectors">Inbound Connectors<a class="headerlink" href="#inbound-connectors" title="Permanent link">&para;</a></h4>
 <p>Inbound connectors are the entry point to an adapter. 
-They need to extend <em>GenericInboundConnectorBase</em>, or one of the dedicated implementations (REST and SOAP),
+They need to extend <code>GenericInboundConnectorBase</code>, or one of the dedicated implementations (REST and SOAP),
 and override necessary methods.
-Also, @InboundConnector annotation is required, with the following fields:</p>
+Also, <code>@InboundConnector</code> annotation is required, with the following fields:</p>
 <ul>
 <li><em>connectorId</em> (optional) - unique identifier of a connector (automatically generated if missing)</li>
 <li><em>connectorGroup</em> - id of the connector group it belongs to</li>
@@ -334,111 +401,241 @@ Also, @InboundConnector annotation is required, with the following fields:</p>
 <li><em>pathToDocumentationResource</em> (optional) - provides path to documentation files.
   (By default it will look for file in <em>document/structure/connectors/{connectorId}.md</em>)</li>
 </ul>
-<p>Defining connector behavior is done by overriding certain methods and adding custom implementation.</p>
-<p>First, <em>EndpointConsumerBuilder defineInitiatingEndpoint()</em> it is used to define the input endpoint.
-StaticEndpointBuilders can be used to provide the endpoint definition. 
-Under the hood connector uses <strong>Apache Camel</strong> endpoints.</p>
-<p>Next is defining processing and transformation. 
-This is done in <em>Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator()</em>.
-Here an Orchestrator needs to be returned, which is available from ConnectorOrchestrator 
-and using <em>forConnector(this)</em> as a builder. 
-<em>setRequestRouteTransformer(Consumer<RouteDefinition> requestRouteTransformer)</em> is for processing and transformation,
-which occurs before providing the data to scenario, 
-while <em>setResponseRouteTransformer(Consumer<RouteDefinition> responseRouteTransformer)</em> handles the response.
-This is illustrated in the example below.</p>
+<h5 id="defining-the-endpoint">Defining the Endpoint<a class="headerlink" href="#defining-the-endpoint" title="Permanent link">&para;</a></h5>
+<p>Overloading the method <code>defineInitiatingEndpoint()</code> is used to define the input endpoint.</p>
+<p>The most common way to specify the correct <code>EndpointConsumerBuilder</code> expected as the return type
+for this method, is to use the <code>StaticEndpoindBuilder</code>class, which contains a large list of integration
+technologies supported by <strong>Apache Camel</strong>.</p>
+<p>Available options and dependency requirements for each technology can be retrieved from 
+Camel's <a href="https://camel.apache.org/components/">component reference documentation</a>.</p>
 <pre class="highlight"><code class="language-java">@InboundConnector(
       connectorId = "appendStaticMessageProvider",
       connectorGroup = DemoConnectorGroup.ID,
       integrationScenario = DemoScenario.ID,
       requestModel = InboundConnectorRequest.class,
       responseModel = InboundConnectorResponse.class)
-  public class DemoConnector extends GenericInboundConnectorBase {
+public class DemoConnector extends GenericInboundConnectorBase {
 
-    // Input endpoint
-    @Override
-    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
-      return StaticEndpointBuilders.direct("entry-point");
-    }
+  @Override
+  protected EndpointConsumerBuilder defineInitiatingEndpoint() {
+    return StaticEndpointBuilders.file("/folder/to/watch");
+  }
 
-    @Override
-    protected Orchestrator&lt;ConnectorOrchestrationInfo&gt; defineTransformationOrchestrator() {
-      return ConnectorOrchestrator.forConnector(this)
-          .setRequestRouteTransformer(this::defineRequestRoute)
-          .setResponseRouteTransformer(this::defineResponseRoute);
-    }
-
-    protected void defineRequestRoute(final RouteDefinition definition) {
-      definition.process(exchange -&gt; System.out.println("Processing and transformation pre-orchestration"));
-    }
-
-    protected void defineResponseRoute(final RouteDefinition definition) {
-        definition.process(exchange -&gt; System.out.println("Processing and transformation post-orchestration"));
-    }
-  }</code></pre>
-<p><strong>Rest connector</strong></p>
-<p>Rest connectors are a subtype of inbound connectors. 
-They are used in order to define REST inbound endpoint via Apache Camel RestDSL.
-The difference is that they need to extend <em>RestConnectorBase</em>, but the annotation stays the same.</p>
-<p>Unlike generic inbound connectors it is required to override <em>void configureRest(RestDefinition definition)</em> method 
-and append the rest DSL to RestDefinition to define the input endpoint.</p>
+}</code></pre>
+<h5 id="rest-connector">REST Connector<a class="headerlink" href="#rest-connector" title="Permanent link">&para;</a></h5>
+<p>To make the commonly required REST services easier to use, a special base class for inbound connectors is available. </p>
+<p>This type of connector easily allows to specify REST services using <a href="https://camel.apache.org/manual/rest-dsl.html">REST DSL</a>.
+To do this, adapter developers must override the <code>configureRest(RestDefinition)</code> method, which receives the handle to the DSL as it's sole parameter.</p>
+<p>For retrieving and handling path- and query-parameters, the <code>ConnectorProcessor</code> extensions as described in <a href="#connector-orchestration">connector orchestration</a> 
+can be utilized. To make the intent of parameter-mapping even more clear, special alias-annotations <code>@ParameterMapping</code> (for <code>@RequestProcessor</code>), as well as 
+<code>@QueryParameter</code> and <code>@PathParameter</code> (for <code>@HeaderParameter</code>) are available.</p>
+<p>SIP will automatically expose the OpenAPI specification for REST endpoints created this way, as well as publish a 
+Swagger-UI suite to allow easy testing for these endpoint.</p>
 <pre class="highlight"><code class="language-java"> @InboundConnector(
       connectorGroup = DemoConnectorGroup.ID,
       integrationScenario = RestDSLScenario.ID,
-      requestModel = String.class)
-  public class RestConnectorTestBase extends RestConnectorBase {
+      requestModel = User.class,
+      responseModel = UserCreationResult.class)
+public class RestConnectorTestBase extends RestConnectorBase {
 
-    // Input endpoint defined via Rest DSl
+  @Override
+  protected void configureRest(RestDefinition definition) {
+    definition
+        .post("/user/{userid}")
+            .type(User.class)
+            .outType(UserCreationResult.class)
+            .consumes("application/json");
+  }
+
+  @ParameterMapping
+  public void attachParameters(User user, @PathParameters("userid") String userId, @QueryParameter("overwriteIfExists") boolean allowOverwrite) {
+      user.setId(userid);
+  }
+
+}</code></pre>
+<h4 id="outbound-connectors">Outbound Connectors<a class="headerlink" href="#outbound-connectors" title="Permanent link">&para;</a></h4>
+<p>Outbound connectors are used to define communication with the external systems inside the adapter. 
+They need to extend <code>GenericOutboundConnectorBase</code> and override necessary methods, but also to be annotated with <code>@OutboundConnector</code>.</p>
+<p>As outbound connectors are otherwise defined identically to inbound ones, additional explanations are available in the 
+<a href="#inbound-connectors">documentation for inbound connectors</a>.</p>
+<h3 id="orchestration_1">Orchestration<a class="headerlink" href="#orchestration_1" title="Permanent link">&para;</a></h3>
+<h4 id="connector-orchestration">Connector Orchestration<a class="headerlink" href="#connector-orchestration" title="Permanent link">&para;</a></h4>
+<p>Connector orchestration allows to define any number of processing steps that need to be completed within the scope of a connector.
+Typical tasks include:
+* Mapping between various data models (such as from the system specific model to the common domain model)
+* Attaching data from the message header to the model (such as query- or path-parameters)
+* Verifying information retrieved with a request (such as authorization tokens)</p>
+<h4 id="implementing-connector-processors">Implementing Connector Processors<a class="headerlink" href="#implementing-connector-processors" title="Permanent link">&para;</a></h4>
+<p>SIP allows to implement and attach processors to (inbound- and outbound-) connectors in a variety of ways.</p>
+<p>Internally, all processors rely on the <code>ConnectorProcessor</code> interface, but it is not always necessary for adapter developers to
+implement this interface themselves. </p>
+<p>Connector processors are attached to either the <em>request</em>- or the <em>response</em>-flow of a connector, typically using the respective <code>@RequestProcessor</code> 
+and <code>@ResponseProcessor</code> annotations. </p>
+<p>If multiple processors are attached to a connector, the ordering in which they are processed can often be important. 
+Chapter <a href="#ordering-connector-processors">Ordering Connector Processors</a> describes how the correct oder can be specified.</p>
+<h5 id="defining-and-attaching-connector-processors">Defining and Attaching Connector Processors<a class="headerlink" href="#defining-and-attaching-connector-processors" title="Permanent link">&para;</a></h5>
+<h6 id="using-model-mappers">Using model mappers<a class="headerlink" href="#using-model-mappers" title="Permanent link">&para;</a></h6>
+<p>The <code>ModelMapper</code> interface allows to implement mappers that transform data from a source- to a target-model. Typically, they
+are used to transform from a system-specific data model to the common domain model used in an integration scenario.</p>
+<p>A mapper is usually attached to a connector by annotation the connector-class with either <code>@UseRequestModelMapper</code> or <code>@UseResponseModelMapper</code>.</p>
+<p>Any class implementing <code>ModelMapper</code> is automatically a <code>ConnectorProcessor</code> as well, and can therefore also be placed in the
+<a href="#ordering-connector-processors">correct order</a> with any other processors used within the connector. </p>
+<pre class="highlight"><code class="language-java">public class SysUserMapper implements ModelMapper&lt;SystemUser, User&gt; {
+
     @Override
-    protected void configureRest(RestDefinition definition) {
-      definition.post("user");
+    public User mapToTargetModel(SystemUser sourceUser) {
+        var user = new User();
+        // do the mapping
+        return user;
     }
+
+}
+
+@InboundConnector(requestModel = SystemUser.class)
+@UseRequestModelMapper(SysUserMapper.class)
+public class SysUserInboundConnector extends GenericInboundConnectorBase {
+
+  @Override
+  protected EndpointConsumerBuilder defineInitiatingEndpoint() {
+    return StaticEndpointBuilders.jms("jms:queue:newuser");
+  }
+
+}</code></pre>
+<h6 id="annotating-methods-inside-a-connector-class">Annotating methods inside a connector class<a class="headerlink" href="#annotating-methods-inside-a-connector-class" title="Permanent link">&para;</a></h6>
+<p>Any public method inside a connector's class can be annotated with either <code>@RequestProcessor</code> or <code>@ResponseProcessor</code>. The SIP framework
+will then automatically attach it to the respective flow of that connector.</p>
+<p>Following variants are supported:
+1. The method can take zero parameters and declare a return type that implements <code>ConnectorProcessor</code>. On adapter startup, SIP framework will then call this method once and attach the provided processor to the flow of the connector.
+2. The method does not have a return type (<code>void</code>) and has any number of arguments. SIP will automatically wrap this method into a <code>ConnectorProcessor</code> instance, and will assign the given parameters using the following rules:
+   * Parameters of type <code>Message</code> or <code>Exchange</code> will receive the respective instance.
+   * Parameters annotated with <code>@HeaderParameter(String)</code> will receive the content of the respectively named header-field in the declared type.
+   * Any other parameter will retrieve the current content of the body in the declared type. <code>@Nullable</code> can be added if <code>null</code> be legal for that parameter.
+3. The method does have a return type which is not a <code>ConnectorProcessor</code> instance and any number of arguments. This will behave identically to approach 2, but additionally uses the returned object as the new message body, effectively making it a simple model mapper.</p>
+<p>Note that for variants 2 and 3, any necessary type conversions are processed through Camel's <a href="https://camel.apache.org/manual/type-converter.html">type converter API</a>.</p>
+<pre class="highlight"><code class="language-java">@InboundConnector(requestModel = UserRequest.class, responseModel = User.class)
+public class UserRequestInboundConnector extends RestConnectorBase {
+
+  @Override
+  protected void configureRest(RestDefinition definition) {
+    definition
+            .get("/user/{userid}")
+            .outType(UserCreationResult.class);
+  }
+
+  // Variant 1
+  @RequestProcessor
+  public ConnectorProcessor authorizeRequest() {
+      return TokenValidator.INSTANCE;
+  }
+
+  // Variant 3
+  @RequestProcessor
+  public UserRequest mapPathIdToUserRequest(@HeaderParameter("userid") String id) {
+      return UserRequest.builder().id(id).build();
+  }
+
+  // Variant 2
+  @ResponseProcessor
+  public void obfuscateVipUserData(User retrievedUser) {
+      if (retrievedUser.isVip()) {
+          VipObfuscator.INSTANCE.obfuscatePersonalData(retrievedUser);
+      }
+  }
+
+}</code></pre>
+<p>Note that instead of using <code>@RequestProcessor</code> and <code>@HeaderParameter</code> annotations for the parameter mapping (as shown above),
+there are also <code>@ParameterMapping</code>, <code>@PathParameter</code>, and <code>@QueryParameter</code> annotations available (as described in the <a href="#rest-connector">REST Connector</a>
+chapter).</p>
+<h6 id="attaching-a-processor-bean-to-a-connector">Attaching a processor bean to a connector<a class="headerlink" href="#attaching-a-processor-bean-to-a-connector" title="Permanent link">&para;</a></h6>
+<p>It is possible to attach a bean implementing <code>ConnectorProcessor</code> to a connector by referencing the connector's id
+or class within the <code>@RequestProcessor</code> or <code>@ResponseProcessor</code> annotation. This can be helpful if the connector can 
+or should not be modified.</p>
+<pre class="highlight"><code class="language-java">@Component
+@RequestProcessor(ClosedSourceInboundConnector.class)
+class MessagePeek implements ConnectorProcessor {
+
+  @Override
+  public void process(final Exchange exchange) throws Exception {
+    String body = exchange.getMessage().getBody(String.class);
+    // do something useful
+  }
+
+}</code></pre>
+<h5 id="ordering-connector-processors">Ordering Connector Processors<a class="headerlink" href="#ordering-connector-processors" title="Permanent link">&para;</a></h5>
+<p>Ordering of connector processors can be achieved via specific annotations, which can be applied in combination with all annotations
+used to attach processors (i.e. <code>@RequestProcessor</code>, <code>@ResponseProcessor</code>, <code>@ParameterMapping</code>, <code>@UseRequestModelMapper</code>, and <code>@UseResponseModelMapper</code>).</p>
+<p>Ordering can either be defined using an <em>absolute</em> order (i.e. numbering the connector processor), or <em>relative</em> ordering of the processors
+in relation to each other.</p>
+<p>It is also possible to combine absolute and relative ordering. In this case, the absolute orderings are applied first, and the
+relative orderings are applied afterward. </p>
+<p>The placement of processors without any ordering annotation is non-deterministic. </p>
+<h6 id="absolute-ordering">Absolute ordering<a class="headerlink" href="#absolute-ordering" title="Permanent link">&para;</a></h6>
+<p>The <code>@ExecutionOrder</code> annotation can be utilized to provide absolute ordering for a connector processor. The annotation supports three variants:
+1. By supplying the order-number of this processor's execution. The processors will be executed in the order from the lowest to the highest number. A continuous numbering is not required. If there are multiple processors with the same ordering number, their execution order is non-deterministic.
+2. By setting <code>@ExecutionOrder(first = true)</code>. This processor will always be executed before any other. This may only be specified once per connector.
+3. By setting <code>@ExecutionOrder(last = true)</code>. This processor will always be last after any other. This may only be specified once per connector.</p>
+<pre class="highlight"><code class="language-java">@InboundConnector(requestModel = String.class)
+@UseRequestModelMapper(StringToCdmMapper.class)
+@ExecutionOrder(last = true)
+public class StringManipulatingInboundProcessor extends GenericInboundConnectorBase {
 
     @Override
-    protected Orchestrator&lt;ConnectorOrchestrationInfo&gt; defineTransformationOrchestrator() {
-      return ConnectorOrchestrator.forConnector(this)
-          .setRequestRouteTransformer(this::defineRequestRoute);
+    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
+        return StaticEndpointBuilders.file("/folder/to/watch");
     }
 
-    protected void defineRequestRoute(final RouteDefinition definition) {
-        definition.process(exchange -&gt; System.out.println("Processing and transformation pre-orchestration"));
-    }
-  }</code></pre>
-<p><strong>Outbound</strong></p>
-<p>Outbound connectors are used to define communication with the external systems inside the adapter.
-They need to extend <em>GenericOutboundConnectorBase</em> and override necessary methods,
-but also to be annotated with @OutboundConnector, with the following fields:</p>
-<ul>
-<li><em>connectorId</em> (optional) - unique identifier of a connector (automatically generated if missing)</li>
-<li><em>connectorGroup</em> - id of the connector group it belongs to</li>
-<li><em>integrationScenario</em> - id of the scenario from which it consumes data</li>
-<li><em>requestModel</em> - model which is expected to be received in the input endpoint from scenario</li>
-<li><em>responseModel</em> (optional) - model which is expected be returned to the caller</li>
-<li><em>domains</em> (optional) - domains this connector is a part of</li>
-<li><em>pathToDocumentationResource</em> (optional) - provides path to documentation files.
-  (By default it will look for file in <em>document/structure/connectors/{connectorId}.md</em>)</li>
-</ul>
-<p>Same as inbound, the behaviour is defined through overridden method implementation.</p>
-<p><em>EndpointProducerBuilder defineOutgoingEndpoint()</em> is used to define the endpoint, 
-which executes the call to an external system.
-StaticEndpointBuilders can be used to provide the endpoint definition. <strong>Apache Camel</strong> is used in the Outbound endpoints as well.</p>
-<p>Defining processing and transformation is done in <em>Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator()</em>.
-Here an Orchestrator needs to be returned, which is available from ConnectorOrchestrator
-and using <em>forConnector(this)</em> as a builder.
-<em>setRequestRouteTransformer(Consumer<RouteDefinition> requestRouteTransformer)</em> is for processing and transformation,
-which occurs before external system call,
-while <em>setResponseRouteTransformer(Consumer<RouteDefinition> responseRouteTransformer)</em> handles the response.
-This is illustrated in the example below.</p>
-<pre class="highlight"><code class="language-java">@OutboundConnector(
-      connectorGroup = OtherDemoGroup.ID,
-      integrationScenario = DemoScenario.ID,
-      requestModel = OutboundConnectorRequest.class,
-      responseModel = OutboundConnectorResponse.class)
-  public class DemoOutboundConnector extends GenericOutboundConnectorBase {
+    @ExecutionOrder(first = true)
+    public ConnectorProcessor authorizeRequest() { /* ... */ }
 
-    // external endpoint definition
+    @ExecutionOrder(2)
+    public String fileToUpper(String fileContent) { return fileContent.toUpperCase(); }
+
+    @ExecutionOrder(1)
+    public void verifyReadable(File file) { if (!file.canRead()) throw new IllegalArgumentException();  }
+
+}</code></pre>
+<p>In this example, <em>authorizeRequest</em> will be called first, followed by <em>verifyReadable</em>, <em>fileToUpper</em> and finally the attached <code>StringToCdmMapper</code> instance.</p>
+<h6 id="relative-ordering">Relative ordering<a class="headerlink" href="#relative-ordering" title="Permanent link">&para;</a></h6>
+<p>The <code>@ExecuteBefore</code> and <code>@ExecuteAfter</code> annotations can be utilized to specify ordering of connector processors relative to each other. These annotations
+expect either the class or processor-name as a pointer to the processor which should be used for the relative ordering. When using method-based 
+connector processors, the name of the method serves as the processor-name that can be used.</p>
+<p>Below is the previous example rewritten with relative ordering.</p>
+<pre class="highlight"><code class="language-java">@InboundConnector(requestModel = String.class)
+@UseRequestModelMapper(StringToCdmMapper.class)
+public class StringManipulatingInboundProcessor extends GenericInboundConnectorBase {
+
+    @Override
+    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
+        return StaticEndpointBuilders.file("/folder/to/watch");
+    }
+
+    @ExecuteBefore(processorName = "verifyReadable")
+    public ConnectorProcessor authorizeRequest() { /* ... */ }
+
+    @ExecuteBefore(StringToCdmMapper.class)
+    public String fileToUpper(String fileContent) { return request.toUpperCase(); }
+
+    @ExecuteBefore(processorName = "authorizeRequest")
+    public void verifyReadable(File file) { if (!file.canRead()) throw new IllegalArgumentException();  }
+
+}</code></pre>
+<h4 id="deprecated-orchestration-via-definetransformationorchestrator">DEPRECATED: Orchestration via defineTransformationOrchestrator()<a class="headerlink" href="#deprecated-orchestration-via-definetransformationorchestrator" title="Permanent link">&para;</a></h4>
+<blockquote>
+<p>[!WARNING] <br />
+This variant of connector orchestration is deprecated since 3.4.0, and support might be removed in the future. 
+This approach is also mutually exclusive with the <a href="#implementing-connector-processors">Connector Processor</a> features described above, so either
+one or the other can be used for any connector.</p>
+</blockquote>
+<p>Overriding <code>defineTransformationOrchestrator()</code> in the connector class allows to return a custom <code>Orchestrator</code>
+to be used with connector.</p>
+<p>The typical pattern when overloading this method is to return a <code>ConnectorOrchestrator</code> instance that provides custom request- and/or
+response-transformers through Camel's RouteDefinition DSL.</p>
+<pre class="highlight"><code class="language-java">@OutboundConnector(requestModel = String.class, responseModel = String.class)
+public class StringAppendingOutboundConnector extends GenericOutboundConnectorBase {
+
     @Override
     protected EndpointProducerBuilder defineOutgoingEndpoint() {
-      return StaticEndpointBuilders.http("localhost:8080/update");
+        return StaticEndpointBuilders.https("example.com/rest/endpoint");
     }
 
     @Override
@@ -449,17 +646,96 @@ This is illustrated in the example below.</p>
     }
 
     protected void defineRequestRoute(final RouteDefinition definition) {
-        definition.process(exchange -&gt; System.out.println("Processing and transformation before external system call"));
+      definition.setBody(exchange -&gt; exchange.getIn().getBody() + "-REQUEST");
     }
 
     protected void defineResponseRoute(final RouteDefinition definition) {
-        definition.process(exchange -&gt; System.out.println("Processing and transformation after external system call"));
+      definition.setBody(exchange -&gt; exchange.getIn().getBody() + "-RESPONSE");
     }
-  }</code></pre>
-<h3 id="composite-processes">Composite Processes<a class="headerlink" href="#composite-processes" title="Permanent link">&para;</a></h3>
+
+}</code></pre>
+<h4 id="integration-scenario_1">Integration Scenario<a class="headerlink" href="#integration-scenario_1" title="Permanent link">&para;</a></h4>
+<p>The integration scenario is defined with the <code>@IntegrationScenario</code> annotation, which specifies the <code>scenarioId</code>, <code>requestModel</code>, and <code>responseModel</code>. 
+In this example, the <code>scenarioId</code> is set to "Demo scenario," and the request and response models are <code>DemoCDMRequest</code> and <code>DemoCDMResponse</code> respectively.</p>
+<p>The <code>DemoScenario</code> class extends <code>IntegrationScenarioBase</code>, indicating that it is part of a framework for defining integration scenarios. 
+The class overrides the <code>getOrchestrator</code> method, which is responsible for setting up the orchestration logic. 
+This method returns an orchestrator configured using the DSL provided by <code>ScenarioOrchestrator</code>.</p>
+<p>Within the <code>getOrchestrator</code> method, <code>ScenarioOrchestrator.forOrchestrationDslWithResponse</code> is used to create an orchestrator that handles the orchestration flow with a response. 
+The DSL is used to define the sequence of actions: it specifies that the scenario should start by handling requests from the <code>DemoConnector</code> 
+(an inbound connector) and then proceed to call the <code>DemoOutboundConnector</code> (an outbound connector). 
+The call to <code>andNoResponseHandling()</code> indicates that no additional response handling is required after the outbound connector is called.</p>
+<p>This example is simplified and mainly serves to illustrate the use of the DSL for defining an integration scenario. 
+In a real-world application, more complex logic and additional connectors might be involved. 
+However, with only two connectors participating, such detailed orchestration might not be necessary. 
+The primary purpose here is to showcase the structure and capabilities of the DSL in managing integration scenarios</p>
+<pre class="highlight"><code class="language-java">@IntegrationScenario(
+        scenarioId = DemoScenario.ID,
+        requestModel = DemoCDMRequest.class,
+        responseModel = DemoCDMResponse.class)
+public class DemoScenario extends IntegrationScenarioBase {
+
+  public static final String ID = "Demo scenario";
+
+  @Override
+  public Orchestrator&lt;ScenarioOrchestrationInfo&gt; getOrchestrator() {
+    return ScenarioOrchestrator.forOrchestrationDslWithResponse(DemoCDMRequest.class,
+        dsl -&gt; dsl.forInboundConnectors(DemoConnector.class)
+            .callOutboundConnector(DemoOutboundConnector.class)
+            .andNoResponseHandling());
+  }
+}</code></pre>
+<p>Following example showcases the use of an integration scenario orchestration, with additional features for request preparation and response handling.
+In this example you can see that there are 4 participants in this integration scenario (<code>DemoConnector</code>, <code>FirstDemoOutboundConnector</code>, <code>SecondDemoOutboundConnector</code>, <code>ThirdDemoOutboundConnector</code>).
+There is a simple condition in the beginning that checks the size of an item list.  </p>
+<p>In case the item list size is greater than 10:
+- First <code>FirstDemoOutboundConnector</code> is called and the response will not be handled
+- Afterward <code>SecondDemoOutboundConnector</code> will be called without any response handling</p>
+<p>In case the item list size is smaller than 10:
+- Before calling the third outbound connector, the request can be modified by calling <code>withRequestPreparation()</code>. Even if the method call comes after
+<code>callOutboundConnector()</code> it is executed before the request is sent. 
+In this example, if the date in the original <code>DemoCDMRequest</code> is before the current time, the estimated delivery date is set to two days from now.
+- Moreover, the snippet demonstrates response handling, allowing modifications to the response before it is sent back to the initial caller by calling <code>andHandleResponse()</code>. 
+The response handling step accesses the latest step's response and modifies its message to "demo".</p>
+<p>These enhancements illustrate the flexibility of the DSL in managing complex integration scenarios, providing hooks to alter the request 
+and response as needed, thereby enabling dynamic and context-aware processing within the orchestration flow. You can even use loops in this orchestration as explained in section <strong>Loops</strong>.
+<pre class="highlight"><code class="language-java">@IntegrationScenario(
+        scenarioId = DemoScenario.ID,
+        requestModel = DemoCDMRequest.class,
+        responseModel = DemoCDMResponse.class)
+public class DemoScenario extends IntegrationScenarioBase {
+
+  public static final String ID = "Demo scenario";
+
+  @Override
+  public Orchestrator&lt;ScenarioOrchestrationInfo&gt; getOrchestrator() {
+    return ScenarioOrchestrator.forOrchestrationDslWithResponse(DemoCDMRequest.class,
+        dsl -&gt; dsl.forInboundConnectors(DemoConnector.class)
+            .ifCase(context -&gt; context.getOriginalRequest(DemoCDMRequest.class).getItems().size() &gt; 10)
+              .callOutboundConnector(FirstDemoOutboundConnector.class)
+              .andNoResponseHandling()
+              .callOutboundConnector(SecondDemoOutboundConnector.class)
+              .andNoResponseHandling()
+            .elseCase()
+              .callOutboundConnector(ThirdDemoOutboundConnector.class)
+              .withRequestPreparation(scenarioOrchestrationContext -&gt; {
+                DemoCDMRequest demoCDMRequest = scenarioOrchestrationContext.getOriginalRequest(DemoCDMRequest.class);
+                if (demoCDMRequest.getDate().isBefore(Instant.now())) {
+                  demoCDMRequest.setEstimatedDelivery(Instant.now().plus(Period.ofDays(2)));
+                }
+                return demoCDMRequest;
+              })
+              .andHandleResponse((demoCDMResponse, scenarioOrchestrationContext) -&gt; {
+                scenarioOrchestrationContext.getResponseForLatestStep().ifPresent(demoCDMResponseOrchestrationStepResponse -&gt; {
+                  demoCDMResponseOrchestrationStepResponse.result().setMessage("demo");
+                });
+              })
+            .endCases());
+  }
+}</code></pre></p>
+<h4 id="composite-processes">Composite Processes<a class="headerlink" href="#composite-processes" title="Permanent link">&para;</a></h4>
 <p>Similar procedure should be followed as on the other declarative elements.
 We first need to extend CompositeProcessBase.
-Then, annotate the class with @CompositeProcess and fill in the required fields:</p>
+Then, annotate the class with <code>@CompositeProcess</code> and fill in the required fields:</p>
 <ul>
 <li><em>processId</em> - unique identifier of a process, used to identify it in SIP, should be unique</li>
 <li><em>provider</em> - represents the integration scenario that provides the data to the process</li>
@@ -467,11 +743,153 @@ Then, annotate the class with @CompositeProcess and fill in the required fields:
 <li><em>pathToDocumentationResource</em> (optional) - provides path to process documentation files
   (By default it will look for file in <em>document/structure/processes/<composite-process-id>.md</em>)</li>
 </ul>
-<pre class="highlight"><code class="language-java">  @CompositeProcess(processId = "demo-process", consumers = {DemoScenarioConsumer1.class, DemoScenarioConsumer2.class},
-        provider = DemoScenario.class)  
-  public class DemoProcess extends CompositeProcessBase {
-    public static final String ID = "demo-process";
+<pre class="highlight"><code class="language-java">@CompositeProcess(processId = "demo-process", consumers = {DemoScenarioConsumer1.class, DemoScenarioConsumer2.class},
+      provider = DemoScenario.class)  
+public class DemoProcess extends CompositeProcessBase {
+  public static final String ID = "demo-process";
+
+  @Override
+  public Orchestrator&lt;CompositeProcessOrchestrationInfo&gt; getOrchestrator() {
+      return ProcessOrchestrator.forOrchestrationDsl(
+              dsl -&gt; {
+                  dsl.callConsumer(DemoScenarioConsumer1.class)
+                      .withRequestPreparation(
+                              context -&gt; {
+                                ResponseModel response = context.&lt;ResponseModel&gt;getLatestResponse()
+                                                .orElseThrow(() -&gt; new SIPAdapterException("Invalid response"));
+                                return ResponseModel2.builder()
+                                        .field1(response.getValue1())
+                                        .field2(response.getValue2())
+                                        .build();
+                              })
+                      .withResponseHandling(
+                              (latestResponse, context) -&gt; {
+                                log.debug(String.valueOf(latestResponse));
+                              })
+                      .callConsumer(DemoScenarioConsumer2.class)
+                      .withNoResponseHandling();
+              });
+  }
+}</code></pre>
+<p>It is also possible to use conditional statements or loops in process orchestration. </p>
+<h5 id="conditionals">Conditionals<a class="headerlink" href="#conditionals" title="Permanent link">&para;</a></h5>
+<ul>
+<li><em>ifCase</em> opens the conditional statement in the DSL. It accepts a predicate as a parameter, 
+which needs to be evaluated into a boolean from the given context. 
+Inside of it one or more consumer calls may be defined.</li>
+<li><em>elseIfCase</em> may be used after statements from <em>ifCase</em>. It also accepts a predicate as a parameter.</li>
+<li><em>elseCase</em> does not take a parameter, 
+it will be executed if the previous conditions from <em>ifCase</em> or <em>elseIfCase</em> are not met.</li>
+<li><em>endCases</em> is used to finish the condition statements and return to previous scope.</li>
+</ul>
+<pre class="highlight"><code class="language-java">public class DemoProcess extends CompositeProcessBase {
+
+    @Override
+    public Orchestrator&lt;CompositeProcessOrchestrationInfo&gt; getOrchestrator() {
+        return ProcessOrchestrator.forOrchestrationDsl(
+                dsl -&gt; { dsl
+                          .ifCase(hasHeader("headerName"))
+                              .callConsumer(DemoScenarioConsumer1.class)
+                              .withNoResponseHandling()
+                          .elseIfCase(context -&gt; context.getLatestResponse().get().isOk())
+                              .callConsumer(DemoScenarioConsumer2.class)
+                              .withNoResponseHandling()
+                          .elseCase()
+                              .callConsumer(DemoScenarioConsumer3.class)
+                              .withNoResponseHandling()
+                          .endCases();
+                });
+    }
+
   }</code></pre>
+<h5 id="loops">Loops<a class="headerlink" href="#loops" title="Permanent link">&para;</a></h5>
+<ul>
+<li><em>doWhile</em> is used to enter looping statement equivalent to 'while' from DSL. It enables looping until the condition 
+passed as a predicate is no longer true. The same predicates as in <em>ifCase</em> can be used.<br />
+To end the loop 'endDoWhile' should be used, which will return to the previous scope.</li>
+<li><em>forLoop</em> is used to enter looping statement equivalent to 'for' from DSL. It accepts a predicate 
+which should be evaluated into an integer marking the number of iterations. To return to previous scope and end the loop
+<em>endForLoop</em> should be used.</li>
+</ul>
+<pre class="highlight"><code class="language-java">public class DemoProcess extends CompositeProcessBase {
+
+    @Override
+    public Orchestrator&lt;CompositeProcessOrchestrationInfo&gt; getOrchestrator() {
+        return ProcessOrchestrator.forOrchestrationDsl(
+                dsl -&gt; { dsl
+                          .doWhile(hasHeader("headerName"))
+                              .callConsumer(DemoScenarioConsumer1.class)
+                              .withNoResponseHandling()
+                          .endDoWhile()
+                          .forLoop(context -&gt; context.getLatestResponse().get().getIterationNumber())
+                              .callConsumer(DemoScenarioConsumer2.class)
+                              .withNoResponseHandling()
+                          .endForLoop();
+                });
+    }
+
+  }</code></pre>
+<h2 id="configuration-and-exception-handling">Configuration and exception handling<a class="headerlink" href="#configuration-and-exception-handling" title="Permanent link">&para;</a></h2>
+<h3 id="scenario-and-connector-level-handlers">Scenario and connector level handlers<a class="headerlink" href="#scenario-and-connector-level-handlers" title="Permanent link">&para;</a></h3>
+<p>To provide a more fine-grained approach to different types of handlers, the SIP framework offers
+ways to configure handlers on either scenario or connector level. This approach is based on the existing 
+functionalities provided by Apache Camel, but in a more structured way.</p>
+<p>To achieve this, first, a configuration class should be created which implements <code>ConfigurationDefinition</code> interface.
+The method which must be overridden provides a hook to <code>RouteConfigurationDefinition</code> which offers adding 
+handlers (onException, onCompletion, intercept, interceptFrom, interceptSendToEndpoint).
+One handler should be defined per class as the return type of the method suggests.</p>
+<pre class="highlight"><code class="language-java">@Configuration
+public class SIPAdapterExceptionHandler implements ConfigurationDefinition {
+
+    @Override
+    public OutputDefinition define(RouteConfigurationDefinition routeConfigurationDefinition) {
+        return routeConfigurationDefinition
+                .onException(SIPAdapterException.class, IllegalArgumentException.class)
+                .process(exchange -&gt; {
+                    String message = exchange
+                            .getProperty(Exchange.EXCEPTION_CAUGHT, Exception.class)
+                            .getMessage();
+                    exchange.getMessage().setBody(message);
+                    exchange.getMessage().setHeader(Exchange.HTTP_RESPONSE_CODE, 400);
+                })
+                .handled(true);
+    }
+}</code></pre>
+<p>Second step would be marking the desired Scenario or Connector to use this handler.
+This is done via <code>@ConfigurationHandler</code> annotation. It requires that the handler classes are provided as parameters.</p>
+<p>When done on scenario level it will apply to all connectors which belong to it.
+<pre class="highlight"><code class="language-java">@IntegrationScenario(
+scenarioId = "scenarioId",
+requestModel = String.class,
+responseModel = String.class)
+@ConfigurationHandler(SIPAdapterExceptionHandler.class)
+public class DemoScenario extends IntegrationScenarioBase {}</code></pre></p>
+<p>When done on connector level it will apply only to that one connector.
+Both inbound and outbound may be used.
+<pre class="highlight"><code class="language-java">@InboundConnector(
+        connectorGroup = "group1",
+        integrationScenario = "scenarioId",
+        requestModel = String.class,
+        responseModel = String.class)
+@ConfigurationHandler(SIPAdapterExceptionHandler.class)
+public class DemoConnector extends GenericInboundConnectorBase {...}</code></pre></p>
+<p>Of course the global level handlers may still be created using standard <code>RouteConfigurationBuilder</code>.</p>
+<h3 id="connector-level-exception-handlers">Connector level exception handlers<a class="headerlink" href="#connector-level-exception-handlers" title="Permanent link">&para;</a></h3>
+<p>If there is a need for a dedicated exception handler in a connector, this is also possible.
+To do so, inside the connector a public method must be created with <code>ConnectorOnExceptionDefinition</code> as the return type.
+The return type is a hook into <code>OnExceptionDefinition</code> from Apache Camel.
+This method must also be annotated with <code>@ConnectorExceptionHandler</code> inside which the exception types,
+which should be handled by the method, are declared.
+It is possible to define multiple methods, each which would handle a different exception in its own way.</p>
+<pre class="highlight"><code class="language-java">@ConnectorExceptionHandler(RuntimeException.class)
+public ConnectorOnExceptionDefinition define() {
+  return onException -&gt;
+       onException
+          .process(doProcessing())
+          .handled(true);
+}</code></pre>
+<p>These exception handlers will override any other handler, meaning if scenario or connector level 
+configuration handler exists, which handles the same exception type, these handlers will take priority.</p>
               
             </div>
           </div><footer>

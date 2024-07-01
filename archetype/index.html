@@ -49,7 +49,7 @@
                 </li>
               </ul>
               <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="./">Archetype</a>
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Archetype</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#description">Description</a>
     </li>
@@ -108,6 +108,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/latest/index.html">JavaDoc Latest Development</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/3.4.0/index.html">JavaDoc 3.4.0</a>
                 </li>
               </ul>
               <ul>
@@ -226,15 +230,15 @@ as they set the properties for the adapter. It is recommended to follow the Mave
 <li><strong>package</strong> (optional) is used to override previous package naming and provide full package name. This can be skipped by leaving value empty.
   It is strongly recommended to follow package naming convention, otherwise your project will be created but it will have
   package naming errors.</li>
+<li><strong>createDemoAdapter</strong> should be set to 'y' or 'Y' when the inclusion of a demo adapter is desired.
+    It will generate example classes using declarative structure, including process and scenario orchestration.</li>
 </ul>
 <p><em>Note</em>: All the parameters can be provided via command line if needed:</p>
-<pre class="highlight"><code class="language-shell">mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=&lt;latest.sip-framework.version&gt; -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT -DconnectorGroup1=group1 -DconnectorGroup2=group2 -DpackageSuffix=project -DuseLombok=y -DuseSoap=n -Dpackage=de.ikor.sip.adapter.demo.project</code></pre>
+<pre class="highlight"><code class="language-shell">mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=&lt;latest.sip-framework.version&gt; -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT -DconnectorGroup1=group1 -DconnectorGroup2=group2 -DpackageSuffix=project -DuseLombok=y -DuseSoap=n -Dpackage=de.ikor.sip.adapter.demo.project -DcreateDemoAdapter=n</code></pre>
 <p>After a successful build, a project with the following structure will be created:</p>
 <ul>
 <li>SIPApplication.java</li>
-<li>common</li>
 <li>config</li>
-<li>util</li>
 <li>connectorgroups</li>
 <li>{connectorGroup1}<ul>
 <li>config</li>
@@ -257,6 +261,7 @@ as they set the properties for the adapter. It is recommended to follow the Mave
 <li>scenarios</li>
 <li>models</li>
 <li>definitions</li>
+<li>processes</li>
 </ul>
 <p>More about packages and internal SIP structure can be found <a href="../">here</a>.</p>
 <p>More information about Maven archetypes is available here:
