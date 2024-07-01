@@ -87,7 +87,7 @@
          CXF related dependencies
          SIPX-96: Currently forced to a higher version than camel-cxf because of CVE-2024-28752. Camel 4.5 will update CXF to 4.0.4
          -->
-        <cxf.version>[4.0.4,)</cxf.version>                         <!-- keep in sync with camel-dependencies cxf-version property -->
+        <cxf.version>4.0.4</cxf.version>                         <!-- keep in sync with camel-dependencies cxf-version property -->
         <woodstox-core.version>[6.6.2,)</woodstox-core.version>     <!-- CXF 4.0.4 bundles 6.6.1 which brakes test-kit because of -> https://github.com/FasterXML/woodstox/issues/200 -->
 
         <!-- maven dependencies -->
