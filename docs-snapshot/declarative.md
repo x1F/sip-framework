@@ -660,8 +660,8 @@ To provide a more fine-grained approach to different types of handlers, the SIP 
 ways to configure handlers on either scenario or connector level. This approach is based on the existing 
 functionalities provided by Apache Camel, but in a more structured way.
 
-To achieve this, first, a configuration class should be created which implements *ConfigurationDefinition* interface.
-The method which must be overridden provides a hook to *RouteConfigurationDefinition* which offers adding 
+To achieve this, first, a configuration class should be created which implements `ConfigurationDefinition` interface.
+The method which must be overridden provides a hook to `RouteConfigurationDefinition` which offers adding 
 handlers (onException, onCompletion, intercept, interceptFrom, interceptSendToEndpoint).
 One handler should be defined per class as the return type of the method suggests.
 
@@ -686,7 +686,7 @@ public class SIPAdapterExceptionHandler implements ConfigurationDefinition {
 ```
 
 Second step would be marking the desired Scenario or Connector to use this handler.
-This is done via *@ConfigurationHandler* annotation. It requires that the handler classes are provided as parameters.
+This is done via `@ConfigurationHandler` annotation. It requires that the handler classes are provided as parameters.
 
 When done on scenario level it will apply to all connectors which belong to it.
 ```java
@@ -710,14 +710,14 @@ Both inbound and outbound may be used.
 public class DemoConnector extends GenericInboundConnectorBase {...}
 ```
 
-Of course the global level handlers may still be created using standard *RouteConfigurationBuilder*.
+Of course the global level handlers may still be created using standard `RouteConfigurationBuilder`.
 
 ### Connector level exception handlers
 
 If there is a need for a dedicated exception handler in a connector, this is also possible.
-To do so, inside the connector a public method must be created with *ConnectorOnExceptionDefinition* as the return type.
-The return type is a hook into *OnExceptionDefinition* from Apache Camel.
-This method must also be annotated with *@ConnectorExceptionHandler* inside which the exception types,
+To do so, inside the connector a public method must be created with `ConnectorOnExceptionDefinition` as the return type.
+The return type is a hook into `OnExceptionDefinition` from Apache Camel.
+This method must also be annotated with `@ConnectorExceptionHandler` inside which the exception types,
 which should be handled by the method, are declared.
 It is possible to define multiple methods, each which would handle a different exception in its own way.
 
