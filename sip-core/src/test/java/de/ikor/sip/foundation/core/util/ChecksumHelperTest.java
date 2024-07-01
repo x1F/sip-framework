@@ -3,7 +3,6 @@ package de.ikor.sip.foundation.core.util;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatException;
 
-import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.*;
 import org.apache.commons.codec.digest.MessageDigestAlgorithms;
@@ -34,7 +33,8 @@ class ChecksumHelperTest {
   @Test
   void GIVEN_list_of_static_resources_WHEN_changing_order_VERIFY_checksum_remains_equal()
       throws IOException {
-    final var reverse = Lists.reverse(RESOURCES);
+    final var reverse = new ArrayList<>(RESOURCES);
+    Collections.reverse(reverse);
 
     final var checksumOriginal =
         ChecksumHelper.calcualteReproducibleHashForResources(
@@ -43,7 +43,7 @@ class ChecksumHelperTest {
         ChecksumHelper.calcualteReproducibleHashForResources(
             reverse, MessageDigestAlgorithms.MD5, Optional.empty());
 
-    assertThat(RESOURCES).allMatch(resource -> reverse.contains(resource)).isNotEqualTo(reverse);
+    assertThat(RESOURCES).allMatch(reverse::contains).isNotEqualTo(reverse);
     assertThat(checksumOriginal).isNotBlank().isEqualTo(checksumReverse);
   }
 
