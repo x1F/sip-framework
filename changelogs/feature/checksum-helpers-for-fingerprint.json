@@ -1,5 +1,0 @@
-{
-  "author": "MartinBuchheim",
-  "pullrequestId": "256",
-  "message": "Added ChecksumHelper class for adapter fingerprinting in SIP Cloud"
-}

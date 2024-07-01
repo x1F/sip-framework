@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "259",
-  "message": "Add support for dynamic endpoints in outbound connectors. The type of endpoint will be determined automatically based on presence of placeholders in uri."
-}

@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "265",
-  "message": "Add possibility to define scenario and connector level configuration. Add hooks to define connector level exception handlers."
-}

@@ -1,5 +1,0 @@
-{
-  "author": "MartinBuchheim",
-  "pullrequestId": "268",
-  "message": "Improved error message when an exception is triggered from a method-based connector processor"
-}

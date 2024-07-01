@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "263",
-  "message": "Remove SIPDefaultErrorHandler as it might cause issues."
-}
