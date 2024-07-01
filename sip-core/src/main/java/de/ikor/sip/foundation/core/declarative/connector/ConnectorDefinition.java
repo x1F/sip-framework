@@ -5,6 +5,7 @@ import de.ikor.sip.foundation.core.declarative.orchestration.Orchestratable;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -106,7 +107,7 @@ public sealed interface ConnectorDefinition
 
     @Override
     public List<Method> getOnExceptionHandler() {
-      return null;
+      return Collections.emptyList();
     }
 
     @Override
