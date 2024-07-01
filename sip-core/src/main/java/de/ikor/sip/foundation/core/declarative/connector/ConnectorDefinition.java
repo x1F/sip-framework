@@ -4,6 +4,9 @@ import de.ikor.sip.foundation.core.declarative.DeclarativeElement;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestratable;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -98,6 +101,16 @@ public sealed interface ConnectorDefinition
     }
 
     @Override
+    public String[] getConfigurationIds() {
+      return new String[0];
+    }
+
+    @Override
+    public List<Method> getOnExceptionHandler() {
+      return Collections.emptyList();
+    }
+
+    @Override
     public String getId() {
       throw new UnsupportedOperationException();
     }
@@ -112,4 +125,18 @@ public sealed interface ConnectorDefinition
       throw new UnsupportedOperationException();
     }
   }
+
+  /**
+   * Returns an array of configuration ids which should be applied to the given connector routes
+   *
+   * @return configuration ids
+   */
+  String[] getConfigurationIds();
+
+  /**
+   * Returns a list of {@link Method}s which contain exception handling logic for the connector
+   *
+   * @return list of {@link Method}
+   */
+  List<Method> getOnExceptionHandler();
 }

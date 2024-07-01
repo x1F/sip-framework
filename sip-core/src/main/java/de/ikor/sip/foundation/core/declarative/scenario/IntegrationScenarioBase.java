@@ -1,13 +1,16 @@
 package de.ikor.sip.foundation.core.declarative.scenario;
 
+import de.ikor.sip.foundation.core.declarative.annonation.ConfigurationHandler;
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.AutoMagicScenarioOrchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.StandardScenarioOrchestrators;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Consumer;
+import org.springframework.util.ClassUtils;
 
 /**
  * Base class for an integration scenario definition.
@@ -20,6 +23,9 @@ public abstract class IntegrationScenarioBase implements IntegrationScenarioDefi
 
   private final IntegrationScenario scenarioAnnotation =
       DeclarativeReflectionUtils.getAnnotationOrThrow(IntegrationScenario.class, this);
+
+  private final Optional<ConfigurationHandler> declarativeConfigurationAnnotation =
+      DeclarativeReflectionUtils.getAnnotationIfPresent(ConfigurationHandler.class, this);
 
   /**
    * Returns the orchestrator for this scenario.
@@ -62,5 +68,16 @@ public abstract class IntegrationScenarioBase implements IntegrationScenarioDefi
   @Override
   public String getPathToDocumentationResource() {
     return scenarioAnnotation.pathToDocumentationResource();
+  }
+
+  @Override
+  public final String[] getConfigurationIds() {
+    return declarativeConfigurationAnnotation
+        .map(
+            configurationHandler ->
+                Arrays.stream(configurationHandler.value())
+                    .map(ClassUtils::getShortName)
+                    .toArray(String[]::new))
+        .orElseGet(() -> new String[0]);
   }
 }

@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistryApi;
+import de.ikor.sip.foundation.core.declarative.annonation.ConfigurationHandler;
 import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
 import de.ikor.sip.foundation.core.declarative.annonation.UseResponseModelMapper;
 import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.RequestProcessor;
@@ -16,6 +17,7 @@ import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.util.ClassUtils;
 
 /**
  * Base class for connector definitions.
@@ -41,6 +44,12 @@ public abstract non-sealed class ConnectorBase
 
   private static final List<Class<? extends Annotation>> TRANSFORM_OVERLOAD_PROHIBITED_ANNOTATIONS =
       List.of(UseRequestModelMapper.class, UseResponseModelMapper.class);
+
+  private final Optional<ConfigurationHandler> declarativeConfigurationAnnotation =
+      DeclarativeReflectionUtils.getAnnotationIfPresent(ConfigurationHandler.class, this);
+
+  private final List<Method> onExceptionHandlers =
+      DeclarativeReflectionUtils.findAnnotatedMethodsWithReturnType(this.getClass());
 
   @Getter(AccessLevel.PROTECTED)
   private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -165,5 +174,21 @@ public abstract non-sealed class ConnectorBase
               });
     }
     return transformationOrchestrator;
+  }
+
+  @Override
+  public final String[] getConfigurationIds() {
+    return declarativeConfigurationAnnotation
+        .map(
+            configurationHandler ->
+                Arrays.stream(configurationHandler.value())
+                    .map(ClassUtils::getShortName)
+                    .toArray(String[]::new))
+        .orElseGet(() -> new String[0]);
+  }
+
+  @Override
+  public final List<Method> getOnExceptionHandler() {
+    return onExceptionHandlers;
   }
 }
