@@ -100,6 +100,16 @@ public sealed interface ConnectorDefinition
     }
 
     @Override
+    public String[] getConfigurationIds() {
+      return new String[0];
+    }
+
+    @Override
+    public List<Method> getOnExceptionHandler() {
+      return null;
+    }
+
+    @Override
     public String getId() {
       throw new UnsupportedOperationException();
     }

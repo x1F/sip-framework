@@ -8,17 +8,15 @@ import ${package}.scenarios.models.NobelPrizeRequest;
 import ${package}.scenarios.models.response.NobelPrizeResponse;
 import de.ikor.sip.foundation.core.declarative.annonation.ConnectorExceptionHandler;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecutionOrder;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ResponseProcessor;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.ParameterMapping;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.PathParameter;
 import de.ikor.sip.foundation.core.declarative.configuration.ConnectorOnExceptionDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase;
-import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
-import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
-import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 import org.apache.camel.model.rest.RestParamType;
 
@@ -70,24 +68,16 @@ public class GetNobelPrizeDetailsInConnector extends RestInboundConnectorBase {
         message.setBody(mappedData);
     }
 
-    // Define request/response transformation.
-    // Default empty transformers exist,
-    // overriding this method is used to replace them when custom transformation is required.
-    @Override
-    public Orchestrator<ConnectorOrchestrationInfo> getOrchestrator() {
-        return ConnectorOrchestrator.forConnector(this)
-                .setResponseRouteTransformer(this::setResponse);
-    }
-
-    private void setResponse(RouteDefinition routeDefinition) {
-        routeDefinition.process(
-                exchange -> {
-                    NobelPrizeCommonModel nobelPrizeCommonModel = exchange.getMessage().getBody(NobelPrizeCommonModel.class);
-                    NobelPrizeResponse nobelPrizeResponse =
-                            nobelPrizeMapper.toNobelPrizeResponse(nobelPrizeCommonModel.getNobelPrize());
-                    nobelPrizeResponse.setLaureates(nobelPrizeMapper.toLaureates(nobelPrizeCommonModel.getLaureates()));
-                    exchange.getMessage().setBody(nobelPrizeResponse);
-                });
+    // Define response transformation processor.
+    // Multiple processors can be chained and their order can be set via annotations.
+    @ResponseProcessor
+    @ExecutionOrder(1)
+    public void setResponse(Exchange exchange) {
+        NobelPrizeCommonModel nobelPrizeCommonModel = exchange.getMessage().getBody(NobelPrizeCommonModel.class);
+        NobelPrizeResponse nobelPrizeResponse =
+                nobelPrizeMapper.toNobelPrizeResponse(nobelPrizeCommonModel.getNobelPrize());
+        nobelPrizeResponse.setLaureates(nobelPrizeMapper.toLaureates(nobelPrizeCommonModel.getLaureates()));
+        exchange.getMessage().setBody(nobelPrizeResponse);
     }
 
     private String getNobelPrizeCategoryValues() {
