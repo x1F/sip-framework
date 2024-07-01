@@ -66,7 +66,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- manage all versions via properties, so that they can be overridden in a project if necessary -->
-        <spring.boot.version>3.2.3</spring.boot.version>
+        <spring.boot.version>3.2.7</spring.boot.version>
         <camel.version>4.3.0</camel.version>
         <jackson-jsr310.version>2.12.7</jackson-jsr310.version>
         <springdoc-openapi-starter-common.version>2.3.0</springdoc-openapi-starter-common.version>
@@ -83,10 +83,12 @@
         <mockito-inline.version>5.2.0</mockito-inline.version>
         <snakeyaml.version>2.2</snakeyaml.version>
 
-        <!-- CXF related dependencies -->
-        <!-- SIPX-96: Currently forced to a higher version than camel-cxf because of CVE-2024-28752. Camel 4.5 will update CXF to 4.0.4 -->
-        <cxf.version>4.0.4</cxf.version>    <!-- keep in sync with camel-dependencies cxf-version property -->
-        <woodstox-core.version>[6.6.2,)</woodstox-core.version> <!-- CXF 4.0.4 bundles 6.6.1 which brakes test-kit because of -> https://github.com/FasterXML/woodstox/issues/200  -->
+        <!--
+         CXF related dependencies
+         SIPX-96: Currently forced to a higher version than camel-cxf because of CVE-2024-28752. Camel 4.5 will update CXF to 4.0.4
+         -->
+        <cxf.version>4.0.4</cxf.version>                         <!-- keep in sync with camel-dependencies cxf-version property -->
+        <woodstox-core.version>[6.6.2,)</woodstox-core.version>     <!-- CXF 4.0.4 bundles 6.6.1 which brakes test-kit because of -> https://github.com/FasterXML/woodstox/issues/200 -->
 
         <!-- maven dependencies -->
         <maven-core.version>3.8.6</maven-core.version>
@@ -139,6 +141,15 @@
     <dependencyManagement>
         <dependencies>
             <!-- spring dependencies -->
+            <!-- Camel BOM -->
+            <dependency>
+                <groupId>org.apache.camel.springboot</groupId>
+                <artifactId>camel-spring-boot-bom</artifactId>
+                <version>${camel.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Spring Boot BOM -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -146,6 +157,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
@@ -308,11 +320,11 @@
                 <version>${cxf.version}</version>
             </dependency>
             <dependency>
-                <!-- TODO: Remove this explicit dependency once CXF bundles woodstox-core 6.6.2 or higher -->
                 <groupId>com.fasterxml.woodstox</groupId>
                 <artifactId>woodstox-core</artifactId>
                 <version>${woodstox-core.version}</version>
             </dependency>
+
 
             <!--            additional dependencies-->
             <dependency>
@@ -533,6 +545,9 @@
                                 <rules>
                                     <enforceBytecodeVersion>
                                         <maxJdkVersion>17</maxJdkVersion>
+                                        <excludes>
+                                            <exclude>org.apache.tomcat.embed:tomcat-embed-core</exclude>  <!-- fails for v 10.1.25 included with Spring Boot 3.2.7 -->
+                                        </excludes>
                                     </enforceBytecodeVersion>
                                     <dependencyConvergence/>
                                     <banDuplicatePomDependencyVersions/>

@@ -8,7 +8,7 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <!-- Attention! We need to keep this in sync with the spring-boot version set in sip-framework,
              which is transitively referenced in sip-integration-starter specified in the dependencymanagement section -->
-        <version>3.2.3</version>
+        <version>3.2.7</version>
     <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
