@@ -1,6 +1,5 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
-
 import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
