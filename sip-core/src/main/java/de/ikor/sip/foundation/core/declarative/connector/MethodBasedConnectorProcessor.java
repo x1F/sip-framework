@@ -8,11 +8,7 @@ import jakarta.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import lombok.Getter;
 import lombok.ToString;
@@ -28,14 +24,17 @@ public class MethodBasedConnectorProcessor implements ConnectorProcessor {
   @Getter @ToString.Include protected final ConnectorDefinition connector;
   @Getter @ToString.Include protected final Method processorMethod;
   @Getter protected final Set<Class<?>> requestedBodyTypes;
-  @Getter protected final Class<?> returnType;
+  @Getter protected final Optional<Class<?>> returnType;
   protected final List<Function<Exchange, Object>> parameterFetchers;
 
   public MethodBasedConnectorProcessor(
       final ConnectorDefinition connector, final Method processorMethod) {
     this.connector = connector;
     this.processorMethod = processorMethod;
-    this.returnType = processorMethod.getReturnType();
+    this.returnType =
+        !Void.TYPE.equals(processorMethod.getReturnType())
+            ? Optional.of(processorMethod.getReturnType())
+            : Optional.empty();
     Set<Class<?>> bodyTypes = new HashSet<>();
     parameterFetchers =
         Arrays.stream(processorMethod.getParameters())
@@ -80,13 +79,17 @@ public class MethodBasedConnectorProcessor implements ConnectorProcessor {
     try {
       final var args = parameterFetchers.stream().map(fetcher -> fetcher.apply(exchange)).toArray();
       final var result = processorMethod.invoke(connector, args);
-      if (!Void.TYPE.equals(getReturnType())) {
-        exchange.getMessage().setBody(result, getReturnType());
-      }
-    } catch (InvocationTargetException | IllegalAccessException e) {
+      getReturnType().ifPresent(type -> exchange.getMessage().setBody(result, type));
+    } catch (InvocationTargetException e) {
+      throw SIPFrameworkException.init(
+          e.getCause(),
+          "Connector processor failed for method %s in connector-class %s",
+          processorMethod.getName(),
+          connector.getClass().getName());
+    } catch (IllegalAccessException e) {
       throw SIPFrameworkException.init(
           e,
-          "Parameter-binding failed for method %s in connector-class %s",
+          "Failed to run connector processor method %s in connector-class %s",
           processorMethod.getName(),
           connector.getClass().getName());
     }
