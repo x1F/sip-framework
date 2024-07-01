@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.core.apps.declarative.mappingadapter;
 
 import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.CommonDomainTypes.ResourceRequest;
-import de.ikor.sip.foundation.core.declarative.annonation.GlobalMapper;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import lombok.Builder;
 import lombok.Value;
@@ -17,7 +16,6 @@ public class BackendTypes {
     String resourceTypeName;
   }
 
-  @GlobalMapper
   public static class BackendRequestModelMapper
       implements ModelMapper<ResourceRequest, BackendResourceRequest> {
 

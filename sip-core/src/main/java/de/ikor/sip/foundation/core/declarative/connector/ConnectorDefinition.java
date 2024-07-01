@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.core.declarative.connector;
 
 import de.ikor.sip.foundation.core.declarative.DeclarativeElement;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestratable;
+import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -23,7 +24,10 @@ import java.util.Optional;
  */
 public sealed interface ConnectorDefinition
     extends Orchestratable<ConnectorOrchestrationInfo>, DeclarativeElement
-    permits ConnectorBase, InboundConnectorDefinition, OutboundConnectorDefinition {
+    permits ConnectorBase,
+        ConnectorDefinition.None,
+        InboundConnectorDefinition,
+        OutboundConnectorDefinition {
 
   /**
    * Returns the type of the connector.
@@ -64,6 +68,52 @@ public sealed interface ConnectorDefinition
    *     a response flow
    */
   Optional<Class<?>> getResponseModelClass();
+
+  /**
+   * Empty {@link ConnectorDefinition} implementation that is used in default values for annotations
+   */
+  final class None implements ConnectorDefinition {
+
+    @Override
+    public ConnectorType getConnectorType() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String getConnectorGroupId() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String getScenarioId() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Class<?> getRequestModelClass() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Optional<Class<?>> getResponseModelClass() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String getId() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String getPathToDocumentationResource() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Orchestrator<ConnectorOrchestrationInfo> getOrchestrator() {
+      throw new UnsupportedOperationException();
+    }
+  }
 
   /**
    * Returns an array of configuration ids which should be applied to the given connector routes

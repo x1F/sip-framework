@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.model;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -28,15 +27,6 @@ class BaseMappingRouteTransformerTest {
   static IntegrationScenarioDefinition integrationScenarioDefinition =
       mock(IntegrationScenarioDefinition.class);
 
-  static RouteDefinition routeDefinition = new RouteDefinition();
-  ResponseMappingRouteTransformer<Integer, Integer> inboundResponseTransformerUnderTest =
-      new ResponseMappingRouteTransformer<>(
-          () -> inboundConnectorDefinition, () -> integrationScenarioDefinition);
-
-  ResponseMappingRouteTransformer<Integer, Integer> outboundResponseTransformerUnderTest =
-      new ResponseMappingRouteTransformer<>(
-          () -> outboundConnectorDefinition, () -> integrationScenarioDefinition);
-
   ModelMapper<Integer, Integer> integerModelMapper =
       new ModelMapper<>() {
         @Override
@@ -54,6 +44,19 @@ class BaseMappingRouteTransformerTest {
           return sourceModel;
         }
       };
+
+  static RouteDefinition routeDefinition = new RouteDefinition();
+  ResponseMappingRouteTransformer<Integer, Integer> inboundResponseTransformerUnderTest =
+      new ResponseMappingRouteTransformer<>(
+          () -> inboundConnectorDefinition,
+          () -> integrationScenarioDefinition,
+          integerModelMapper);
+
+  ResponseMappingRouteTransformer<Integer, Integer> outboundResponseTransformerUnderTest =
+      new ResponseMappingRouteTransformer<>(
+          () -> outboundConnectorDefinition,
+          () -> integrationScenarioDefinition,
+          integerModelMapper);
 
   @BeforeAll
   static void setUp() {
@@ -83,15 +86,10 @@ class BaseMappingRouteTransformerTest {
     DeclarationsRegistry declarationsRegistry = mock(DeclarationsRegistry.class);
     when(camelContext.getRegistry().findSingleByType(DeclarationsRegistry.class))
         .thenReturn(declarationsRegistry);
-    when(declarationsRegistry.getGlobalModelMapperForModels(any(), any()))
-        .thenReturn(Optional.empty());
   }
 
   @Test
   void WHEN_incompatibleSourceMappersUsed_THEN_SIPExceptionIsThrown() {
-    // arrange
-    inboundResponseTransformerUnderTest.setMapper(Optional.of(integerModelMapper));
-
     // act&assert
     assertThatThrownBy(() -> inboundResponseTransformerUnderTest.accept(routeDefinition))
         .isInstanceOf(SIPFrameworkInitializationException.class)
@@ -106,9 +104,6 @@ class BaseMappingRouteTransformerTest {
 
   @Test
   void WHEN_incompatibleTargetMappersUsed_THEN_SIPExceptionIsThrown() {
-    // arrange
-    outboundResponseTransformerUnderTest.setMapper(Optional.of(integerModelMapper));
-
     // act&assert
     assertThatThrownBy(() -> outboundResponseTransformerUnderTest.accept(routeDefinition))
         .isInstanceOf(SIPFrameworkInitializationException.class)
@@ -119,20 +114,5 @@ class BaseMappingRouteTransformerTest {
             integerModelMapper.getTargetModelClass().getName(),
             outboundResponseTransformerUnderTest.getTargetModelClass().getName(),
             outboundConnectorDefinition.getId());
-  }
-
-  @Test
-  void WHEN_noCompatibleMapperFound_THEN_SIPExceptionIsThrown() {
-    // arrange
-    inboundResponseTransformerUnderTest.setMapper(Optional.empty());
-
-    // act&assert
-    assertThatThrownBy(() -> inboundResponseTransformerUnderTest.accept(routeDefinition))
-        .isInstanceOf(SIPFrameworkInitializationException.class)
-        .hasMessage(
-            "No compatible Mapper found for Connector '%s' to map between %s and %s",
-            inboundConnectorDefinition.getId(),
-            inboundResponseTransformerUnderTest.getSourceModelClass().getName(),
-            inboundResponseTransformerUnderTest.getTargetModelClass().getName());
   }
 }

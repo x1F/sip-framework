@@ -42,7 +42,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-public class AdapterBuilder extends RouteBuilder {
+public final class AdapterBuilder extends RouteBuilder {
 
   private static final String PROCESS_HANDOFF_ROUTE_ID_PATTERN = "sip-process-handoff-%s";
   private static final String PROCESS_TAKEOVER_ROUTE_ID_PATTERN = "sip-process-takeover-%s";

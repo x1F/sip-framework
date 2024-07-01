@@ -4,6 +4,7 @@ import de.ikor.sip.foundation.core.declarative.annonation.ConnectorExceptionHand
 import de.ikor.sip.foundation.core.declarative.configuration.ConnectorOnExceptionDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -33,7 +34,12 @@ public class DeclarativeReflectionUtils {
 
   public static <A extends Annotation> Optional<A> getAnnotationIfPresent(
       Class<A> annotation, Object from) {
-    return Optional.ofNullable(from.getClass().getAnnotation(annotation));
+    return getAnnotationIfPresent(annotation, from.getClass());
+  }
+
+  public static <A extends Annotation> Optional<A> getAnnotationIfPresent(
+      Class<A> annotation, AnnotatedElement from) {
+    return Optional.ofNullable(from.getAnnotation(annotation));
   }
 
   @SneakyThrows

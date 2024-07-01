@@ -19,16 +19,21 @@ import org.apache.camel.model.RouteDefinition;
  * RouteDefinition} handles.
  *
  * @see ConnectorOrchestrationInfo
+ * @deprecated Use {@link ConnectorProcessorChainOrchestrator} based approach instead
  */
 @Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 @Accessors(chain = true)
+@Deprecated(since = "3.4.0")
 public class ConnectorOrchestrator implements Orchestrator<ConnectorOrchestrationInfo> {
   private final Supplier<ConnectorDefinition> relatedConnector;
   private Consumer<RouteDefinition> requestRouteTransformer = null;
   private Consumer<RouteDefinition> responseRouteTransformer = this::defaultResponseTransformer;
 
+  /**
+   * @deprecated Use {@link ConnectorProcessorChainOrchestrator} based approach instead
+   */
   public static ConnectorOrchestrator forConnector(final ConnectorDefinition relatedConnector) {
     return new ConnectorOrchestrator(() -> relatedConnector);
   }
