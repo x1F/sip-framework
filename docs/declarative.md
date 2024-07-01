@@ -54,9 +54,10 @@ and custom code defined by the developer.
 Custom behaviour supplied by the developer in different places in the adapter is called "orchestration".
 
 There are 3 points of orchestration:
-- `Connectors` - Behavior of the connector that influences request and (optional) response flow. This orchestration can be written in **Camel and Java**.
-- `Integration scenario` - Execution order of Connectors, control flow, and response aggregation. This orchestration can be written in custom **SIP Orchestration DSL and Java**. 
-- `Composite process` - Execution order of integration scenarios, control flow and mappings. This orchestration can be written in custom **SIP Orchestration DSL and Java**.
+
+- **Connectors**: Behavior of the connector that influences request and (optional) response flow. This orchestration can be written using **Connector Processors**.
+- **Integration scenario**: Execution order of Connectors, control flow, and response aggregation. This orchestration can be written in custom **SIP Orchestration DSL and Java**. 
+- **Composite process**: Execution order of integration scenarios, control flow and mappings. This orchestration can be written in custom **SIP Orchestration DSL and Java**.
 
 
 ## Configuration
