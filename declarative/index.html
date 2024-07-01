@@ -343,9 +343,9 @@ At the end SIP framework builds the adapter using predefined SIP constructs (map
 and custom code defined by the developer. 
 Custom behaviour supplied by the developer in different places in the adapter is called "orchestration".</p>
 <p>There are 3 points of orchestration:
-* <code>Connectors</code> - Behavior of the connector that influences request and (optional) response flow. This orchestration can be written in <strong>Camel and Java</strong>.
-* <code>Integration scenario</code> - Execution order of Connectors, control flow, and response aggregation. This orchestration can be written in custom <strong>SIP Orchestration DSL and Java</strong>. 
-* <code>Composite process</code> - Execution order of integration scenarios, control flow and mappings. This orchestration can be written in custom <strong>SIP Orchestration DSL and Java</strong>.</p>
+- <code>Connectors</code> - Behavior of the connector that influences request and (optional) response flow. This orchestration can be written in <strong>Camel and Java</strong>.
+- <code>Integration scenario</code> - Execution order of Connectors, control flow, and response aggregation. This orchestration can be written in custom <strong>SIP Orchestration DSL and Java</strong>. 
+- <code>Composite process</code> - Execution order of integration scenarios, control flow and mappings. This orchestration can be written in custom <strong>SIP Orchestration DSL and Java</strong>.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p>To enable or disable declarative adapter building the following configuration property is used:</p>
 <pre class="highlight"><code class="language-yaml">sip:
@@ -461,10 +461,12 @@ They need to extend <code>GenericOutboundConnectorBase</code> and override neces
 <h3 id="orchestration_1">Orchestration<a class="headerlink" href="#orchestration_1" title="Permanent link">&para;</a></h3>
 <h4 id="connector-orchestration">Connector Orchestration<a class="headerlink" href="#connector-orchestration" title="Permanent link">&para;</a></h4>
 <p>Connector orchestration allows to define any number of processing steps that need to be completed within the scope of a connector.
-Typical tasks include:
-* Mapping between various data models (such as from the system specific model to the common domain model)
-* Attaching data from the message header to the model (such as query- or path-parameters)
-* Verifying information retrieved with a request (such as authorization tokens)</p>
+Typical tasks include:</p>
+<ul>
+<li>Mapping between various data models (such as from the system specific model to the common domain model)</li>
+<li>Attaching data from the message header to the model (such as query- or path-parameters)</li>
+<li>Verifying information retrieved with a request (such as authorization tokens)</li>
+</ul>
 <h4 id="implementing-connector-processors">Implementing Connector Processors<a class="headerlink" href="#implementing-connector-processors" title="Permanent link">&para;</a></h4>
 <p>SIP allows to implement and attach processors to (inbound- and outbound-) connectors in a variety of ways.</p>
 <p>Internally, all processors rely on the <code>ConnectorProcessor</code> interface, but it is not always necessary for adapter developers to
@@ -507,9 +509,9 @@ will then automatically attach it to the respective flow of that connector.</p>
 <p>Following variants are supported:
 1. The method can take zero parameters and declare a return type that implements <code>ConnectorProcessor</code>. On adapter startup, SIP framework will then call this method once and attach the provided processor to the flow of the connector.
 2. The method does not have a return type (<code>void</code>) and has any number of arguments. SIP will automatically wrap this method into a <code>ConnectorProcessor</code> instance, and will assign the given parameters using the following rules:
-   * Parameters of type <code>Message</code> or <code>Exchange</code> will receive the respective instance.
-   * Parameters annotated with <code>@HeaderParameter(String)</code> will receive the content of the respectively named header-field in the declared type.
-   * Any other parameter will retrieve the current content of the body in the declared type. <code>@Nullable</code> can be added if <code>null</code> be legal for that parameter.
+    - Parameters of type <code>Message</code> or <code>Exchange</code> will receive the respective instance.
+    - Parameters annotated with <code>@HeaderParameter(String)</code> will receive the content of the respectively named header-field in the declared type.
+    - Any other parameter will retrieve the current content of the body in the declared type. <code>@Nullable</code> can be added if <code>null</code> be legal for that parameter.
 3. The method does have a return type which is not a <code>ConnectorProcessor</code> instance and any number of arguments. This will behave identically to approach 2, but additionally uses the returned object as the new message body, effectively making it a simple model mapper.</p>
 <p>Note that for variants 2 and 3, any necessary type conversions are processed through Camel's <a href="https://camel.apache.org/manual/type-converter.html">type converter API</a>.</p>
 <pre class="highlight"><code class="language-java">@InboundConnector(requestModel = UserRequest.class, responseModel = User.class)
@@ -570,10 +572,12 @@ in relation to each other.</p>
 relative orderings are applied afterward. </p>
 <p>The placement of processors without any ordering annotation is non-deterministic. </p>
 <h6 id="absolute-ordering">Absolute ordering<a class="headerlink" href="#absolute-ordering" title="Permanent link">&para;</a></h6>
-<p>The <code>@ExecutionOrder</code> annotation can be utilized to provide absolute ordering for a connector processor. The annotation supports three variants:
-1. By supplying the order-number of this processor's execution. The processors will be executed in the order from the lowest to the highest number. A continuous numbering is not required. If there are multiple processors with the same ordering number, their execution order is non-deterministic.
-2. By setting <code>@ExecutionOrder(first = true)</code>. This processor will always be executed before any other. This may only be specified once per connector.
-3. By setting <code>@ExecutionOrder(last = true)</code>. This processor will always be last after any other. This may only be specified once per connector.</p>
+<p>The <code>@ExecutionOrder</code> annotation can be utilized to provide absolute ordering for a connector processor. The annotation supports three variants:</p>
+<ol>
+<li>By supplying the order-number of this processor's execution. The processors will be executed in the order from the lowest to the highest number. A continuous numbering is not required. If there are multiple processors with the same ordering number, their execution order is non-deterministic.</li>
+<li>By setting <code>@ExecutionOrder(first = true)</code>. This processor will always be executed before any other. This may only be specified once per connector.</li>
+<li>By setting <code>@ExecutionOrder(last = true)</code>. This processor will always be last after any other. This may only be specified once per connector.</li>
+</ol>
 <pre class="highlight"><code class="language-java">@InboundConnector(requestModel = String.class)
 @UseRequestModelMapper(StringToCdmMapper.class)
 @ExecutionOrder(last = true)
