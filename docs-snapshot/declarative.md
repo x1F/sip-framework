@@ -710,7 +710,7 @@ Both inbound and outbound may be used.
 public class DemoConnector extends GenericInboundConnectorBase {...}
 ```
 
-Of course the global level handlers may still be created using standard *RouteConfigurationBuilder*.
+Of course the global level handlers may still be created using standard `RouteConfigurationBuilder`.
 
 ### Connector level exception handlers
 
