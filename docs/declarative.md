@@ -218,7 +218,7 @@ Typical tasks include:
 - Attaching data from the message header to the model (such as query- or path-parameters)
 - Verifying information retrieved with a request (such as authorization tokens)
 
-#### Implementing Connector Processors
+##### Attaching Connector Processors
 
 SIP allows to implement and attach processors to (inbound- and outbound-) connectors in a variety of ways.
 
@@ -230,8 +230,6 @@ and `@ResponseProcessor` annotations.
 
 If multiple processors are attached to a connector, the ordering in which they are processed can often be important. 
 Chapter [Ordering Connector Processors](#ordering-connector-processors) describes how the correct oder can be specified.
-
-##### Defining and Attaching Connector Processors
 
 ###### Using model mappers
 
@@ -273,11 +271,15 @@ Any public method inside a connector's class can be annotated with either `@Requ
 will then automatically attach it to the respective flow of that connector.
 
 Following variants are supported:
+
 1. The method can take zero parameters and declare a return type that implements `ConnectorProcessor`. On adapter startup, SIP framework will then call this method once and attach the provided processor to the flow of the connector.
+   
 2. The method does not have a return type (`void`) and has any number of arguments. SIP will automatically wrap this method into a `ConnectorProcessor` instance, and will assign the given parameters using the following rules:
+   
     - Parameters of type `Message` or `Exchange` will receive the respective instance.
     - Parameters annotated with `@HeaderParameter(String)` will receive the content of the respectively named header-field in the declared type.
     - Any other parameter will retrieve the current content of the body in the declared type. `@Nullable` can be added if `null` be legal for that parameter.
+      
 3. The method does have a return type which is not a `ConnectorProcessor` instance and any number of arguments. This will behave identically to approach 2, but additionally uses the returned object as the new message body, effectively making it a simple model mapper.
 
 Note that for variants 2 and 3, any necessary type conversions are processed through Camel's [type converter API](https://camel.apache.org/manual/type-converter.html).
@@ -416,7 +418,7 @@ public class StringManipulatingInboundProcessor extends GenericInboundConnectorB
 }
 ```
 
-#### DEPRECATED: Orchestration via defineTransformationOrchestrator()
+##### DEPRECATED: Orchestration via defineTransformationOrchestrator()
 
 > [!WARNING]   
 > This variant of connector orchestration is deprecated since 3.4.0, and support might be removed in the future. 
