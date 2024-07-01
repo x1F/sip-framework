@@ -83,14 +83,14 @@ public class MethodBasedConnectorProcessor implements ConnectorProcessor {
     } catch (InvocationTargetException e) {
       throw SIPFrameworkException.init(
           e.getCause(),
-          "An error occurred while running connector processor method %s in connector-class %s: %s",
+          "An error occurred while running connector processor method '%s' in connector-class %s: %s",
           processorMethod.getName(),
           connector.getClass().getName(),
           e.getCause().getMessage());
     } catch (IllegalAccessException e) {
       throw SIPFrameworkException.init(
           e,
-          "Failed to run connector processor method %s in connector-class %s",
+          "Failed to run connector processor method '%s' in connector-class %s",
           processorMethod.getName(),
           connector.getClass().getName());
     }
