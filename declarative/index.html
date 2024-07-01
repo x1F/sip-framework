@@ -97,10 +97,6 @@
         <ul>
     <li class="toctree-l4"><a class="reference internal" href="#connector-orchestration">Connector Orchestration</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#implementing-connector-processors">Implementing Connector Processors</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#deprecated-orchestration-via-definetransformationorchestrator">DEPRECATED: Orchestration via defineTransformationOrchestrator()</a>
-    </li>
     <li class="toctree-l4"><a class="reference internal" href="#integration-scenario_1">Integration Scenario</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#composite-processes">Composite Processes</a>
@@ -272,9 +268,8 @@
 </ul>
 </li>
 <li><a href="#orchestration_1">Orchestration</a><ul>
-<li><a href="#connector-orchestration">Connector Orchestration</a></li>
-<li><a href="#implementing-connector-processors">Implementing Connector Processors</a><ul>
-<li><a href="#defining-and-attaching-connector-processors">Defining and Attaching Connector Processors</a><ul>
+<li><a href="#connector-orchestration">Connector Orchestration</a><ul>
+<li><a href="#attaching-connector-processors">Attaching Connector Processors</a><ul>
 <li><a href="#using-model-mappers">Using model mappers</a></li>
 <li><a href="#annotating-methods-inside-a-connector-class">Annotating methods inside a connector class</a></li>
 <li><a href="#attaching-a-processor-bean-to-a-connector">Attaching a processor bean to a connector</a></li>
@@ -285,9 +280,9 @@
 <li><a href="#relative-ordering">Relative ordering</a></li>
 </ul>
 </li>
+<li><a href="#deprecated-orchestration-via-definetransformationorchestrator">DEPRECATED: Orchestration via defineTransformationOrchestrator()</a></li>
 </ul>
 </li>
-<li><a href="#deprecated-orchestration-via-definetransformationorchestrator">DEPRECATED: Orchestration via defineTransformationOrchestrator()</a></li>
 <li><a href="#integration-scenario_1">Integration Scenario</a></li>
 <li><a href="#composite-processes">Composite Processes</a><ul>
 <li><a href="#conditionals">Conditionals</a></li>
@@ -467,7 +462,7 @@ Typical tasks include:</p>
 <li>Attaching data from the message header to the model (such as query- or path-parameters)</li>
 <li>Verifying information retrieved with a request (such as authorization tokens)</li>
 </ul>
-<h4 id="implementing-connector-processors">Implementing Connector Processors<a class="headerlink" href="#implementing-connector-processors" title="Permanent link">&para;</a></h4>
+<h5 id="attaching-connector-processors">Attaching Connector Processors<a class="headerlink" href="#attaching-connector-processors" title="Permanent link">&para;</a></h5>
 <p>SIP allows to implement and attach processors to (inbound- and outbound-) connectors in a variety of ways.</p>
 <p>Internally, all processors rely on the <code>ConnectorProcessor</code> interface, but it is not always necessary for adapter developers to
 implement this interface themselves. </p>
@@ -475,7 +470,6 @@ implement this interface themselves. </p>
 and <code>@ResponseProcessor</code> annotations. </p>
 <p>If multiple processors are attached to a connector, the ordering in which they are processed can often be important. 
 Chapter <a href="#ordering-connector-processors">Ordering Connector Processors</a> describes how the correct oder can be specified.</p>
-<h5 id="defining-and-attaching-connector-processors">Defining and Attaching Connector Processors<a class="headerlink" href="#defining-and-attaching-connector-processors" title="Permanent link">&para;</a></h5>
 <h6 id="using-model-mappers">Using model mappers<a class="headerlink" href="#using-model-mappers" title="Permanent link">&para;</a></h6>
 <p>The <code>ModelMapper</code> interface allows to implement mappers that transform data from a source- to a target-model. Typically, they
 are used to transform from a system-specific data model to the common domain model used in an integration scenario.</p>
@@ -506,13 +500,23 @@ public class SysUserInboundConnector extends GenericInboundConnectorBase {
 <h6 id="annotating-methods-inside-a-connector-class">Annotating methods inside a connector class<a class="headerlink" href="#annotating-methods-inside-a-connector-class" title="Permanent link">&para;</a></h6>
 <p>Any public method inside a connector's class can be annotated with either <code>@RequestProcessor</code> or <code>@ResponseProcessor</code>. The SIP framework
 will then automatically attach it to the respective flow of that connector.</p>
-<p>Following variants are supported:
-1. The method can take zero parameters and declare a return type that implements <code>ConnectorProcessor</code>. On adapter startup, SIP framework will then call this method once and attach the provided processor to the flow of the connector.
-2. The method does not have a return type (<code>void</code>) and has any number of arguments. SIP will automatically wrap this method into a <code>ConnectorProcessor</code> instance, and will assign the given parameters using the following rules:
-    - Parameters of type <code>Message</code> or <code>Exchange</code> will receive the respective instance.
-    - Parameters annotated with <code>@HeaderParameter(String)</code> will receive the content of the respectively named header-field in the declared type.
-    - Any other parameter will retrieve the current content of the body in the declared type. <code>@Nullable</code> can be added if <code>null</code> be legal for that parameter.
-3. The method does have a return type which is not a <code>ConnectorProcessor</code> instance and any number of arguments. This will behave identically to approach 2, but additionally uses the returned object as the new message body, effectively making it a simple model mapper.</p>
+<p>Following variants are supported:</p>
+<ol>
+<li>
+<p>The method can take zero parameters and declare a return type that implements <code>ConnectorProcessor</code>. On adapter startup, SIP framework will then call this method once and attach the provided processor to the flow of the connector.</p>
+</li>
+<li>
+<p>The method does not have a return type (<code>void</code>) and has any number of arguments. SIP will automatically wrap this method into a <code>ConnectorProcessor</code> instance, and will assign the given parameters using the following rules:</p>
+<ul>
+<li>Parameters of type <code>Message</code> or <code>Exchange</code> will receive the respective instance.</li>
+<li>Parameters annotated with <code>@HeaderParameter(String)</code> will receive the content of the respectively named header-field in the declared type.</li>
+<li>Any other parameter will retrieve the current content of the body in the declared type. <code>@Nullable</code> can be added if <code>null</code> be legal for that parameter.</li>
+</ul>
+</li>
+<li>
+<p>The method does have a return type which is not a <code>ConnectorProcessor</code> instance and any number of arguments. This will behave identically to approach 2, but additionally uses the returned object as the new message body, effectively making it a simple model mapper.</p>
+</li>
+</ol>
 <p>Note that for variants 2 and 3, any necessary type conversions are processed through Camel's <a href="https://camel.apache.org/manual/type-converter.html">type converter API</a>.</p>
 <pre class="highlight"><code class="language-java">@InboundConnector(requestModel = UserRequest.class, responseModel = User.class)
 public class UserRequestInboundConnector extends RestConnectorBase {
@@ -623,7 +627,7 @@ public class StringManipulatingInboundProcessor extends GenericInboundConnectorB
     public void verifyReadable(File file) { if (!file.canRead()) throw new IllegalArgumentException();  }
 
 }</code></pre>
-<h4 id="deprecated-orchestration-via-definetransformationorchestrator">DEPRECATED: Orchestration via defineTransformationOrchestrator()<a class="headerlink" href="#deprecated-orchestration-via-definetransformationorchestrator" title="Permanent link">&para;</a></h4>
+<h5 id="deprecated-orchestration-via-definetransformationorchestrator">DEPRECATED: Orchestration via defineTransformationOrchestrator()<a class="headerlink" href="#deprecated-orchestration-via-definetransformationorchestrator" title="Permanent link">&para;</a></h5>
 <blockquote>
 <p>[!WARNING] <br />
 This variant of connector orchestration is deprecated since 3.4.0, and support might be removed in the future. 
