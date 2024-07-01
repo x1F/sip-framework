@@ -337,10 +337,12 @@ that can control the behaviour of the specific declarative element.
 At the end SIP framework builds the adapter using predefined SIP constructs (mapping, control flow, etc.) 
 and custom code defined by the developer. 
 Custom behaviour supplied by the developer in different places in the adapter is called "orchestration".</p>
-<p>There are 3 points of orchestration:
-- <code>Connectors</code> - Behavior of the connector that influences request and (optional) response flow. This orchestration can be written in <strong>Camel and Java</strong>.
-- <code>Integration scenario</code> - Execution order of Connectors, control flow, and response aggregation. This orchestration can be written in custom <strong>SIP Orchestration DSL and Java</strong>. 
-- <code>Composite process</code> - Execution order of integration scenarios, control flow and mappings. This orchestration can be written in custom <strong>SIP Orchestration DSL and Java</strong>.</p>
+<p>There are 3 points of orchestration:</p>
+<ul>
+<li><strong>Connectors</strong>: Behavior of the connector that influences request and (optional) response flow. This orchestration can be written using <strong>Connector Processors</strong>.</li>
+<li><strong>Integration scenario</strong>: Execution order of Connectors, control flow, and response aggregation. This orchestration can be written in custom <strong>SIP Orchestration DSL and Java</strong>. </li>
+<li><strong>Composite process</strong>: Execution order of integration scenarios, control flow and mappings. This orchestration can be written in custom <strong>SIP Orchestration DSL and Java</strong>.</li>
+</ul>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p>To enable or disable declarative adapter building the following configuration property is used:</p>
 <pre class="highlight"><code class="language-yaml">sip:
