@@ -54,9 +54,9 @@ and custom code defined by the developer.
 Custom behaviour supplied by the developer in different places in the adapter is called "orchestration".
 
 There are 3 points of orchestration:
-* `Connectors` - Behavior of the connector that influences request and (optional) response flow. This orchestration can be written in **Camel and Java**.
-* `Integration scenario` - Execution order of Connectors, control flow, and response aggregation. This orchestration can be written in custom **SIP Orchestration DSL and Java**. 
-* `Composite process` - Execution order of integration scenarios, control flow and mappings. This orchestration can be written in custom **SIP Orchestration DSL and Java**.
+- `Connectors` - Behavior of the connector that influences request and (optional) response flow. This orchestration can be written in **Camel and Java**.
+- `Integration scenario` - Execution order of Connectors, control flow, and response aggregation. This orchestration can be written in custom **SIP Orchestration DSL and Java**. 
+- `Composite process` - Execution order of integration scenarios, control flow and mappings. This orchestration can be written in custom **SIP Orchestration DSL and Java**.
 
 
 ## Configuration
@@ -213,9 +213,10 @@ As outbound connectors are otherwise defined identically to inbound ones, additi
 
 Connector orchestration allows to define any number of processing steps that need to be completed within the scope of a connector.
 Typical tasks include:
-* Mapping between various data models (such as from the system specific model to the common domain model)
-* Attaching data from the message header to the model (such as query- or path-parameters)
-* Verifying information retrieved with a request (such as authorization tokens)
+
+- Mapping between various data models (such as from the system specific model to the common domain model)
+- Attaching data from the message header to the model (such as query- or path-parameters)
+- Verifying information retrieved with a request (such as authorization tokens)
 
 #### Implementing Connector Processors
 
@@ -274,9 +275,9 @@ will then automatically attach it to the respective flow of that connector.
 Following variants are supported:
 1. The method can take zero parameters and declare a return type that implements `ConnectorProcessor`. On adapter startup, SIP framework will then call this method once and attach the provided processor to the flow of the connector.
 2. The method does not have a return type (`void`) and has any number of arguments. SIP will automatically wrap this method into a `ConnectorProcessor` instance, and will assign the given parameters using the following rules:
-   * Parameters of type `Message` or `Exchange` will receive the respective instance.
-   * Parameters annotated with `@HeaderParameter(String)` will receive the content of the respectively named header-field in the declared type.
-   * Any other parameter will retrieve the current content of the body in the declared type. `@Nullable` can be added if `null` be legal for that parameter.
+    - Parameters of type `Message` or `Exchange` will receive the respective instance.
+    - Parameters annotated with `@HeaderParameter(String)` will receive the content of the respectively named header-field in the declared type.
+    - Any other parameter will retrieve the current content of the body in the declared type. `@Nullable` can be added if `null` be legal for that parameter.
 3. The method does have a return type which is not a `ConnectorProcessor` instance and any number of arguments. This will behave identically to approach 2, but additionally uses the returned object as the new message body, effectively making it a simple model mapper.
 
 Note that for variants 2 and 3, any necessary type conversions are processed through Camel's [type converter API](https://camel.apache.org/manual/type-converter.html).
@@ -355,6 +356,7 @@ The placement of processors without any ordering annotation is non-deterministic
 ###### Absolute ordering
 
 The `@ExecutionOrder` annotation can be utilized to provide absolute ordering for a connector processor. The annotation supports three variants:
+
 1. By supplying the order-number of this processor's execution. The processors will be executed in the order from the lowest to the highest number. A continuous numbering is not required. If there are multiple processors with the same ordering number, their execution order is non-deterministic.
 2. By setting `@ExecutionOrder(first = true)`. This processor will always be executed before any other. This may only be specified once per connector.
 3. By setting `@ExecutionOrder(last = true)`. This processor will always be last after any other. This may only be specified once per connector.
