@@ -60,11 +60,6 @@ public class HeaderCleanupAdapter {
           .dataType("string")
           .endParam();
     }
-
-    /* @ResponseProcessor
-    public Map<String, Object> exposeHeaders(Message message) {
-        return message.getHeaders();JSOnO
-    }*/
   }
 
   @OutboundConnector(
@@ -84,10 +79,7 @@ public class HeaderCleanupAdapter {
 
     @Bean(BEAN_NAME)
     public Function<Object, String> endpointBean() {
-      return exchange -> {
-          /* exchange.getMessage().setHeader("thirdHeader", "test"); exchange.getMessage().setHeader("secondary", "changed");*/
-        return "response";
-      };
+      return data -> "response";
     }
   }
 }
