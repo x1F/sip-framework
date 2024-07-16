@@ -275,6 +275,8 @@ public final class AdapterBuilder extends RouteBuilder {
     headerCleanupProcessor.ifPresent(
         proc -> endpointRouteDefinition.process(proc::cleanHeadersProcessor));
     outboundConnector.defineOutboundEndpoints(endpointRouteDefinition);
+    headerCleanupProcessor.ifPresent(
+        proc -> endpointRouteDefinition.process(proc::recreateHeadersProcessor));
     endpointRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));
 
     // Build orchestration route(s) to/from scenario
@@ -282,8 +284,6 @@ public final class AdapterBuilder extends RouteBuilder {
         from(StaticEndpointBuilders.direct(requestOrchestrationRouteId))
             .routeId(requestOrchestrationRouteId)
             .routeConfigurationId(configIds);
-    headerCleanupProcessor.ifPresent(
-        proc -> requestRouteDefinition.process(proc::recreateHeadersProcessor));
     appendOnException(outboundConnector, requestRouteDefinition);
     final RouteDefinition responseRouteDefinition =
         from(StaticEndpointBuilders.direct(responseOrchestrationRouteId))
@@ -424,7 +424,11 @@ public final class AdapterBuilder extends RouteBuilder {
     private final List<Pattern> keepHeaders;
 
     HeaderCleanupProcessors(final String[] keepHeaders) {
-      this(Arrays.stream(keepHeaders).map(Pattern::compile).toArray(Pattern[]::new));
+      this(
+          Arrays.stream(keepHeaders)
+              .map(String::toLowerCase)
+              .map(Pattern::compile)
+              .toArray(Pattern[]::new));
     }
 
     HeaderCleanupProcessors(final Pattern[] keepHeaders) {
