@@ -4,6 +4,7 @@ import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.ap
 import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.joinConfigurationIds;
 import static de.ikor.sip.foundation.core.declarative.validator.CDMValidator.*;
 
+import de.ikor.sip.foundation.core.declarative.annotation.connector.CleanupHeaders;
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
@@ -15,14 +16,17 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefin
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import de.ikor.sip.foundation.core.declarative.validator.CDMValidator;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.RouteBuilder;
@@ -240,6 +244,10 @@ public final class AdapterBuilder extends RouteBuilder {
     final var scenarioTakeoverRouteId =
         routesRegistry.generateRouteIdForConnector(RouteRole.SCENARIO_TAKEOVER, outboundConnector);
 
+    final var headerCleanupProcessor =
+        Optional.ofNullable(outboundConnector.getClass().getAnnotation(CleanupHeaders.class))
+            .map(annotation -> new HeaderCleanupProcessors(annotation.keep()));
+
     String configIds =
         joinConfigurationIds(
             outboundConnector.getId(),
@@ -264,8 +272,9 @@ public final class AdapterBuilder extends RouteBuilder {
             .routeId(externalEndpointRouteId)
             .routeConfigurationId(configIds);
     appendOnException(outboundConnector, endpointRouteDefinition);
+    headerCleanupProcessor.ifPresent(
+        proc -> endpointRouteDefinition.process(proc::cleanHeadersProcessor));
     outboundConnector.defineOutboundEndpoints(endpointRouteDefinition);
-
     endpointRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));
 
     // Build orchestration route(s) to/from scenario
@@ -273,6 +282,8 @@ public final class AdapterBuilder extends RouteBuilder {
         from(StaticEndpointBuilders.direct(requestOrchestrationRouteId))
             .routeId(requestOrchestrationRouteId)
             .routeConfigurationId(configIds);
+    headerCleanupProcessor.ifPresent(
+        proc -> requestRouteDefinition.process(proc::recreateHeadersProcessor));
     appendOnException(outboundConnector, requestRouteDefinition);
     final RouteDefinition responseRouteDefinition =
         from(StaticEndpointBuilders.direct(responseOrchestrationRouteId))
@@ -399,5 +410,57 @@ public final class AdapterBuilder extends RouteBuilder {
     RoutesDefinition routesDefinition;
     Map<IntegrationScenarioDefinition, EndpointConsumerBuilder> providerEndpoints;
     Map<IntegrationScenarioDefinition, EndpointProducerBuilder> consumerEndpoints;
+  }
+
+  /**
+   * Class that cleans and reinstates headers for {@link OutboundConnectorDefinition}s that are
+   * annotated with {@link CleanupHeaders}. <em>For internal use only</em>
+   *
+   * @see CleanupHeaders
+   */
+  static class HeaderCleanupProcessors {
+
+    private static final String HEADER_MEMORY_PROPERTY_NAME = "sip-header-cleanup-memory";
+    private final List<Pattern> keepHeaders;
+
+    HeaderCleanupProcessors(final String[] keepHeaders) {
+      this(Arrays.stream(keepHeaders).map(Pattern::compile).toArray(Pattern[]::new));
+    }
+
+    HeaderCleanupProcessors(final Pattern[] keepHeaders) {
+      this.keepHeaders = List.of(keepHeaders);
+    }
+
+    void cleanHeadersProcessor(final Exchange exchange) {
+      final var message = exchange.getMessage();
+      final var headers = message.getHeaders();
+      final var toRemove =
+          headers.keySet().stream()
+              .filter(
+                  headerName ->
+                      keepHeaders.stream()
+                          .anyMatch(pattern -> pattern.matcher(headerName).matches()))
+              .toList();
+      if (!toRemove.isEmpty()) {
+        final var copy = new HashMap<>(headers);
+        copy.keySet().retainAll(toRemove);
+        exchange.setProperty(HEADER_MEMORY_PROPERTY_NAME, copy);
+        toRemove.forEach(message::removeHeader);
+      }
+    }
+
+    @SuppressWarnings("unchecked")
+    void recreateHeadersProcessor(final Exchange exchange) {
+      final Map<String, Object> storedHeaders =
+          exchange.getProperty(HEADER_MEMORY_PROPERTY_NAME, Map.class);
+      if (null != storedHeaders) {
+        final var message = exchange.getMessage();
+        for (var entry : storedHeaders.entrySet()) {
+          if (null == message.getHeader(entry.getKey())) {
+            message.setHeader(entry.getKey(), entry.getValue());
+          }
+        }
+      }
+    }
   }
 }
