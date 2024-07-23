@@ -79,6 +79,10 @@ public class ProcessorProxy extends AsyncProcessorSupport {
 
   @Override
   public boolean process(Exchange exchange, AsyncCallback callback) {
+    if (isTestMode(exchange) && exchange.getProperty(TEST_MODE_HEADER) == null) {
+      exchange.setProperty(TEST_MODE_HEADER, true);
+      exchange.setProperty("test-name", exchange.getMessage().getHeader("test-name"));
+    }
 
     Exchange originalExchange = exchange.copy();
 
@@ -103,7 +107,8 @@ public class ProcessorProxy extends AsyncProcessorSupport {
   }
 
   private boolean isTestMode(Exchange exchange) {
-    return "true".equals(exchange.getIn().getHeader(TEST_MODE_HEADER, String.class));
+    return "true".equals(exchange.getProperty(TEST_MODE_HEADER, String.class))
+        || "true".equals(exchange.getMessage().getHeader(TEST_MODE_HEADER, String.class));
   }
 
   @SneakyThrows

@@ -34,5 +34,8 @@ public class ExecutionWrapper {
     Map<String, Object> headers = whenDefinitionExchange.getMessage().getHeaders();
     headers.put(RouteInvoker.TEST_NAME_HEADER, testName);
     headers.put(ProcessorProxy.TEST_MODE_HEADER, true);
+    Map<String, Object> properties = whenDefinitionExchange.getProperties();
+    properties.put(RouteInvoker.TEST_NAME_HEADER, testName);
+    properties.put(ProcessorProxy.TEST_MODE_HEADER, true);
   }
 }

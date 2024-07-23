@@ -46,7 +46,7 @@ class ProcessorProxyTest {
   }
 
   private void putProxyInTestMode() {
-    when(exchange.getIn().getHeader(TEST_MODE_HEADER, String.class)).thenReturn("true");
+    when(exchange.getProperty(TEST_MODE_HEADER, String.class)).thenReturn("true");
   }
 
   @Test

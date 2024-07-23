@@ -118,7 +118,7 @@ class ProcessorProxyMockTest {
 
       actualExchange = TestKitHelper.parseExchangeProperties(null, camelContext);
       actualExchange.setProperty(ENDPOINT_ID_EXCHANGE_PROPERTY, PROXY_ID);
-      actualExchange.getMessage().setHeader(TEST_MODE_HEADER, "true");
+      actualExchange.setProperty(TEST_MODE_HEADER, "true");
 
       processorProxyMock.setReturnExchange(actualExchange);
       processorProxyMock.setBehavior(null);

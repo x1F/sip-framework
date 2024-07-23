@@ -19,7 +19,7 @@ class ExecutionWrapperTest {
   private CamelContext camelContext;
 
   @Test
-  void GIVEN_mockExchange_WHEN_execute_THEN_validateTestKitHeaders() {
+  void GIVEN_mockExchangeWithProperties_WHEN_execute_THEN_validateTestKitHeaders() {
     // arrange
     camelContext = mock(CamelContext.class);
     when(camelContext.getCamelContextExtension()).thenReturn(mock(ExtendedCamelContext.class));
@@ -33,10 +33,28 @@ class ExecutionWrapperTest {
 
     // assert
     assertThat(actual).isPresent();
-    assertThat(actual.get().getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER))
-        .isEqualTo(TEST_NAME);
-    assertThat(actual.get().getMessage().getHeader(ProcessorProxy.TEST_MODE_HEADER, Boolean.class))
-        .isTrue();
+    assertThat(actual.get().getProperty(RouteInvoker.TEST_NAME_HEADER)).isEqualTo(TEST_NAME);
+    assertThat(actual.get().getProperty(ProcessorProxy.TEST_MODE_HEADER, Boolean.class)).isTrue();
+    assertThat(actual.get().getMessage().getBody()).isNull();
+  }
+
+  @Test
+  void GIVEN_mockExchangeWithHeaders_WHEN_execute_THEN_validateTestKitHeaders() {
+    // arrange
+    camelContext = mock(CamelContext.class);
+    when(camelContext.getCamelContextExtension()).thenReturn(mock(ExtendedCamelContext.class));
+    Exchange inputExchange = createEmptyExchange();
+    RouteInvoker routeInvoker = mock(RouteInvoker.class);
+    ExecutionWrapper subject = new ExecutionWrapper(TEST_NAME, inputExchange, routeInvoker);
+    when(routeInvoker.invoke(any(Exchange.class))).thenReturn(Optional.of(inputExchange));
+
+    // act
+    Optional<Exchange> actual = subject.execute();
+
+    // assert
+    assertThat(actual).isPresent();
+    assertThat(actual.get().getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER)).isEqualTo(TEST_NAME);
+    assertThat(actual.get().getMessage().getHeader(ProcessorProxy.TEST_MODE_HEADER, Boolean.class)).isTrue();
     assertThat(actual.get().getMessage().getBody()).isNull();
   }
 

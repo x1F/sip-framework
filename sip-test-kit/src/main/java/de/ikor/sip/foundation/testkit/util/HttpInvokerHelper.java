@@ -1,7 +1,8 @@
 package de.ikor.sip.foundation.testkit.util;
 
-import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
-import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
+import static de.ikor.sip.foundation.core.proxies.ProcessorProxy.TEST_MODE_HEADER;
+import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker.TEST_NAME_HEADER;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,13 +37,9 @@ public class HttpInvokerHelper {
           }
         });
     addHeaderIfAbsent(
-        headers,
-        RouteInvoker.TEST_NAME_HEADER,
-        exchange.getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER, String.class));
+        headers, TEST_NAME_HEADER, exchange.getProperty(TEST_NAME_HEADER, String.class));
     addHeaderIfAbsent(
-        headers,
-        ProcessorProxy.TEST_MODE_HEADER,
-        exchange.getMessage().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class));
+        headers, TEST_MODE_HEADER, exchange.getProperty(TEST_MODE_HEADER, String.class));
     return headers;
   }
 
@@ -65,6 +62,9 @@ public class HttpInvokerHelper {
     ExchangeBuilder exchangeBuilder =
         ExchangeBuilder.anExchange(camelContext).withBody(formatToOneLine(response.getBody()));
     response.getHeaders().forEach(exchangeBuilder::withHeader);
+    exchangeBuilder.withProperty(TEST_MODE_HEADER, true);
+    exchangeBuilder.withProperty(
+        TEST_NAME_HEADER, response.getHeaders().getFirst(TEST_NAME_HEADER));
     return exchangeBuilder.build();
   }
 
