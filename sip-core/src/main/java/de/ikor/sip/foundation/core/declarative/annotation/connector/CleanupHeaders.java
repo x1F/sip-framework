@@ -6,10 +6,19 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation to be used in conjunction with outbound connectors when it is necessary to clean up
- * headers before sending the message to the external system.
+ * Annotation to be used in conjunction with connectors when it is necessary to clean up headers
+ * before further processing.
  *
- * <p>Headers will only be removed for the call and re-added once the outbound call has completed.
+ * <ul>
+ *   <li>When used on an {@link
+ *       de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition inbound
+ *       connector}, the headers will be removed before the message is passed to the integration
+ *       scenario, and recreated once the response is returning into the connector.
+ *   <li>When used on an {@link
+ *       de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition outbound
+ *       connector}, the headers will be removed before the message is passed to the external
+ *       endpoint, and recreated once the response is returning into the connector.
+ * </ul>
  *
  * <p>Headers that should remain can be defined via {@link #keep()}
  *
@@ -20,7 +29,7 @@ import java.lang.annotation.Target;
 public @interface CleanupHeaders {
 
   /**
-   * @return Regex patterns for headers that should be kept for the outbound call
+   * @return Regex patterns for headers that should be kept
    */
   String[] keep() default {};
 }

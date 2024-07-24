@@ -5,6 +5,7 @@ import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.jo
 import static de.ikor.sip.foundation.core.declarative.validator.CDMValidator.*;
 
 import de.ikor.sip.foundation.core.declarative.annotation.connector.CleanupHeaders;
+import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
@@ -169,6 +170,10 @@ public final class AdapterBuilder extends RouteBuilder {
     final var scenarioHandoffRouteId =
         routesRegistry.generateRouteIdForConnector(RouteRole.SCENARIO_HANDOFF, inboundConnector);
 
+    final var headerCleanupProcessor =
+        Optional.ofNullable(inboundConnector.getClass().getAnnotation(CleanupHeaders.class))
+            .map(annotation -> new HeaderCleanupProcessors(annotation.keep(), inboundConnector));
+
     // Channel all inbound camel endpoint routes to the orchestration route
     final var endpointDefinitionType = inboundConnector.getEndpointDefinitionTypeClass();
     inboundConnector.defineInboundEndpoints(
@@ -187,6 +192,8 @@ public final class AdapterBuilder extends RouteBuilder {
             .routeId(scenarioHandoffRouteId)
             .routeConfigurationId(routeConfigurationIds);
     appendOnException(inboundConnector, handoffRouteDefinition);
+    headerCleanupProcessor.ifPresent(
+        proc -> handoffRouteDefinition.process(proc::cleanHeadersProcessor));
     handoffRouteDefinition
         .process(
             new CDMValidator(
@@ -205,6 +212,8 @@ public final class AdapterBuilder extends RouteBuilder {
                         inboundConnector.getId(),
                         cdmModel,
                         FROM_CDM_EXCEPTION_MESSAGE)));
+    headerCleanupProcessor.ifPresent(
+        proc -> handoffRouteDefinition.process(proc::recreateHeadersProcessor));
     handoffRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));
 
     // Build orchestration route(s) to/from scenario
@@ -246,7 +255,7 @@ public final class AdapterBuilder extends RouteBuilder {
 
     final var headerCleanupProcessor =
         Optional.ofNullable(outboundConnector.getClass().getAnnotation(CleanupHeaders.class))
-            .map(annotation -> new HeaderCleanupProcessors(annotation.keep()));
+            .map(annotation -> new HeaderCleanupProcessors(annotation.keep(), outboundConnector));
 
     String configIds =
         joinConfigurationIds(
@@ -420,19 +429,22 @@ public final class AdapterBuilder extends RouteBuilder {
    */
   static class HeaderCleanupProcessors {
 
-    private static final String HEADER_MEMORY_PROPERTY_NAME = "sip-header-cleanup-memory";
+    private static final String HEADER_MEMORY_PROPERTY_NAME = "sip-header-cleanup-memory-%s";
     private final List<Pattern> keepHeaders;
+    private final String memoryPropertyName;
 
-    HeaderCleanupProcessors(final String[] keepHeaders) {
+    HeaderCleanupProcessors(final String[] keepHeaders, final ConnectorDefinition connector) {
       this(
           Arrays.stream(keepHeaders)
               .map(String::toLowerCase)
               .map(Pattern::compile)
-              .toArray(Pattern[]::new));
+              .toArray(Pattern[]::new),
+          connector);
     }
 
-    HeaderCleanupProcessors(final Pattern[] keepHeaders) {
+    HeaderCleanupProcessors(final Pattern[] keepHeaders, final ConnectorDefinition connector) {
       this.keepHeaders = List.of(keepHeaders);
+      this.memoryPropertyName = String.format(HEADER_MEMORY_PROPERTY_NAME, connector.getId());
     }
 
     void cleanHeadersProcessor(final Exchange exchange) {
@@ -448,15 +460,14 @@ public final class AdapterBuilder extends RouteBuilder {
       if (!toRemove.isEmpty()) {
         final var copy = new HashMap<>(headers);
         copy.keySet().retainAll(toRemove);
-        exchange.setProperty(HEADER_MEMORY_PROPERTY_NAME, copy);
         toRemove.forEach(message::removeHeader);
+        exchange.setProperty(memoryPropertyName, copy);
       }
     }
 
     @SuppressWarnings("unchecked")
     void recreateHeadersProcessor(final Exchange exchange) {
-      final Map<String, Object> storedHeaders =
-          exchange.getProperty(HEADER_MEMORY_PROPERTY_NAME, Map.class);
+      final Map<String, Object> storedHeaders = exchange.getProperty(memoryPropertyName, Map.class);
       if (null != storedHeaders) {
         final var message = exchange.getMessage();
         for (var entry : storedHeaders.entrySet()) {
@@ -464,6 +475,7 @@ public final class AdapterBuilder extends RouteBuilder {
             message.setHeader(entry.getKey(), entry.getValue());
           }
         }
+        exchange.removeProperty(memoryPropertyName);
       }
     }
   }
