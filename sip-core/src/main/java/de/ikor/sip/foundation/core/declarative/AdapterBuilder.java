@@ -436,8 +436,7 @@ public final class AdapterBuilder extends RouteBuilder {
     HeaderCleanupProcessors(final String[] keepHeaders, final ConnectorDefinition connector) {
       this(
           Arrays.stream(keepHeaders)
-              .map(String::toLowerCase)
-              .map(Pattern::compile)
+              .map(pattern -> Pattern.compile(pattern, Pattern.CASE_INSENSITIVE))
               .toArray(Pattern[]::new),
           connector);
     }
@@ -455,7 +454,7 @@ public final class AdapterBuilder extends RouteBuilder {
               .filter(
                   headerName ->
                       keepHeaders.stream()
-                          .anyMatch(pattern -> pattern.matcher(headerName).matches()))
+                          .noneMatch(pattern -> pattern.matcher(headerName).matches()))
               .toList();
       if (!toRemove.isEmpty()) {
         final var copy = new HashMap<>(headers);
