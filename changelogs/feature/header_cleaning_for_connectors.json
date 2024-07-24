@@ -1,5 +1,5 @@
 {
   "author": "MartinBuchheim",
   "pullrequestId": "269",
-  "message": "Added @CleanupHeaders annotation to temporarily remove headers for outbound connectors"
+  "message": "Added @CleanupHeaders annotation to temporarily remove headers for connectors"
 }
