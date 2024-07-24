@@ -9,13 +9,11 @@ import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnecto
 import de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import java.util.Map;
-import java.util.function.Function;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.apache.camel.model.rest.RestDefinition;
 import org.apache.camel.model.rest.RestParamType;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 @SIPIntegrationAdapter
@@ -35,6 +33,7 @@ public class HeaderCleanupAdapter {
       integrationScenario = CleanupScenario.ID,
       requestModel = String.class,
       responseModel = Map.class)
+  @CleanupHeaders(keep = "^(?!firstHiddenKey).*")
   public class CleanupRestInboundConnector extends RestInboundConnectorBase {
 
     @Override
@@ -67,19 +66,11 @@ public class HeaderCleanupAdapter {
       integrationScenario = CleanupScenario.ID,
       requestModel = String.class,
       responseModel = String.class)
-  @CleanupHeaders(keep = {"sec.+", "firstHeader"})
+  @CleanupHeaders(keep = {"^(sec).+$", ".*hiddenKey.*"})
   public class HeaderManipulatingOutboundConnector extends GenericOutboundConnectorBase {
-
-    public static final String BEAN_NAME = "headerManipulatingBean";
-
     @Override
     protected EndpointProducerBuilder defineOutgoingEndpoint() {
-      return StaticEndpointBuilders.bean(BEAN_NAME);
-    }
-
-    @Bean(BEAN_NAME)
-    public Function<Object, String> endpointBean() {
-      return data -> "response";
+      return StaticEndpointBuilders.stub("http://somehost.here/header-test");
     }
   }
 }
