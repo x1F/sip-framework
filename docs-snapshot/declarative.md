@@ -218,7 +218,7 @@ To address this, SIP framework provides the `@CleanupHeaders` annotation, which 
 to temporarily remove any headers that are not explicitly declared to be kept within that annotation.
 
 - If the annotation is used on an *inbound* connector, headers will be removed before the message is passed from the inbound connector to the integration scenario, and then re-added for the response message as it is received from the integration scenario. In other words, the headers removed in an inbound connector will be usable within the scope of that connector only, and are not visible to any other connector or orchestration involved in the integration flow.
-- If the annotation is used on an *outbound* connector, headers will be removed just before the external endpoint is called, and re-added as the response has been received from the endpoint. In other words, the headers will remain available for the full message flow within the SIP adapter, and only be removed for call to the (external) endpoint.
+- If the annotation is used on an *outbound* connector, headers will be removed just before the external endpoint is called, and re-added as the response has been received from the endpoint. In other words, the headers will remain available for the full message flow within the SIP adapter, and only be removed for the call to the (external) endpoint.
 
 Note that any cleaned header will only be re-added if no header with the same name has been set elsewhere since it's removal, which means existing headers will not be overwritten when the framework attempts to re-attach the original headers that were removed during header cleanup.
 
