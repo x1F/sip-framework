@@ -177,6 +177,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-stub-starter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>de.ikor.sip.foundation</groupId>
             <artifactId>sip-middle-component</artifactId>
             <scope>test</scope>
