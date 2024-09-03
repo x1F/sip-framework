@@ -99,7 +99,7 @@ final class RouteGeneratorForForLoopCallScenarioConsumerDefinition<M> extends Ro
               exchange.getProperty(
                   ScenarioOrchestrationContext.PROPERTY_NAME, ScenarioOrchestrationContext.class),
               "Orchestration context for scenario-orchestration could not be retrieved from exchange");
-      ScenarioOrchestrationHelper.setExchange(context, exchange);
+      ScenarioOrchestrationHelper.setExchangeInContext(context, exchange);
       return context;
     }
   }
