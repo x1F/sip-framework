@@ -25,6 +25,8 @@ import org.apache.camel.builder.endpoint.dsl.JmsEndpointBuilderFactory;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
 
 /**
  * Helper methods for the declarative structure adapter building.
@@ -44,7 +46,7 @@ public class DeclarativeHelper {
     return String.format(CONNECTOR_ID_FORMAT, type.getValue(), scenarioID, connectorGroupID);
   }
 
-  public static <T extends ModelMapper> T createMapperInstance(Class<T> clazz) {
+  public static <T extends ModelMapper<?, ?>> T createMapperInstance(Class<T> clazz) {
     try {
       return Mappers.getMapper(clazz);
     } catch (RuntimeException e) {
@@ -60,6 +62,23 @@ public class DeclarativeHelper {
         throw SIPFrameworkInitializationException.init(
             exception, "SIP couldn't create a Mapper %s.", clazz.getName());
       }
+    }
+  }
+
+  /**
+   * Attempt to get mapper bean from context, otherwise create new mapper instance
+   *
+   * @param context {@link ApplicationContext}
+   * @param clazz mapper class
+   * @return instance of {@link ModelMapper}
+   * @param <T> mapper type
+   */
+  public static <T extends ModelMapper<?, ?>> T createMapperInstance(
+      ApplicationContext context, Class<T> clazz) {
+    try {
+      return context.getBean(clazz);
+    } catch (BeansException beansException) {
+      return createMapperInstance(clazz);
     }
   }
 
