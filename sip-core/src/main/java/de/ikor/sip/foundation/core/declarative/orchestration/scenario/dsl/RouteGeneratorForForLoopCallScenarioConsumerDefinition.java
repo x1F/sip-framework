@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding.ScenarioStepIterations;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationContext;
+import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationHelper;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -98,7 +99,7 @@ final class RouteGeneratorForForLoopCallScenarioConsumerDefinition<M> extends Ro
               exchange.getProperty(
                   ScenarioOrchestrationContext.PROPERTY_NAME, ScenarioOrchestrationContext.class),
               "Orchestration context for scenario-orchestration could not be retrieved from exchange");
-      context.setExchange(exchange);
+      ScenarioOrchestrationHelper.setExchange(context, exchange);
       return context;
     }
   }

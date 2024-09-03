@@ -47,7 +47,7 @@ public class CompositeProcessOrchestrationContext {
   private Object processResponse;
 
   /** Raw underlying Camel exchange. To be used with care! */
-  @Getter(AccessLevel.PACKAGE)
+  @Getter
   @Setter(AccessLevel.PACKAGE)
   private Exchange exchange;
 
