@@ -57,42 +57,6 @@ public abstract non-sealed class ConnectorBase
   @Getter(AccessLevel.PROTECTED)
   private ApplicationContext applicationContext;
 
-  @SuppressWarnings({"unchecked", "OptionalUsedAsFieldOrParameterType"})
-  private Optional<RequestMappingRouteTransformer<?, ?>> requestMappingRouteTransformer;
-
-  private Optional<RequestMappingRouteTransformer<?, ?>> getRequestMappingRouteTransformer() {
-    if (requestMappingRouteTransformer == null)
-      requestMappingRouteTransformer =
-          DeclarativeReflectionUtils.getAnnotationIfPresent(UseRequestModelMapper.class, this)
-              .map(
-                  annotation ->
-                      DeclarativeHelper.createMapperInstance(
-                          applicationContext, annotation.value()))
-              .map(
-                  mapper ->
-                      RequestMappingRouteTransformer.forConnectorWithScenario(
-                          this, getScenario(), mapper));
-    return requestMappingRouteTransformer;
-  }
-
-  @SuppressWarnings({"unchecked", "OptionalUsedAsFieldOrParameterType"})
-  private Optional<ResponseMappingRouteTransformer<?, ?>> responseMappingRouteTransformer;
-
-  private Optional<ResponseMappingRouteTransformer<?, ?>> getResponseMappingRouteTransformer() {
-    if (responseMappingRouteTransformer == null)
-      responseMappingRouteTransformer =
-          DeclarativeReflectionUtils.getAnnotationIfPresent(UseResponseModelMapper.class, this)
-              .map(
-                  annotation ->
-                      DeclarativeHelper.createMapperInstance(
-                          applicationContext, annotation.value()))
-              .map(
-                  mapper ->
-                      ResponseMappingRouteTransformer.forConnectorWithScenario(
-                          this, getScenario(), mapper));
-    return responseMappingRouteTransformer;
-  }
-
   @Delegate private Orchestrator<ConnectorOrchestrationInfo> modelTransformationOrchestrator;
 
   @Override
@@ -211,5 +175,27 @@ public abstract non-sealed class ConnectorBase
   @Override
   public final List<Method> getOnExceptionHandler() {
     return onExceptionHandlers;
+  }
+
+  private Optional<RequestMappingRouteTransformer<?, ?>> getRequestMappingRouteTransformer() {
+    return DeclarativeReflectionUtils.getAnnotationIfPresent(UseRequestModelMapper.class, this)
+        .map(
+            annotation ->
+                DeclarativeHelper.createMapperInstance(applicationContext, annotation.value()))
+        .map(
+            mapper ->
+                RequestMappingRouteTransformer.forConnectorWithScenario(
+                    this, getScenario(), mapper));
+  }
+
+  private Optional<ResponseMappingRouteTransformer<?, ?>> getResponseMappingRouteTransformer() {
+    return DeclarativeReflectionUtils.getAnnotationIfPresent(UseResponseModelMapper.class, this)
+        .map(
+            annotation ->
+                DeclarativeHelper.createMapperInstance(applicationContext, annotation.value()))
+        .map(
+            mapper ->
+                ResponseMappingRouteTransformer.forConnectorWithScenario(
+                    this, getScenario(), mapper));
   }
 }
