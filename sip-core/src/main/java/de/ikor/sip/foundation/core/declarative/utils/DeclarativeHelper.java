@@ -75,6 +75,7 @@ public class DeclarativeHelper {
    */
   public static <T extends ModelMapper<?, ?>> T createMapperInstance(
       ApplicationContext context, Class<T> clazz) {
+    if (context == null) return createMapperInstance(clazz);
     try {
       return context.getBean(clazz);
     } catch (BeansException beansException) {

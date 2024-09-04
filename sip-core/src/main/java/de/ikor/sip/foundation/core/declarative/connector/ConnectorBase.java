@@ -58,29 +58,48 @@ public abstract non-sealed class ConnectorBase
   private ApplicationContext applicationContext;
 
   @SuppressWarnings({"unchecked", "OptionalUsedAsFieldOrParameterType"})
-  private final Optional<RequestMappingRouteTransformer<?, ?>> requestMappingRouteTransformer =
-      DeclarativeReflectionUtils.getAnnotationIfPresent(UseRequestModelMapper.class, this)
-          .map(annotation -> DeclarativeHelper.createMapperInstance(annotation.value()))
-          .map(
-              mapper ->
-                  RequestMappingRouteTransformer.forConnectorWithScenario(
-                      this, getScenario(), mapper));
+  private Optional<RequestMappingRouteTransformer<?, ?>> requestMappingRouteTransformer;
+
+  private Optional<RequestMappingRouteTransformer<?, ?>> getRequestMappingRouteTransformer() {
+    if (requestMappingRouteTransformer == null)
+      requestMappingRouteTransformer =
+          DeclarativeReflectionUtils.getAnnotationIfPresent(UseRequestModelMapper.class, this)
+              .map(
+                  annotation ->
+                      DeclarativeHelper.createMapperInstance(
+                          applicationContext, annotation.value()))
+              .map(
+                  mapper ->
+                      RequestMappingRouteTransformer.forConnectorWithScenario(
+                          this, getScenario(), mapper));
+    return requestMappingRouteTransformer;
+  }
 
   @SuppressWarnings({"unchecked", "OptionalUsedAsFieldOrParameterType"})
-  private final Optional<ResponseMappingRouteTransformer<?, ?>> responseMappingRouteTransformer =
-      DeclarativeReflectionUtils.getAnnotationIfPresent(UseResponseModelMapper.class, this)
-          .map(annotation -> DeclarativeHelper.createMapperInstance(annotation.value()))
-          .map(
-              mapper ->
-                  ResponseMappingRouteTransformer.forConnectorWithScenario(
-                      this, getScenario(), mapper));
+  private Optional<ResponseMappingRouteTransformer<?, ?>> responseMappingRouteTransformer;
 
-  @Delegate
-  private final Orchestrator<ConnectorOrchestrationInfo> modelTransformationOrchestrator =
-      initConnectorOrchestrator();
+  private Optional<ResponseMappingRouteTransformer<?, ?>> getResponseMappingRouteTransformer() {
+    if (responseMappingRouteTransformer == null)
+      responseMappingRouteTransformer =
+          DeclarativeReflectionUtils.getAnnotationIfPresent(UseResponseModelMapper.class, this)
+              .map(
+                  annotation ->
+                      DeclarativeHelper.createMapperInstance(
+                          applicationContext, annotation.value()))
+              .map(
+                  mapper ->
+                      ResponseMappingRouteTransformer.forConnectorWithScenario(
+                          this, getScenario(), mapper));
+    return responseMappingRouteTransformer;
+  }
+
+  @Delegate private Orchestrator<ConnectorOrchestrationInfo> modelTransformationOrchestrator;
 
   @Override
   public Orchestrator<ConnectorOrchestrationInfo> getOrchestrator() {
+    if (modelTransformationOrchestrator == null) {
+      modelTransformationOrchestrator = initConnectorOrchestrator();
+    }
     return modelTransformationOrchestrator;
   }
 
@@ -118,8 +137,8 @@ public abstract non-sealed class ConnectorBase
   @Deprecated(since = "3.4.0")
   protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
     final var orchestrator = ConnectorOrchestrator.forConnector(this);
-    requestMappingRouteTransformer.ifPresent(orchestrator::setRequestRouteTransformer);
-    responseMappingRouteTransformer.ifPresent(orchestrator::setResponseRouteTransformer);
+    getRequestMappingRouteTransformer().ifPresent(orchestrator::setRequestRouteTransformer);
+    getResponseMappingRouteTransformer().ifPresent(orchestrator::setResponseRouteTransformer);
     return orchestrator;
   }
 
@@ -148,20 +167,22 @@ public abstract non-sealed class ConnectorBase
 
     if (transformationOrchestrator
         instanceof @SuppressWarnings("deprecation") ConnectorOrchestrator connectorOrchestrator) {
-      requestMappingRouteTransformer.ifPresent(
-          transformer ->
-              SIPFrameworkInitializationException.throwIf(
-                  !transformer.equals(connectorOrchestrator.getRequestRouteTransformer()),
-                  "Connector %s specifies custom request-transformation in it's orchestrator, and at the same time has annotation @%s present, which is not allowed.",
-                  getClass().getName(),
-                  UseRequestModelMapper.class.getSimpleName()));
-      responseMappingRouteTransformer.ifPresent(
-          transformer ->
-              SIPFrameworkInitializationException.throwIf(
-                  !transformer.equals(connectorOrchestrator.getResponseRouteTransformer()),
-                  "Connector %s specifies custom response-transformation in it's orchestrator, and at the same time has annotation @%s present, which is not allowed.",
-                  getClass().getName(),
-                  UseResponseModelMapper.class.getSimpleName()));
+      getRequestMappingRouteTransformer()
+          .ifPresent(
+              transformer ->
+                  SIPFrameworkInitializationException.throwIf(
+                      !transformer.equals(connectorOrchestrator.getRequestRouteTransformer()),
+                      "Connector %s specifies custom request-transformation in it's orchestrator, and at the same time has annotation @%s present, which is not allowed.",
+                      getClass().getName(),
+                      UseRequestModelMapper.class.getSimpleName()));
+      getResponseMappingRouteTransformer()
+          .ifPresent(
+              transformer ->
+                  SIPFrameworkInitializationException.throwIf(
+                      !transformer.equals(connectorOrchestrator.getResponseRouteTransformer()),
+                      "Connector %s specifies custom response-transformation in it's orchestrator, and at the same time has annotation @%s present, which is not allowed.",
+                      getClass().getName(),
+                      UseResponseModelMapper.class.getSimpleName()));
     } else {
       TRANSFORM_OVERLOAD_PROHIBITED_ANNOTATIONS.stream()
           .filter(annotation -> getClass().isAnnotationPresent(annotation))

@@ -29,6 +29,7 @@ import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.apache.camel.model.rest.RestDefinition;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 
@@ -108,5 +109,10 @@ public class MappingAdapter {
     protected EndpointProducerBuilder defineOutgoingEndpoint() {
       return StaticEndpointBuilders.log("message");
     }
+  }
+
+  @Bean
+  public FrontEndSystemRequestMapper frontEndSystemRequestMapperBean() {
+    return new FrontEndSystemRequestMapper();
   }
 }
