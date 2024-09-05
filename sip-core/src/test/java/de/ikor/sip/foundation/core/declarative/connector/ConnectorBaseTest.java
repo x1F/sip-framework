@@ -5,8 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
+import org.apache.camel.model.RouteDefinition;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -29,15 +31,20 @@ class ConnectorBaseTest {
       connectorGroup = "group",
       integrationScenario = "scenario",
       requestModel = Object.class)
-  public class TestConnector extends GenericOutboundConnectorBase {
+  class TestConnector extends GenericOutboundConnectorBase {
     @Override
     protected EndpointProducerBuilder defineOutgoingEndpoint() {
       return StaticEndpointBuilders.log("log");
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
-      return super.defineTransformationOrchestrator();
+      return ConnectorOrchestrator.forConnector(this).setRequestRouteTransformer(this::setRequest);
+    }
+
+    private void setRequest(RouteDefinition routeDefinition) {
+      routeDefinition.log("log");
     }
   }
 }

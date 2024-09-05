@@ -97,8 +97,7 @@ public abstract non-sealed class ConnectorBase
    */
   @Deprecated(since = "3.4.0")
   protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
-    final var orchestrator = ConnectorOrchestrator.forConnector(this);
-    return orchestrator;
+    return ConnectorOrchestrator.forConnector(this);
   }
 
   private boolean isDeprecatedTransformationOrchestrationOverloaded() {
@@ -124,24 +123,21 @@ public abstract non-sealed class ConnectorBase
             getClass().getName());
     @Deprecated final var transformationOrchestrator = defineTransformationOrchestrator();
 
-    if (transformationOrchestrator
-        instanceof @SuppressWarnings("deprecation") ConnectorOrchestrator connectorOrchestrator) {
+    if (transformationOrchestrator instanceof ConnectorOrchestrator) {
       DeclarativeReflectionUtils.getAnnotationIfPresent(UseRequestModelMapper.class, this)
           .ifPresent(
-              transformer ->
-                  SIPFrameworkInitializationException.throwIf(
-                      !transformer.equals(connectorOrchestrator.getRequestRouteTransformer()),
-                      "Connector %s specifies custom request-transformation in it's orchestrator, and at the same time has annotation @%s present, which is not allowed.",
-                      getClass().getName(),
-                      UseRequestModelMapper.class.getSimpleName()));
+              transformer -> {
+                throw SIPFrameworkInitializationException.init(
+                    "Connector %s specifies custom request-transformation in it's orchestrator, and at the same time has annotation @%s present, which is not allowed.",
+                    getClass().getName(), UseRequestModelMapper.class.getSimpleName());
+              });
       DeclarativeReflectionUtils.getAnnotationIfPresent(UseResponseModelMapper.class, this)
           .ifPresent(
-              transformer ->
-                  SIPFrameworkInitializationException.throwIf(
-                      !transformer.equals(connectorOrchestrator.getResponseRouteTransformer()),
-                      "Connector %s specifies custom response-transformation in it's orchestrator, and at the same time has annotation @%s present, which is not allowed.",
-                      getClass().getName(),
-                      UseResponseModelMapper.class.getSimpleName()));
+              transformer -> {
+                throw SIPFrameworkInitializationException.init(
+                    "Connector %s specifies custom response-transformation in it's orchestrator, and at the same time has annotation @%s present, which is not allowed.",
+                    getClass().getName(), UseResponseModelMapper.class.getSimpleName());
+              });
     } else {
       TRANSFORM_OVERLOAD_PROHIBITED_ANNOTATIONS.stream()
           .filter(annotation -> getClass().isAnnotationPresent(annotation))
