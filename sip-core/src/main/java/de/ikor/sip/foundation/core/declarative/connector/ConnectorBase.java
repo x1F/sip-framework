@@ -6,14 +6,11 @@ import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
 import de.ikor.sip.foundation.core.declarative.annonation.UseResponseModelMapper;
 import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.RequestProcessor;
 import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ResponseProcessor;
-import de.ikor.sip.foundation.core.declarative.model.RequestMappingRouteTransformer;
-import de.ikor.sip.foundation.core.declarative.model.ResponseMappingRouteTransformer;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorProcessorChainOrchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.lang.annotation.Annotation;
@@ -101,8 +98,6 @@ public abstract non-sealed class ConnectorBase
   @Deprecated(since = "3.4.0")
   protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
     final var orchestrator = ConnectorOrchestrator.forConnector(this);
-    getRequestMappingRouteTransformer().ifPresent(orchestrator::setRequestRouteTransformer);
-    getResponseMappingRouteTransformer().ifPresent(orchestrator::setResponseRouteTransformer);
     return orchestrator;
   }
 
@@ -131,7 +126,7 @@ public abstract non-sealed class ConnectorBase
 
     if (transformationOrchestrator
         instanceof @SuppressWarnings("deprecation") ConnectorOrchestrator connectorOrchestrator) {
-      getRequestMappingRouteTransformer()
+      DeclarativeReflectionUtils.getAnnotationIfPresent(UseRequestModelMapper.class, this)
           .ifPresent(
               transformer ->
                   SIPFrameworkInitializationException.throwIf(
@@ -139,7 +134,7 @@ public abstract non-sealed class ConnectorBase
                       "Connector %s specifies custom request-transformation in it's orchestrator, and at the same time has annotation @%s present, which is not allowed.",
                       getClass().getName(),
                       UseRequestModelMapper.class.getSimpleName()));
-      getResponseMappingRouteTransformer()
+      DeclarativeReflectionUtils.getAnnotationIfPresent(UseResponseModelMapper.class, this)
           .ifPresent(
               transformer ->
                   SIPFrameworkInitializationException.throwIf(
@@ -175,27 +170,5 @@ public abstract non-sealed class ConnectorBase
   @Override
   public final List<Method> getOnExceptionHandler() {
     return onExceptionHandlers;
-  }
-
-  private Optional<RequestMappingRouteTransformer<?, ?>> getRequestMappingRouteTransformer() {
-    return DeclarativeReflectionUtils.getAnnotationIfPresent(UseRequestModelMapper.class, this)
-        .map(
-            annotation ->
-                DeclarativeHelper.createMapperInstance(applicationContext, annotation.value()))
-        .map(
-            mapper ->
-                RequestMappingRouteTransformer.forConnectorWithScenario(
-                    this, getScenario(), mapper));
-  }
-
-  private Optional<ResponseMappingRouteTransformer<?, ?>> getResponseMappingRouteTransformer() {
-    return DeclarativeReflectionUtils.getAnnotationIfPresent(UseResponseModelMapper.class, this)
-        .map(
-            annotation ->
-                DeclarativeHelper.createMapperInstance(applicationContext, annotation.value()))
-        .map(
-            mapper ->
-                ResponseMappingRouteTransformer.forConnectorWithScenario(
-                    this, getScenario(), mapper));
   }
 }
