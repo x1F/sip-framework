@@ -80,7 +80,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
   @Override
   public boolean process(Exchange exchange, AsyncCallback callback) {
     if (isTestMode(exchange) && exchange.getProperty(TEST_MODE_HEADER) == null) {
-      exchange.setProperty(TEST_MODE_HEADER, true);
+      exchange.setProperty(TEST_MODE_HEADER, "true");
       exchange.setProperty("test-name", exchange.getMessage().getHeader("test-name"));
     }
 
