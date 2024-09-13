@@ -107,6 +107,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/3.5.0/index.html">JavaDoc 3.5.0</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/3.4.0/index.html">JavaDoc 3.4.0</a>
                 </li>
               </ul>
@@ -298,7 +302,7 @@ Running this class would execute the test, but also it will be executed in the t
 <pre class="highlight"><code class="language-yaml">  WHEN-execute:
     endpointId: "id of starting route under test"
     with:
-      body: "file:SOAP request.xml"</code></pre>
+      body: "resource-file:filename.ext"</code></pre>
 This approach is possible in all three phases of test: WHEN-execute, WITH-mocks and THEN-expect. It this case, payload 
 files must be on classpath.</p>
 <p>The default file for placing your test case definitions is <code>test-case-definition.yml</code> which can be found under
