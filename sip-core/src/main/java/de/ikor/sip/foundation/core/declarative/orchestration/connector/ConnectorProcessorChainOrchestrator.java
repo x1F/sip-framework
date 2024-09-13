@@ -276,11 +276,13 @@ public final class ConnectorProcessorChainOrchestrator
 
     // Register attached mappers
     registerMapperProcessor(
+        context,
         connector,
         requestExtensionsRegistry,
         UseRequestModelMapper.class,
         UseRequestModelMapper::value);
     registerMapperProcessor(
+        context,
         connector,
         responseExtensionsRegistry,
         UseResponseModelMapper.class,
@@ -288,13 +290,15 @@ public final class ConnectorProcessorChainOrchestrator
   }
 
   private <T extends Annotation> void registerMapperProcessor(
+      ApplicationContext context,
       final ConnectorDefinition connector,
       final Map<String, ConnectorProcessorRegistryEntry> registry,
       final Class<T> annotationClass,
       final Function<T, Class<? extends ModelMapper>> mapperFetcher) {
     if (connector.getClass().isAnnotationPresent(annotationClass)) {
       final var annotation = connector.getClass().getAnnotation(annotationClass);
-      final var mapper = DeclarativeHelper.createMapperInstance(mapperFetcher.apply(annotation));
+      final var mapper =
+          DeclarativeHelper.createMapperInstance(context, mapperFetcher.apply(annotation));
       final var entry =
           new ConnectorProcessorRegistryEntry(
               mapper, connector.getClass(), requestExtensionsRegistry);

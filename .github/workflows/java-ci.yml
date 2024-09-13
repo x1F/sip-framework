@@ -98,7 +98,7 @@ jobs:
       run: mvn ${MAVEN_ARGS} javadoc:aggregate -Pjavadoc-lint-html
     - name: 'Upload Javadoc Artifact'
       if: ${{ github.ref == 'refs/heads/develop' }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: javadoc
         path: target/site/apidocs/*
@@ -122,7 +122,7 @@ jobs:
         git rm -r javadoc/latest || true
         mkdir -p javadoc/latest
     - name: Download newer javadoc
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: javadoc
         path: javadoc/latest

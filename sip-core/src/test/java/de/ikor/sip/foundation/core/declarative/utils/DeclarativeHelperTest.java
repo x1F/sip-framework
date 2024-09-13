@@ -34,7 +34,8 @@ class DeclarativeHelperTest {
   @Test
   void WHEN_createMapperWithoutNoArgConstructor_THEN_throwSIPException() {
 
-    assertThatThrownBy(() -> DeclarativeHelper.createMapperInstance(NoArgsConstructorMapper.class))
+    assertThatThrownBy(
+            () -> DeclarativeHelper.createMapperInstance(null, NoArgsConstructorMapper.class))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
             "Mapper %s needs to have a no-arg constructor, please define one.",
@@ -45,7 +46,9 @@ class DeclarativeHelperTest {
   void WHEN_createMapperWhichThrowsError_THEN_throwSIPExceptionWhichWrapsRuntimeException() {
 
     assertThatThrownBy(
-            () -> DeclarativeHelper.createMapperInstance(ExceptionThrowingConstructorMapper.class))
+            () ->
+                DeclarativeHelper.createMapperInstance(
+                    null, ExceptionThrowingConstructorMapper.class))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
             "SIP couldn't create a Mapper %s.", ExceptionThrowingConstructorMapper.class.getName())
