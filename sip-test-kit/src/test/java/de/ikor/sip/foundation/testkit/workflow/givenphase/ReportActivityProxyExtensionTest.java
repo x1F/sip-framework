@@ -48,7 +48,7 @@ class ReportActivityProxyExtensionTest {
     // arrange
     TestExecutionStatus testExecutionStatus = new TestExecutionStatus();
     when(original.getMessage()).thenReturn(message);
-    when(message.getHeader(RouteInvoker.TEST_NAME_HEADER, String.class)).thenReturn(TEST_NAME);
+    when(original.getProperty(RouteInvoker.TEST_NAME_HEADER, String.class)).thenReturn(TEST_NAME);
     String ORIGINAL_BODY = "originalbody";
     when(message.getBody()).thenReturn(ORIGINAL_BODY);
     String PROXY_ID = "proxy id";
@@ -66,8 +66,7 @@ class ReportActivityProxyExtensionTest {
   void When_run_With_NoTestCases_Then_exception() {
     // arrange
     subject.setTestCases(new ArrayList<>());
-    when(original.getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER, String.class))
-        .thenReturn(TEST_NAME);
+    when(original.getProperty(RouteInvoker.TEST_NAME_HEADER, String.class)).thenReturn(TEST_NAME);
 
     // act + assert
     assertThatThrownBy(() -> subject.run(proxy, original, current))
@@ -78,10 +77,8 @@ class ReportActivityProxyExtensionTest {
   @Test
   void When_isApplicable_With_AllConditionsMatch_Then_true() {
     when(proxy.isEndpointProcessor()).thenReturn(true);
-    when(original.getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER, String.class))
-        .thenReturn(TEST_NAME);
-    when(original.getIn().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class))
-        .thenReturn("true");
+    when(original.getProperty(RouteInvoker.TEST_NAME_HEADER, String.class)).thenReturn(TEST_NAME);
+    when(original.getProperty(ProcessorProxy.TEST_MODE_HEADER, String.class)).thenReturn("true");
     assertTrue(subject.isApplicable(proxy, original, current));
   }
 
@@ -109,18 +106,15 @@ class ReportActivityProxyExtensionTest {
   @Test
   void When_isApplicable_With_TestModeFalse_Then_false() {
     when(proxy.isEndpointProcessor()).thenReturn(true);
-    when(original.getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER, String.class))
-        .thenReturn(TEST_NAME);
-    when(original.getIn().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class))
-        .thenReturn("false");
+    when(original.getProperty(RouteInvoker.TEST_NAME_HEADER, String.class)).thenReturn(TEST_NAME);
+    when(original.getProperty(ProcessorProxy.TEST_MODE_HEADER, String.class)).thenReturn("false");
     assertFalse(subject.isApplicable(proxy, original, current));
   }
 
   @Test
   void When_isApplicable_With_NoTestName_Then_false() {
     when(proxy.isEndpointProcessor()).thenReturn(true);
-    when(original.getIn().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class))
-        .thenReturn("true");
+    when(original.getProperty(ProcessorProxy.TEST_MODE_HEADER, String.class)).thenReturn("true");
     assertFalse(subject.isApplicable(proxy, original, current));
   }
 }
