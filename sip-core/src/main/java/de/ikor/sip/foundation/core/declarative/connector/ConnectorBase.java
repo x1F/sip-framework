@@ -123,7 +123,8 @@ public abstract non-sealed class ConnectorBase
             getClass().getName());
     @Deprecated final var transformationOrchestrator = defineTransformationOrchestrator();
 
-    if (transformationOrchestrator instanceof ConnectorOrchestrator) {
+    if (transformationOrchestrator
+        instanceof @SuppressWarnings("deprecation") ConnectorOrchestrator connectorOrchestrator) {
       DeclarativeReflectionUtils.getAnnotationIfPresent(UseRequestModelMapper.class, this)
           .ifPresent(
               transformer -> {
