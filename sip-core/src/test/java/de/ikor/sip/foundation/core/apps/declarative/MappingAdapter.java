@@ -14,21 +14,20 @@ import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
 import de.ikor.sip.foundation.core.declarative.annonation.UseResponseModelMapper;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ResponseProcessor;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
-import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
-import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import java.util.Optional;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.DataFormatClause;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
-import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.apache.camel.model.rest.RestDefinition;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 
@@ -69,16 +68,7 @@ public class MappingAdapter {
       integrationScenario = MapDomainModelsScenario.ID,
       requestModel = BackendResourceRequest.class)
   @UseRequestModelMapper(BackendTypes.BackendRequestModelMapper.class)
-  public class LoggerConsumerWithReponse extends GenericOutboundConnectorBase {
-
-    @Override
-    @Deprecated
-    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
-      ConnectorOrchestrator orchestrator =
-          (ConnectorOrchestrator) super.defineTransformationOrchestrator();
-      orchestrator.setResponseRouteTransformer(this::defineResponseRoute);
-      return orchestrator;
-    }
+  public class LoggerConsumerWithResponse extends GenericOutboundConnectorBase {
 
     @Override
     protected Optional<MarshallerDefinition> defineRequestMarshalling() {
@@ -92,21 +82,25 @@ public class MappingAdapter {
               unmarshaller -> unmarshaller.json(BackendResourceRequest.class)));
     }
 
-    protected void defineResponseRoute(final RouteDefinition definition) {
+    @ResponseProcessor
+    public ResourceResponse defineResponseRoute(Exchange exchange) {
       // manually returning the test response
-      definition.setBody(
-          exchange ->
-              ResourceResponse.builder()
-                  .resourceType(
-                      exchange.getIn().getBody(BackendResourceRequest.class).getResourceTypeName())
-                  .resourceName("TEST")
-                  .id(exchange.getIn().getBody(BackendResourceRequest.class).getId())
-                  .build());
+      return ResourceResponse.builder()
+          .resourceType(
+              exchange.getIn().getBody(BackendResourceRequest.class).getResourceTypeName())
+          .resourceName("TEST")
+          .id(exchange.getIn().getBody(BackendResourceRequest.class).getId())
+          .build();
     }
 
     @Override
     protected EndpointProducerBuilder defineOutgoingEndpoint() {
       return StaticEndpointBuilders.log("message");
     }
+  }
+
+  @Bean
+  public FrontEndSystemRequestMapper frontEndSystemRequestMapperBean() {
+    return new FrontEndSystemRequestMapper();
   }
 }

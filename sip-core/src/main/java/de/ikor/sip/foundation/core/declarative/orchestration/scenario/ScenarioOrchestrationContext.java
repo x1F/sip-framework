@@ -50,7 +50,9 @@ public class ScenarioOrchestrationContext<M> {
 
   private M aggregatedResponse;
 
-  @Getter @Setter private Exchange exchange;
+  @Getter
+  @Setter(value = AccessLevel.PACKAGE)
+  private Exchange exchange;
 
   /**
    * Returns the request as retrieved from the provider that initiated the integration call with the
