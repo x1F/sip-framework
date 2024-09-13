@@ -6,25 +6,25 @@
 
 SIP Declarative Adapter concept relies on using best practices in order to provide developers
 with a tool for building unified adapters. It is a structured approach for building integration adapters.
-By using predefined SIP constructs (Connector, Integration scenario, Connector Group, Composite process) 
-the adapter development is streamlined and built by the SIP Framework. 
+By using predefined SIP constructs (Connector, Integration scenario, Connector Group, Composite process)
+the adapter development is streamlined and built by the SIP Framework.
 
 
 ## Concepts
 
 ### Common Domain Model (CDM)
 
-CDM is a model which is used in connecting different non-compatible systems. 
-It is also referred to as _Canonical Data Model_ in the standard integration patterns. 
-It is the shared data model that needs to be understood by all **Connectors** participating in an **Integration scenario**. 
-Each **Integration scenario** specifies the CDM that is used for it, 
-while the **Connectors** participating in the scenario act as interpreters 
+CDM is a model which is used in connecting different non-compatible systems.
+It is also referred to as _Canonical Data Model_ in the standard integration patterns.
+It is the shared data model that needs to be understood by all **Connectors** participating in an **Integration scenario**.
+Each **Integration scenario** specifies the CDM that is used for it,
+while the **Connectors** participating in the scenario act as interpreters
 and translate between the CDM and the model used by the external system they are connecting to.
 
 ### Integration Scenario
 
 A scenario is a means of linking connectors into one fluent flow.
-They are used to define a specific integration flow, usually one concrete operation, between integration sides. 
+They are used to define a specific integration flow, usually one concrete operation, between integration sides.
 Each adapter contains one or more scenarios that are related to the scope of the adapter itself.
 
 ### Connector group
@@ -33,30 +33,30 @@ Connector groups are used for grouping connectors based on the system they belon
 
 ### Connector
 
-A connector is a holder of an **external** endpoint and represents one integration side. 
-One connector would typically only talk to multiple external systems if they form a dependent unit - otherwise, 
-for independent systems, separate connectors should be provided, one for each individual system. 
-Their duty is to provide necessary processing and transformation into/from the Common Domain Model. 
+A connector is a holder of an **external** endpoint and represents one integration side.
+One connector would typically only talk to multiple external systems if they form a dependent unit - otherwise,
+for independent systems, separate connectors should be provided, one for each individual system.
+Their duty is to provide necessary processing and transformation into/from the Common Domain Model.
 They can be either _Inbound_ or _Outbound_, with Inbound having Rest and SOAP as pre-built subtypes.
 
 ### Composite Process
 
-Combines multiple Integration Scenarios into one flow. 
-Its purpose is to allow reuse of the integration scenarios and provide mappings between different CDMs, 
+Combines multiple Integration Scenarios into one flow.
+Its purpose is to allow reuse of the integration scenarios and provide mappings between different CDMs,
 define order of execution, conditional execution and looping.
 
 ### Orchestration
 
 SIP Framework allows custom code to be added to multiple predefined points in the adapter
-that can control the behaviour of the specific declarative element. 
-At the end SIP framework builds the adapter using predefined SIP constructs (mapping, control flow, etc.) 
-and custom code defined by the developer. 
+that can control the behaviour of the specific declarative element.
+At the end SIP framework builds the adapter using predefined SIP constructs (mapping, control flow, etc.)
+and custom code defined by the developer.
 Custom behaviour supplied by the developer in different places in the adapter is called "orchestration".
 
 There are 3 points of orchestration:
 
 - **Connectors**: Behavior of the connector that influences request and (optional) response flow. This orchestration can be written using **Connector Processors**.
-- **Integration scenario**: Execution order of Connectors, control flow, and response aggregation. This orchestration can be written in custom **SIP Orchestration DSL and Java**. 
+- **Integration scenario**: Execution order of Connectors, control flow, and response aggregation. This orchestration can be written in custom **SIP Orchestration DSL and Java**.
 - **Composite process**: Execution order of integration scenarios, control flow and mappings. This orchestration can be written in custom **SIP Orchestration DSL and Java**.
 
 
@@ -77,7 +77,7 @@ Building one adapter requires implementation of previously mentioned concepts.
 
 ### Integration Scenarios
 
-In order to create a scenario first we need to create a class which extends `IntegrationScenarioBase`. 
+In order to create a scenario first we need to create a class which extends `IntegrationScenarioBase`.
 Then, annotate it with `@IntegrationScenario` and fill in the required fields:
 
 - *scenarioId* - unique identifier of a scenario, used in connectors to link them
@@ -88,18 +88,18 @@ Then, annotate it with `@IntegrationScenario` and fill in the required fields:
 
 ```java
 @IntegrationScenario(
-      scenarioId = DemoScenario.ID, 
-      requestModel = DemoCDMRequest.class, 
-      responseModel = DemoCDMResponse.class)
+        scenarioId = DemoScenario.ID,
+        requestModel = DemoCDMRequest.class,
+        responseModel = DemoCDMResponse.class)
 public class DemoScenario extends IntegrationScenarioBase {
-  public static final String ID = "Demo scenario";
+    public static final String ID = "Demo scenario";
 }
 ```
 
 ### Connector Groups
 
 Similar to scenarios, we first need to extend `ConnectorGroupBase` and also annotate the class with `@ConnectorGroup`.
-Defining connector group is optional. If a connector group is not represented in code, but is used in a connector, 
+Defining connector group is optional. If a connector group is not represented in code, but is used in a connector,
 it will be automatically generated by the framework with the ID declared in the connector.
 Fields that are available are:
 
@@ -110,7 +110,7 @@ Fields that are available are:
 ```java
 @ConnectorGroup(groupId = DemoConnectorGroup.ID)
 public class DemoConnectorGroup extends ConnectorGroupBase {
-  public static final String ID = "SIP1";
+    public static final String ID = "SIP1";
 }
 ```
 
@@ -118,7 +118,7 @@ public class DemoConnectorGroup extends ConnectorGroupBase {
 
 #### Inbound Connectors
 
-Inbound connectors are the entry point to an adapter. 
+Inbound connectors are the entry point to an adapter.
 They need to extend `GenericInboundConnectorBase`, or one of the dedicated implementations (REST and SOAP),
 and override necessary methods.
 Also, `@InboundConnector` annotation is required, with the following fields:
@@ -128,7 +128,7 @@ Also, `@InboundConnector` annotation is required, with the following fields:
 - *integrationScenario* - id of the scenario to which it provides data
 - *requestModel* - model which is expected be received on the input endpoint
 - *responseModel* (optional) - model which is expected be returned to the caller
-- *domains* (optional) - list of domains this connector is a part of 
+- *domains* (optional) - list of domains this connector is a part of
 - *pathToDocumentationResource* (optional) - provides path to documentation files.
   (By default it will look for file in _document/structure/connectors/{connectorId}.md_)
 
@@ -140,73 +140,121 @@ The most common way to specify the correct `EndpointConsumerBuilder` expected as
 for this method, is to use the `StaticEndpoindBuilder`class, which contains a large list of integration
 technologies supported by **Apache Camel**.
 
-Available options and dependency requirements for each technology can be retrieved from 
+Available options and dependency requirements for each technology can be retrieved from
 Camel's [component reference documentation](https://camel.apache.org/components/).
 
 ```java
 @InboundConnector(
-      connectorId = "appendStaticMessageProvider",
-      connectorGroup = DemoConnectorGroup.ID,
-      integrationScenario = DemoScenario.ID,
-      requestModel = InboundConnectorRequest.class,
-      responseModel = InboundConnectorResponse.class)
+        connectorId = "appendStaticMessageProvider",
+        connectorGroup = DemoConnectorGroup.ID,
+        integrationScenario = DemoScenario.ID,
+        requestModel = InboundConnectorRequest.class,
+        responseModel = InboundConnectorResponse.class)
 public class DemoConnector extends GenericInboundConnectorBase {
 
-  @Override
-  protected EndpointConsumerBuilder defineInitiatingEndpoint() {
-    return StaticEndpointBuilders.file("/folder/to/watch");
-  }
-  
+    @Override
+    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
+        return StaticEndpointBuilders.file("/folder/to/watch");
+    }
+
 }
 ```
 
 ##### REST Connector
 
-To make the commonly required REST services easier to use, a special base class for inbound connectors is available. 
+To make the commonly required REST services easier to use, a special base class for inbound connectors is available.
 
 This type of connector easily allows to specify REST services using [REST DSL](https://camel.apache.org/manual/rest-dsl.html).
 To do this, adapter developers must override the `configureRest(RestDefinition)` method, which receives the handle to the DSL as it's sole parameter.
 
-For retrieving and handling path- and query-parameters, the `ConnectorProcessor` extensions as described in [connector orchestration](#connector-orchestration) 
-can be utilized. To make the intent of parameter-mapping even more clear, special alias-annotations `@ParameterMapping` (for `@RequestProcessor`), as well as 
+For retrieving and handling path- and query-parameters, the `ConnectorProcessor` extensions as described in [connector orchestration](#connector-orchestration)
+can be utilized. To make the intent of parameter-mapping even more clear, special alias-annotations `@ParameterMapping` (for `@RequestProcessor`), as well as
 `@QueryParameter` and `@PathParameter` (for `@HeaderParameter`) are available.
- 
-SIP will automatically expose the OpenAPI specification for REST endpoints created this way, as well as publish a 
+
+SIP will automatically expose the OpenAPI specification for REST endpoints created this way, as well as publish a
 Swagger-UI suite to allow easy testing for these endpoint.
 
 
 ```java
  @InboundConnector(
-      connectorGroup = DemoConnectorGroup.ID,
-      integrationScenario = RestDSLScenario.ID,
-      requestModel = User.class,
-      responseModel = UserCreationResult.class)
+        connectorGroup = DemoConnectorGroup.ID,
+        integrationScenario = RestDSLScenario.ID,
+        requestModel = User.class,
+        responseModel = UserCreationResult.class)
 public class RestConnectorTestBase extends RestConnectorBase {
 
-  @Override
-  protected void configureRest(RestDefinition definition) {
-    definition
-        .post("/user/{userid}")
-            .type(User.class)
-            .outType(UserCreationResult.class)
-            .consumes("application/json");
-  }
-  
-  @ParameterMapping
-  public void attachParameters(User user, @PathParameters("userid") String userId, @QueryParameter("overwriteIfExists") boolean allowOverwrite) {
-      user.setId(userid);
-  }
-  
+    @Override
+    protected void configureRest(RestDefinition definition) {
+        definition
+                .post("/user/{userid}")
+                .type(User.class)
+                .outType(UserCreationResult.class)
+                .consumes("application/json");
+    }
+
+    @ParameterMapping
+    public void attachParameters(User user, @PathParameters("userid") String userId, @QueryParameter("overwriteIfExists") boolean allowOverwrite) {
+        user.setId(userid);
+    }
+
 }
 ```
 
 #### Outbound Connectors
 
-Outbound connectors are used to define communication with the external systems inside the adapter. 
+Outbound connectors are used to define communication with the external systems inside the adapter.
 They need to extend `GenericOutboundConnectorBase` and override necessary methods, but also to be annotated with `@OutboundConnector`.
 
-As outbound connectors are otherwise defined identically to inbound ones, additional explanations are available in the 
+As outbound connectors are otherwise defined identically to inbound ones, additional explanations are available in the
 [documentation for inbound connectors](#inbound-connectors).
+
+#### Header Cleanup
+
+Some external systems might be sensitive to headers that they receive and don't understand. For example, Camel's REST endpoint
+automatically sets a lot of headers containing metadata about the incoming request, which would lead to an error
+within an outbound connector communicating with IBM MQ.
+
+To address this, SIP framework provides the `@CleanupHeaders` annotation, which can be set on inbound and outbound connectors
+to temporarily remove any headers that are not explicitly declared to be kept within that annotation.
+
+- If the annotation is used on an *inbound* connector, headers will be removed before the message is passed from the inbound connector to the integration scenario, and then re-added for the response message as it is received from the integration scenario. In other words, the headers removed in an inbound connector will be usable within the scope of that connector only, and are not visible to any other connector or orchestration involved in the integration flow.
+- If the annotation is used on an *outbound* connector, headers will be removed just before the external endpoint is called, and re-added as the response has been received from the endpoint. In other words, the headers will remain available for the full message flow within the SIP adapter, and only be removed for the call to the (external) endpoint.
+
+Note that any cleaned header will only be re-added if no header with the same name has been set elsewhere since it's removal, which means existing headers will not be overwritten when the framework attempts to re-attach the original headers that were removed during header cleanup.
+
+The `@CleanupHeaders` annotation has an attribute `keep`, which can be used to declare any number of headers that should not be removed as a regular expression.
+
+```java
+
+@InboundConnector(integrationScenario = "api-bridge")
+@CleanupHeaders(keep = "^(?!api-secret)$")  // keeps any header except api-secret
+public class CleanupRestInboundConnector extends RestInboundConnectorBase {
+    
+    @Override
+    protected void configureRest(final RestDefinition definition) {
+        definition
+                .get("/api")             
+                .param()
+                    .name("api-secret")
+                    .type(RestParamType.header)
+                    .dataType("string")
+                .endParam();
+    }
+    
+}
+
+@OutboundConnector(integrationScenario = "api-bridge")
+@CleanupHeaders(keep = { "token", "^mq-.+$" })  // removes any header except "token" and anything starting with "mq-"
+public class CleanupMqOutboundConnector extends GenericOutboundConnectorBase {
+    
+    @Override
+    protected EndpointProducerBuilder defineOutgoingEndpoint() {
+        return StaticEndpointBuilders.jms("...");        
+    }
+    
+}
+
+```
 
 ### Orchestration
 
@@ -224,12 +272,12 @@ Typical tasks include:
 SIP allows to implement and attach processors to (inbound- and outbound-) connectors in a variety of ways.
 
 Internally, all processors rely on the `ConnectorProcessor` interface, but it is not always necessary for adapter developers to
-implement this interface themselves. 
+implement this interface themselves.
 
-Connector processors are attached to either the _request_- or the _response_-flow of a connector, typically using the respective `@RequestProcessor` 
-and `@ResponseProcessor` annotations. 
+Connector processors are attached to either the _request_- or the _response_-flow of a connector, typically using the respective `@RequestProcessor`
+and `@ResponseProcessor` annotations.
 
-If multiple processors are attached to a connector, the ordering in which they are processed can often be important. 
+If multiple processors are attached to a connector, the ordering in which they are processed can often be important.
 Chapter [Ordering Connector Processors](#ordering-connector-processors) describes how the correct oder can be specified.
 
 ###### Using model mappers
@@ -240,29 +288,29 @@ are used to transform from a system-specific data model to the common domain mod
 A mapper is usually attached to a connector by annotation the connector-class with either `@UseRequestModelMapper` or `@UseResponseModelMapper`.
 
 Any class implementing `ModelMapper` is automatically a `ConnectorProcessor` as well, and can therefore also be placed in the
-[correct order](#ordering-connector-processors) with any other processors used within the connector. 
+[correct order](#ordering-connector-processors) with any other processors used within the connector.
 
 ```java
 public class SysUserMapper implements ModelMapper<SystemUser, User> {
-    
+
     @Override
     public User mapToTargetModel(SystemUser sourceUser) {
         var user = new User();
         // do the mapping
         return user;
     }
-    
+
 }
 
 @InboundConnector(requestModel = SystemUser.class)
 @UseRequestModelMapper(SysUserMapper.class)
 public class SysUserInboundConnector extends GenericInboundConnectorBase {
-    
-  @Override
-  protected EndpointConsumerBuilder defineInitiatingEndpoint() {
-    return StaticEndpointBuilders.jms("jms:queue:newuser");
-  }
-  
+
+    @Override
+    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
+        return StaticEndpointBuilders.jms("jms:queue:newuser");
+    }
+
 }
 ```
 
@@ -274,13 +322,13 @@ will then automatically attach it to the respective flow of that connector.
 Following variants are supported:
 
 1. The method can take zero parameters and declare a return type that implements `ConnectorProcessor`. On adapter startup, SIP framework will then call this method once and attach the provided processor to the flow of the connector.
-   
+
 2. The method does not have a return type (`void`) and has any number of arguments. SIP will automatically wrap this method into a `ConnectorProcessor` instance, and will assign the given parameters using the following rules:
-   
+
     - Parameters of type `Message` or `Exchange` will receive the respective instance.
     - Parameters annotated with `@HeaderParameter(String)` will receive the content of the respectively named header-field in the declared type.
     - Any other parameter will retrieve the current content of the body in the declared type. `@Nullable` can be added if `null` be legal for that parameter.
-      
+
 3. The method does have a return type which is not a `ConnectorProcessor` instance and any number of arguments. This will behave identically to approach 2, but additionally uses the returned object as the new message body, effectively making it a simple model mapper.
 
 Note that for variants 2 and 3, any necessary type conversions are processed through Camel's [type converter API](https://camel.apache.org/manual/type-converter.html).
@@ -288,34 +336,34 @@ Note that for variants 2 and 3, any necessary type conversions are processed thr
 ```java
 @InboundConnector(requestModel = UserRequest.class, responseModel = User.class)
 public class UserRequestInboundConnector extends RestConnectorBase {
-    
-  @Override
-  protected void configureRest(RestDefinition definition) {
-    definition
-            .get("/user/{userid}")
-            .outType(UserCreationResult.class);
-  }
-  
-  // Variant 1
-  @RequestProcessor
-  public ConnectorProcessor authorizeRequest() {
-      return TokenValidator.INSTANCE;
-  }
-  
-  // Variant 3
-  @RequestProcessor
-  public UserRequest mapPathIdToUserRequest(@HeaderParameter("userid") String id) {
-      return UserRequest.builder().id(id).build();
-  }
-  
-  // Variant 2
-  @ResponseProcessor
-  public void obfuscateVipUserData(User retrievedUser) {
-      if (retrievedUser.isVip()) {
-          VipObfuscator.INSTANCE.obfuscatePersonalData(retrievedUser);
-      }
-  }
-  
+
+    @Override
+    protected void configureRest(RestDefinition definition) {
+        definition
+                .get("/user/{userid}")
+                .outType(UserCreationResult.class);
+    }
+
+    // Variant 1
+    @RequestProcessor
+    public ConnectorProcessor authorizeRequest() {
+        return TokenValidator.INSTANCE;
+    }
+
+    // Variant 3
+    @RequestProcessor
+    public UserRequest mapPathIdToUserRequest(@HeaderParameter("userid") String id) {
+        return UserRequest.builder().id(id).build();
+    }
+
+    // Variant 2
+    @ResponseProcessor
+    public void obfuscateVipUserData(User retrievedUser) {
+        if (retrievedUser.isVip()) {
+            VipObfuscator.INSTANCE.obfuscatePersonalData(retrievedUser);
+        }
+    }
+
 }
 ```
 
@@ -326,23 +374,23 @@ chapter).
 ###### Attaching a processor bean to a connector
 
 It is possible to attach a bean implementing `ConnectorProcessor` to a connector by referencing the connector's id
-or class within the `@RequestProcessor` or `@ResponseProcessor` annotation. This can be helpful if the connector can 
+or class within the `@RequestProcessor` or `@ResponseProcessor` annotation. This can be helpful if the connector can
 or should not be modified.
 
 ```java
 @Component
 @RequestProcessor(ClosedSourceInboundConnector.class)
 class MessagePeek implements ConnectorProcessor {
-    
-  @Override
-  public void process(final Exchange exchange) throws Exception {
-    String body = exchange.getMessage().getBody(String.class);
-    // do something useful
-  }
-  
+
+    @Override
+    public void process(final Exchange exchange) throws Exception {
+        String body = exchange.getMessage().getBody(String.class);
+        // do something useful
+    }
+
 }
 ```
- 
+
 ##### Ordering Connector Processors
 
 Ordering of connector processors can be achieved via specific annotations, which can be applied in combination with all annotations
@@ -352,9 +400,9 @@ Ordering can either be defined using an _absolute_ order (i.e. numbering the con
 in relation to each other.
 
 It is also possible to combine absolute and relative ordering. In this case, the absolute orderings are applied first, and the
-relative orderings are applied afterward. 
+relative orderings are applied afterward.
 
-The placement of processors without any ordering annotation is non-deterministic. 
+The placement of processors without any ordering annotation is non-deterministic.
 
 ###### Absolute ordering
 
@@ -374,16 +422,16 @@ public class StringManipulatingInboundProcessor extends GenericInboundConnectorB
     protected EndpointConsumerBuilder defineInitiatingEndpoint() {
         return StaticEndpointBuilders.file("/folder/to/watch");
     }
-        
+
     @ExecutionOrder(first = true)
     public ConnectorProcessor authorizeRequest() { /* ... */ }
-    
+
     @ExecutionOrder(2)
     public String fileToUpper(String fileContent) { return fileContent.toUpperCase(); }
-    
+
     @ExecutionOrder(1)
     public void verifyReadable(File file) { if (!file.canRead()) throw new IllegalArgumentException();  }
-    
+
 }
 ```
 
@@ -392,7 +440,7 @@ In this example, _authorizeRequest_ will be called first, followed by _verifyRea
 ###### Relative ordering
 
 The `@ExecuteBefore` and `@ExecuteAfter` annotations can be utilized to specify ordering of connector processors relative to each other. These annotations
-expect either the class or processor-name as a pointer to the processor which should be used for the relative ordering. When using method-based 
+expect either the class or processor-name as a pointer to the processor which should be used for the relative ordering. When using method-based
 connector processors, the name of the method serves as the processor-name that can be used.
 
 Below is the previous example rewritten with relative ordering.
@@ -406,23 +454,23 @@ public class StringManipulatingInboundProcessor extends GenericInboundConnectorB
     protected EndpointConsumerBuilder defineInitiatingEndpoint() {
         return StaticEndpointBuilders.file("/folder/to/watch");
     }
-        
+
     @ExecuteBefore(processorName = "verifyReadable")
     public ConnectorProcessor authorizeRequest() { /* ... */ }
-    
+
     @ExecuteBefore(StringToCdmMapper.class)
     public String fileToUpper(String fileContent) { return request.toUpperCase(); }
-    
+
     @ExecuteBefore(processorName = "authorizeRequest")
     public void verifyReadable(File file) { if (!file.canRead()) throw new IllegalArgumentException();  }
-    
+
 }
 ```
 
 ##### DEPRECATED: Orchestration via defineTransformationOrchestrator()
 
 > [!WARNING]   
-> This variant of connector orchestration is deprecated since 3.4.0, and support might be removed in the future. 
+> This variant of connector orchestration is deprecated since 3.4.0, and support might be removed in the future.
 > This approach is also mutually exclusive with the [Connector Processor](#implementing-connector-processors) features described above, so either
 > one or the other can be used for any connector.
 
@@ -440,42 +488,42 @@ public class StringAppendingOutboundConnector extends GenericOutboundConnectorBa
     protected EndpointProducerBuilder defineOutgoingEndpoint() {
         return StaticEndpointBuilders.https("example.com/rest/endpoint");
     }
-    
+
     @Override
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
-      return ConnectorOrchestrator.forConnector(this)
-          .setRequestRouteTransformer(this::defineRequestRoute)
-          .setResponseRouteTransformer(this::defineResponseRoute);
+        return ConnectorOrchestrator.forConnector(this)
+                .setRequestRouteTransformer(this::defineRequestRoute)
+                .setResponseRouteTransformer(this::defineResponseRoute);
     }
-    
+
     protected void defineRequestRoute(final RouteDefinition definition) {
-      definition.setBody(exchange -> exchange.getIn().getBody() + "-REQUEST");
+        definition.setBody(exchange -> exchange.getIn().getBody() + "-REQUEST");
     }
-    
+
     protected void defineResponseRoute(final RouteDefinition definition) {
-      definition.setBody(exchange -> exchange.getIn().getBody() + "-RESPONSE");
+        definition.setBody(exchange -> exchange.getIn().getBody() + "-RESPONSE");
     }
-    
+
 }
 ```
 
-#### Integration Scenario 
+#### Integration Scenario
 
-The integration scenario is defined with the `@IntegrationScenario` annotation, which specifies the `scenarioId`, `requestModel`, and `responseModel`. 
+The integration scenario is defined with the `@IntegrationScenario` annotation, which specifies the `scenarioId`, `requestModel`, and `responseModel`.
 In this example, the `scenarioId` is set to "Demo scenario," and the request and response models are `DemoCDMRequest` and `DemoCDMResponse` respectively.
 
-The `DemoScenario` class extends `IntegrationScenarioBase`, indicating that it is part of a framework for defining integration scenarios. 
-The class overrides the `getOrchestrator` method, which is responsible for setting up the orchestration logic. 
+The `DemoScenario` class extends `IntegrationScenarioBase`, indicating that it is part of a framework for defining integration scenarios.
+The class overrides the `getOrchestrator` method, which is responsible for setting up the orchestration logic.
 This method returns an orchestrator configured using the DSL provided by `ScenarioOrchestrator`.
 
-Within the `getOrchestrator` method, `ScenarioOrchestrator.forOrchestrationDslWithResponse` is used to create an orchestrator that handles the orchestration flow with a response. 
-The DSL is used to define the sequence of actions: it specifies that the scenario should start by handling requests from the `DemoConnector` 
-(an inbound connector) and then proceed to call the `DemoOutboundConnector` (an outbound connector). 
+Within the `getOrchestrator` method, `ScenarioOrchestrator.forOrchestrationDslWithResponse` is used to create an orchestrator that handles the orchestration flow with a response.
+The DSL is used to define the sequence of actions: it specifies that the scenario should start by handling requests from the `DemoConnector`
+(an inbound connector) and then proceed to call the `DemoOutboundConnector` (an outbound connector).
 The call to `andNoResponseHandling()` indicates that no additional response handling is required after the outbound connector is called.
 
-This example is simplified and mainly serves to illustrate the use of the DSL for defining an integration scenario. 
-In a real-world application, more complex logic and additional connectors might be involved. 
-However, with only two connectors participating, such detailed orchestration might not be necessary. 
+This example is simplified and mainly serves to illustrate the use of the DSL for defining an integration scenario.
+In a real-world application, more complex logic and additional connectors might be involved.
+However, with only two connectors participating, such detailed orchestration might not be necessary.
 The primary purpose here is to showcase the structure and capabilities of the DSL in managing integration scenarios
 
 ```java
@@ -484,22 +532,22 @@ The primary purpose here is to showcase the structure and capabilities of the DS
         requestModel = DemoCDMRequest.class,
         responseModel = DemoCDMResponse.class)
 public class DemoScenario extends IntegrationScenarioBase {
-    
-  public static final String ID = "Demo scenario";
 
-  @Override
-  public Orchestrator<ScenarioOrchestrationInfo> getOrchestrator() {
-    return ScenarioOrchestrator.forOrchestrationDslWithResponse(DemoCDMRequest.class,
-        dsl -> dsl.forInboundConnectors(DemoConnector.class)
-            .callOutboundConnector(DemoOutboundConnector.class)
-            .andNoResponseHandling());
-  }
+    public static final String ID = "Demo scenario";
+
+    @Override
+    public Orchestrator<ScenarioOrchestrationInfo> getOrchestrator() {
+        return ScenarioOrchestrator.forOrchestrationDslWithResponse(DemoCDMRequest.class,
+                dsl -> dsl.forInboundConnectors(DemoConnector.class)
+                        .callOutboundConnector(DemoOutboundConnector.class)
+                        .andNoResponseHandling());
+    }
 }
 ```
 
 Following example showcases the use of an integration scenario orchestration, with additional features for request preparation and response handling.
 In this example you can see that there are 4 participants in this integration scenario (`DemoConnector`, `FirstDemoOutboundConnector`, `SecondDemoOutboundConnector`, `ThirdDemoOutboundConnector`).
-There is a simple condition in the beginning that checks the size of an item list.  
+There is a simple condition in the beginning that checks the size of an item list.
 
 In case the item list size is greater than 10:
 - First `FirstDemoOutboundConnector` is called and the response will not be handled
@@ -507,12 +555,12 @@ In case the item list size is greater than 10:
 
 In case the item list size is smaller than 10:
 - Before calling the third outbound connector, the request can be modified by calling `withRequestPreparation()`. Even if the method call comes after
-`callOutboundConnector()` it is executed before the request is sent. 
-In this example, if the date in the original `DemoCDMRequest` is before the current time, the estimated delivery date is set to two days from now.
-- Moreover, the snippet demonstrates response handling, allowing modifications to the response before it is sent back to the initial caller by calling `andHandleResponse()`. 
-The response handling step accesses the latest step's response and modifies its message to "demo".
+  `callOutboundConnector()` it is executed before the request is sent.
+  In this example, if the date in the original `DemoCDMRequest` is before the current time, the estimated delivery date is set to two days from now.
+- Moreover, the snippet demonstrates response handling, allowing modifications to the response before it is sent back to the initial caller by calling `andHandleResponse()`.
+  The response handling step accesses the latest step's response and modifies its message to "demo".
 
-These enhancements illustrate the flexibility of the DSL in managing complex integration scenarios, providing hooks to alter the request 
+These enhancements illustrate the flexibility of the DSL in managing complex integration scenarios, providing hooks to alter the request
 and response as needed, thereby enabling dynamic and context-aware processing within the orchestration flow. You can even use loops in this orchestration as explained in section **Loops**.
 ```java
 @IntegrationScenario(
@@ -520,34 +568,34 @@ and response as needed, thereby enabling dynamic and context-aware processing wi
         requestModel = DemoCDMRequest.class,
         responseModel = DemoCDMResponse.class)
 public class DemoScenario extends IntegrationScenarioBase {
-    
-  public static final String ID = "Demo scenario";
 
-  @Override
-  public Orchestrator<ScenarioOrchestrationInfo> getOrchestrator() {
-    return ScenarioOrchestrator.forOrchestrationDslWithResponse(DemoCDMRequest.class,
-        dsl -> dsl.forInboundConnectors(DemoConnector.class)
-            .ifCase(context -> context.getOriginalRequest(DemoCDMRequest.class).getItems().size() > 10)
-              .callOutboundConnector(FirstDemoOutboundConnector.class)
-              .andNoResponseHandling()
-              .callOutboundConnector(SecondDemoOutboundConnector.class)
-              .andNoResponseHandling()
-            .elseCase()
-              .callOutboundConnector(ThirdDemoOutboundConnector.class)
-              .withRequestPreparation(scenarioOrchestrationContext -> {
-                DemoCDMRequest demoCDMRequest = scenarioOrchestrationContext.getOriginalRequest(DemoCDMRequest.class);
-                if (demoCDMRequest.getDate().isBefore(Instant.now())) {
-                  demoCDMRequest.setEstimatedDelivery(Instant.now().plus(Period.ofDays(2)));
-                }
-                return demoCDMRequest;
-              })
-              .andHandleResponse((demoCDMResponse, scenarioOrchestrationContext) -> {
-                scenarioOrchestrationContext.getResponseForLatestStep().ifPresent(demoCDMResponseOrchestrationStepResponse -> {
-                  demoCDMResponseOrchestrationStepResponse.result().setMessage("demo");
-                });
-              })
-            .endCases());
-  }
+    public static final String ID = "Demo scenario";
+
+    @Override
+    public Orchestrator<ScenarioOrchestrationInfo> getOrchestrator() {
+        return ScenarioOrchestrator.forOrchestrationDslWithResponse(DemoCDMRequest.class,
+                dsl -> dsl.forInboundConnectors(DemoConnector.class)
+                        .ifCase(context -> context.getOriginalRequest(DemoCDMRequest.class).getItems().size() > 10)
+                        .callOutboundConnector(FirstDemoOutboundConnector.class)
+                        .andNoResponseHandling()
+                        .callOutboundConnector(SecondDemoOutboundConnector.class)
+                        .andNoResponseHandling()
+                        .elseCase()
+                        .callOutboundConnector(ThirdDemoOutboundConnector.class)
+                        .withRequestPreparation(scenarioOrchestrationContext -> {
+                            DemoCDMRequest demoCDMRequest = scenarioOrchestrationContext.getOriginalRequest(DemoCDMRequest.class);
+                            if (demoCDMRequest.getDate().isBefore(Instant.now())) {
+                                demoCDMRequest.setEstimatedDelivery(Instant.now().plus(Period.ofDays(2)));
+                            }
+                            return demoCDMRequest;
+                        })
+                        .andHandleResponse((demoCDMResponse, scenarioOrchestrationContext) -> {
+                            scenarioOrchestrationContext.getResponseForLatestStep().ifPresent(demoCDMResponseOrchestrationStepResponse -> {
+                                demoCDMResponseOrchestrationStepResponse.result().setMessage("demo");
+                            });
+                        })
+                        .endCases());
+    }
 }
 ```
 
@@ -565,96 +613,96 @@ Then, annotate the class with `@CompositeProcess` and fill in the required field
 
 ```java
 @CompositeProcess(processId = "demo-process", consumers = {DemoScenarioConsumer1.class, DemoScenarioConsumer2.class},
-      provider = DemoScenario.class)  
+        provider = DemoScenario.class)
 public class DemoProcess extends CompositeProcessBase {
-  public static final String ID = "demo-process";
+    public static final String ID = "demo-process";
 
-  @Override
-  public Orchestrator<CompositeProcessOrchestrationInfo> getOrchestrator() {
-      return ProcessOrchestrator.forOrchestrationDsl(
-              dsl -> {
-                  dsl.callConsumer(DemoScenarioConsumer1.class)
-                      .withRequestPreparation(
-                              context -> {
-                                ResponseModel response = context.<ResponseModel>getLatestResponse()
+    @Override
+    public Orchestrator<CompositeProcessOrchestrationInfo> getOrchestrator() {
+        return ProcessOrchestrator.forOrchestrationDsl(
+                dsl -> {
+                    dsl.callConsumer(DemoScenarioConsumer1.class)
+                            .withRequestPreparation(
+                                    context -> {
+                                        ResponseModel response = context.<ResponseModel>getLatestResponse()
                                                 .orElseThrow(() -> new SIPAdapterException("Invalid response"));
-                                return ResponseModel2.builder()
-                                        .field1(response.getValue1())
-                                        .field2(response.getValue2())
-                                        .build();
-                              })
-                      .withResponseHandling(
-                              (latestResponse, context) -> {
-                                log.debug(String.valueOf(latestResponse));
-                              })
-                      .callConsumer(DemoScenarioConsumer2.class)
-                      .withNoResponseHandling();
-              });
-  }
+                                        return ResponseModel2.builder()
+                                                .field1(response.getValue1())
+                                                .field2(response.getValue2())
+                                                .build();
+                                    })
+                            .withResponseHandling(
+                                    (latestResponse, context) -> {
+                                        log.debug(String.valueOf(latestResponse));
+                                    })
+                            .callConsumer(DemoScenarioConsumer2.class)
+                            .withNoResponseHandling();
+                });
+    }
 }
 ```
 
-It is also possible to use conditional statements or loops in process orchestration. 
+It is also possible to use conditional statements or loops in process orchestration.
 
 ##### Conditionals
-- *ifCase* opens the conditional statement in the DSL. It accepts a predicate as a parameter, 
-which needs to be evaluated into a boolean from the given context. 
-Inside of it one or more consumer calls may be defined.
+- *ifCase* opens the conditional statement in the DSL. It accepts a predicate as a parameter,
+  which needs to be evaluated into a boolean from the given context.
+  Inside of it one or more consumer calls may be defined.
 - *elseIfCase* may be used after statements from *ifCase*. It also accepts a predicate as a parameter.
-- *elseCase* does not take a parameter, 
-it will be executed if the previous conditions from *ifCase* or *elseIfCase* are not met.
+- *elseCase* does not take a parameter,
+  it will be executed if the previous conditions from *ifCase* or *elseIfCase* are not met.
 - *endCases* is used to finish the condition statements and return to previous scope.
 
 ```java
 public class DemoProcess extends CompositeProcessBase {
-    
+
     @Override
     public Orchestrator<CompositeProcessOrchestrationInfo> getOrchestrator() {
         return ProcessOrchestrator.forOrchestrationDsl(
                 dsl -> { dsl
-                          .ifCase(hasHeader("headerName"))
-                              .callConsumer(DemoScenarioConsumer1.class)
-                              .withNoResponseHandling()
-                          .elseIfCase(context -> context.getLatestResponse().get().isOk())
-                              .callConsumer(DemoScenarioConsumer2.class)
-                              .withNoResponseHandling()
-                          .elseCase()
-                              .callConsumer(DemoScenarioConsumer3.class)
-                              .withNoResponseHandling()
-                          .endCases();
+                        .ifCase(hasHeader("headerName"))
+                        .callConsumer(DemoScenarioConsumer1.class)
+                        .withNoResponseHandling()
+                        .elseIfCase(context -> context.getLatestResponse().get().isOk())
+                        .callConsumer(DemoScenarioConsumer2.class)
+                        .withNoResponseHandling()
+                        .elseCase()
+                        .callConsumer(DemoScenarioConsumer3.class)
+                        .withNoResponseHandling()
+                        .endCases();
                 });
     }
-    
-  }
+
+}
 ```
 
 ##### Loops
-- *doWhile* is used to enter looping statement equivalent to 'while' from DSL. It enables looping until the condition 
-passed as a predicate is no longer true. The same predicates as in *ifCase* can be used.  
-To end the loop 'endDoWhile' should be used, which will return to the previous scope.
-- *forLoop* is used to enter looping statement equivalent to 'for' from DSL. It accepts a predicate 
-which should be evaluated into an integer marking the number of iterations. To return to previous scope and end the loop
-*endForLoop* should be used.
+- *doWhile* is used to enter looping statement equivalent to 'while' from DSL. It enables looping until the condition
+  passed as a predicate is no longer true. The same predicates as in *ifCase* can be used.  
+  To end the loop 'endDoWhile' should be used, which will return to the previous scope.
+- *forLoop* is used to enter looping statement equivalent to 'for' from DSL. It accepts a predicate
+  which should be evaluated into an integer marking the number of iterations. To return to previous scope and end the loop
+  *endForLoop* should be used.
 
 ```java
 public class DemoProcess extends CompositeProcessBase {
-    
+
     @Override
     public Orchestrator<CompositeProcessOrchestrationInfo> getOrchestrator() {
         return ProcessOrchestrator.forOrchestrationDsl(
                 dsl -> { dsl
-                          .doWhile(hasHeader("headerName"))
-                              .callConsumer(DemoScenarioConsumer1.class)
-                              .withNoResponseHandling()
-                          .endDoWhile()
-                          .forLoop(context -> context.getLatestResponse().get().getIterationNumber())
-                              .callConsumer(DemoScenarioConsumer2.class)
-                              .withNoResponseHandling()
-                          .endForLoop();
+                        .doWhile(hasHeader("headerName"))
+                        .callConsumer(DemoScenarioConsumer1.class)
+                        .withNoResponseHandling()
+                        .endDoWhile()
+                        .forLoop(context -> context.getLatestResponse().get().getIterationNumber())
+                        .callConsumer(DemoScenarioConsumer2.class)
+                        .withNoResponseHandling()
+                        .endForLoop();
                 });
     }
-    
-  }
+
+}
 ```
 
 ## Configuration and exception handling
@@ -662,11 +710,11 @@ public class DemoProcess extends CompositeProcessBase {
 ### Scenario and connector level handlers
 
 To provide a more fine-grained approach to different types of handlers, the SIP framework offers
-ways to configure handlers on either scenario or connector level. This approach is based on the existing 
+ways to configure handlers on either scenario or connector level. This approach is based on the existing
 functionalities provided by Apache Camel, but in a more structured way.
 
 To achieve this, first, a configuration class should be created which implements `ConfigurationDefinition` interface.
-The method which must be overridden provides a hook to `RouteConfigurationDefinition` which offers adding 
+The method which must be overridden provides a hook to `RouteConfigurationDefinition` which offers adding
 handlers (onException, onCompletion, intercept, interceptFrom, interceptSendToEndpoint).
 One handler should be defined per class as the return type of the method suggests.
 
@@ -696,9 +744,9 @@ This is done via `@ConfigurationHandler` annotation. It requires that the handle
 When done on scenario level it will apply to all connectors which belong to it.
 ```java
 @IntegrationScenario(
-scenarioId = "scenarioId",
-requestModel = String.class,
-responseModel = String.class)
+        scenarioId = "scenarioId",
+        requestModel = String.class,
+        responseModel = String.class)
 @ConfigurationHandler(SIPAdapterExceptionHandler.class)
 public class DemoScenario extends IntegrationScenarioBase {}
 ```
@@ -729,12 +777,12 @@ It is possible to define multiple methods, each which would handle a different e
 ```java
 @ConnectorExceptionHandler(RuntimeException.class)
 public ConnectorOnExceptionDefinition define() {
-  return onException ->
-       onException
-          .process(doProcessing())
-          .handled(true);
+    return onException ->
+            onException
+                    .process(doProcessing())
+                    .handled(true);
 }
 ```
 
-These exception handlers will override any other handler, meaning if scenario or connector level 
+These exception handlers will override any other handler, meaning if scenario or connector level
 configuration handler exists, which handles the same exception type, these handlers will take priority.

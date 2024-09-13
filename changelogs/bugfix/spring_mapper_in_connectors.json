@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "271",
-  "message": "Add support for using mapstruct mappers created with spring framework in connectors."
-}

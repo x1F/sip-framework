@@ -103,7 +103,7 @@ Given that body can vary in length, it can be set as a reference to a file where
   WHEN-execute:
     endpointId: "id of starting route under test"
     with:
-      body: "file:SOAP request.xml"
+      body: "resource-file:filename.ext"
 ```
 This approach is possible in all three phases of test: WHEN-execute, WITH-mocks and THEN-expect. It this case, payload 
 files must be on classpath.

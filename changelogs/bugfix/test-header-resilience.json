@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "270",
-  "message": "Add test-mode header as property to preserve it in case header is removed."
-}
