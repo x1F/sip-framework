@@ -5,10 +5,13 @@ import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.annotation.connector.CleanupHeaders;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.RequestProcessor;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import java.util.Map;
+
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.model.rest.RestBindingMode;
@@ -58,6 +61,11 @@ public class HeaderCleanupAdapter {
           .type(RestParamType.header)
           .dataType("string")
           .endParam();
+    }
+
+    @RequestProcessor
+    public void process(Exchange exchange) {
+      exchange.getMessage().setBody("");
     }
   }
 

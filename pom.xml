@@ -67,7 +67,7 @@
 
         <!-- manage all versions via properties, so that they can be overridden in a project if necessary -->
         <spring.boot.version>3.2.7</spring.boot.version>
-        <camel.version>4.3.0</camel.version>
+        <camel.version>4.7.0</camel.version>
         <jackson-jsr310.version>2.12.7</jackson-jsr310.version>
         <springdoc-openapi-starter-common.version>2.3.0</springdoc-openapi-starter-common.version>
         <springdoc-openapi-starter-webmvc-ui.version>2.3.0</springdoc-openapi-starter-webmvc-ui.version>
