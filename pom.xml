@@ -66,13 +66,13 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- manage all versions via properties, so that they can be overridden in a project if necessary -->
-        <spring.boot.version>3.2.7</spring.boot.version>
-        <camel.version>4.7.0</camel.version>
+        <spring.boot.version>3.3.3</spring.boot.version>
+        <camel.version>4.8.0</camel.version>
         <jackson-jsr310.version>2.12.7</jackson-jsr310.version>
-        <springdoc-openapi-starter-common.version>2.3.0</springdoc-openapi-starter-common.version>
-        <springdoc-openapi-starter-webmvc-ui.version>2.3.0</springdoc-openapi-starter-webmvc-ui.version>
-        <swagger-annotation.version>2.2.8</swagger-annotation.version>
-        <lombok.version>1.18.30</lombok.version>
+        <springdoc-openapi-starter-common.version>2.6.0</springdoc-openapi-starter-common.version>
+        <springdoc-openapi-starter-webmvc-ui.version>2.6.0</springdoc-openapi-starter-webmvc-ui.version>
+        <swagger-annotation.version>2.2.23</swagger-annotation.version>
+        <lombok.version>1.18.34</lombok.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <commons-text.version>1.10.0</commons-text.version>
         <commons-collections4.version>4.4</commons-collections4.version>
@@ -87,8 +87,8 @@
          CXF related dependencies
          SIPX-96: Currently forced to a higher version than camel-cxf because of CVE-2024-28752. Camel 4.5 will update CXF to 4.0.4
          -->
-        <cxf.version>4.0.4</cxf.version>                         <!-- keep in sync with camel-dependencies cxf-version property -->
-        <woodstox-core.version>[6.6.2,)</woodstox-core.version>     <!-- CXF 4.0.4 bundles 6.6.1 which brakes test-kit because of -> https://github.com/FasterXML/woodstox/issues/200 -->
+        <cxf.version>4.0.5</cxf.version>                         <!-- keep in sync with camel-dependencies cxf-version property -->
+        <woodstox-core.version>7.0.0</woodstox-core.version>     <!-- CXF 4.0.4 bundles 6.6.1 which brakes test-kit because of -> https://github.com/FasterXML/woodstox/issues/200 -->
 
         <!-- maven dependencies -->
         <maven-core.version>3.8.6</maven-core.version>

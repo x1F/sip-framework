@@ -7,6 +7,7 @@ import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import de.ikor.sip.foundation.soap.utils.OutboundSOAPMarshallerDefinition;
 import de.ikor.sip.foundation.soap.utils.SOAPEndpointBuilder;
+import jakarta.xml.bind.JAXBContext;
 import java.util.Optional;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
@@ -29,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 public abstract class SoapOperationOutboundConnectorBase<T> extends GenericOutboundConnectorBase {
 
   private Class<T> serviceClass;
+  private JaxbDataFormat dataFormat;
 
   @SuppressWarnings("unchecked")
   protected SoapOperationOutboundConnectorBase() {
@@ -37,6 +39,8 @@ public abstract class SoapOperationOutboundConnectorBase<T> extends GenericOutbo
           (Class<T>)
               DeclarativeReflectionUtils.getClassFromGeneric(
                   getClass(), SoapOperationOutboundConnectorBase.class);
+      this.dataFormat =
+          new SIPJaxbDataFormat(JAXBContext.newInstance(getJaxbContextPathForRequestModel()));
     } catch (Exception e) {
       this.serviceClass = null;
     }
@@ -57,15 +61,13 @@ public abstract class SoapOperationOutboundConnectorBase<T> extends GenericOutbo
   protected Optional<MarshallerDefinition> defineRequestMarshalling() {
     return Optional.of(
         OutboundSOAPMarshallerDefinition.forDataFormatWithOperationAndAddress(
-            new JaxbDataFormat(getJaxbContextPathForRequestModel()),
-            getServiceOperationName(),
-            getServiceAddress()));
+            dataFormat, getServiceOperationName(), getServiceAddress()));
   }
 
   @Override
   protected Optional<UnmarshallerDefinition> defineResponseUnmarshalling() {
     return getJaxbContextPathForResponseModel()
-        .map(contextPath -> UnmarshallerDefinition.forDataFormat(new JaxbDataFormat(contextPath)));
+        .map(contextPath -> UnmarshallerDefinition.forDataFormat(dataFormat));
   }
 
   /**

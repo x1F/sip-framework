@@ -123,6 +123,13 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <optional>true</optional>
+            <exclusions>
+                <!-- Remove once version matches with camel-->
+                <exclusion>
+                    <groupId>io.swagger.core.v3</groupId>
+                    <artifactId>swagger-core-jakarta</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Test dependencies-->

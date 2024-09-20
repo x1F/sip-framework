@@ -5,6 +5,7 @@ import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
+import jakarta.xml.bind.JAXBContext;
 import java.util.Optional;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
@@ -33,6 +34,8 @@ public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboun
 
   private Class<T> serviceClass;
 
+  private JaxbDataFormat dataFormat;
+
   @SuppressWarnings("unchecked")
   protected SoapOperationInboundConnectorBase() {
     try {
@@ -40,6 +43,8 @@ public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboun
           (Class<T>)
               DeclarativeReflectionUtils.getClassFromGeneric(
                   getClass(), SoapOperationInboundConnectorBase.class);
+      this.dataFormat =
+          new SIPJaxbDataFormat(JAXBContext.newInstance(getJaxbContextPathForRequestModel()));
     } catch (Exception e) {
       this.serviceClass = null;
     }
@@ -47,9 +52,7 @@ public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboun
 
   @Override
   protected Optional<UnmarshallerDefinition> defineRequestUnmarshalling() {
-    return Optional.of(
-        UnmarshallerDefinition.forDataFormat(
-            new JaxbDataFormat(getJaxbContextPathForRequestModel())));
+    return Optional.of(UnmarshallerDefinition.forDataFormat(dataFormat));
   }
 
   /**
@@ -64,7 +67,7 @@ public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboun
   @Override
   protected Optional<MarshallerDefinition> defineResponseMarshalling() {
     return getJaxbContextPathForResponseModel()
-        .map(contextPath -> MarshallerDefinition.forDataFormat(new JaxbDataFormat(contextPath)));
+        .map(contextPath -> MarshallerDefinition.forDataFormat(dataFormat));
   }
 
   /**

@@ -10,7 +10,6 @@ import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnecto
 import de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import java.util.Map;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;

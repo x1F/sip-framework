@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.trace;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.NamedNode;
 import org.apache.camel.NamedRoute;
@@ -57,6 +58,13 @@ public class CustomTracer extends DefaultTracer implements TraceSupport {
   public void traceAfterRoute(NamedRoute route, Exchange exchange) {
     if (sipTraceConfig.isLog()) {
       super.traceAfterRoute(route, exchange);
+    }
+  }
+
+  @Override
+  public void traceSentNode(NamedNode node, Exchange exchange, Endpoint endpoint, long elapsed) {
+    if (sipTraceConfig.isLog()) {
+      this.traceSentNode(node, exchange, endpoint, elapsed);
     }
   }
 
