@@ -6,7 +6,6 @@ import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.ParameterMapping;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.model.ToDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 import org.apache.camel.model.rest.RestsDefinition;
@@ -39,9 +38,10 @@ public abstract class RestInboundConnectorBase extends InboundConnectorBase
     for (VerbDefinition verb : rest.getVerbs()) {
       verb.setId(
           routeRegistry.generateRouteIdForConnector(
-              RouteRole.EXTERNAL_ENDPOINT, this, "rest-dsl", ++endpointCounter));
-      String routePath = targetToBase + "rest-dsl" + endpointCounter;
-      verb.setTo(new ToDefinition(StaticEndpointBuilders.direct(routePath)));
+              RouteRole.EXTERNAL_ENDPOINT, this, "-rest-dsl-", ++endpointCounter));
+      String routePath = targetToBase + "-rest-dsl-" + endpointCounter;
+      ToDefinition toDefinition = new ToDefinition("direct:" + routePath);
+      verb.setTo(toDefinition);
       routeToPaths.add(routePath);
     }
     return routeToPaths;

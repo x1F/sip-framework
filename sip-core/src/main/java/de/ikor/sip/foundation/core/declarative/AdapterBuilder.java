@@ -63,7 +63,6 @@ public final class AdapterBuilder extends RouteBuilder {
 
   @Override
   public void configure() {
-    restConfiguration().inlineRoutes(false);
     getCamelContext().getGlobalEndpointConfiguration().setBridgeErrorHandler(true);
     declarationsRegistry.getScenarios().forEach(this::buildScenario);
     declarationsRegistry.getProcesses().forEach(this::buildCompositeProcess);
