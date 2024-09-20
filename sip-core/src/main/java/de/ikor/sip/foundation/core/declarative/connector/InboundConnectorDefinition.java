@@ -13,7 +13,7 @@ import org.apache.camel.model.OptionalIdentifiedDefinition;
  *
  * <p>The inbound connector is responsible for defining the endpoint that initiates the integration
  * call. The endpoint is defined by the {@link #defineInboundEndpoints(OptionalIdentifiedDefinition,
- * EndpointProducerBuilder, RoutesRegistry)} method.
+ * String, RoutesRegistry)} method.
  *
  * <p>Adapter developers should not implement this interface directly, but rather extend one of the
  * inbound {@link ConnectorBase} subclasses and annotate it with @{@link
