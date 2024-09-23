@@ -53,6 +53,7 @@ while read line; do
       [[ $line == *"(MIT)"* ]] ||
       [[ $line == *"(Mozilla Public License, Version 2.0)"* ]] ||
       [[ $line == *"(Unicode/ICU License)"* ]] ||
+      [[ $line == *"(Unicode-3.0)"* ]] ||
       [[ $line == *"(Public Domain)"* ]] ||
       [[ $line == *"(Public Domain, per Creative Commons CC0)"* ]]; then
     continue
