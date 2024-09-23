@@ -19,6 +19,7 @@ while read line; do
       [[ $line == *"(Eclipse Public License, Version 1.0)"* ]] ||
       [[ $line == *"(Eclipse Distribution License - v 1.0)"* ]] ||
       [[ $line == *"(Eclipse Public License v2.0)"* ]] ||
+      [[ $line == *"(Eclipse Public License, Version 2.0)"* ]] ||
       [[ $line == *"(The Apache Software License, Version 2.0)"* ]] ||
       [[ $line == *"(Apache License, Version 2.0)"* ]] ||
       [[ $line == *"(Apache License, version 2.0)"* ]] ||
