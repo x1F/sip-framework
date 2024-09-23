@@ -42,8 +42,11 @@ class CamelProcessorsHelperTest {
   void GIVEN_specificProcessorsWithInMemoryEndpoints_WHEN_isEndpointProcessor_then_expectFalse() {
     // arrange
     Processor enrichProcessor =
-        new Enricher(ExpressionBuilder.simpleExpression(ENDPOINT_IN_MEMORY_URI), ENDPOINT_URI);
-    Processor pollEnrichProcessor = new PollEnricher(ENDPOINT_URI, 0);
+        new Enricher(
+            ExpressionBuilder.simpleExpression(ENDPOINT_IN_MEMORY_URI), ENDPOINT_IN_MEMORY_URI);
+    Processor pollEnrichProcessor =
+        new PollEnricher(
+            ExpressionBuilder.simpleExpression(ENDPOINT_IN_MEMORY_URI), ENDPOINT_IN_MEMORY_URI, 0);
     WireTapProcessor wireTapProcessor = mock(WireTapProcessor.class);
     when(wireTapProcessor.getUri()).thenReturn(ENDPOINT_IN_MEMORY_URI);
 
@@ -53,7 +56,7 @@ class CamelProcessorsHelperTest {
 
     // act & assert
     assertThat(CamelProcessorsHelper.isEndpointProcessor(enrichProcessor)).isFalse();
-    // assertThat(CamelProcessorsHelper.isEndpointProcessor(pollEnrichProcessor)).isFalse();
+    assertThat(CamelProcessorsHelper.isEndpointProcessor(pollEnrichProcessor)).isFalse();
     assertThat(CamelProcessorsHelper.isEndpointProcessor(wireTapProcessor)).isFalse();
     assertThat(CamelProcessorsHelper.isEndpointProcessor(sendDynamicProcessor)).isFalse();
   }
