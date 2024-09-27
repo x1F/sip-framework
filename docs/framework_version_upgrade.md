@@ -9,11 +9,11 @@ This is a quality of life and bugfix update, it shouldn't introduce any breaking
 ## Upgrade from 3.3.0 to 3.4.0
 
 Version 3.4.0 allows fine-grained configuration and exception handling for connectors. 
-If an adapter contains global configuration was added directly with **RouteConfigurationBuilder**, 
+If an adapter contains global configuration which was added directly with **RouteConfigurationBuilder**, 
 it will no longer apply to connectors.
 It should be refactored and provided via **ConfigurationDefinition**.
 
-**Note:** when it comes to process orchestration global configuration will still be applicable.
+**Note:** When it comes to process orchestration global configuration will still be applicable.
 
 **Deprecation Notice**
 
