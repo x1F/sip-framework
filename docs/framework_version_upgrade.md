@@ -2,6 +2,25 @@
 
 [TOC]
 
+## Upgrade from 3.4.0 to 3.5.0
+
+This is a quality of life and bugfix update, it shouldn't introduce any breaking issues.
+
+## Upgrade from 3.3.0 to 3.4.0
+
+Version 3.4.0 allows fine-grained configuration and exception handling for connectors. 
+If an adapter contains global configuration which was added directly with **RouteConfigurationBuilder**, 
+it will no longer apply to connectors.
+It should be refactored and provided via **ConfigurationDefinition**.
+
+**Note:** When it comes to process orchestration global configuration will still be applicable.
+
+**Deprecation Notice**
+
+The `defineTransformationOrchestrator` method from **ConnectorBase** class is marked as deprecated as of version 3.4.0. 
+This method may be removed in future versions.
+It is recommended to migrate to new **Connector Processors** in all connectors.
+
 ## Upgrade from 3.2.0 to 3.3.0
 
 This is mostly a dependencies update and bugfix version, so it's shouldn't introduce any braking changes. 

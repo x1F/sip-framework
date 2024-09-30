@@ -1,4 +1,4 @@
-# SIP Integration Starter
+# SIP SOAP Starter
 
 [TOC]
 
