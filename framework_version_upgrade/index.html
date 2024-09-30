@@ -77,12 +77,24 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../soap-starter/">SOAP Starter</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../middle-component/">Middle Component</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../maven-plugin/">Maven Plugin</a>
                 </li>
               </ul>
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Framework Version Upgrade</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#upgrade-from-340-to-350">Upgrade from 3.4.0 to 3.5.0</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#upgrade-from-330-to-340">Upgrade from 3.3.0 to 3.4.0</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#upgrade-from-320-to-330">Upgrade from 3.2.0 to 3.3.0</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#upgrade-from-310-to-320">Upgrade from 3.1.0 to 3.2.0</a>
@@ -200,6 +212,8 @@
 <div class="toc">
 <ul>
 <li><a href="#sip-framework-version-upgrade">SIP Framework version upgrade</a><ul>
+<li><a href="#upgrade-from-340-to-350">Upgrade from 3.4.0 to 3.5.0</a></li>
+<li><a href="#upgrade-from-330-to-340">Upgrade from 3.3.0 to 3.4.0</a></li>
 <li><a href="#upgrade-from-320-to-330">Upgrade from 3.2.0 to 3.3.0</a></li>
 <li><a href="#upgrade-from-310-to-320">Upgrade from 3.1.0 to 3.2.0</a></li>
 <li><a href="#upgrade-from-100-to-200">Upgrade from 1.0.0 to 2.0.0</a></li>
@@ -207,6 +221,18 @@
 </li>
 </ul>
 </div>
+<h2 id="upgrade-from-340-to-350">Upgrade from 3.4.0 to 3.5.0<a class="headerlink" href="#upgrade-from-340-to-350" title="Permanent link">&para;</a></h2>
+<p>This is a quality of life and bugfix update, it shouldn't introduce any breaking issues.</p>
+<h2 id="upgrade-from-330-to-340">Upgrade from 3.3.0 to 3.4.0<a class="headerlink" href="#upgrade-from-330-to-340" title="Permanent link">&para;</a></h2>
+<p>Version 3.4.0 allows fine-grained configuration and exception handling for connectors. 
+If an adapter contains global configuration which was added directly with <strong>RouteConfigurationBuilder</strong>, 
+it will no longer apply to connectors.
+It should be refactored and provided via <strong>ConfigurationDefinition</strong>.</p>
+<p><strong>Note:</strong> When it comes to process orchestration global configuration will still be applicable.</p>
+<p><strong>Deprecation Notice</strong></p>
+<p>The <code>defineTransformationOrchestrator</code> method from <strong>ConnectorBase</strong> class is marked as deprecated as of version 3.4.0. 
+This method may be removed in future versions.
+It is recommended to migrate to new <strong>Connector Processors</strong> in all connectors.</p>
 <h2 id="upgrade-from-320-to-330">Upgrade from 3.2.0 to 3.3.0<a class="headerlink" href="#upgrade-from-320-to-330" title="Permanent link">&para;</a></h2>
 <p>This is mostly a dependencies update and bugfix version, so it's shouldn't introduce any braking changes. 
 However, in the previous version, Integration Scenario model validation was triggered conditionally
@@ -333,7 +359,7 @@ directory with test profile configured:</p>
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../middle-component/" class="btn btn-neutral float-left" title="Middle Component"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../maven-plugin/" class="btn btn-neutral float-left" title="Maven Plugin"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../license/" class="btn btn-neutral float-right" title="License">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -362,7 +388,7 @@ directory with test profile configured:</p>
         </span>
     
     
-      <span><a href="../middle-component/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../maven-plugin/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="../license/" style="color: #fcfcfc">Next &raquo;</a></span>
