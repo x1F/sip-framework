@@ -411,3 +411,6 @@ public class SampleRestRoute extends RouteBuilder {
 -----------------------------
 ```
 
+## Declarative approach
+
+To use declarative approach with test kit follow the guide provided here: [Test Kit Declarative](test-kit-declarative.md)
