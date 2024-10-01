@@ -75,12 +75,13 @@ public class MethodBasedConnectorProcessor implements ConnectorProcessor {
   }
 
   @Override
-  public final void process(final Exchange exchange) throws SIPFrameworkException {
+  public final void process(final Exchange exchange) throws Exception {
     try {
       final var args = parameterFetchers.stream().map(fetcher -> fetcher.apply(exchange)).toArray();
       final var result = processorMethod.invoke(connector, args);
       getReturnType().ifPresent(type -> exchange.getMessage().setBody(result, type));
     } catch (InvocationTargetException e) {
+      if (e.getCause() instanceof Exception exception) throw exception;
       throw SIPFrameworkException.init(
           e.getCause(),
           "An error occurred while running connector processor method '%s' in connector-class %s: %s",

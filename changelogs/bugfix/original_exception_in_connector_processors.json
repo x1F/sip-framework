@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "275",
+  "message": "Throw original exception in connector processors instead of wrapping it in SIPFrameworkException."
+}
