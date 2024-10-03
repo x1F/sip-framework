@@ -66,7 +66,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- manage all versions via properties, so that they can be overridden in a project if necessary -->
-        <spring.boot.version>3.3.3</spring.boot.version>
+        <spring.boot.version>3.3.4</spring.boot.version>
         <camel.version>4.8.0</camel.version>
         <jackson-jsr310.version>2.12.7</jackson-jsr310.version>
         <springdoc-openapi-starter-common.version>2.6.0</springdoc-openapi-starter-common.version>
