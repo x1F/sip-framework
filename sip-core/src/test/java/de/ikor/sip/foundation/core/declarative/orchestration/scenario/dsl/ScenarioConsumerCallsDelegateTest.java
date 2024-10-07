@@ -26,4 +26,17 @@ class ScenarioConsumerCallsDelegateTest {
         .hasMessageContaining(
             "Integration Scenario test does not have a response model defined, using response handler is not intended.");
   }
+
+  @Test
+  void
+      When_NoResponseInScenario_With_AggregationInOrchestration_Then_ThrowInitializationException() {
+    var s =
+        new CallScenarioConsumerBaseNoResponseDefinition(
+            mock(), new TestScenario(), GenericOutboundConnectorBase.class);
+
+    assertThatThrownBy(() -> s.andAggregateResponse((a, b) -> a))
+        .isInstanceOf(SIPFrameworkInitializationException.class)
+        .hasMessageContaining(
+            "Integration Scenario test does not have a response model defined, using aggregate response is not intended.");
+  }
 }
