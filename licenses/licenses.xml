@@ -202,7 +202,7 @@
     <dependency>
       <groupId>com.fasterxml.woodstox</groupId>
       <artifactId>woodstox-core</artifactId>
-      <version>7.0.0</version>
+      <version>7.1.0</version>
       <licenses>
         <license>
           <name>The Apache License, Version 2.0</name>
@@ -378,7 +378,6 @@
           <name>BSD 2-Clause License</name>
           <url>https://opensource.org/licenses/BSD-2-Clause</url>
           <distribution>repo</distribution>
-          <file>bsd 2-clause license - bsd-2-clause.html</file>
         </license>
       </licenses>
     </dependency>
@@ -1240,7 +1239,6 @@
           <name>The MIT License</name>
           <url>http://www.opensource.org/licenses/mit-license.php</url>
           <distribution>repo</distribution>
-          <file>the mit license - mit-license.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3357,7 +3355,6 @@
           <name>The MIT License</name>
           <url>http://opensource.org/licenses/MIT</url>
           <distribution>repo</distribution>
-          <file>the mit license - mit.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3448,7 +3445,6 @@
           <name>The BSD 2-Clause License</name>
           <url>http://www.opensource.org/licenses/bsd-license.php</url>
           <distribution>repo</distribution>
-          <file>the bsd 2-clause license - bsd-license.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3593,7 +3589,6 @@
         <license>
           <name>BSD License 3</name>
           <url>http://opensource.org/licenses/BSD-3-Clause</url>
-          <file>bsd license 3 - bsd-3-clause.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3605,7 +3600,6 @@
         <license>
           <name>BSD License 3</name>
           <url>http://opensource.org/licenses/BSD-3-Clause</url>
-          <file>bsd license 3 - bsd-3-clause.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3624,7 +3618,6 @@
         <license>
           <name>BSD-2-Clause</name>
           <url>https://opensource.org/licenses/BSD-2-Clause</url>
-          <file>bsd 2-clause license - bsd-2-clause.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3774,7 +3767,6 @@
           <name>MIT</name>
           <url>https://opensource.org/licenses/MIT</url>
           <distribution>repo</distribution>
-          <file>mit - mit.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3800,7 +3792,6 @@
           <name>MIT</name>
           <url>https://opensource.org/licenses/MIT</url>
           <distribution>repo</distribution>
-          <file>mit - mit.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3888,7 +3879,6 @@
           <name>MIT License</name>
           <url>http://www.opensource.org/licenses/mit-license.php</url>
           <distribution>repo</distribution>
-          <file>the mit license - mit-license.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3901,7 +3891,6 @@
           <name>MIT License</name>
           <url>http://www.opensource.org/licenses/mit-license.php</url>
           <distribution>repo</distribution>
-          <file>the mit license - mit-license.html</file>
         </license>
       </licenses>
     </dependency>
