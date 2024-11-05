@@ -183,6 +183,7 @@ jobs:
           git add licenses
           if git status -s | grep "^[MADRCU]"; then
               git commit -m "Update licenses folder"
+              git pull --rebase
               git push
           fi
         fi
@@ -231,7 +232,7 @@ jobs:
         git commit -m "Updated sip-framework version to ${RELEASE_VERSION}"
         git tag -a releases/${RELEASE_VERSION} -m "Released new sip-framework version ${RELEASE_VERSION}"
         echo "::set-output name=version::${RELEASE_VERSION}"
-        mvn ${MAVEN_ARGS} clean deploy -DskipTests -Ppackage-deployment
+        # mvn ${MAVEN_ARGS} clean deploy -DskipTests -Ppackage-deployment
         mvn ${MAVEN_ARGS} versions:set -DnextSnapshot=true -DgenerateBackupPoms=false
         export SNAPSHOT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
         mvn ${MAVEN_ARGS} versions:set-property -Dproperty=sip-framework.version -DnewVersion=${SNAPSHOT_VERSION}
@@ -239,6 +240,7 @@ jobs:
         mvn ${MAVEN_ARGS} versions:set-property -pl ${STARTER_POM} -Dproperty=sip-dependency.version -DnewVersion=${SNAPSHOT_VERSION}
         git add .
         git commit -m "Updated sip-framework version to next snapshot ${SNAPSHOT_VERSION}"
+        git pull --rebase
         git push
         git push origin releases/${RELEASE_VERSION}
 
