@@ -35,9 +35,16 @@ final class ScenarioConsumerCallsDelegate<S extends ScenarioConsumerCalls<S, R, 
   @Override
   public CallScenarioConsumerByClassDefinition<S, M> callScenarioConsumer(
       final Class<? extends IntegrationScenarioConsumerDefinition> consumerClass) {
-    final CallScenarioConsumerByClassDefinition<S, M> def =
+    final CallScenarioConsumerByClassDefinition<S, M> consumerByClassDefinition =
         new CallScenarioConsumerByClassDefinition<>(
             definitionNode, integrationScenario, consumerClass);
+    final CallScenarioConsumerBaseNoResponseDefinition<S, M> noResponseDefinition =
+        new CallScenarioConsumerBaseNoResponseDefinition<>(
+            definitionNode, integrationScenario, consumerClass);
+    var def =
+        integrationScenario.getResponseModelClass().isPresent()
+            ? consumerByClassDefinition
+            : noResponseDefinition;
     consumerDefinitions.add(def);
     return def;
   }
