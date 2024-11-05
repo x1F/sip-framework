@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "276",
-  "message": "Prevent using response handing in scenario orchestration when no response model is defined in the scenario."
-}
