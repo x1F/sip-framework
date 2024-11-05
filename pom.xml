@@ -66,13 +66,13 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- manage all versions via properties, so that they can be overridden in a project if necessary -->
-        <spring.boot.version>3.2.7</spring.boot.version>
-        <camel.version>4.3.0</camel.version>
+        <spring.boot.version>3.3.4</spring.boot.version>
+        <camel.version>4.8.0</camel.version>
         <jackson-jsr310.version>2.12.7</jackson-jsr310.version>
-        <springdoc-openapi-starter-common.version>2.3.0</springdoc-openapi-starter-common.version>
-        <springdoc-openapi-starter-webmvc-ui.version>2.3.0</springdoc-openapi-starter-webmvc-ui.version>
-        <swagger-annotation.version>2.2.8</swagger-annotation.version>
-        <lombok.version>1.18.30</lombok.version>
+        <springdoc-openapi-starter-common.version>2.6.0</springdoc-openapi-starter-common.version>
+        <springdoc-openapi-starter-webmvc-ui.version>2.6.0</springdoc-openapi-starter-webmvc-ui.version>
+        <swagger-annotation.version>2.2.23</swagger-annotation.version>
+        <lombok.version>1.18.34</lombok.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <commons-text.version>1.10.0</commons-text.version>
         <commons-collections4.version>4.4</commons-collections4.version>
@@ -87,27 +87,27 @@
          CXF related dependencies
          SIPX-96: Currently forced to a higher version than camel-cxf because of CVE-2024-28752. Camel 4.5 will update CXF to 4.0.4
          -->
-        <cxf.version>4.0.4</cxf.version>                         <!-- keep in sync with camel-dependencies cxf-version property -->
-        <woodstox-core.version>[6.6.2,)</woodstox-core.version>     <!-- CXF 4.0.4 bundles 6.6.1 which brakes test-kit because of -> https://github.com/FasterXML/woodstox/issues/200 -->
+        <cxf.version>4.0.5</cxf.version>                         <!-- keep in sync with camel-dependencies cxf-version property -->
+        <woodstox-core.version>7.0.0</woodstox-core.version>     <!-- CXF 4.0.4 bundles 6.6.1 which brakes test-kit because of -> https://github.com/FasterXML/woodstox/issues/200 -->
 
         <!-- maven dependencies -->
-        <maven-core.version>3.8.6</maven-core.version>
-        <maven-project-dependecies.version>3.8.4</maven-project-dependecies.version>
-        <maven-plugin-annotations.version>3.6.1</maven-plugin-annotations.version>
-        <qdox.version>2.0.1</qdox.version>
+        <maven-core.version>3.9.9</maven-core.version>
+        <maven-project-dependecies.version>3.9.9</maven-project-dependecies.version>
+        <maven-plugin-annotations.version>3.15.0</maven-plugin-annotations.version>
+        <qdox.version>2.1.0</qdox.version>
 
         <!-- plugin versions -->
         <maven-enforcer-plugin.version>3.2.1</maven-enforcer-plugin.version>
         <maven-enforcer-plugin-extra-rules.version>1.6.1</maven-enforcer-plugin-extra-rules.version>
         <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
         <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
-        <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
-        <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
-        <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
+        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <fmt-maven-plugin.version>2.19</fmt-maven-plugin.version>
-        <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
-        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
+        <maven-gpg-plugin.version>3.2.6</maven-gpg-plugin.version>
+        <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
         <license-maven-plugin.version>2.0.0</license-maven-plugin.version>
 
         <!-- sonar settings -->
@@ -382,7 +382,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-plugin-plugin</artifactId>
-                    <version>3.6.4</version>
+                    <version>3.15.0</version>
                 </plugin>
 
                 <plugin>
@@ -552,7 +552,7 @@
                                     <dependencyConvergence/>
                                     <banDuplicatePomDependencyVersions/>
                                     <requireMavenVersion>
-                                        <version>${maven-compiler-plugin.version}</version>
+                                        <version>3.8.8</version>
                                     </requireMavenVersion>
                                 </rules>
                                 <fail>true</fail>

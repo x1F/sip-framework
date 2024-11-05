@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.apache.camel.Expression;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.ExpressionBuilder;
 import org.apache.camel.processor.Enricher;
@@ -22,9 +21,9 @@ class CamelProcessorsHelperTest {
   @Test
   void GIVEN_specificProcessorsWithEndpoints_WHEN_isEndpointProcessor_then_expectTrue() {
     // arrange
-    Processor enrichProcessor = new Enricher(ExpressionBuilder.simpleExpression(ENDPOINT_URI));
-    Processor pollEnrichProcessor =
-        new PollEnricher(ExpressionBuilder.simpleExpression(ENDPOINT_URI), 0);
+    Processor enrichProcessor =
+        new Enricher(ExpressionBuilder.simpleExpression(ENDPOINT_URI), ENDPOINT_URI);
+    Processor pollEnrichProcessor = new PollEnricher(ENDPOINT_URI, 0);
     WireTapProcessor wireTapProcessor = mock(WireTapProcessor.class);
     when(wireTapProcessor.getUri()).thenReturn(ENDPOINT_URI);
 
@@ -43,9 +42,11 @@ class CamelProcessorsHelperTest {
   void GIVEN_specificProcessorsWithInMemoryEndpoints_WHEN_isEndpointProcessor_then_expectFalse() {
     // arrange
     Processor enrichProcessor =
-        new Enricher(ExpressionBuilder.simpleExpression(ENDPOINT_IN_MEMORY_URI));
+        new Enricher(
+            ExpressionBuilder.simpleExpression(ENDPOINT_IN_MEMORY_URI), ENDPOINT_IN_MEMORY_URI);
     Processor pollEnrichProcessor =
-        new PollEnricher(ExpressionBuilder.simpleExpression(ENDPOINT_IN_MEMORY_URI), 0);
+        new PollEnricher(
+            ExpressionBuilder.simpleExpression(ENDPOINT_IN_MEMORY_URI), ENDPOINT_IN_MEMORY_URI, 0);
     WireTapProcessor wireTapProcessor = mock(WireTapProcessor.class);
     when(wireTapProcessor.getUri()).thenReturn(ENDPOINT_IN_MEMORY_URI);
 
@@ -64,8 +65,8 @@ class CamelProcessorsHelperTest {
   void
       GIVEN_specificProcessorsWithEndpointsAndWithoutExpressions_WHEN_isEndpointProcessor_then_expectTrue() {
     // arrange
-    Processor enrichProcessor = new Enricher(null);
-    Processor pollEnrichProcessor = new PollEnricher((Expression) null, 0);
+    Processor enrichProcessor = new Enricher(null, null);
+    Processor pollEnrichProcessor = new PollEnricher(null, 0);
 
     // act & assert
     assertThat(CamelProcessorsHelper.isEndpointProcessor(enrichProcessor)).isTrue();

@@ -7,9 +7,10 @@ import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
+import java.util.List;
 import java.util.Optional;
 import org.apache.camel.builder.EndpointConsumerBuilder;
-import org.apache.camel.builder.EndpointProducerBuilder;
+import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.model.RoutesDefinition;
 
 /**
@@ -27,9 +28,9 @@ public abstract class GenericInboundConnectorBase extends InboundConnectorBase
     implements InboundConnectorDefinition<RoutesDefinition> {
 
   @Override
-  public final void defineInboundEndpoints(
+  public final List<String> defineInboundEndpoints(
       final RoutesDefinition definition,
-      final EndpointProducerBuilder targetToDefinition,
+      final String targetToBase,
       final RoutesRegistry routeRegistry) {
     String routeConfigurationIds =
         joinConfigurationIds(
@@ -43,8 +44,9 @@ public abstract class GenericInboundConnectorBase extends InboundConnectorBase
             .routeConfigurationId(routeConfigurationIds);
     appendOnException(this, routeDef);
     defineRequestUnmarshalling().ifPresent(unmarshaller -> unmarshaller.accept(routeDef));
-    routeDef.to(targetToDefinition);
+    routeDef.to(StaticEndpointBuilders.direct(targetToBase));
     defineResponseMarshalling().ifPresent(marshaller -> marshaller.accept(routeDef));
+    return List.of(targetToBase);
   }
 
   /**
