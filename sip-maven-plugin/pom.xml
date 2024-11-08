@@ -4,7 +4,7 @@
     <parent>
         <artifactId>sip-framework</artifactId>
         <groupId>de.ikor.sip.foundation</groupId>
-        <version>3.6.1-SNAPSHOT</version>
+        <version>3.6.1</version>
     </parent>
 
     <name>sip-maven-plugin</name>
