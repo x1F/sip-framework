@@ -472,6 +472,11 @@ public class RestConnectorTestBase extends RestConnectorBase {
 <h4 id="outbound-connectors">Outbound Connectors<a class="headerlink" href="#outbound-connectors" title="Permanent link">&para;</a></h4>
 <p>Outbound connectors are used to define communication with the external systems inside the adapter.
 They need to extend <code>GenericOutboundConnectorBase</code> and override necessary methods, but also to be annotated with <code>@OutboundConnector</code>.</p>
+<p>EndpointProducerBuilder defineOutgoingEndpoint() is used to define the endpoint,
+which executes the call to an external system.
+StaticEndpointBuilders can be used to provide the endpoint definition.
+If the URI of the endpoint contains placeholder values in format of <code>${placeholder}</code> (value from exchange) or 
+<code>{{placeholder}}</code> (value from configuration) the endpoint will automatically be converted into a dynamic endpoint (toD).</p>
 <p>As outbound connectors are otherwise defined identically to inbound ones, additional explanations are available in the
 <a href="#inbound-connectors">documentation for inbound connectors</a>.</p>
 <h4 id="header-cleanup">Header Cleanup<a class="headerlink" href="#header-cleanup" title="Permanent link">&para;</a></h4>
