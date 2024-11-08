@@ -2,6 +2,13 @@
 
 [TOC]
 
+## Upgrade from 3.5.0 to 3.6.0
+
+This version contains upgrades to major libraries used by the framework.
+There is a possibility that they may lead to some changes.
+
+Please use the following Apache Camel guide if necessary: https://camel.apache.org/manual/camel-4x-upgrade-guide.html
+
 ## Upgrade from 3.4.0 to 3.5.0
 
 This is a quality of life and bugfix update, it shouldn't introduce any breaking issues.
