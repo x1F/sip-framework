@@ -12,7 +12,6 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefin
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.event.EventListener;
