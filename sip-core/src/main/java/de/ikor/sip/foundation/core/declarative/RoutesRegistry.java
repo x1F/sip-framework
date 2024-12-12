@@ -4,10 +4,10 @@ import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.is
 import static de.ikor.sip.foundation.core.util.CamelProcessorsHelper.getEndpointUri;
 import static de.ikor.sip.foundation.core.util.CamelProcessorsHelper.isInMemoryUri;
 
-import de.ikor.sip.foundation.core.actuator.declarative.model.EndpointInfo;
-import de.ikor.sip.foundation.core.actuator.declarative.model.RouteDeclarativeStructureInfo;
-import de.ikor.sip.foundation.core.actuator.declarative.model.RouteInfo;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.dto.EndpointInfo;
+import de.ikor.sip.foundation.core.declarative.dto.RouteDeclarativeStructureInfo;
+import de.ikor.sip.foundation.core.declarative.dto.RouteInfo;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
