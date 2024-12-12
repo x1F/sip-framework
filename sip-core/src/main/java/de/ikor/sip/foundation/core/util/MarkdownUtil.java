@@ -22,9 +22,9 @@ public class MarkdownUtil {
           + // Captures alt text
           "\\("
           + // Opening parenthesis
-          "(?<uri>[^\\\"\\)]+?)"
-          + // Captures uri (up to " or ))
-          "(?:\\s*\"(?<optionalpart>[^\"]*?)\")?"
+          "(?<uri>[^\\\"\\)]+)"
+          + // Captures filename (up to " or ))
+          "(?:\\s*\"(?<optionalpart>[^\"]*)\")?"
           + // Captures optional title
           "\\)"; // Closing parenthesis
 
