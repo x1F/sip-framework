@@ -23,7 +23,7 @@ public class OpenApiContextPathResolver {
     String contextPath = camelContext.getRestConfiguration().getContextPath();
     Paths paths = new Paths();
     OpenAPI openAPICamelConfig = camelRestDSLOpenApi.get();
-    if (openAPICamelConfig.getPaths() != null) {
+    if (openAPICamelConfig.getPaths() != null && contextPath != null) {
       openAPICamelConfig
           .getPaths()
           .forEach((path, pathItem) -> paths.put(contextPath.concat(path), pathItem));
