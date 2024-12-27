@@ -41,6 +41,7 @@ public abstract class RestInboundConnectorBase extends InboundConnectorBase
               RouteRole.EXTERNAL_ENDPOINT, this, "-rest-dsl-", ++endpointCounter));
       String routePath = targetToBase + "-rest-dsl-" + endpointCounter;
       ToDefinition toDefinition = new ToDefinition("direct:" + routePath);
+      routeRegistry.updateRouteId(targetToBase, routePath);
       verb.setTo(toDefinition);
       routeToPaths.add(routePath);
     }

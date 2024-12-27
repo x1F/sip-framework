@@ -314,4 +314,13 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
         ? expression.toString()
         : String.format("%s-%s", processorName, counter);
   }
+
+  public void updateRouteId(String targetToBase, String routePath) {
+    var connector = connectorForRouteIdRegister.remove(targetToBase);
+    connectorForRouteIdRegister.put(routePath, connector);
+    routeIdsForConnectorRegister.remove(connector);
+    routeIdsForConnectorRegister.put(connector, routePath);
+    var role = roleForRouteIdRegister.remove(targetToBase);
+    roleForRouteIdRegister.put(routePath, role);
+  }
 }
