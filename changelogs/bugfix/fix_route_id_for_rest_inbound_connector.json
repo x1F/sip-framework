@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "282",
+  "message": "Fix an issue where incorrect route id and connector id was registered for REST inbound connectors."
+}
