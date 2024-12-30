@@ -1,5 +1,5 @@
 {
   "author": "Nemikor",
   "pullrequestId": "281",
-  "message": "Prevent NPE when context path is not set in configuration,"
+  "message": "Prevent NPE when context path is not set in configuration."
 }
