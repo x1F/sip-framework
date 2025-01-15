@@ -91,7 +91,7 @@ public class SimpleAdapter {
   }
 
   @InboundConnector(
-          connectorId = "PostRestInboundConnectorTestBase",
+      connectorId = "PostRestInboundConnectorTestBase",
       connectorGroup = ConnectorGroupSip1.ID,
       integrationScenario = RestDSLScenario.ID,
       requestModel = String.class)
@@ -114,10 +114,10 @@ public class SimpleAdapter {
   }
 
   @InboundConnector(
-          connectorId = "GetRestInboundConnectorTestBase",
-          connectorGroup = ConnectorGroupSip1.ID,
-          integrationScenario = RestDSLScenario.ID,
-          requestModel = String.class)
+      connectorId = "GetRestInboundConnectorTestBase",
+      connectorGroup = ConnectorGroupSip1.ID,
+      integrationScenario = RestDSLScenario.ID,
+      requestModel = String.class)
   public class GetRestInboundConnectorTestBase extends RestInboundConnectorBase {
 
     @Override
@@ -128,7 +128,7 @@ public class SimpleAdapter {
     @Override
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
-              .setRequestRouteTransformer(this::defineRequestRoute);
+          .setRequestRouteTransformer(this::defineRequestRoute);
     }
 
     protected void defineRequestRoute(final RouteDefinition definition) {
