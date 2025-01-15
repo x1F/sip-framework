@@ -91,20 +91,44 @@ public class SimpleAdapter {
   }
 
   @InboundConnector(
+          connectorId = "PostRestInboundConnectorTestBase",
       connectorGroup = ConnectorGroupSip1.ID,
       integrationScenario = RestDSLScenario.ID,
       requestModel = String.class)
-  public class RestInboundConnectorTestBase extends RestInboundConnectorBase {
+  public class PostRestInboundConnectorTestBase extends RestInboundConnectorBase {
 
     @Override
     protected void configureRest(RestDefinition definition) {
-      definition.bindingMode("off").post("path").type(String.class).get("path");
+      definition.bindingMode("off").post("path").type(String.class);
     }
 
     @Override
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(this::defineRequestRoute);
+    }
+
+    protected void defineRequestRoute(final RouteDefinition definition) {
+      definition.setBody(exchange -> "PRODUCED_REST-" + exchange.getIn().getBody(String.class));
+    }
+  }
+
+  @InboundConnector(
+          connectorId = "GetRestInboundConnectorTestBase",
+          connectorGroup = ConnectorGroupSip1.ID,
+          integrationScenario = RestDSLScenario.ID,
+          requestModel = String.class)
+  public class GetRestInboundConnectorTestBase extends RestInboundConnectorBase {
+
+    @Override
+    protected void configureRest(RestDefinition definition) {
+      definition.bindingMode("off").get("path");
+    }
+
+    @Override
+    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+      return ConnectorOrchestrator.forConnector(this)
+              .setRequestRouteTransformer(this::defineRequestRoute);
     }
 
     protected void defineRequestRoute(final RouteDefinition definition) {

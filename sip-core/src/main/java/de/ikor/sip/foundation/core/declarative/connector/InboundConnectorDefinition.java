@@ -39,7 +39,7 @@ public non-sealed interface InboundConnectorDefinition<T extends OptionalIdentif
    * @param routeRegistry Route registry that must be used to register routeIds for the inbound
    *     endpoint(s).
    */
-  List<String> defineInboundEndpoints(
+  void defineInboundEndpoints(
       T definition, String targetToBase, RoutesRegistry routeRegistry);
 
   @Override

@@ -6,6 +6,8 @@ import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.ParameterMapping;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import org.apache.camel.model.ToDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 import org.apache.camel.model.rest.RestsDefinition;
@@ -27,24 +29,21 @@ public abstract class RestInboundConnectorBase extends InboundConnectorBase
     implements InboundConnectorDefinition<RestsDefinition> {
 
   @Override
-  public final List<String> defineInboundEndpoints(
+  public final void defineInboundEndpoints(
       final RestsDefinition definition,
       final String targetToBase,
       final RoutesRegistry routeRegistry) {
     var rest = definition.rest();
-    var endpointCounter = 0;
     configureRest(rest);
-    List<String> routeToPaths = new ArrayList<>();
+    SIPFrameworkInitializationException.throwIf(rest.getVerbs().size() > 1,
+            "Using multiple REST endpoints in one Inbound connector is not allowed");
     for (VerbDefinition verb : rest.getVerbs()) {
       verb.setId(
           routeRegistry.generateRouteIdForConnector(
-              RouteRole.EXTERNAL_ENDPOINT, this, "-rest-dsl-", ++endpointCounter));
-      String routePath = targetToBase + "-rest-dsl-" + endpointCounter;
-      ToDefinition toDefinition = new ToDefinition("direct:" + routePath);
+              RouteRole.EXTERNAL_ENDPOINT, this));
+      ToDefinition toDefinition = new ToDefinition("direct:" + targetToBase);
       verb.setTo(toDefinition);
-      routeToPaths.add(routePath);
     }
-    return routeToPaths;
   }
 
   /**
