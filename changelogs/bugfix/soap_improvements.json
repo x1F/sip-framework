@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "283",
+  "message": "Add possibility to configure additional parameters in SOAP endpoints, like DataFormat"
+}
