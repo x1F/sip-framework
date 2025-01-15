@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
+import org.apache.camel.component.cxf.common.DataFormat;
 import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -38,6 +39,7 @@ public class SOAPAdapter {
   public CxfEndpoint createCustomerServiceEndpoint() throws ClassNotFoundException {
     CxfEndpoint serviceEndpoint = new CxfEndpoint();
     serviceEndpoint.setAddress(SOAP_ADDRESS);
+    serviceEndpoint.setDataFormat(DataFormat.PAYLOAD);
     return serviceEndpoint;
   }
 

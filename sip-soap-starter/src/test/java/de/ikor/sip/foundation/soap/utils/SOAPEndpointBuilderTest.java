@@ -8,6 +8,7 @@ import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationExce
 import java.util.Collections;
 import java.util.Map;
 import org.apache.camel.builder.endpoint.dsl.CxfEndpointBuilderFactory.CxfEndpointBuilder;
+import org.apache.camel.component.cxf.common.DataFormat;
 import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,12 @@ class SOAPEndpointBuilderTest {
     // act
     CxfEndpointBuilder cxfEndpointBuilder =
         SOAPEndpointBuilder.generateCXFEndpoint(
-            "connectorID", cxfBeans, "serviceClassName", "serviceClassQualifiedName", "address");
+            "connectorID",
+            cxfBeans,
+            "serviceClassName",
+            "serviceClassQualifiedName",
+            "address",
+            DataFormat.PAYLOAD);
 
     // assert
     assertThat(cxfEndpointBuilder.getUri())
@@ -39,7 +45,12 @@ class SOAPEndpointBuilderTest {
     assertThatThrownBy(
             () -> {
               SOAPEndpointBuilder.generateCXFEndpoint(
-                  "connectorID", cxfBeans, "serviceClassName", "serviceClassQualifiedName", "");
+                  "connectorID",
+                  cxfBeans,
+                  "serviceClassName",
+                  "serviceClassQualifiedName",
+                  "",
+                  DataFormat.PAYLOAD);
             })
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
@@ -66,7 +77,8 @@ class SOAPEndpointBuilderTest {
             cxfBeans,
             "serviceClassName",
             "serviceClassQualifiedName",
-            EXAMPLE_ADDRESS);
+            EXAMPLE_ADDRESS,
+            DataFormat.PAYLOAD);
 
     // assert
     assertThat(cxfEndpoint.getAddress()).isEqualTo(EXAMPLE_ADDRESS);
@@ -86,7 +98,12 @@ class SOAPEndpointBuilderTest {
     assertThatThrownBy(
             () -> {
               SOAPEndpointBuilder.generateCXFEndpoint(
-                  "connectorID", cxfBeans, "serviceClassName", "serviceClassQualifiedName", "");
+                  "connectorID",
+                  cxfBeans,
+                  "serviceClassName",
+                  "serviceClassQualifiedName",
+                  "",
+                  DataFormat.PAYLOAD);
             })
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
@@ -112,7 +129,8 @@ class SOAPEndpointBuilderTest {
                   cxfBeans,
                   "serviceClassName",
                   "invalidServiceClassQualifiedName",
-                  "address");
+                  "address",
+                  DataFormat.PAYLOAD);
             })
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(

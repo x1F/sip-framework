@@ -6,6 +6,7 @@ import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 import java.util.Optional;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
@@ -43,8 +44,7 @@ public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboun
           (Class<T>)
               DeclarativeReflectionUtils.getClassFromGeneric(
                   getClass(), SoapOperationInboundConnectorBase.class);
-      this.dataFormat =
-          new SIPJaxbDataFormat(JAXBContext.newInstance(getJaxbContextPathForRequestModel()));
+      this.dataFormat = getDataFormat();
     } catch (Exception e) {
       this.serviceClass = null;
     }
@@ -121,4 +121,8 @@ public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboun
    * @return Service operation name
    */
   public abstract String getServiceOperationName();
+
+  protected JaxbDataFormat getDataFormat() throws JAXBException {
+    return new SIPJaxbDataFormat(JAXBContext.newInstance(getJaxbContextPathForRequestModel()));
+  }
 }
