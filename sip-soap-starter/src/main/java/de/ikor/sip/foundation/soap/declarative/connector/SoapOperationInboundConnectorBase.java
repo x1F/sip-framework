@@ -44,7 +44,6 @@ public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboun
           (Class<T>)
               DeclarativeReflectionUtils.getClassFromGeneric(
                   getClass(), SoapOperationInboundConnectorBase.class);
-      this.dataFormat = getDataFormat();
     } catch (Exception e) {
       this.serviceClass = null;
     }

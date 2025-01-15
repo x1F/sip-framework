@@ -10,9 +10,9 @@ import lombok.Getter;
 public abstract sealed class CallScenarioConsumerBaseDefinition<
         S extends CallScenarioConsumerBaseDefinition<S, R, M>, R, M>
     extends ScenarioDslDefinitionBase<S, R, M> implements CallableWithinProviderDefinition
-    permits CallScenarioConsumerCatchAllDefinition,
-        CallScenarioConsumerByClassDefinition,
-        CallScenarioConsumerByConnectorIdDefinition {
+    permits CallScenarioConsumerByClassDefinition,
+        CallScenarioConsumerByConnectorIdDefinition,
+        CallScenarioConsumerCatchAllDefinition {
 
   @Getter(AccessLevel.PACKAGE)
   private Optional<ScenarioStepRequestExtractor<M>> requestPreparation = Optional.empty();

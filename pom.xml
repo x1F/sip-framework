@@ -6,7 +6,7 @@
 
     <groupId>de.ikor.sip.foundation</groupId>
     <artifactId>sip-framework</artifactId>
-    <version>3.5.1-SNAPSHOT</version>
+    <version>3.6.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SIP Framework</name>
     <url>https://github.com/IKOR-GmbH/sip-framework</url>
@@ -59,14 +59,14 @@
 
         <!-- sip framework version, decoupled from actual version to make dependency resolution work properly in projects
              where sip-framework is the dependency. This version should always be the same as the version of sip-framework itself -->
-        <sip-framework.version>3.5.1-SNAPSHOT</sip-framework.version>
+        <sip-framework.version>3.6.2-SNAPSHOT</sip-framework.version>
 
         <!-- properly set encoding, this is especially necessary for resource filtering -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- manage all versions via properties, so that they can be overridden in a project if necessary -->
-        <spring.boot.version>3.3.4</spring.boot.version>
+        <spring.boot.version>3.3.5</spring.boot.version>
         <camel.version>4.8.0</camel.version>
         <jackson-jsr310.version>2.12.7</jackson-jsr310.version>
         <springdoc-openapi-starter-common.version>2.6.0</springdoc-openapi-starter-common.version>
