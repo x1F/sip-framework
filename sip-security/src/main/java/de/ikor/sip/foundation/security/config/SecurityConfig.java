@@ -18,6 +18,7 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.authentication.AuthenticationManagerBeanDefinitionParser.NullAuthenticationProvider;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -113,19 +114,20 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain sipDefaultSecurityFilterChain(HttpSecurity http) throws Exception {
     // disable sessions completely
-    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    http.sessionManagement(
+        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
     // add our composite authentication Filter for all requests (besides the ones ignored separately
     // in the WebSecurity configure method
     if (config.isDisableCsrf()) {
-      http.csrf().disable();
+      http.csrf(AbstractHttpConfigurer::disable);
     }
 
     http.addFilterAt(
             new CompositeAuthenticationFilter(tokenExtractors, config, authenticationManagerBean()),
             BasicAuthenticationFilter.class)
-        .authorizeHttpRequests()
-        .anyRequest()
-        .authenticated();
+        .authorizeHttpRequests(
+            authorizationManagerRequestMatcherRegistry ->
+                authorizationManagerRequestMatcherRegistry.anyRequest().authenticated());
 
     return http.build();
   }
