@@ -176,11 +176,10 @@ public final class AdapterBuilder extends RouteBuilder {
 
     // Channel all inbound camel endpoint routes to the orchestration route
     final var endpointDefinitionType = inboundConnector.getEndpointDefinitionTypeClass();
-    List<String> directRoutes =
-        inboundConnector.defineInboundEndpoints(
-            resolveConnectorDefinitionType(endpointDefinitionType),
-            requestOrchestrationRouteId,
-            routesRegistry);
+    inboundConnector.defineInboundEndpoints(
+        resolveConnectorDefinitionType(endpointDefinitionType),
+        requestOrchestrationRouteId,
+        routesRegistry);
 
     // Build scenario handoff and response-route
     String routeConfigurationIds =
@@ -218,26 +217,24 @@ public final class AdapterBuilder extends RouteBuilder {
     handoffRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));
 
     // Build orchestration route(s) to/from scenario
+    final var requestRouteDefinition =
+        from(StaticEndpointBuilders.direct(requestOrchestrationRouteId))
+            .routeId(requestOrchestrationRouteId)
+            .routeConfigurationId(routeConfigurationIds);
+    appendOnException(inboundConnector, requestRouteDefinition);
     final RouteDefinition responseRouteDefinition =
         from(StaticEndpointBuilders.direct(responseOrchestrationRouteId))
             .routeId(responseOrchestrationRouteId)
             .routeConfigurationId(routeConfigurationIds);
     appendOnException(inboundConnector, responseRouteDefinition);
-    directRoutes.forEach(
-        route -> {
-          final var requestRouteDefinition =
-              from(StaticEndpointBuilders.direct(route))
-                  .routeId(route)
-                  .routeConfigurationId(routeConfigurationIds);
-          appendOnException(inboundConnector, requestRouteDefinition);
-          var orchestrationInfo =
-              new OrchestrationRoutes(requestRouteDefinition, Optional.of(responseRouteDefinition));
 
-          if (inboundConnector.getOrchestrator().canOrchestrate(orchestrationInfo)) {
-            inboundConnector.getOrchestrator().doOrchestrate(orchestrationInfo);
-          }
-          requestRouteDefinition.to(StaticEndpointBuilders.direct(scenarioHandoffRouteId));
-        });
+    var orchestrationInfo =
+        new OrchestrationRoutes(requestRouteDefinition, Optional.of(responseRouteDefinition));
+
+    if (inboundConnector.getOrchestrator().canOrchestrate(orchestrationInfo)) {
+      inboundConnector.getOrchestrator().doOrchestrate(orchestrationInfo);
+    }
+    requestRouteDefinition.to(StaticEndpointBuilders.direct(scenarioHandoffRouteId));
   }
 
   private void buildOutboundConnector(
