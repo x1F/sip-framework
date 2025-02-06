@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "286",
+  "message": "Remove usage of deprecated methods from spring security and use up-to-date ones."
+}
