@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "285",
+  "message": "Disable CSRF by default in SOAP configuration."
+}
