@@ -1,11 +1,13 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
+import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.ParameterMapping;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.camel.model.ToDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 import org.apache.camel.model.rest.RestsDefinition;
@@ -28,9 +30,10 @@ public abstract class RestInboundConnectorBase extends InboundConnectorBase
 
   @Override
   public final List<String> defineInboundEndpoints(
-      final RestsDefinition definition,
-      final String targetToBase,
-      final RoutesRegistry routeRegistry) {
+          final RestsDefinition definition,
+          final String targetToBase,
+          final RoutesRegistry routeRegistry,
+          final DeclarationsRegistry declarationsRegistry) {
     var rest = definition.rest();
     var endpointCounter = 0;
     configureRest(rest);

@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
+import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import java.util.List;
@@ -40,7 +41,7 @@ public non-sealed interface InboundConnectorDefinition<T extends OptionalIdentif
    *     endpoint(s).
    */
   List<String> defineInboundEndpoints(
-      T definition, String targetToBase, RoutesRegistry routeRegistry);
+          T definition, String targetToBase, RoutesRegistry routeRegistry, DeclarationsRegistry declarationsRegistry);
 
   @Override
   default ConnectorType getConnectorType() {

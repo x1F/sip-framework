@@ -180,7 +180,8 @@ public final class AdapterBuilder extends RouteBuilder {
         inboundConnector.defineInboundEndpoints(
             resolveConnectorDefinitionType(endpointDefinitionType),
             requestOrchestrationRouteId,
-            routesRegistry);
+            routesRegistry,
+            declarationsRegistry);
 
     // Build scenario handoff and response-route
     String routeConfigurationIds =
@@ -192,7 +193,7 @@ public final class AdapterBuilder extends RouteBuilder {
         from(StaticEndpointBuilders.direct(scenarioHandoffRouteId))
             .routeId(scenarioHandoffRouteId)
             .routeConfigurationId(routeConfigurationIds);
-    appendOnException(inboundConnector, handoffRouteDefinition);
+    appendOnException(inboundConnector, handoffRouteDefinition, declarationsRegistry);
     headerCleanupProcessor.ifPresent(
         proc -> handoffRouteDefinition.process(proc::cleanHeadersProcessor));
     handoffRouteDefinition
@@ -222,14 +223,14 @@ public final class AdapterBuilder extends RouteBuilder {
         from(StaticEndpointBuilders.direct(responseOrchestrationRouteId))
             .routeId(responseOrchestrationRouteId)
             .routeConfigurationId(routeConfigurationIds);
-    appendOnException(inboundConnector, responseRouteDefinition);
+    appendOnException(inboundConnector, responseRouteDefinition, declarationsRegistry);
     directRoutes.forEach(
         route -> {
           final var requestRouteDefinition =
               from(StaticEndpointBuilders.direct(route))
                   .routeId(route)
                   .routeConfigurationId(routeConfigurationIds);
-          appendOnException(inboundConnector, requestRouteDefinition);
+          appendOnException(inboundConnector, requestRouteDefinition, declarationsRegistry);
           var orchestrationInfo =
               new OrchestrationRoutes(requestRouteDefinition, Optional.of(responseRouteDefinition));
 
@@ -268,7 +269,7 @@ public final class AdapterBuilder extends RouteBuilder {
     // Build takeover route from scenario
     RouteDefinition routeDefinition =
         from(takeoverFromEndpoint).routeId(scenarioTakeoverRouteId).routeConfigurationId(configIds);
-    appendOnException(outboundConnector, routeDefinition);
+    appendOnException(outboundConnector, routeDefinition, declarationsRegistry);
     routeDefinition
         .process(
             new CDMValidator(
@@ -283,7 +284,7 @@ public final class AdapterBuilder extends RouteBuilder {
         from(StaticEndpointBuilders.direct(externalEndpointRouteId))
             .routeId(externalEndpointRouteId)
             .routeConfigurationId(configIds);
-    appendOnException(outboundConnector, endpointRouteDefinition);
+    appendOnException(outboundConnector, endpointRouteDefinition, declarationsRegistry);
     headerCleanupProcessor.ifPresent(
         proc -> endpointRouteDefinition.process(proc::cleanHeadersProcessor));
     outboundConnector.defineOutboundEndpoints(endpointRouteDefinition);
@@ -296,12 +297,12 @@ public final class AdapterBuilder extends RouteBuilder {
         from(StaticEndpointBuilders.direct(requestOrchestrationRouteId))
             .routeId(requestOrchestrationRouteId)
             .routeConfigurationId(configIds);
-    appendOnException(outboundConnector, requestRouteDefinition);
+    appendOnException(outboundConnector, requestRouteDefinition, declarationsRegistry);
     final RouteDefinition responseRouteDefinition =
         from(StaticEndpointBuilders.direct(responseOrchestrationRouteId))
             .routeId(responseOrchestrationRouteId)
             .routeConfigurationId(configIds);
-    appendOnException(outboundConnector, responseRouteDefinition);
+    appendOnException(outboundConnector, responseRouteDefinition, declarationsRegistry);
 
     var orchestrationInfo =
         new OrchestrationRoutes(requestRouteDefinition, Optional.of(responseRouteDefinition));
