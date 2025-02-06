@@ -7,7 +7,6 @@ import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
-import java.util.List;
 import java.util.Optional;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
@@ -28,7 +27,7 @@ public abstract class GenericInboundConnectorBase extends InboundConnectorBase
     implements InboundConnectorDefinition<RoutesDefinition> {
 
   @Override
-  public final List<String> defineInboundEndpoints(
+  public final void defineInboundEndpoints(
       final RoutesDefinition definition,
       final String targetToBase,
       final RoutesRegistry routeRegistry) {
@@ -46,7 +45,6 @@ public abstract class GenericInboundConnectorBase extends InboundConnectorBase
     defineRequestUnmarshalling().ifPresent(unmarshaller -> unmarshaller.accept(routeDef));
     routeDef.to(StaticEndpointBuilders.direct(targetToBase));
     defineResponseMarshalling().ifPresent(marshaller -> marshaller.accept(routeDef));
-    return List.of(targetToBase);
   }
 
   /**

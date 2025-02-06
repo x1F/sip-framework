@@ -38,7 +38,7 @@ class DeclarativeDefinitionEndpointTest {
 
   private final int CONNECTORGROUPS_IN_TEST_ADAPTER = 2;
   private final int SCENARIOS_IN_TEST_ADAPTER = 2;
-  private final int CONNECTORS_IN_TEST_ADAPTER = 4;
+  private final int CONNECTORS_IN_TEST_ADAPTER = 5;
 
   @Test
   void when_ActuatorGetAdapterDefinitionInfo_then_RetrieveFullAdapterInfo() throws IOException {
