@@ -7,8 +7,11 @@ import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.apache.camel.CamelContext;
 import org.apache.camel.NamedNode;
 import org.apache.camel.Processor;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,10 +26,11 @@ class AddProxyInterceptStrategyTest {
   private final List<ProxyExtension> extensions = new ArrayList<>();
   @Mock private NamedNode definition;
   @Mock private Processor original;
+  private final CamelContext camelContext = new DefaultCamelContext();
 
   @BeforeEach
   public void setup() {
-    addProxyInterceptStrategy = new AddProxyInterceptStrategy(proxyRegistry, extensions);
+    addProxyInterceptStrategy = new AddProxyInterceptStrategy(proxyRegistry, extensions, camelContext);
     when(definition.getId()).thenReturn(PROCESSOR_ID);
   }
 
