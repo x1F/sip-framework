@@ -22,7 +22,7 @@ runs:
       server-username: MAVEN_CENTRAL_USERNAME
       server-password: MAVEN_CENTRAL_PASSWORD
   - name: Cache Maven packages
-    uses: actions/cache@v1
+    uses: actions/cache@v3
     with:
       path: ~/.m2
       key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
