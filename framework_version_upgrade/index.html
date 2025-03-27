@@ -91,6 +91,8 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Framework Version Upgrade</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#upgrade-from-361-to-xyz">Upgrade from 3.6.1 to x.y.z</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#upgrade-from-350-to-360">Upgrade from 3.5.0 to 3.6.0</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#upgrade-from-340-to-350">Upgrade from 3.4.0 to 3.5.0</a>
@@ -124,6 +126,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/latest/index.html">JavaDoc Latest Development</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/3.6.2/index.html">JavaDoc 3.6.2</a>
                 </li>
               </ul>
               <ul>
@@ -222,6 +228,7 @@
 <div class="toc">
 <ul>
 <li><a href="#sip-framework-version-upgrade">SIP Framework version upgrade</a><ul>
+<li><a href="#upgrade-from-361-to-xyz">Upgrade from 3.6.1 to x.y.z</a></li>
 <li><a href="#upgrade-from-350-to-360">Upgrade from 3.5.0 to 3.6.0</a></li>
 <li><a href="#upgrade-from-340-to-350">Upgrade from 3.4.0 to 3.5.0</a></li>
 <li><a href="#upgrade-from-330-to-340">Upgrade from 3.3.0 to 3.4.0</a></li>
@@ -232,6 +239,13 @@
 </li>
 </ul>
 </div>
+<h2 id="upgrade-from-361-to-xyz">Upgrade from 3.6.1 to x.y.z<a class="headerlink" href="#upgrade-from-361-to-xyz" title="Permanent link">&para;</a></h2>
+<p>Building REST inbound connectors was changed. 
+Usage of multiple HTTP methods in REST DSL of a single connector is no longer allowed.
+REST Connectors which contain this should be split into their own connector implementations.
+This change will not affect how the adapter behaves.</p>
+<p><strong>Note:</strong> Unique connector ID should be assigned to each new connector, 
+since the automatically generated one may be duplicated.</p>
 <h2 id="upgrade-from-350-to-360">Upgrade from 3.5.0 to 3.6.0<a class="headerlink" href="#upgrade-from-350-to-360" title="Permanent link">&para;</a></h2>
 <p>This version contains upgrades to major libraries used by the framework.
 There is a possibility that they may lead to some changes.</p>
