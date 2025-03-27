@@ -14,7 +14,7 @@
 
     <groupId>de.ikor.sip.foundation</groupId>
     <artifactId>sip-starter-parent</artifactId>
-    <version>3.6.2-SNAPSHOT</version>
+    <version>3.6.2</version>
     <packaging>pom</packaging>
     <name>SIP Starter Parent</name>
     <description>Parent pom providing dependency and plugin management for SIP integration adapters built with Maven
@@ -58,7 +58,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
-        <sip-framework.version>3.6.2-SNAPSHOT</sip-framework.version>               <!-- keep in sync with framework version -->
+        <sip-framework.version>3.6.2</sip-framework.version>               <!-- keep in sync with framework version -->
         <mapstruct.version>1.5.5.Final</mapstruct.version>                          <!-- keep in sync with mapstruct version in framework pom -->
         <lombok.version>1.18.34</lombok.version>                                    <!-- keep in sync with lombok version in framework pom -->
         <cxf.version>4.0.5</cxf.version>                                            <!-- keep in sync with cxf version in framework pom -->

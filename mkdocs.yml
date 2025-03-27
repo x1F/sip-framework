@@ -25,6 +25,7 @@ nav:
     - Changelog: changelog.md
     - JavaDoc Latest Development: './javadoc/latest/index.html'
     # JAVADOC_RELEASES sed marker, do not delete
+    - JavaDoc 3.6.2: './javadoc/3.6.2/index.html'
     - JavaDoc 3.6.1: './javadoc/3.6.1/index.html'
     - JavaDoc 3.6.0: './javadoc/3.6.0/index.html'
     - JavaDoc 3.5.0: './javadoc/3.5.0/index.html'

@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "284",
-  "message": "Forbid usage of multiple REST DSL verbs for different HTTP methods in a single Rest inbound connector."
-}

@@ -2,6 +2,16 @@
 
 [TOC]
 
+## Upgrade from 3.6.1 to x.y.z
+
+Building REST inbound connectors was changed. 
+Usage of multiple HTTP methods in REST DSL of a single connector is no longer allowed.
+REST Connectors which contain this should be split into their own connector implementations.
+This change will not affect how the adapter behaves.
+
+**Note:** Unique connector ID should be assigned to each new connector, 
+since the automatically generated one may be duplicated.
+
 ## Upgrade from 3.5.0 to 3.6.0
 
 This version contains upgrades to major libraries used by the framework.
