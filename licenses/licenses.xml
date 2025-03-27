@@ -444,7 +444,7 @@
     <dependency>
       <groupId>de.ikor.sip.foundation</groupId>
       <artifactId>sip-core</artifactId>
-      <version>3.6.2-SNAPSHOT</version>
+      <version>3.6.3-SNAPSHOT</version>
       <licenses>
         <license>
           <name>The Apache License, Version 2.0</name>
@@ -456,7 +456,7 @@
     <dependency>
       <groupId>de.ikor.sip.foundation</groupId>
       <artifactId>sip-integration-starter</artifactId>
-      <version>3.6.2-SNAPSHOT</version>
+      <version>3.6.3-SNAPSHOT</version>
       <licenses>
         <license>
           <name>The Apache License, Version 2.0</name>
@@ -468,7 +468,7 @@
     <dependency>
       <groupId>de.ikor.sip.foundation</groupId>
       <artifactId>sip-middle-component</artifactId>
-      <version>3.6.2-SNAPSHOT</version>
+      <version>3.6.3-SNAPSHOT</version>
       <licenses>
         <license>
           <name>The Apache License, Version 2.0</name>
@@ -480,7 +480,7 @@
     <dependency>
       <groupId>de.ikor.sip.foundation</groupId>
       <artifactId>sip-security</artifactId>
-      <version>3.6.2-SNAPSHOT</version>
+      <version>3.6.3-SNAPSHOT</version>
       <licenses>
         <license>
           <name>The Apache License, Version 2.0</name>
@@ -492,7 +492,7 @@
     <dependency>
       <groupId>de.ikor.sip.foundation</groupId>
       <artifactId>sip-test-kit</artifactId>
-      <version>3.6.2-SNAPSHOT</version>
+      <version>3.6.3-SNAPSHOT</version>
       <licenses>
         <license>
           <name>The Apache License, Version 2.0</name>
