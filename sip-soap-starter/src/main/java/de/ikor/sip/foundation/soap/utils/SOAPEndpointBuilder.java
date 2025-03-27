@@ -17,7 +17,8 @@ public class SOAPEndpointBuilder {
       Map<String, CxfEndpoint> cxfBeans,
       String serviceClassName,
       String serviceClassQualifiedName,
-      String address) {
+      String address,
+      DataFormat dataFormat) {
 
     if (cxfBeans.containsKey(serviceClassName)) {
 
@@ -42,7 +43,7 @@ public class SOAPEndpointBuilder {
         cxfEndpoint.setAddress(address);
       }
       // Our route building only works with payload mode
-      cxfEndpoint.setDataFormat(DataFormat.PAYLOAD);
+      cxfEndpoint.setDataFormat(dataFormat);
 
       return StaticEndpointBuilders.cxf(String.format("bean:%s", serviceClassName));
     } else {
@@ -54,7 +55,7 @@ public class SOAPEndpointBuilder {
       }
       return StaticEndpointBuilders.cxf(address)
           .serviceClass(serviceClassQualifiedName)
-          .dataFormat(DataFormat.PAYLOAD);
+          .dataFormat(dataFormat);
     }
   }
 }

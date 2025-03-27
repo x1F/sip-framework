@@ -2,13 +2,11 @@ package de.ikor.sip.foundation.core.declarative.connector;
 
 import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.*;
 
-import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
-import java.util.List;
 import java.util.Optional;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
@@ -29,11 +27,10 @@ public abstract class GenericInboundConnectorBase extends InboundConnectorBase
     implements InboundConnectorDefinition<RoutesDefinition> {
 
   @Override
-  public final List<String> defineInboundEndpoints(
-          final RoutesDefinition definition,
-          final String targetToBase,
-          final RoutesRegistry routeRegistry,
-          final DeclarationsRegistry declarationsRegistry) {
+  public final void defineInboundEndpoints(
+      final RoutesDefinition definition,
+      final String targetToBase,
+      final RoutesRegistry routeRegistry) {
     String routeConfigurationIds =
         joinConfigurationIds(
             this.getId(),
@@ -44,11 +41,10 @@ public abstract class GenericInboundConnectorBase extends InboundConnectorBase
             .from(resolveForbiddenEndpoint(defineInitiatingEndpoint()))
             .routeId(routeRegistry.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, this))
             .routeConfigurationId(routeConfigurationIds);
-    appendOnException(this, routeDef, declarationsRegistry);
+    appendOnException(this, routeDef);
     defineRequestUnmarshalling().ifPresent(unmarshaller -> unmarshaller.accept(routeDef));
     routeDef.to(StaticEndpointBuilders.direct(targetToBase));
     defineResponseMarshalling().ifPresent(marshaller -> marshaller.accept(routeDef));
-    return List.of(targetToBase);
   }
 
   /**

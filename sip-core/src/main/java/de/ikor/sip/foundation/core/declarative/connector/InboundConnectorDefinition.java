@@ -1,9 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
-import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
-import java.util.List;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.OptionalIdentifiedDefinition;
 
@@ -40,8 +38,7 @@ public non-sealed interface InboundConnectorDefinition<T extends OptionalIdentif
    * @param routeRegistry Route registry that must be used to register routeIds for the inbound
    *     endpoint(s).
    */
-  List<String> defineInboundEndpoints(
-          T definition, String targetToBase, RoutesRegistry routeRegistry, DeclarationsRegistry declarationsRegistry);
+  void defineInboundEndpoints(T definition, String targetToBase, RoutesRegistry routeRegistry);
 
   @Override
   default ConnectorType getConnectorType() {

@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.cxf.common.DataFormat;
 import org.apache.camel.component.cxf.common.message.CxfConstants;
 import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
 import org.springframework.context.ApplicationContext;
@@ -58,13 +59,19 @@ class SoapServiceTieInRouteBuilder extends RouteBuilder {
 
     String soapServiceName = serviceClass.getSimpleName();
 
+    Map<String, CxfEndpoint> cxfBeans = applicationContext.getBeansOfType(CxfEndpoint.class);
+    DataFormat dataFormat =
+        cxfBeans.containsKey(serviceClass.getName())
+            ? cxfBeans.get(serviceClass.getName()).getDataFormat()
+            : DataFormat.PAYLOAD;
     final var routeChoices =
         from(SOAPEndpointBuilder.generateCXFEndpoint(
                 soapServiceName,
-                applicationContext.getBeansOfType(CxfEndpoint.class),
+                cxfBeans,
                 soapServiceName,
                 serviceClass.getName(),
-                soapServiceName))
+                soapServiceName,
+                dataFormat))
             .routeId(routesRegistry.generateRouteIdForSoapService(soapServiceName))
             .log(LoggingLevel.TRACE, "Received SOAP request for ${header.operationName}")
             .choice();

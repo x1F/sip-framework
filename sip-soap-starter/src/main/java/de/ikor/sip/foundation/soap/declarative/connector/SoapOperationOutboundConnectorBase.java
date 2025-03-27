@@ -8,8 +8,10 @@ import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationExce
 import de.ikor.sip.foundation.soap.utils.OutboundSOAPMarshallerDefinition;
 import de.ikor.sip.foundation.soap.utils.SOAPEndpointBuilder;
 import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 import java.util.Optional;
 import org.apache.camel.builder.EndpointProducerBuilder;
+import org.apache.camel.component.cxf.common.DataFormat;
 import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
 import org.apache.camel.converter.jaxb.JaxbDataFormat;
 import org.apache.commons.lang3.StringUtils;
@@ -39,8 +41,7 @@ public abstract class SoapOperationOutboundConnectorBase<T> extends GenericOutbo
           (Class<T>)
               DeclarativeReflectionUtils.getClassFromGeneric(
                   getClass(), SoapOperationOutboundConnectorBase.class);
-      this.dataFormat =
-          new SIPJaxbDataFormat(JAXBContext.newInstance(getJaxbContextPathForRequestModel()));
+      this.dataFormat = getDataFormat();
     } catch (Exception e) {
       this.serviceClass = null;
     }
@@ -54,7 +55,8 @@ public abstract class SoapOperationOutboundConnectorBase<T> extends GenericOutbo
         getApplicationContext().getBeansOfType(CxfEndpoint.class),
         getServiceInterfaceClass().getSimpleName(),
         getServiceInterfaceClass().getName(),
-        getServiceAddress());
+        getServiceAddress(),
+        getSOAPMessageFormat());
   }
 
   @Override
@@ -113,5 +115,13 @@ public abstract class SoapOperationOutboundConnectorBase<T> extends GenericOutbo
 
   protected String getServiceAddress() {
     return StringUtils.EMPTY;
+  }
+
+  protected DataFormat getSOAPMessageFormat() {
+    return DataFormat.PAYLOAD;
+  }
+
+  protected JaxbDataFormat getDataFormat() throws JAXBException {
+    return new SIPJaxbDataFormat(JAXBContext.newInstance(getJaxbContextPathForRequestModel()));
   }
 }

@@ -6,7 +6,7 @@
 
     <groupId>de.ikor.sip.foundation</groupId>
     <artifactId>sip-framework</artifactId>
-    <version>3.6.2-SNAPSHOT</version>
+    <version>3.6.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SIP Framework</name>
     <url>https://github.com/IKOR-GmbH/sip-framework</url>
@@ -59,15 +59,15 @@
 
         <!-- sip framework version, decoupled from actual version to make dependency resolution work properly in projects
              where sip-framework is the dependency. This version should always be the same as the version of sip-framework itself -->
-        <sip-framework.version>3.6.2-SNAPSHOT</sip-framework.version>
+        <sip-framework.version>3.6.3-SNAPSHOT</sip-framework.version>
 
         <!-- properly set encoding, this is especially necessary for resource filtering -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- manage all versions via properties, so that they can be overridden in a project if necessary -->
-        <spring.boot.version>3.3.5</spring.boot.version>
-        <camel.version>4.8.0</camel.version>
+        <spring.boot.version>3.3.10</spring.boot.version>
+        <camel.version>4.8.5</camel.version>
         <jackson-jsr310.version>2.12.7</jackson-jsr310.version>
         <springdoc-openapi-starter-common.version>2.6.0</springdoc-openapi-starter-common.version>
         <springdoc-openapi-starter-webmvc-ui.version>2.6.0</springdoc-openapi-starter-webmvc-ui.version>
@@ -76,7 +76,7 @@
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <commons-text.version>1.10.0</commons-text.version>
         <commons-collections4.version>4.4</commons-collections4.version>
-        <commons-io.version>2.13.0</commons-io.version>
+        <commons-io.version>2.14.0</commons-io.version>
         <commons-exec.version>1.3</commons-exec.version>
         <asm.version>9.5</asm.version>      <!-- Spring is using 9.3, Cxf is using 9.5, when Spring upgrades to 9.5, then explicit dependency can be removed -->
         <jaxb-api.version>2.3.1</jaxb-api.version>
@@ -87,7 +87,7 @@
          CXF related dependencies
          SIPX-96: Currently forced to a higher version than camel-cxf because of CVE-2024-28752. Camel 4.5 will update CXF to 4.0.4
          -->
-        <cxf.version>4.0.5</cxf.version>                         <!-- keep in sync with camel-dependencies cxf-version property -->
+        <cxf.version>4.0.6</cxf.version>                         <!-- keep in sync with camel-dependencies cxf-version property -->
         <woodstox-core.version>7.0.0</woodstox-core.version>     <!-- CXF 4.0.4 bundles 6.6.1 which brakes test-kit because of -> https://github.com/FasterXML/woodstox/issues/200 -->
 
         <!-- maven dependencies -->
