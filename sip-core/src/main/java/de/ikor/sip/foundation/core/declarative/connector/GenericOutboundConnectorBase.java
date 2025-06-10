@@ -35,7 +35,7 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
           formatConnectorId(getConnectorType(), getScenarioId(), getConnectorGroupId()));
 
   @Override
-  public final void defineOutboundEndpoints(final RouteDefinition routeDefinition) {
+  public void defineOutboundEndpoints(final RouteDefinition routeDefinition) {
     defineRequestMarshalling().ifPresent(marshaller -> marshaller.accept(routeDefinition));
     EndpointProducerBuilder endpoint = defineOutgoingEndpoint();
     if (doesUriContainPlaceholders(endpoint.getUri())) {
