@@ -3,9 +3,9 @@ package de.ikor.sip.foundation.core.declarative.model;
 import java.util.function.Consumer;
 import org.apache.camel.builder.DataFormatClause;
 import org.apache.camel.model.DataFormatDefinition;
-import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spi.DataFormat;
+
+import static de.ikor.sip.foundation.core.proxies.ProcessorProxy.TEST_MODE_HEADER;
 
 /** Class providing various way to define an unmarshaller */
 public interface UnmarshallerDefinition extends RouteDefinitionConsumer {
@@ -17,7 +17,13 @@ public interface UnmarshallerDefinition extends RouteDefinitionConsumer {
    * @return The unmarshaller definition
    */
   static UnmarshallerDefinition forDataFormat(final DataFormat dataFormat) {
-    return routeBuilder -> routeBuilder.unmarshal(dataFormat);
+    return routeBuilder -> routeBuilder
+            .choice()
+            .when(exchange -> Boolean.parseBoolean(exchange.getProperty(TEST_MODE_HEADER, String.class)))
+            .log("Skip unmarshal in test mode")
+            .otherwise()
+            .unmarshal(dataFormat)
+            .endChoice();
   }
 
   /**
@@ -27,7 +33,13 @@ public interface UnmarshallerDefinition extends RouteDefinitionConsumer {
    * @return The unmarshaller definition
    */
   static UnmarshallerDefinition forDataFormat(final DataFormatDefinition dataFormatDefinition) {
-    return routeBuilder -> routeBuilder.unmarshal(dataFormatDefinition);
+    return routeBuilder -> routeBuilder
+            .choice()
+            .when(exchange -> Boolean.parseBoolean(exchange.getProperty(TEST_MODE_HEADER, String.class)))
+            .log("Skip unmarshal in test mode")
+            .otherwise()
+            .unmarshal(dataFormatDefinition)
+            .endChoice();
   }
 
   /**
@@ -37,7 +49,18 @@ public interface UnmarshallerDefinition extends RouteDefinitionConsumer {
    * @return The unmarshaller definition
    */
   static UnmarshallerDefinition forClause(
-      final Consumer<DataFormatClause<ProcessorDefinition<RouteDefinition>>> consumer) {
-    return routeBuilder -> consumer.accept(routeBuilder.unmarshal());
+          final Consumer<DataFormatClause<?>> consumer) {
+    return routeBuilder -> {
+      var choiceRoute = routeBuilder
+              .choice()
+              .when(exchange -> Boolean.parseBoolean(exchange.getProperty(TEST_MODE_HEADER, String.class)))
+              .log("Skip unmarshal in test mode")
+              .otherwise();
+
+      consumer.accept(choiceRoute.unmarshal());
+
+      choiceRoute.endChoice();
+    };
   }
+
 }

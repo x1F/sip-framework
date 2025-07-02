@@ -1,9 +1,9 @@
 package de.ikor.sip.foundation.core.declarative.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.apache.camel.component.jackson.JacksonDataFormat;
+import org.apache.camel.model.ChoiceDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.UnmarshalDefinition;
 import org.apache.camel.model.dataformat.JaxbDataFormat;
@@ -32,8 +32,9 @@ class UnmarshallerDefinitionTest {
     // assert
     assertThat(routeDefinition.getOutputs())
         .hasSize(1)
-        .hasExactlyElementsOfTypes(UnmarshalDefinition.class);
-    assertThat(((UnmarshalDefinition) routeDefinition.getOutputs().get(0)).getDataFormatType())
+        .hasExactlyElementsOfTypes(ChoiceDefinition.class);
+    UnmarshalDefinition processorDefinition = (UnmarshalDefinition)((ChoiceDefinition) routeDefinition.getOutputs().get(0)).getOtherwise().getOutputs().get(0);
+    assertThat(processorDefinition.getDataFormatType())
         .isInstanceOf(dataFormatDefinition.getClass());
   }
 
@@ -50,11 +51,9 @@ class UnmarshallerDefinitionTest {
     // assert
     assertThat(routeDefinition.getOutputs())
         .hasSize(1)
-        .hasExactlyElementsOfTypes(UnmarshalDefinition.class);
-    assertThat(
-            ((UnmarshalDefinition) routeDefinition.getOutputs().get(0))
-                .getDataFormatType()
-                .getDataFormat())
+        .hasExactlyElementsOfTypes(ChoiceDefinition.class);
+    UnmarshalDefinition processorDefinition = (UnmarshalDefinition)((ChoiceDefinition) routeDefinition.getOutputs().get(0)).getOtherwise().getOutputs().get(0);
+    assertThat(processorDefinition.getDataFormatType().getDataFormat())
         .isInstanceOf(jacksonDataFormat.getClass());
   }
 }
