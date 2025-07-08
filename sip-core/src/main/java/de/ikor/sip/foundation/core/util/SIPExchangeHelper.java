@@ -36,6 +36,30 @@ public class SIPExchangeHelper extends DefaultExchangeHolder {
     return filteredHeaders;
   }
 
+  public static Map<String, Object> filterNonSerializableProperties(Exchange exchange) {
+    Map<String, Object> filteredProperties = new HashMap<>();
+    exchange
+            .getProperties()
+            .forEach(
+                    (k, v) -> {
+                      Object value = getValidHeaderValue(k, v, true);
+                      if (value != null) {
+                        filteredProperties.put(k, reassignNonSerializableValue(k, value));
+                      }
+                    });
+    exchange
+            .getExchangeExtension()
+            .getInternalProperties()
+            .forEach(
+                    (k, v) -> {
+                      Object value = getValidHeaderValue(k, v, true);
+                      if (value != null) {
+                        filteredProperties.put(k, reassignNonSerializableValue(k, value));
+                      }
+                    });
+    return filteredProperties;
+  }
+
   public static Object reassignNonSerializableValue(String headerName, Object value) {
     ObjectMapper objectMapper = new ObjectMapper();
     try {
