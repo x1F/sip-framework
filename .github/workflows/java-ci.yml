@@ -41,8 +41,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn ${MAVEN_ARGS} verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=IKOR-GmbH_sip-framework -Psip-developer,package-deployment
-
+        run: mvn ${MAVEN_ARGS} verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=IKOR-GmbH_sip-framework -Dsonar.organization=ikor-gmbh -Psip-developer,package-deployment
+    
   build-from-fork:
     if: ${{ github.event.pull_request.head.repo.full_name != null && github.event.pull_request.head.repo.full_name != github.repository }}
     runs-on: ubuntu-latest
