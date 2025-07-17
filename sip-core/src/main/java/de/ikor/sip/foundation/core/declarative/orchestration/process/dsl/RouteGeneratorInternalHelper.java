@@ -76,4 +76,9 @@ public class RouteGeneratorInternalHelper {
       CallForLoopStatement element) {
     return element.getLoopProcess();
   }
+
+  public static List<CallSplitStatement.ProcessBranchStatements> getSplitProcess(
+          CallSplitStatement element) {
+    return element.getSplitProcess();
+  }
 }

@@ -107,6 +107,28 @@ final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBa
     }
   }
 
+  <T extends ProcessorDefinition<T>> void generateRouteWithExpression(final T routeDefinition) {
+    for (final var consumer : getHandledConsumers()) {
+      routeDefinition
+              .transform()
+              .method(
+                      CompositeProcessOrchestrationHandlers.handleRequestToConsumerWithExpression(
+                              consumer, RouteGeneratorInternalHelper.getRequestPreparation(definitionElement)))
+              .to(getEndpointForConsumer(consumer))
+
+              // store / aggregate the response and place it on the body
+
+              .transform()
+              .method(
+                      CompositeProcessOrchestrationHandlers.handleResponseFromConsumer(
+                              consumer,
+                              RouteGeneratorInternalHelper.getStepResultCloner(definitionElement),
+                              RouteGeneratorInternalHelper.getResponseConsumer(definitionElement)));
+
+      overallUnhandledConsumers.remove(consumer);
+    }
+  }
+
   private EndpointProducerBuilder getEndpointForConsumer(
       final IntegrationScenarioDefinition consumer) {
     return Objects.requireNonNull(getOrchestrationInfo().getConsumerEndpoints().get(consumer));

@@ -77,6 +77,10 @@ public final class RouteGeneratorForProcessOrchestrationDefinition extends Route
         new RouteGeneratorForForLoopProcessConsumer(
                 getOrchestrationInfo(), ele, unhandledProcessConsumers)
             .generateRoute(routeDef);
+      } else if (element instanceof CallSplitStatement<?> ele) {
+        new RouteGeneratorForSplitProcessConsumer(
+                getOrchestrationInfo(), ele, unhandledProcessConsumers)
+                .generateRoute(routeDef);
       }
     }
 
