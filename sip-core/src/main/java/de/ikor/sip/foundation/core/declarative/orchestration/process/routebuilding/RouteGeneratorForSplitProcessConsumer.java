@@ -50,7 +50,9 @@ final class RouteGeneratorForSplitProcessConsumer extends RouteGeneratorProcessB
     }
     splitProcess.forEach(
         branch -> {
-          SplitDefinition splitDef = routeDefinition.split(new SplitExpression(Optional.of(branch.expression())));
+          SplitDefinition splitDef =
+                  routeDefinition.split(new SplitExpression(Optional.of(branch.expression())),
+                          (oldExchange, newExchange) -> newExchange);
           if (splitStatement.isParallel()) {
             splitDef.parallelProcessing().synchronous();
           }
