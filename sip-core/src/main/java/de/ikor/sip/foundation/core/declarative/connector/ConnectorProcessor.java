@@ -1,20 +1,14 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.RequestProcessor;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ResponseProcessor;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.apache.camel.model.RouteDefinition;
 
-/**
- * Interface that marks {@link Processor}s that can be placed within the integration flow of a
- * connector.
- *
- * @see RequestProcessor
- * @see ResponseProcessor
- */
-public interface ConnectorProcessor extends Processor {
-  default String getProcessorName() {
-    return getClass().getSimpleName();
+public interface ConnectorProcessor extends ConnectorExtension, Processor {
+
+  @Override
+  default void accept(RouteDefinition routeDefinition) {
+    routeDefinition.process(this);
   }
 
   /**

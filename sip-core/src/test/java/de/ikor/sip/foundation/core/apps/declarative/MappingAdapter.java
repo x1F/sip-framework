@@ -9,18 +9,13 @@ import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.FrontEndSyste
 import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.FrontEndTypes.FrontEndSystemRequestMapper;
 import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.FrontEndTypes.UserRequest;
 import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.FrontEndTypes.UserResponse;
-import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
-import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
-import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
-import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
-import de.ikor.sip.foundation.core.declarative.annonation.UseResponseModelMapper;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ResponseProcessor;
+import de.ikor.sip.foundation.core.declarative.annonation.*;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.ResponseProcessor;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
-import java.util.Optional;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.DataFormatClause;
 import org.apache.camel.builder.EndpointProducerBuilder;
@@ -30,6 +25,8 @@ import org.apache.camel.model.rest.RestDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
+
+import java.util.Optional;
 
 @SIPIntegrationAdapter
 @ComponentScan(excludeFilters = @Filter(SIPIntegrationAdapter.class))

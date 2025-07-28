@@ -2,14 +2,15 @@ package de.ikor.sip.foundation.core.declarative.orchestration.connector;
 
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.model.RouteDefinition;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Standard implementation for orchestrating connectors.
@@ -19,7 +20,7 @@ import org.apache.camel.model.RouteDefinition;
  * RouteDefinition} handles.
  *
  * @see ConnectorOrchestrationInfo
- * @deprecated Use {@link ConnectorProcessorChainOrchestrator} based approach instead
+ * @deprecated Use {@link ConnectorExtensionChainOrchestrator} based approach instead
  */
 @Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -32,7 +33,7 @@ public class ConnectorOrchestrator implements Orchestrator<ConnectorOrchestratio
   private Consumer<RouteDefinition> responseRouteTransformer = this::defaultResponseTransformer;
 
   /**
-   * @deprecated Use {@link ConnectorProcessorChainOrchestrator} based approach instead
+   * @deprecated Use {@link ConnectorExtensionChainOrchestrator} based approach instead
    */
   public static ConnectorOrchestrator forConnector(final ConnectorDefinition relatedConnector) {
     return new ConnectorOrchestrator(() -> relatedConnector);

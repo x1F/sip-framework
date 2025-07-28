@@ -2,8 +2,11 @@ package de.ikor.sip.foundation.core.apps.declarative;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
 import de.ikor.sip.foundation.core.apps.declarative.connectorextensions.RestStringAttachmentMapper;
-import de.ikor.sip.foundation.core.declarative.annonation.*;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.*;
+import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
+import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
+import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
+import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.*;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
@@ -48,7 +51,7 @@ public class ConnectorProcessorExtensionsAdapter {
     }
 
     @RequestProcessor
-    @ExecuteAfter(processorName = "attachFirstString")
+    @ExecuteAfter(extensionName = "attachFirstString")
     public String attachSecondString(String body) {
       return body + " second";
     }
@@ -58,7 +61,7 @@ public class ConnectorProcessorExtensionsAdapter {
     public ConnectorProcessor attachProcessor() {
       return new ConnectorProcessor() {
         @Override
-        public String getProcessorName() {
+        public String getExtensionName() {
           return "method-processor";
         }
 
@@ -88,19 +91,19 @@ public class ConnectorProcessorExtensionsAdapter {
     }
 
     @ResponseProcessor
-    @ExecuteBefore(processorName = "attachThirdString")
+    @ExecuteBefore(extensionName = "attachThirdString")
     public String attachSecondString(String body) {
       return body + " second";
     }
 
     @ResponseProcessor
-    @ExecuteAfter(processorName = "attachSecondString")
+    @ExecuteAfter(extensionName = "attachSecondString")
     public String attachThirdString(String body) {
       return body + " third";
     }
 
     @ResponseProcessor
-    @ExecuteAfter(processorName = "attachThirdString")
+    @ExecuteAfter(extensionName = "attachThirdString")
     public String attachFourthString(String body) {
       return body + " fourth";
     }

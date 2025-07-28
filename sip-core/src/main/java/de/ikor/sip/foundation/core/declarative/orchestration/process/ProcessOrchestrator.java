@@ -4,14 +4,15 @@ import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding.RouteGeneratorForProcessOrchestrationDefinition;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * Orchestrator meant to be attached to {@link
@@ -36,6 +37,7 @@ public class ProcessOrchestrator implements Orchestrator<CompositeProcessOrchest
     this.orchestrationInfoConsumer = orchestrationInfoConsumer;
     this.dslDefinition = Optional.of(dslDefinition);
   }
+
   /**
    * Creates a new orchestrator specified via orchestration-DSL
    *

@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.model;
 
+import de.ikor.sip.foundation.core.declarative.connector.ConnectorExtension;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
@@ -58,7 +59,7 @@ public interface ModelMapper<S, T> extends ConnectorProcessor {
   }
 
   /**
-   * Maps from source to target model using the {@link ConnectorProcessor} API.
+   * Maps from source to target model using the {@link ConnectorExtension} API.
    *
    * <p>The default implementation uses {@link #mapToTargetModel(Object, Exchange)} to map the
    * current message body to the target type.

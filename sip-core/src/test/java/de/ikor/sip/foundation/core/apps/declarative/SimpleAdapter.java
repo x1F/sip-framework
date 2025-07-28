@@ -1,11 +1,7 @@
 package de.ikor.sip.foundation.core.apps.declarative;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
-import de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup;
-import de.ikor.sip.foundation.core.declarative.annonation.Disabled;
-import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
-import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
-import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
+import de.ikor.sip.foundation.core.declarative.annonation.*;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase;
@@ -79,6 +75,7 @@ public class SimpleAdapter {
       return StaticEndpointBuilders.log("message");
     }
   }
+
   // <---- AppendStaticMessage SCENARIO
 
   // ----> RestDSL SCENARIO

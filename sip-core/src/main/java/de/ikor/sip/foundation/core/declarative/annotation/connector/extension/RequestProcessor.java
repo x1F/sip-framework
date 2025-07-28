@@ -1,6 +1,7 @@
-package de.ikor.sip.foundation.core.declarative.annotation.connector.processor;
+package de.ikor.sip.foundation.core.declarative.annotation.connector.extension;
 
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.connector.ConnectorExtension;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -42,7 +43,7 @@ import java.lang.annotation.Target;
  * <p>For ordering of multiple processors, {@link ExecutionOrder} can be used for absolute ordering,
  * while {@link ExecuteAfter} or {@link ExecuteBefore} can be used for relative ordering.
  *
- * @see de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor
+ * @see ConnectorExtension
  * @see ResponseProcessor
  * @see ExecuteAfter
  * @see ExecuteBefore

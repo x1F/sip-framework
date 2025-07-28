@@ -1,4 +1,6 @@
-package de.ikor.sip.foundation.core.declarative.annotation.connector.processor;
+package de.ikor.sip.foundation.core.declarative.annotation.connector.extension;
+
+import de.ikor.sip.foundation.core.declarative.connector.ConnectorExtension;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,8 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation used for absolute ordering of {@link
- * de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor}s.
+ * Annotation used for absolute ordering of {@link ConnectorExtension}s.
  *
  * <p>Can be used on types or methods annotated via {@link RequestProcessor} or {@link
  * ResponseProcessor}.
