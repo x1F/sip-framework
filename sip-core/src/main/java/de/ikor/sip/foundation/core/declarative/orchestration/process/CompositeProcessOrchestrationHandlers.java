@@ -151,7 +151,7 @@ public class CompositeProcessOrchestrationHandlers {
               requestPreparation.orElseGet(ConsumerWithExpressionRequestHandler::defaultRequestExtractor);
     }
 
-    private static synchronized CompositeProcessStepRequestExtractor defaultRequestExtractor() {
+    private static CompositeProcessStepRequestExtractor defaultRequestExtractor() {
       return context -> context.getExchange().getMessage().getBody();
     }
 
