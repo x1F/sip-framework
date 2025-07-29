@@ -44,7 +44,9 @@ public class DeclarativeReflectionUtils {
 
   @SneakyThrows
   public static <T> T createInstance(Class<T> clazz, Object... parameters)
-      throws NoSuchMethodException, InvocationTargetException, InstantiationException,
+      throws NoSuchMethodException,
+          InvocationTargetException,
+          InstantiationException,
           IllegalAccessException {
     Class<?>[] params = Arrays.stream(parameters).map(Object::getClass).toArray(Class[]::new);
     return clazz.getConstructor(params).newInstance(parameters);

@@ -79,6 +79,7 @@ public class SimpleAdapter {
       return StaticEndpointBuilders.log("message");
     }
   }
+
   // <---- AppendStaticMessage SCENARIO
 
   // ----> RestDSL SCENARIO

@@ -84,6 +84,7 @@ public class AdapterRouteEndpoint {
         .getRoutes()
         .forEach(route -> RouteOperation.RESUME.execute(routeController, route.getRouteId()));
   }
+
   /** Suspends all routes */
   @PostMapping("/suspend")
   @Operation(summary = "Suspend all routes", description = "Suspends all routes in Camel Context")
