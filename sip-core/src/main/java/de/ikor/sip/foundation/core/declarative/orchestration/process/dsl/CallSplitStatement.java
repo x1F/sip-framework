@@ -2,12 +2,11 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepSplitExpression;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Delegate;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * DSL class used for construction of for split statements and ending them
@@ -34,7 +33,8 @@ public final class CallSplitStatement<R> extends ProcessDslBase<CallSplitStateme
     return new ProcessBranch<>(branch.statements, self(), processDefinition);
   }
 
-  ProcessBranch<CallSplitStatement<R>> parallelSplit(final CompositeProcessStepSplitExpression expression) {
+  ProcessBranch<CallSplitStatement<R>> parallelSplit(
+      final CompositeProcessStepSplitExpression expression) {
     isParallel = true;
     final var branch = new ProcessBranchStatements(expression, new ArrayList<>());
     splitProcess.add(branch);

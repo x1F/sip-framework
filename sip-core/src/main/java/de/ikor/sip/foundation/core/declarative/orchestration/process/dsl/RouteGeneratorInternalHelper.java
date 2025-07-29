@@ -78,7 +78,7 @@ public class RouteGeneratorInternalHelper {
   }
 
   public static List<CallSplitStatement.ProcessBranchStatements> getSplitProcess(
-          CallSplitStatement element) {
+      CallSplitStatement element) {
     return element.getSplitProcess();
   }
 }

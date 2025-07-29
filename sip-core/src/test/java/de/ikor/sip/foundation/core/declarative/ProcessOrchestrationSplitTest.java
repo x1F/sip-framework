@@ -1,5 +1,8 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import de.ikor.sip.foundation.core.apps.declarative.ProcessOrchestrationSplitAdapter;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
@@ -14,9 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-
-import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @CamelSpringBootTest
 @SpringBootTest(classes = {ProcessOrchestrationSplitAdapter.class})
@@ -52,7 +52,10 @@ class ProcessOrchestrationSplitTest {
     // act
     Exchange exchangeFirstConnector =
         template.withBody("").to(direct("CallSplitInboundConnector")).send();
-    ProcessOrchestrationSplitAdapter.CallSplitResponse response = exchangeFirstConnector.getMessage().getBody(ProcessOrchestrationSplitAdapter.CallSplitResponse.class);
+    ProcessOrchestrationSplitAdapter.CallSplitResponse response =
+        exchangeFirstConnector
+            .getMessage()
+            .getBody(ProcessOrchestrationSplitAdapter.CallSplitResponse.class);
 
     // assert
     assertThat(exchangeFirstConnector.getException()).isNull();

@@ -5,6 +5,5 @@ import java.util.List;
 @FunctionalInterface
 public interface CompositeProcessStepSplitExpression {
 
-
   List<?> determinePayload(CompositeProcessOrchestrationContext context);
 }

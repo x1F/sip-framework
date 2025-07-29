@@ -93,18 +93,18 @@ public class ProcessOrchestrationDefinition
    */
   public CallSplitStatement<ProcessOrchestrationDefinition>.ProcessBranch<
           CallSplitStatement<ProcessOrchestrationDefinition>>
-  split(CompositeProcessStepSplitExpression expression) {
+      split(CompositeProcessStepSplitExpression expression) {
     final CallSplitStatement<ProcessOrchestrationDefinition> def =
-            new CallSplitStatement<>(self(), getCompositeProcess());
+        new CallSplitStatement<>(self(), getCompositeProcess());
     steps.add(def);
     return def.split(expression);
   }
 
   public CallSplitStatement<ProcessOrchestrationDefinition>.ProcessBranch<
           CallSplitStatement<ProcessOrchestrationDefinition>>
-  parallelSplit(CompositeProcessStepSplitExpression expression) {
+      parallelSplit(CompositeProcessStepSplitExpression expression) {
     final CallSplitStatement<ProcessOrchestrationDefinition> def =
-            new CallSplitStatement<>(self(), getCompositeProcess());
+        new CallSplitStatement<>(self(), getCompositeProcess());
     steps.add(def);
     return def.parallelSplit(expression);
   }

@@ -14,15 +14,14 @@ import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositePr
 import de.ikor.sip.foundation.core.declarative.orchestration.process.ProcessOrchestrator;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessBase;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @SIPIntegrationAdapter
 @ComponentScan(excludeFilters = @Filter(SIPIntegrationAdapter.class))
@@ -73,19 +72,22 @@ public class ProcessOrchestrationSplitAdapter {
     public Orchestrator<CompositeProcessOrchestrationInfo> getOrchestrator() {
       return ProcessOrchestrator.forOrchestrationDsl(
           dsl -> {
-            dsl.split(context ->
-                        context.getOriginalRequest(CallSplitRequest.class).names())
+            dsl.split(context -> context.getOriginalRequest(CallSplitRequest.class).names())
                 .callConsumer(InsideSplitScenario.class)
-                .withResponseHandling((latestResponse, context) -> {
-                    var res = context.getProcessResponse();
-                    if(res.isPresent()) {
-                        ((CallSplitResponse) res.get()).updatedNames().add(latestResponse.toString());
-                    } else {
+                .withResponseHandling(
+                    (latestResponse, context) -> {
+                      var res = context.getProcessResponse();
+                      if (res.isPresent()) {
+                        ((CallSplitResponse) res.get())
+                            .updatedNames()
+                            .add(latestResponse.toString());
+                      } else {
                         List<String> processRes = new ArrayList<>();
                         processRes.add(latestResponse.toString());
-                        context.setProcessResponse(new CallSplitResponse(processRes), Optional.empty());
-                    }
-                })
+                        context.setProcessResponse(
+                            new CallSplitResponse(processRes), Optional.empty());
+                      }
+                    })
                 .endSplit()
                 .callConsumer(AfterSplitScenario.class)
                 .withRequestPreparation(
@@ -114,7 +116,7 @@ public class ProcessOrchestrationSplitAdapter {
 
     @RequestProcessor
     public CallSplitRequest handleRequest() {
-        return new CallSplitRequest(List.of("John", "Jane"));
+      return new CallSplitRequest(List.of("John", "Jane"));
     }
   }
 
@@ -135,7 +137,7 @@ public class ProcessOrchestrationSplitAdapter {
 
     @ResponseProcessor
     public void handleResponse(CallSplitResponse response) {
-        response.updatedNames().add("Jon Doe");
+      response.updatedNames().add("Jon Doe");
     }
   }
 
@@ -154,9 +156,9 @@ public class ProcessOrchestrationSplitAdapter {
       return StaticEndpointBuilders.log("InsideSplitOutboundConnector").plain(true);
     }
 
-      @ResponseProcessor
-      public String handleResponse(String response) {
-          return response + " Doe";
-      }
+    @ResponseProcessor
+    public String handleResponse(String response) {
+      return response + " Doe";
+    }
   }
 }

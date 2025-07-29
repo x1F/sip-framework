@@ -39,8 +39,8 @@ public class CompositeProcessOrchestrationHandlers {
   }
 
   public static ConsumerWithExpressionRequestHandler handleRequestToConsumerWithExpression(
-          final IntegrationScenarioDefinition consumerDefinition,
-          final Optional<CompositeProcessStepRequestExtractor> requestPreparation) {
+      final IntegrationScenarioDefinition consumerDefinition,
+      final Optional<CompositeProcessStepRequestExtractor> requestPreparation) {
     return new ConsumerWithExpressionRequestHandler(consumerDefinition, requestPreparation);
   }
 
@@ -57,10 +57,9 @@ public class CompositeProcessOrchestrationHandlers {
   }
 
   public static List<?> handleSplitArray(
-          final Exchange exchange, final Optional<CompositeProcessStepSplitExpression> expression) {
+      final Exchange exchange, final Optional<CompositeProcessStepSplitExpression> expression) {
     return new ArrayHandler(expression).determineList(exchange);
   }
-
 
   public static ConsumerResponseHandler handleResponseFromConsumer(
       final IntegrationScenarioDefinition consumer,
@@ -144,11 +143,12 @@ public class CompositeProcessOrchestrationHandlers {
     private final CompositeProcessStepRequestExtractor requestPreparation;
 
     private ConsumerWithExpressionRequestHandler(
-            final IntegrationScenarioDefinition consumerDefinition,
-            final Optional<CompositeProcessStepRequestExtractor> requestPreparation) {
+        final IntegrationScenarioDefinition consumerDefinition,
+        final Optional<CompositeProcessStepRequestExtractor> requestPreparation) {
       this.consumerDefinition = consumerDefinition;
       this.requestPreparation =
-              requestPreparation.orElseGet(ConsumerWithExpressionRequestHandler::defaultRequestExtractor);
+          requestPreparation.orElseGet(
+              ConsumerWithExpressionRequestHandler::defaultRequestExtractor);
     }
 
     private static CompositeProcessStepRequestExtractor defaultRequestExtractor() {
@@ -207,7 +207,6 @@ public class CompositeProcessOrchestrationHandlers {
       return new ArrayList<>();
     }
   }
-
 
   @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
   static class ConsumerResponseHandler {

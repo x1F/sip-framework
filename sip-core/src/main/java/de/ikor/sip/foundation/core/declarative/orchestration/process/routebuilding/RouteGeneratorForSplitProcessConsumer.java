@@ -1,22 +1,21 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding;
 
+import static de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers.handleSplitArray;
+
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepSplitExpression;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.*;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.SplitDefinition;
 import org.apache.camel.support.ExpressionAdapter;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import static de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers.handleSplitArray;
 
 /**
  * Class for generating Camel routes for 'split' process consumer calls from a DSL
@@ -51,8 +50,9 @@ final class RouteGeneratorForSplitProcessConsumer extends RouteGeneratorProcessB
     splitProcess.forEach(
         branch -> {
           SplitDefinition splitDef =
-                  routeDefinition.split(new SplitExpression(Optional.of(branch.expression())),
-                          (oldExchange, newExchange) -> newExchange);
+              routeDefinition.split(
+                  new SplitExpression(Optional.of(branch.expression())),
+                  (oldExchange, newExchange) -> newExchange);
           if (splitStatement.isParallel()) {
             splitDef.parallelProcessing().synchronous();
           }

@@ -80,7 +80,7 @@ public final class RouteGeneratorForProcessOrchestrationDefinition extends Route
       } else if (element instanceof CallSplitStatement<?> ele) {
         new RouteGeneratorForSplitProcessConsumer(
                 getOrchestrationInfo(), ele, unhandledProcessConsumers)
-                .generateRoute(routeDef);
+            .generateRoute(routeDef);
       }
     }
 
