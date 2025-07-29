@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.annotation.connector.extension;
 
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorExtension;
-import de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -21,7 +20,7 @@ public @interface ExecuteAfter {
   /**
    * @return Reference to connector after which the annotated connector should run
    */
-  Class<? extends ConnectorExtension> value() default ConnectorProcessor.None.class;
+  Class<? extends ConnectorExtension> value() default ConnectorExtension.None.class;
 
   /**
    * @return Name of the connector name after which the annotated connector should run

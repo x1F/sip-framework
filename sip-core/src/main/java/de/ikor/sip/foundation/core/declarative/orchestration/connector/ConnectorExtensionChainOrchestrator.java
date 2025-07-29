@@ -90,12 +90,12 @@ public final class ConnectorExtensionChainOrchestrator
   }
 
   private static void logListOrder(
-      String prefix, List<ConnectorExtension> orderedRequestProcessors) {
-    if (!orderedRequestProcessors.isEmpty()) {
+      String prefix, List<ConnectorExtension> orderedRequestExtensions) {
+    if (!orderedRequestExtensions.isEmpty()) {
       log.info(
           "{} {}",
           prefix,
-          orderedRequestProcessors.stream()
+          orderedRequestExtensions.stream()
               .map(ConnectorExtension::getExtensionName)
               .collect(Collectors.joining(" => ")));
     }
@@ -207,7 +207,7 @@ public final class ConnectorExtensionChainOrchestrator
       }
     }
     throw SIPFrameworkInitializationException.init(
-        "Failed to find correct relative placement position for connector processor '%s'",
+        "Failed to find correct relative placement position for connector extension '%s'",
         entry.getExtension().getExtensionName());
   }
 
@@ -399,11 +399,11 @@ public final class ConnectorExtensionChainOrchestrator
       ConnectorDefinition connector,
       Method method,
       Map<String, ConnectorExtensionRegistryEntry> registry) {
-    final var processor =
+    final var extension =
         ConnectorExtension.class.isAssignableFrom(method.getReturnType())
             ? (ConnectorExtension) method.invoke(connector, null)
             : new MethodBasedConnectorExtension(connector, method);
-    final var registryEntry = new ConnectorExtensionRegistryEntry(processor, method, registry);
+    final var registryEntry = new ConnectorExtensionRegistryEntry(extension, method, registry);
     storeInRegistry(registryEntry, registry);
   }
 
@@ -426,8 +426,8 @@ public final class ConnectorExtensionChainOrchestrator
       final Class<T> annotationClass,
       final Function<T, Class<? extends ConnectorDefinition>> connectorClassFetcher,
       final Function<T, String> connectorIdFetcher) {
-    if (bean instanceof ConnectorExtension processor) {
-      final var annotation = processor.getClass().getAnnotation(annotationClass);
+    if (bean instanceof ConnectorExtension extension) {
+      final var annotation = extension.getClass().getAnnotation(annotationClass);
       final var connectorClass = connectorClassFetcher.apply(annotation);
       final var connectorId = connectorIdFetcher.apply(annotation);
       if (!ConnectorDefinition.None.class.equals(connectorClass)) {

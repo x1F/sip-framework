@@ -19,11 +19,14 @@ public interface ConnectorExtension extends Consumer<RouteDefinition> {
     return getClass().getSimpleName();
   }
 
-  /*  */
   /**
    * Empty {@link ConnectorExtension} implementation that is used for default assignments in
    * annotations
    */
-  /*
-  final class None implements ConnectorExtension {}*/
+  final class None implements ConnectorExtension {
+    @Override
+    public void accept(RouteDefinition routeDefinition) {
+      throw new UnsupportedOperationException("Empty connector extension may not be registered");
+    }
+  }
 }

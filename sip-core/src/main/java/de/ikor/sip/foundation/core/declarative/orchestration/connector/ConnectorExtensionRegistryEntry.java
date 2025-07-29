@@ -4,7 +4,6 @@ import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.Ex
 import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.ExecuteBefore;
 import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.ExecutionOrder;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorExtension;
-import de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import de.ikor.sip.foundation.core.util.StreamHelper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -82,7 +81,7 @@ class ConnectorExtensionRegistryEntry {
       final Class<? extends ConnectorExtension> relativeExtensionClass =
           extensionClassFetcher.apply(annotation.orElseThrow());
       final String relativeExtensionName = extensionNameFetcher.apply(annotation.orElseThrow());
-      if (!ConnectorProcessor.None.class.equals(relativeExtensionClass)) {
+      if (!ConnectorExtension.None.class.equals(relativeExtensionClass)) {
         return Optional.of(findUniqueConnectorForClass(relativeExtensionClass));
       }
       if (Strings.isNotBlank(relativeExtensionName)) {
