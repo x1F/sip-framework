@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.proxies;
 
 import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
+import jakarta.annotation.PostConstruct;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,12 @@ import org.springframework.stereotype.Component;
 public class AddProxyInterceptStrategy implements InterceptStrategy {
   private final ProcessorProxyRegistry proxyRegistry;
   private final List<ProxyExtension> extensions;
+  private final CamelContext camelContext;
+
+  @PostConstruct
+  private void setup() {
+    camelContext.getCamelContextExtension().addInterceptStrategy(this);
+  }
 
   @Override
   public Processor wrapProcessorInInterceptors(

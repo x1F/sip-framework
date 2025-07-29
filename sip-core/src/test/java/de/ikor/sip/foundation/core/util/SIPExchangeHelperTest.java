@@ -1,8 +1,7 @@
 package de.ikor.sip.foundation.core.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,26 +18,27 @@ class SIPExchangeHelperTest {
   private static final String BODY = "body";
 
   private Exchange exchange;
-  private Message message;
-  private Map<String, Object> headers;
+  private Map<String, Object> stringObjectMap;
   private CamelContext camelContext;
 
   @BeforeEach
   void setup() {
     camelContext = mock(CamelContext.class);
-    exchange = mock(Exchange.class);
-    headers = new HashMap<>();
-    message = mock(Message.class);
+    exchange = mock(Exchange.class, RETURNS_DEEP_STUBS);
+    stringObjectMap = new HashMap<>();
+    Message message = mock(Message.class);
     when(exchange.getMessage()).thenReturn(message);
     when(message.getBody()).thenReturn(BODY);
-    when(message.getHeaders()).thenReturn(headers);
+    when(message.getHeaders()).thenReturn(stringObjectMap);
+    when(exchange.getProperties()).thenReturn(stringObjectMap);
+    when(exchange.getExchangeExtension().getInternalProperties()).thenReturn(stringObjectMap);
   }
 
   @Test
   void GIVEN_differentHeaderValues_WHEN_filterNonSerializableHeaders_THEN_getOnlyFilteredHeaders() {
 
-    headers.put("empty", null);
-    headers.put("nonempty", "sth");
+    stringObjectMap.put("empty", null);
+    stringObjectMap.put("nonempty", "sth");
 
     Map<String, Object> result = SIPExchangeHelper.filterNonSerializableHeaders(exchange);
 
@@ -59,5 +59,30 @@ class SIPExchangeHelperTest {
 
     // assert
     assertThat(actual).isEqualTo(SERIALIZABLE_DEFAULT_VALUE);
+  }
+
+  @Test
+  void
+      GIVEN_differentPropertyValues_WHEN_filterNonSerializableProperties_THEN_getOnlyFilteredProperties() {
+    stringObjectMap.put("empty", null);
+    stringObjectMap.put("nonempty", "sth");
+
+    Map<String, Object> result = SIPExchangeHelper.filterNonSerializableProperties(exchange);
+
+    assertThat(result.get("empty")).isNull();
+    assertThat(result.get("nonempty")).isNotNull();
+  }
+
+  @Test
+  void
+      GIVEN_differentInternalPropertyValues_WHEN_filterNonSerializableInternalProperties_THEN_getOnlyFilteredInternalProperties() {
+    stringObjectMap.put("empty", null);
+    stringObjectMap.put("nonempty", "sth");
+
+    Map<String, Object> result =
+        SIPExchangeHelper.filterNonSerializableInternalProperties(exchange);
+
+    assertThat(result.get("empty")).isNull();
+    assertThat(result.get("nonempty")).isNotNull();
   }
 }
