@@ -7,7 +7,6 @@ import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.NamedNode;
 import org.apache.camel.Processor;
@@ -30,7 +29,8 @@ class AddProxyInterceptStrategyTest {
 
   @BeforeEach
   public void setup() {
-    addProxyInterceptStrategy = new AddProxyInterceptStrategy(proxyRegistry, extensions, camelContext);
+    addProxyInterceptStrategy =
+        new AddProxyInterceptStrategy(proxyRegistry, extensions, camelContext);
     when(definition.getId()).thenReturn(PROCESSOR_ID);
   }
 

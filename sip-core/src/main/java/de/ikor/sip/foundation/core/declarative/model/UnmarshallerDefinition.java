@@ -1,11 +1,11 @@
 package de.ikor.sip.foundation.core.declarative.model;
 
+import static de.ikor.sip.foundation.core.proxies.ProcessorProxy.TEST_MODE_HEADER;
+
 import java.util.function.Consumer;
 import org.apache.camel.builder.DataFormatClause;
 import org.apache.camel.model.DataFormatDefinition;
 import org.apache.camel.spi.DataFormat;
-
-import static de.ikor.sip.foundation.core.proxies.ProcessorProxy.TEST_MODE_HEADER;
 
 /** Class providing various way to define an unmarshaller */
 public interface UnmarshallerDefinition extends RouteDefinitionConsumer {
@@ -17,9 +17,12 @@ public interface UnmarshallerDefinition extends RouteDefinitionConsumer {
    * @return The unmarshaller definition
    */
   static UnmarshallerDefinition forDataFormat(final DataFormat dataFormat) {
-    return routeBuilder -> routeBuilder
+    return routeBuilder ->
+        routeBuilder
             .choice()
-            .when(exchange -> Boolean.parseBoolean(exchange.getProperty(TEST_MODE_HEADER, String.class)))
+            .when(
+                exchange ->
+                    Boolean.parseBoolean(exchange.getProperty(TEST_MODE_HEADER, String.class)))
             .log("Skip unmarshal in test mode")
             .otherwise()
             .unmarshal(dataFormat)
@@ -33,9 +36,12 @@ public interface UnmarshallerDefinition extends RouteDefinitionConsumer {
    * @return The unmarshaller definition
    */
   static UnmarshallerDefinition forDataFormat(final DataFormatDefinition dataFormatDefinition) {
-    return routeBuilder -> routeBuilder
+    return routeBuilder ->
+        routeBuilder
             .choice()
-            .when(exchange -> Boolean.parseBoolean(exchange.getProperty(TEST_MODE_HEADER, String.class)))
+            .when(
+                exchange ->
+                    Boolean.parseBoolean(exchange.getProperty(TEST_MODE_HEADER, String.class)))
             .log("Skip unmarshal in test mode")
             .otherwise()
             .unmarshal(dataFormatDefinition)
@@ -48,12 +54,14 @@ public interface UnmarshallerDefinition extends RouteDefinitionConsumer {
    * @param consumer Consumer for fluent API
    * @return The unmarshaller definition
    */
-  static UnmarshallerDefinition forClause(
-          final Consumer<DataFormatClause<?>> consumer) {
+  static UnmarshallerDefinition forClause(final Consumer<DataFormatClause<?>> consumer) {
     return routeBuilder -> {
-      var choiceRoute = routeBuilder
+      var choiceRoute =
+          routeBuilder
               .choice()
-              .when(exchange -> Boolean.parseBoolean(exchange.getProperty(TEST_MODE_HEADER, String.class)))
+              .when(
+                  exchange ->
+                      Boolean.parseBoolean(exchange.getProperty(TEST_MODE_HEADER, String.class)))
               .log("Skip unmarshal in test mode")
               .otherwise();
 
@@ -62,5 +70,4 @@ public interface UnmarshallerDefinition extends RouteDefinitionConsumer {
       choiceRoute.endChoice();
     };
   }
-
 }

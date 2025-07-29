@@ -1,8 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.configuration;
 
-import java.util.List;
-
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.builder.RouteConfigurationBuilder;
 import org.apache.camel.model.OnExceptionDefinition;
@@ -25,9 +24,10 @@ public class DeclarativeConfigurationBuilder extends RouteConfigurationBuilder {
       var config = routeConfiguration(ClassUtils.getShortName(def.getClass()));
       var processDef = def.define(config);
       if (processDef instanceof OnExceptionDefinition onExceptionDefinition) {
-        registry.registerClassForOnException(onExceptionDefinition, ClassUtils.getUserClass(def.getClass()).getName());
-        onExceptionDefinition.setProperty(
-            ERROR_HANDLER, simple(ClassUtils.getUserClass(def.getClass()).getName()))
+        registry.registerClassForOnException(
+            onExceptionDefinition, ClassUtils.getUserClass(def.getClass()).getName());
+        onExceptionDefinition
+            .setProperty(ERROR_HANDLER, simple(ClassUtils.getUserClass(def.getClass()).getName()))
             .id(SIP_INTERNAL_SET_PROPERTY);
       }
     }

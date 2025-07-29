@@ -183,7 +183,9 @@ public class DeclarativeHelper {
    * @param routeDefinition {@link RouteDefinition}
    */
   public static void appendOnException(
-          ConnectorDefinition connectorDefinition, RouteDefinition routeDefinition, DeclarationsRegistry declarationsRegistry) {
+      ConnectorDefinition connectorDefinition,
+      RouteDefinition routeDefinition,
+      DeclarationsRegistry declarationsRegistry) {
     if (!connectorDefinition.getOnExceptionHandler().isEmpty()) {
       for (Method method : connectorDefinition.getOnExceptionHandler()) {
         var exceptions = method.getAnnotation(ConnectorExceptionHandler.class).value();
@@ -191,11 +193,12 @@ public class DeclarativeHelper {
         try {
           var result = method.invoke(connectorDefinition);
           if (result instanceof ConnectorOnExceptionDefinition configurationDefinition) {
-            declarationsRegistry.registerClassForOnException(onExceptionDefinition, connectorDefinition.getClass().getName());
+            declarationsRegistry.registerClassForOnException(
+                onExceptionDefinition, connectorDefinition.getClass().getName());
             configurationDefinition.define(onExceptionDefinition);
             onExceptionDefinition
-                    .setProperty(ERROR_HANDLER, simple(connectorDefinition.getClass().getName()))
-                    .id(SIP_INTERNAL_SET_PROPERTY);
+                .setProperty(ERROR_HANDLER, simple(connectorDefinition.getClass().getName()))
+                .id(SIP_INTERNAL_SET_PROPERTY);
             onExceptionDefinition.end();
           }
         } catch (Exception e) {

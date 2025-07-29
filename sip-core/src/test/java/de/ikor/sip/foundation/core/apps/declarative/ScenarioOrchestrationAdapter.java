@@ -263,6 +263,7 @@ public class ScenarioOrchestrationAdapter {
                   routeDefinition.setBody().constant(new ScenarioResponse("testThree", 3)));
     }
   }
+
   // <-- ORCHESTRATED SCENARIO END
 
   // <-- AUTO ORCHESTRATED SCENARIO START

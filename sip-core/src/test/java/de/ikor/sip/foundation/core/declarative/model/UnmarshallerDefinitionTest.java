@@ -33,7 +33,12 @@ class UnmarshallerDefinitionTest {
     assertThat(routeDefinition.getOutputs())
         .hasSize(1)
         .hasExactlyElementsOfTypes(ChoiceDefinition.class);
-    UnmarshalDefinition processorDefinition = (UnmarshalDefinition)((ChoiceDefinition) routeDefinition.getOutputs().get(0)).getOtherwise().getOutputs().get(0);
+    UnmarshalDefinition processorDefinition =
+        (UnmarshalDefinition)
+            ((ChoiceDefinition) routeDefinition.getOutputs().get(0))
+                .getOtherwise()
+                .getOutputs()
+                .get(0);
     assertThat(processorDefinition.getDataFormatType())
         .isInstanceOf(dataFormatDefinition.getClass());
   }
@@ -52,7 +57,12 @@ class UnmarshallerDefinitionTest {
     assertThat(routeDefinition.getOutputs())
         .hasSize(1)
         .hasExactlyElementsOfTypes(ChoiceDefinition.class);
-    UnmarshalDefinition processorDefinition = (UnmarshalDefinition)((ChoiceDefinition) routeDefinition.getOutputs().get(0)).getOtherwise().getOutputs().get(0);
+    UnmarshalDefinition processorDefinition =
+        (UnmarshalDefinition)
+            ((ChoiceDefinition) routeDefinition.getOutputs().get(0))
+                .getOtherwise()
+                .getOutputs()
+                .get(0);
     assertThat(processorDefinition.getDataFormatType().getDataFormat())
         .isInstanceOf(jacksonDataFormat.getClass());
   }

@@ -123,7 +123,7 @@ public class TestCasesConfig {
       String connectorId = routesRegistry.get().getConnectorIdByRouteId(properties.getEndpointId());
       if (connectorId == null) {
         throw SIPFrameworkException.init(
-                "There is no connector for endpoint with id %s", properties.getEndpointId());
+            "There is no connector for endpoint with id %s", properties.getEndpointId());
       }
       properties.setConnectorId(connectorId);
     }
