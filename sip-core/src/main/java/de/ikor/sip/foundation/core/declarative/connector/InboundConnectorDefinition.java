@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
+import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import org.apache.camel.builder.EndpointProducerBuilder;
@@ -12,7 +13,7 @@ import org.apache.camel.model.OptionalIdentifiedDefinition;
  *
  * <p>The inbound connector is responsible for defining the endpoint that initiates the integration
  * call. The endpoint is defined by the {@link #defineInboundEndpoints(OptionalIdentifiedDefinition,
- * String, RoutesRegistry)} method.
+ * String, RoutesRegistry, DeclarationsRegistry)} method.
  *
  * <p>Adapter developers should not implement this interface directly, but rather extend one of the
  * inbound {@link ConnectorBase} subclasses and annotate it with @{@link
@@ -38,7 +39,11 @@ public non-sealed interface InboundConnectorDefinition<T extends OptionalIdentif
    * @param routeRegistry Route registry that must be used to register routeIds for the inbound
    *     endpoint(s).
    */
-  void defineInboundEndpoints(T definition, String targetToBase, RoutesRegistry routeRegistry);
+  void defineInboundEndpoints(
+      T definition,
+      String targetToBase,
+      RoutesRegistry routeRegistry,
+      DeclarationsRegistry declarationsRegistry);
 
   @Override
   default ConnectorType getConnectorType() {

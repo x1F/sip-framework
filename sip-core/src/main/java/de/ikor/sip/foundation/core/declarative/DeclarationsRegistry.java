@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.model.OnExceptionDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   private final List<CompositeProcessDefinition> processes;
   private final List<IntegrationScenarioDefinition> scenarios;
   private final List<ConnectorDefinition> connectors;
+  private final Map<OnExceptionDefinition, String> definitionMap = new HashMap<>();
 
   public DeclarationsRegistry(
       List<ConnectorGroupDefinition> autowiredConnectorGroups,
@@ -298,5 +300,13 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
   private Predicate<Object> isDisabled() {
     return elem -> elem.getClass().isAnnotationPresent(Disabled.class);
+  }
+
+  public void registerClassForOnException(OnExceptionDefinition key, String className) {
+    definitionMap.put(key, className);
+  }
+
+  public String getClassForOnException(OnExceptionDefinition key) {
+    return definitionMap.get(key);
   }
 }

@@ -1,7 +1,10 @@
 package de.ikor.sip.foundation.core.declarative.utils;
 
 import static de.ikor.sip.foundation.core.declarative.configuration.DeclarativeConfigurationBuilder.ERROR_HANDLER;
+import static de.ikor.sip.foundation.core.declarative.configuration.DeclarativeConfigurationBuilder.SIP_INTERNAL_SET_PROPERTY;
+import static org.apache.camel.builder.Builder.simple;
 
+import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.ConnectorExceptionHandler;
@@ -180,7 +183,9 @@ public class DeclarativeHelper {
    * @param routeDefinition {@link RouteDefinition}
    */
   public static void appendOnException(
-      ConnectorDefinition connectorDefinition, RouteDefinition routeDefinition) {
+      ConnectorDefinition connectorDefinition,
+      RouteDefinition routeDefinition,
+      DeclarationsRegistry declarationsRegistry) {
     if (!connectorDefinition.getOnExceptionHandler().isEmpty()) {
       for (Method method : connectorDefinition.getOnExceptionHandler()) {
         var exceptions = method.getAnnotation(ConnectorExceptionHandler.class).value();
@@ -188,10 +193,12 @@ public class DeclarativeHelper {
         try {
           var result = method.invoke(connectorDefinition);
           if (result instanceof ConnectorOnExceptionDefinition configurationDefinition) {
+            declarationsRegistry.registerClassForOnException(
+                onExceptionDefinition, connectorDefinition.getClass().getName());
             configurationDefinition.define(onExceptionDefinition);
-            onExceptionDefinition.process(
-                exchange ->
-                    exchange.setProperty(ERROR_HANDLER, connectorDefinition.getClass().getName()));
+            onExceptionDefinition
+                .setProperty(ERROR_HANDLER, simple(connectorDefinition.getClass().getName()))
+                .id(SIP_INTERNAL_SET_PROPERTY);
             onExceptionDefinition.end();
           }
         } catch (Exception e) {

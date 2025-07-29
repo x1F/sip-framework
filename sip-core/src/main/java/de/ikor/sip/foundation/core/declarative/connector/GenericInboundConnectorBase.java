@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.core.declarative.connector;
 
 import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.*;
 
+import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
@@ -30,7 +31,8 @@ public abstract class GenericInboundConnectorBase extends InboundConnectorBase
   public final void defineInboundEndpoints(
       final RoutesDefinition definition,
       final String targetToBase,
-      final RoutesRegistry routeRegistry) {
+      final RoutesRegistry routeRegistry,
+      final DeclarationsRegistry declarationsRegistry) {
     String routeConfigurationIds =
         joinConfigurationIds(
             this.getId(),
@@ -41,7 +43,7 @@ public abstract class GenericInboundConnectorBase extends InboundConnectorBase
             .from(resolveForbiddenEndpoint(defineInitiatingEndpoint()))
             .routeId(routeRegistry.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, this))
             .routeConfigurationId(routeConfigurationIds);
-    appendOnException(this, routeDef);
+    appendOnException(this, routeDef, declarationsRegistry);
     defineRequestUnmarshalling().ifPresent(unmarshaller -> unmarshaller.accept(routeDef));
     routeDef.to(StaticEndpointBuilders.direct(targetToBase));
     defineResponseMarshalling().ifPresent(marshaller -> marshaller.accept(routeDef));

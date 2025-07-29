@@ -9,26 +9,26 @@ inputs:
 runs:
   using: composite
   steps:
-  - name: Set up JDK 17
-    uses: actions/setup-java@v2
-    with:
-      java-version: '17'
-      distribution: 'adopt'
-      cache: maven
-      gpg-private-key: ${{ inputs.gpg-key }}
-        # env variable for GPG private key passphrase, used with mvn deploy command
-      gpg-passphrase: MAVEN_GPG_PASSPHRASE
-      server-id: maven-central
-      server-username: MAVEN_CENTRAL_USERNAME
-      server-password: MAVEN_CENTRAL_PASSWORD
-  - name: Cache Maven packages
-    uses: actions/cache@v3
-    with:
-      path: ~/.m2
-      key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-      restore-keys: ${{ runner.os }}-m2
-  - name: Configure git identity
-    run:  |
-      git config --global user.email "sip-dev@ikor.de"
-      git config --global user.name "GitHub Actions"
-    shell: bash
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+        gpg-private-key: ${{ inputs.gpg-key }}
+          # env variable for GPG private key passphrase, used with mvn deploy command
+        gpg-passphrase: MAVEN_GPG_PASSPHRASE
+        server-id: maven-central
+        server-username: MAVEN_CENTRAL_USERNAME
+        server-password: MAVEN_CENTRAL_PASSWORD
+    - name: Cache Maven packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+    - name: Configure git identity
+      run:  |
+        git config --global user.email "sip-dev@ikor.de"
+        git config --global user.name "GitHub Actions"
+      shell: bash

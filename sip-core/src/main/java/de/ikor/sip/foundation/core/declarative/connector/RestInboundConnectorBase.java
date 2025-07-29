@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
+import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
@@ -29,7 +30,8 @@ public abstract class RestInboundConnectorBase extends InboundConnectorBase
   public final void defineInboundEndpoints(
       final RestsDefinition definition,
       final String targetToBase,
-      final RoutesRegistry routeRegistry) {
+      final RoutesRegistry routeRegistry,
+      final DeclarationsRegistry declarationsRegistry) {
     var rest = definition.rest();
     configureRest(rest);
     SIPFrameworkInitializationException.throwIf(

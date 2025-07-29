@@ -2,7 +2,7 @@ package de.ikor.sip.foundation.core.actuator.routes;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import de.ikor.sip.foundation.core.actuator.declarative.model.RouteDeclarativeStructureInfo;
+import de.ikor.sip.foundation.core.declarative.dto.RouteDeclarativeStructureInfo;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
