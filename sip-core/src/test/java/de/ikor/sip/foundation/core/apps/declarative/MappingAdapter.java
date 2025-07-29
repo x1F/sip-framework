@@ -16,6 +16,7 @@ import de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBas
 import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
+import java.util.Optional;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.DataFormatClause;
 import org.apache.camel.builder.EndpointProducerBuilder;
@@ -25,8 +26,6 @@ import org.apache.camel.model.rest.RestDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
-
-import java.util.Optional;
 
 @SIPIntegrationAdapter
 @ComponentScan(excludeFilters = @Filter(SIPIntegrationAdapter.class))

@@ -4,7 +4,6 @@ import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.He
 import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.RequestProcessor;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorExtension;
 import de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

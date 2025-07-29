@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.annotation.rest;
 
 import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.HeaderParameter;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

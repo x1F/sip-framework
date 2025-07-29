@@ -60,7 +60,8 @@ public class ConnectorProcessorExtensionsAdapter {
     @RequestExtension
     @ExecuteBefore(extensionName = "method-processor")
     public void attachReqExtension(RouteDefinition routeDef) {
-      routeDef.process(exchange -> exchange.getMessage().setBody(exchange.getMessage().getBody() + " dslExt"));
+      routeDef.process(
+          exchange -> exchange.getMessage().setBody(exchange.getMessage().getBody() + " dslExt"));
     }
 
     @RequestProcessor

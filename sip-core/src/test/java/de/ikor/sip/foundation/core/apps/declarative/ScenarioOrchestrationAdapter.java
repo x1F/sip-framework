@@ -13,6 +13,10 @@ import de.ikor.sip.foundation.core.declarative.orchestration.connector.Connector
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.IntStream;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.camel.builder.EndpointConsumerBuilder;
@@ -20,11 +24,6 @@ import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
-
-import java.io.Serializable;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.IntStream;
 
 @SIPIntegrationAdapter
 @ComponentScan(excludeFilters = @Filter(SIPIntegrationAdapter.class))

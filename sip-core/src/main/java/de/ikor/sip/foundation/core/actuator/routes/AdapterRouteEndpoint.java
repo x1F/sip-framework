@@ -4,6 +4,10 @@ import de.ikor.sip.foundation.core.actuator.routes.annotations.RouteIdParameter;
 import de.ikor.sip.foundation.core.actuator.routes.annotations.RouteOperationParameter;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import io.swagger.v3.oas.annotations.Operation;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Route;
@@ -17,11 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * Entry point of the HTTP-only Actuator endpoint that exposes management functions from the

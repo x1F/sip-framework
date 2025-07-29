@@ -2,15 +2,14 @@ package de.ikor.sip.foundation.core.declarative.orchestration.connector;
 
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.model.RouteDefinition;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * Standard implementation for orchestrating connectors.
