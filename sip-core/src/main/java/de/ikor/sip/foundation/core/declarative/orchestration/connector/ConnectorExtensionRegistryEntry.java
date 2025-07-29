@@ -8,14 +8,13 @@ import de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import de.ikor.sip.foundation.core.util.StreamHelper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
-import lombok.*;
-import org.apache.logging.log4j.util.Strings;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import lombok.*;
+import org.apache.logging.log4j.util.Strings;
 
 @Value
 @RequiredArgsConstructor
@@ -90,7 +89,7 @@ class ConnectorExtensionRegistryEntry {
         final var element = extensionRegistry.get(relativeExtensionName);
         SIPFrameworkInitializationException.throwIf(
             null == element,
-            "No matching connector named '%s' could be found for relative placement defined in annotation %s in %s",
+            "No matching extension named '%s' could be found for relative placement defined in annotation %s in %s",
             relativeExtensionName,
             annotationClass.getSimpleName(),
             definingElement.getClass().getName());

@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 /**
  * Annotation used for relative ordering of {@link ConnectorExtension}s.
  *
- * <p>Specifies that the annotated processor should be run after the extension specified by either
+ * <p>Specifies that the annotated extension should be run after the extension specified by either
  * {@link #value()} or {@link #extensionName()}.
  *
  * @see ExecuteBefore

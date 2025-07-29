@@ -46,8 +46,8 @@ class ConnectorProcessorExtensionsTest {
       GIVEN_processor_ordering_specified_WHEN_sending_valid_request_VERIFY_expected_response_order() {
 
     final var expectedRequestOrder =
-        List.of("start", "external", "method", "first", "second", "RestStringAttachmentMapper");
-    final var expectedResponseOrder = List.of("first", "second", "third", "fourth", "end");
+        List.of("start", "external", "dslExt", "method", "first", "second", "RestStringAttachmentMapper");
+    final var expectedResponseOrder = List.of("first", "second", "third", "fourth", "extBean", "end");
     var response =
         producerTemplate.requestBody(
             "direct:" + ConnectorProcessorExtensionsAdapter.INBOUND_DIRECT_OK,

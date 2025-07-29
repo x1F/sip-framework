@@ -3,19 +3,20 @@ package de.ikor.sip.foundation.core.declarative.orchestration.connector;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
 import de.ikor.sip.foundation.core.declarative.annonation.UseResponseModelMapper;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.ExecutionOrder;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.RequestProcessor;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.ResponseProcessor;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.*;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.ParameterMapping;
-import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.connector.ConnectorExtension;
-import de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor;
-import de.ikor.sip.foundation.core.declarative.connector.MethodBasedConnectorProcessor;
+import de.ikor.sip.foundation.core.declarative.connector.*;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import de.ikor.sip.foundation.core.util.StreamHelper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +24,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.context.ApplicationContext;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -56,12 +50,13 @@ public final class ConnectorExtensionChainOrchestrator
     final var connector = relatedConnector.get();
     final var context = applicationContext.get();
 
-    buildProcessorRegistryForConnector(connector, context);
+    buildExtensionRegistryForConnector(connector, context);
 
     final var orderedRequestExtensions =
-        orderProcessorsByAnnotations(requestExtensionsRegistry.values());
+        orderExtensionsByAnnotations(
+            Collections.unmodifiableCollection(requestExtensionsRegistry.values()));
     logListOrder(
-        String.format("Order of request-processors for connector %s: ", connector.getId()),
+        String.format("Order of request-extensions for connector %s: ", connector.getId()),
         orderedRequestExtensions);
     if (!orderedRequestExtensions.isEmpty()) {
       var requestRoute = info.getRequestRouteDefinition();
@@ -79,9 +74,10 @@ public final class ConnectorExtensionChainOrchestrator
         responseRoute.process(exchange -> {});
       } else {
         var orderedResponseExtensions =
-            orderProcessorsByAnnotations(responseExtensionsRegistry.values());
+            orderExtensionsByAnnotations(
+                Collections.unmodifiableCollection(responseExtensionsRegistry.values()));
         logListOrder(
-            String.format("Order of response-processors for connector %s: ", connector.getId()),
+            String.format("Order of response-extensions for connector %s: ", connector.getId()),
             orderedResponseExtensions);
         for (var extension : orderedResponseExtensions) {
           String extensionId =
@@ -105,11 +101,12 @@ public final class ConnectorExtensionChainOrchestrator
     }
   }
 
-  private List<ConnectorExtension> orderProcessorsByAnnotations(
-      final Collection<ConnectorExtensionRegistryEntry> unordered) {
+  private List<ConnectorExtension> orderExtensionsByAnnotations(
+      final Collection<ConnectorExtensionRegistryEntry> unorderedImmutable) {
 
-    final var originalProcessorSize = unordered.size();
-    final List<ConnectorExtension> orderedProcessors = new ArrayList<>(unordered.size());
+    final var originalExtensionSize = unorderedImmutable.size();
+    final var unordered = new ArrayList<>(unorderedImmutable);
+    final List<ConnectorExtension> orderedExtensions = new ArrayList<>(originalExtensionSize);
     final List<ConnectorExtensionRegistryEntry> absoluteOrderedEntries = new ArrayList<>();
     final List<ConnectorExtensionRegistryEntry> relativeOrderedEntries = new LinkedList<>();
     final List<ConnectorExtensionRegistryEntry> unorderedEntries = new ArrayList<>();
@@ -119,7 +116,7 @@ public final class ConnectorExtensionChainOrchestrator
             ConnectorExtensionRegistryEntry::isPlacedFirst,
             () ->
                 SIPFrameworkInitializationException.init(
-                    "More than one connector processor is ordered as first via @%s for connector %s",
+                    "More than one connector extension is ordered as first via @%s for connector %s",
                     ExecutionOrder.class.getSimpleName(), relatedConnector.get().getClass()));
 
     final Optional<ConnectorExtensionRegistryEntry> lastEntry =
@@ -128,7 +125,7 @@ public final class ConnectorExtensionChainOrchestrator
             ConnectorExtensionRegistryEntry::isPlacedLast,
             () ->
                 SIPFrameworkInitializationException.init(
-                    "More than one connector processor is ordered as last via @%s for connector %s",
+                    "More than one connector extension is ordered as last via @%s for connector %s",
                     ExecutionOrder.class.getSimpleName(), relatedConnector.get().getClass()));
 
     // sort unordered elements into buckets
@@ -148,52 +145,52 @@ public final class ConnectorExtensionChainOrchestrator
 
     // first, sort the list with entries that have absolute ordering
     absoluteOrderedEntries.sort(Comparator.comparing(o -> o.getPlacementAbsolute().orElseThrow()));
-    orderedProcessors.addAll(
+    orderedExtensions.addAll(
         absoluteOrderedEntries.stream()
             .map(ConnectorExtensionRegistryEntry::getExtension)
             .toList());
 
     // second, add all unordered elements to the end, so they can still be referred to by relative
     // orderings
-    orderedProcessors.addAll(
+    orderedExtensions.addAll(
         unorderedEntries.stream().map(ConnectorExtensionRegistryEntry::getExtension).toList());
 
     // place elements with a relative placement on elements inside the ordered list accordingly
     var placeableRelations =
         relativeOrderedEntries.stream()
-            .filter(e -> hasProcessorRelativeRelationToList(e, orderedProcessors))
+            .filter(e -> hasExtensionRelativeRelationToList(e, orderedExtensions))
             .toList();
     while (!placeableRelations.isEmpty()) {
       relativeOrderedEntries.removeAll(placeableRelations);
-      placeableRelations.forEach(e -> placeRelativeOrderedProcessorInList(e, orderedProcessors));
+      placeableRelations.forEach(e -> placeRelativeOrderedExtensionInList(e, orderedExtensions));
       placeableRelations =
           relativeOrderedEntries.stream()
-              .filter(e -> hasProcessorRelativeRelationToList(e, orderedProcessors))
+              .filter(e -> hasExtensionRelativeRelationToList(e, orderedExtensions))
               .toList();
     }
 
     // sort and attach any remaining items to the end of the ordered list
     relativeOrderedEntries.sort(ConnectorExtensionChainOrchestrator::compareRelativeOrderedEntries);
-    orderedProcessors.addAll(
+    orderedExtensions.addAll(
         relativeOrderedEntries.stream()
             .map(ConnectorExtensionRegistryEntry::getExtension)
             .toList());
 
     // Add first and last entries last, to make absolutely sure the list does not shift any more
-    firstEntry.ifPresent(entry -> orderedProcessors.add(0, entry.getExtension()));
-    lastEntry.ifPresent(entry -> orderedProcessors.add(entry.getExtension()));
+    firstEntry.ifPresent(entry -> orderedExtensions.add(0, entry.getExtension()));
+    lastEntry.ifPresent(entry -> orderedExtensions.add(entry.getExtension()));
 
     // validate
     SIPFrameworkInitializationException.throwIf(
-        orderedProcessors.size() != originalProcessorSize,
-        "Number of ordered connector-processors (%d) differs from expected amount of given registry-entries (%d)",
-        orderedProcessors.size(),
-        originalProcessorSize);
+        orderedExtensions.size() != originalExtensionSize,
+        "Number of ordered connector-extensions (%d) differs from expected amount of given registry-entries (%d)",
+        orderedExtensions.size(),
+        originalExtensionSize);
 
-    return orderedProcessors;
+    return orderedExtensions;
   }
 
-  private void placeRelativeOrderedProcessorInList(
+  private void placeRelativeOrderedExtensionInList(
       final ConnectorExtensionRegistryEntry entry, final List<ConnectorExtension> orderedList) {
     if (entry.getPlacementBeforeExtension().isPresent()) {
       var indexBefore = orderedList.indexOf(entry.getPlacementBeforeExtension().get());
@@ -214,7 +211,7 @@ public final class ConnectorExtensionChainOrchestrator
         entry.getExtension().getExtensionName());
   }
 
-  private boolean hasProcessorRelativeRelationToList(
+  private boolean hasExtensionRelativeRelationToList(
       ConnectorExtensionRegistryEntry entry, List<ConnectorExtension> orderedList) {
     Set<ConnectorExtension> lookup = new HashSet<>();
     entry.getPlacementAfterExtension().ifPresent(lookup::add);
@@ -271,7 +268,7 @@ public final class ConnectorExtensionChainOrchestrator
     return 0;
   }
 
-  private void buildProcessorRegistryForConnector(
+  private void buildExtensionRegistryForConnector(
       final ConnectorDefinition connector, final ApplicationContext context) {
 
     // Find and register all method-based connector processors
@@ -279,6 +276,12 @@ public final class ConnectorExtensionChainOrchestrator
 
     // Find and register bean-based processors
     registerBeanBasedProcessors(connector, context);
+
+    // Find and register method-based connector extensions
+    registerMethodBasedExtensions(connector);
+
+    // Find and register bean-based extensions
+    registerBeanBasedExtensions(connector, context);
 
     // Register attached mappers
     registerMapperProcessor(
@@ -338,6 +341,32 @@ public final class ConnectorExtensionChainOrchestrator
         .forEach(bean -> registerBeanBasedExtension(bean, responseExtensionsRegistry));
   }
 
+  private void registerBeanBasedExtensions(
+      final ConnectorDefinition connector, final ApplicationContext context) {
+    context.getBeansWithAnnotation(RequestExtension.class).values().stream()
+        .filter(
+            bean ->
+                isExtensionBeanForThisConnector(
+                    connector,
+                    bean,
+                    RequestExtension.class,
+                    RequestExtension::value,
+                    RequestExtension::connectorId))
+        .flatMap(StreamHelper.typeFilter(ConnectorExtension.class))
+        .forEach(bean -> registerBeanBasedExtension(bean, requestExtensionsRegistry));
+    context.getBeansWithAnnotation(ResponseExtension.class).values().stream()
+        .filter(
+            bean ->
+                isExtensionBeanForThisConnector(
+                    connector,
+                    bean,
+                    ResponseExtension.class,
+                    ResponseExtension::value,
+                    ResponseExtension::connectorId))
+        .flatMap(StreamHelper.typeFilter(ConnectorExtension.class))
+        .forEach(bean -> registerBeanBasedExtension(bean, responseExtensionsRegistry));
+  }
+
   private void registerMethodBasedProcessors(final ConnectorDefinition connector) {
     final var connectorMethods = connector.getClass().getMethods();
     Arrays.stream(connectorMethods)
@@ -351,6 +380,31 @@ public final class ConnectorExtensionChainOrchestrator
         .filter(method -> method.isAnnotationPresent(ResponseProcessor.class))
         .forEach(
             method -> registerMethodBasedProcessor(connector, method, responseExtensionsRegistry));
+  }
+
+  private void registerMethodBasedExtensions(final ConnectorDefinition connector) {
+    final var connectorMethods = connector.getClass().getMethods();
+    Arrays.stream(connectorMethods)
+        .filter(method -> method.isAnnotationPresent(RequestExtension.class))
+        .forEach(
+            method -> registerMethodBasedExtension(connector, method, requestExtensionsRegistry));
+    Arrays.stream(connectorMethods)
+        .filter(method -> method.isAnnotationPresent(ResponseExtension.class))
+        .forEach(
+            method -> registerMethodBasedExtension(connector, method, responseExtensionsRegistry));
+  }
+
+  @SneakyThrows
+  private void registerMethodBasedExtension(
+      ConnectorDefinition connector,
+      Method method,
+      Map<String, ConnectorExtensionRegistryEntry> registry) {
+    final var processor =
+        ConnectorExtension.class.isAssignableFrom(method.getReturnType())
+            ? (ConnectorExtension) method.invoke(connector, null)
+            : new MethodBasedConnectorExtension(connector, method);
+    final var registryEntry = new ConnectorExtensionRegistryEntry(processor, method, registry);
+    storeInRegistry(registryEntry, registry);
   }
 
   @SneakyThrows

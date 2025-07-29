@@ -92,7 +92,7 @@ public abstract non-sealed class ConnectorBase
    * {@link ConnectorOrchestrator} which does not contain any additional model transformation logic.
    * It is only suitable if the connectors and the common domain model share the same type.
    *
-   * @deprecated Use new connector-processor extensions via @{@link RequestProcessor} and @{@link
+   * @deprecated Use new connector-processor extensions via @{@link RequestProcessor}, and @{@link
    *     ResponseProcessor} instead
    * @return Orchestrator for the transformation between connector and common domain models.
    */

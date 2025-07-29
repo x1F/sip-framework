@@ -11,6 +11,15 @@ public interface ConnectorProcessor extends ConnectorExtension, Processor {
     routeDefinition.process(this);
   }
 
+  default String getProcessorName() {
+    return getClass().getSimpleName();
+  }
+
+  @Override
+  default String getExtensionName() {
+    return getProcessorName();
+  }
+
   /**
    * Empty {@link ConnectorProcessor} implementation that is used for default assignments in
    * annotations

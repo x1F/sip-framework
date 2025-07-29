@@ -16,6 +16,7 @@ import org.apache.camel.Message;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
+import org.apache.camel.model.RouteDefinition;
 import org.springframework.context.annotation.ComponentScan;
 
 @SIPIntegrationAdapter
@@ -54,6 +55,12 @@ public class ConnectorProcessorExtensionsAdapter {
     @ExecuteAfter(extensionName = "attachFirstString")
     public String attachSecondString(String body) {
       return body + " second";
+    }
+
+    @RequestExtension
+    @ExecuteBefore(extensionName = "method-processor")
+    public void attachReqExtension(RouteDefinition routeDef) {
+      routeDef.process(exchange -> exchange.getMessage().setBody(exchange.getMessage().getBody() + " dslExt"));
     }
 
     @RequestProcessor
