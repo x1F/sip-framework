@@ -29,10 +29,10 @@ public abstract class GenericInboundConnectorBase extends InboundConnectorBase
 
   @Override
   public final void defineInboundEndpoints(
-          final RoutesDefinition definition,
-          final String targetToBase,
-          final RoutesRegistry routeRegistry,
-          final DeclarationsRegistry declarationsRegistry) {
+      final RoutesDefinition definition,
+      final String targetToBase,
+      final RoutesRegistry routeRegistry,
+      final DeclarationsRegistry declarationsRegistry) {
     String routeConfigurationIds =
         joinConfigurationIds(
             this.getId(),

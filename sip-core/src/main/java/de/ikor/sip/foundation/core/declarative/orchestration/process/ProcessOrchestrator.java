@@ -36,6 +36,7 @@ public class ProcessOrchestrator implements Orchestrator<CompositeProcessOrchest
     this.orchestrationInfoConsumer = orchestrationInfoConsumer;
     this.dslDefinition = Optional.of(dslDefinition);
   }
+
   /**
    * Creates a new orchestrator specified via orchestration-DSL
    *

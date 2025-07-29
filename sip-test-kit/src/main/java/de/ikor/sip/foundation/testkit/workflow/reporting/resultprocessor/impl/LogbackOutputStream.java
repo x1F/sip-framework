@@ -9,6 +9,7 @@ public class LogbackOutputStream extends LogOutputStream {
 
   private static final String LOGGER_NAME = "TestReportLog";
   private final Logger logger;
+
   /** Adds logger that uses a pattern */
   public LogbackOutputStream() {
     logger = (Logger) LoggerFactory.getLogger(LOGGER_NAME);

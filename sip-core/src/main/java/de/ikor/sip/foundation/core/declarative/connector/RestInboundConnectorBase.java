@@ -28,10 +28,10 @@ public abstract class RestInboundConnectorBase extends InboundConnectorBase
 
   @Override
   public final void defineInboundEndpoints(
-          final RestsDefinition definition,
-          final String targetToBase,
-          final RoutesRegistry routeRegistry,
-          final DeclarationsRegistry declarationsRegistry) {
+      final RestsDefinition definition,
+      final String targetToBase,
+      final RoutesRegistry routeRegistry,
+      final DeclarationsRegistry declarationsRegistry) {
     var rest = definition.rest();
     configureRest(rest);
     SIPFrameworkInitializationException.throwIf(

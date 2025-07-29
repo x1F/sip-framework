@@ -15,6 +15,7 @@ public class FtpHealthConsumers {
   private static final Logger logger = LoggerFactory.getLogger(FtpHealthConsumers.class);
 
   private FtpHealthConsumers() {}
+
   /**
    * Executes the FTP NOOP request to check if the remote FTP server is healthy.
    *
