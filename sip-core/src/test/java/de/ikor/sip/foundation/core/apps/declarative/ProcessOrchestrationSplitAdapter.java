@@ -27,7 +27,7 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 @ComponentScan(excludeFilters = @Filter(SIPIntegrationAdapter.class))
 public class ProcessOrchestrationSplitAdapter {
 
-  private final String GROUP_ID = "split_group";
+  private static final String GROUP_ID = "split_group";
 
   public record CallSplitRequest(List<String> names) {}
 

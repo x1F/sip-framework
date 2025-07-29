@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative;
 
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import de.ikor.sip.foundation.core.apps.declarative.ProcessOrchestrationSplitAdapter;
 import org.apache.camel.EndpointInject;
@@ -59,7 +59,7 @@ class ProcessOrchestrationSplitTest {
 
     // assert
     assertThat(exchangeFirstConnector.getException()).isNull();
-    assertThat(response.updatedNames().size()).isEqualTo(3);
+    assertThat(response.updatedNames()).hasSize(3);
     assertThat(response.updatedNames().toString()).contains("John Doe", "Jane Doe", "Jon Doe");
   }
 }

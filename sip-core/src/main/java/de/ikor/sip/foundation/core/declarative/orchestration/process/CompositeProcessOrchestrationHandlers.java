@@ -56,7 +56,7 @@ public class CompositeProcessOrchestrationHandlers {
     return new IterationsHandler(iterations).determineIterations(exchange);
   }
 
-  public static List<?> handleSplitArray(
+  public static List handleSplitArray(
       final Exchange exchange, final Optional<CompositeProcessStepSplitExpression> expression) {
     return new ArrayHandler(expression).determineList(exchange);
   }
@@ -199,7 +199,7 @@ public class CompositeProcessOrchestrationHandlers {
     private final Optional<CompositeProcessStepSplitExpression> expression;
 
     @Handler
-    public List<?> determineList(final Exchange exchange) {
+    public List determineList(final Exchange exchange) {
       final CompositeProcessOrchestrationContext context = retrieveOrchestrationContext(exchange);
       if (expression.isPresent()) {
         return expression.get().determinePayload(context);
