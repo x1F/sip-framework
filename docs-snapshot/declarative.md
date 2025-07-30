@@ -352,7 +352,7 @@ Following variants are supported:
 
     - Parameters of type `Message` or `Exchange` will receive the respective instance.
     - Parameters annotated with `@HeaderParameter(String)` will receive the content of the respectively named header-field in the declared type.
-    - Any other parameter will retrieve the current content of the body in the declared type. `@Nullable` can be added if `null` be legal for that parameter.
+    - Any other parameter will retrieve the current content of the body in the declared type. `@Nullable` can be added if `null` is legal for that parameter.
 
 3. The method does have a return type which is not a `ConnectorProcessor` instance and any number of arguments. This will behave identically to approach 2, but additionally uses the returned object as the new message body, effectively making it a simple model mapper.
 
@@ -409,7 +409,7 @@ class MessageSigner implements ConnectorExtension {
 
     @Override
     public void accept(final RouteDefinition routeDefinition) {
-      routeDefinition.tranform(simple("signed: ${body}"));
+      routeDefinition.transform(simple("signed: ${body}"));
     }
 
 }
