@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.HeaderParameter;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.HeaderParameter;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.PathParameter;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.QueryParameter;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
@@ -70,7 +70,7 @@ public class MethodBasedConnectorProcessor implements ConnectorProcessor {
   }
 
   @Override
-  public String getProcessorName() {
+  public String getExtensionName() {
     return processorMethod.getName();
   }
 

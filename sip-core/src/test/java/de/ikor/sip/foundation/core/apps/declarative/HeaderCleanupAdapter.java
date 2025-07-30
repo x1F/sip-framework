@@ -5,7 +5,7 @@ import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.annotation.connector.CleanupHeaders;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.RequestProcessor;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.RequestProcessor;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
