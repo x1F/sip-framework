@@ -1,20 +1,26 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
-import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.RequestProcessor;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.ResponseProcessor;
 import java.util.function.Consumer;
-import org.apache.camel.Processor;
 import org.apache.camel.model.RouteDefinition;
 
 /**
- * Interface that marks {@link Processor}s that can be placed within the integration flow of a
- * connector.
+ * Interface that marks extensions that can be placed within the integration flow of a connector.
  *
- * @see RequestProcessor
- * @see ResponseProcessor
+ * <p>Extensions of the route should be attached using the {@link #accept(Object)} method.
+ *
+ * @see de.ikor.sip.foundation.core.declarative.annotation.connector.extension.RequestExtension
+ * @see de.ikor.sip.foundation.core.declarative.annotation.connector.extension.ResponseExtension
  */
+@FunctionalInterface
 public interface ConnectorExtension extends Consumer<RouteDefinition> {
 
+  /**
+   * Returns the name of the extension. Must be unique among all extensions of a connector.
+   *
+   * <p>The default implementation returns the name of the implementing class.
+   *
+   * @return Extension name
+   */
   default String getExtensionName() {
     return getClass().getSimpleName();
   }
