@@ -337,9 +337,9 @@ public class SampleRestRoute extends RouteBuilder {
         restConfiguration().component("servlet").port("8080").host("localhost");
         
         // Endpoint under test
-        from("rest:POST:/say/hello").routeId("rest-endpoint").to("sipmc:bridge");
+        from("rest:POST:/say/hello").routeId("rest-endpoint").to("direct:bridge");
 
-        from("sipmc:bridge")
+        from("direct:bridge")
                 .routeId("http-route")
                 .setHeader("Authorization", constant("Basic am9obkBleGFtcGxlLmNvbTphYmMxMjM="))
                 .transform(body().append(" now looks better"))

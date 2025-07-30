@@ -138,19 +138,13 @@ All registered routes with basic info can be listed by using the following URI:
 GET /actuator/adapterroutes
 ```
 
-Getting only routes with sip middle component consumer (including all outbound connectors):
-
-```
-GET /actuator/adapterroutes/sipmc
-```
-
 More detailed info view for only one exact route can be seen by providing route id into following URI:
 
 ```
 GET /actuator/adapterroutes/{routeId}
 ```
 
-The following operations (case sensitive) can be executed per route, for all route or on sipmc:
+The following operations (case sensitive) can be executed per route, for all route:
 
 - start
 - stop
@@ -170,19 +164,6 @@ This can be achieved by using following URI:
 ```
 POST /actuator/adapterroutes/{routeId}/{operation}
 ```
-
-It is also possible to execute desired operation on integration scenarios level via sip middle component. 
-By specifying the operation in the following URI, 
-it will be executed for all outgoing connectors inside the adapter, and any other consumer using sipmc:
-
-```
-POST /actuator/adapterroutes/sipmc/{operation}
-```
-
-**Warning:**
-When using suspend or stop operation on route that has middle component as a consumer, default value (30 seconds)
-timeout will be used. Keep in mind that if route is not started for next 30 seconds after sending data to middle
-component, data could be lost.
 
 ### Logging Translation
 
@@ -307,7 +288,7 @@ sip:
 ```
 
 Exchanges will contain the "traceSet" header, which appears as a list of ordered exchange Ids,
-appended based on EIP used in a route and separated by a coma. This allows to easily track the path of an message.
+appended based on EIP used in a route and separated by a coma. This allows to easily track the path of a message.
 
 ### OpenAPI Descriptor
 
@@ -322,7 +303,7 @@ For working with Swagger OpenAPI, check their official [documentation](https://s
 
 SIP Framework provides a Swagger documentation for the actuator endpoints out of the box. In case a custom Swagger
 documentation is needed it could be added by including the Swagger Apache Camel component. This component is only
-supporting the REST DSL component. For controller classes annotated with `@RestController` an entry is added to the
+supporting the REST DSL component. For controller classes annotated with `@WebController` an entry is added to the
 default swagger docs. This might not be the expected behavior for which reason the `REST DSL` component is recommended.
 
 The custom Swagger documentation could easily be added by defining it in the `restConfiguration` as seen in the
@@ -414,40 +395,3 @@ SIP Framework offers a few types of exceptions. The base ones are:
 If there is a need for additional exceptions it is highly encouraged that they have 
 one of SIP base exceptions as parent class.
 This provides uniformed data of exception origin for easier handling.
-
-### Declarative Structure in actuator adapter definition endpoint
-
-To see the detailed Declarative Structure of an adapter, containing all elements: `Integration Scenarios`, `Connectors` and 
-`Connector groups`, there is a following endpoint exposed through actuator:
-
-```
-# all types
-GET /adapterdefinition
-
-# specific endpoints for each of the 3 types:
-GET /adapterdefinition/scenarios
-GET /adapterdefinition/connectors
-GET /adapterdefinition/connectorgroups
-```
-
-It will present a list of all Declarative Structure elements with details and relations between them.
-Following details are presented:
-
-- `Connectors` - connector request and response data models, Camel routes, connector descriptions, and 
-necessary information for creating 
-[SIP Test Kit Declarative](https://ikor-gmbh.github.io/sip-framework/test-kit-declarative/) tests.
-
-- `Integration Scenarios` - contain common domain request and response models description.
-
-- `Connector groups` - connectors belonging to that connector group 
-
-
-To enable or disable this feature the following property should be used:
-
-```yaml
-sip:
-  core:
-    actuator:
-      adapterdefinition:
-        enabled: true       # enabled by default
-```
