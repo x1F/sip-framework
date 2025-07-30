@@ -733,6 +733,9 @@ public class DemoProcess extends CompositeProcessBase {
 - *forLoop* is used to enter looping statement equivalent to 'for' from DSL. It accepts a predicate
   which should be evaluated into an integer marking the number of iterations. To return to previous scope and end the loop
   *endForLoop* should be used.
+- *split* is used to enter looping statement equivalent to 'split' and 'parallelSplit' from DSL. It accepts a predicate which should be
+  evaluated into a List of object which will be individually processed by the consumer(s).
+  To return to previous scope and end the loop *endSplit* should be used.
 
 ```java
 public class DemoProcess extends CompositeProcessBase {
@@ -748,7 +751,11 @@ public class DemoProcess extends CompositeProcessBase {
                         .forLoop(context -> context.getLatestResponse().get().getIterationNumber())
                         .callConsumer(DemoScenarioConsumer2.class)
                         .withNoResponseHandling()
-                        .endForLoop();
+                        .endForLoop()
+                        .split(context -> context.getLatestResponse().get().getIdList())
+                        .callConsumer(DemoScenarioConsumer2.class)
+                        .withNoResponseHandling()
+                        .endSplit();
                 });
     }
 
