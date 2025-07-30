@@ -1,9 +1,9 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process;
 
-import java.util.List;
+import java.util.Collection;
 
 @FunctionalInterface
-public interface CompositeProcessStepSplitExpression<T> {
+public interface CompositeProcessStepSplitExpression {
 
-  List<T> determinePayload(CompositeProcessOrchestrationContext context);
+  Collection determinePayload(CompositeProcessOrchestrationContext context);
 }

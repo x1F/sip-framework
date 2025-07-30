@@ -1,12 +1,13 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding;
 
-import static de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers.handleSplitArray;
+import static de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers.handleSplitCollection;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepSplitExpression;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.*;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -66,8 +67,8 @@ final class RouteGeneratorForSplitProcessConsumer extends RouteGeneratorProcessB
     private final Optional<CompositeProcessStepSplitExpression> expression;
 
     @Override
-    public List<?> evaluate(Exchange exchange) {
-      return handleSplitArray(exchange, expression);
+    public Collection<?> evaluate(Exchange exchange) {
+      return handleSplitCollection(exchange, expression);
     }
   }
 
