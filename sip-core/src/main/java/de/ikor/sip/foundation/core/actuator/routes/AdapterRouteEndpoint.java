@@ -7,10 +7,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
-import org.apache.camel.Route;
 import org.apache.camel.api.management.ManagedCamelContext;
 import org.apache.camel.api.management.mbean.ManagedRouteMBean;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
@@ -146,62 +144,6 @@ public class AdapterRouteEndpoint {
   @Operation(summary = "Reset route", description = "Reset route")
   public void resetStatistics(@RouteIdParameter @PathVariable("routeId") String routeId) {
     getRouteMBean(routeId).reset();
-  }
-
-  /**
-   * Executes an operation on SipMc route
-   *
-   * @param operation - RouteOperation
-   */
-  @PostMapping("/sipmc/{operation}")
-  @Operation(
-      summary = "Execute operation on sipmc",
-      description =
-          "Execute operation on all routes which use consumer from SIP Middle component (sipmc)")
-  public void executeOnSipmcRoute(
-      @RouteOperationParameter @PathVariable("operation") String operation) {
-    Stream<Route> sipMcRoutes = filterMiddleComponentProducerRoutes(this.camelContext.getRoutes());
-    sipMcRoutes.forEach(route -> this.execute(route.getRouteId(), operation));
-  }
-
-  /** Executes reset operation on SipMc route */
-  @PostMapping("/sipmc/reset")
-  @Operation(
-      summary = "Reset sipmc routes",
-      description = "Reset all routes which use consumer from SIP Middle component (sipmc)")
-  public void resetSipmcRoute() {
-    Stream<Route> sipMcRoutes = filterMiddleComponentProducerRoutes(this.camelContext.getRoutes());
-    sipMcRoutes.forEach(route -> getRouteMBean(route.getRouteId()).reset());
-  }
-
-  /**
-   * Returns a list of "sipmc" routes
-   *
-   * @param routes Active routes with sipmc consumers
-   * @return Stream<Route>
-   */
-  private Stream<Route> filterMiddleComponentProducerRoutes(List<Route> routes) {
-
-    return routes.stream()
-        .filter(route -> route.getEndpoint().getEndpointUri().startsWith("sipmc"));
-  }
-
-  /**
-   * List of "sipmc" routes summaries
-   *
-   * @return AdapterRouteSummary
-   */
-  @GetMapping("/sipmc")
-  @Operation(
-      summary = "Get sipmc route summary",
-      description = "Get summaries of routes which use consumer from SIP Middle component (sipmc)")
-  public List<AdapterRouteSummary> sipmcRoutes() {
-    Stream<Route> routeStream = filterMiddleComponentProducerRoutes(camelContext.getRoutes());
-
-    Stream<AdapterRouteSummary> adapterRouteSummaryStream =
-        routeStream.map(route -> generateSummary(route.getRouteId()));
-
-    return adapterRouteSummaryStream.toList();
   }
 
   private ManagedRouteMBean getRouteMBean(String routeId) {

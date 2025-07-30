@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 class CamelProcessorsHelperTest {
 
   private static final String ENDPOINT_URI = "endpointUri";
-  private static final String ENDPOINT_IN_MEMORY_URI = "sipmc:endpointUri";
+  private static final String ENDPOINT_IN_MEMORY_URI = "direct:endpointUri";
   private static final String EXPRESSION_VALUE = "expression";
 
   @Test

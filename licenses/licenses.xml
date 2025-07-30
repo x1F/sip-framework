@@ -24,6 +24,7 @@
         <license>
           <name>GNU Lesser General Public License</name>
           <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
+          <file>gnu lesser general public license - lgpl-2.1.html</file>
         </license>
       </licenses>
     </dependency>
@@ -40,6 +41,7 @@
         <license>
           <name>GNU Lesser General Public License</name>
           <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
+          <file>gnu lesser general public license - lgpl-2.1.html</file>
         </license>
       </licenses>
     </dependency>
@@ -456,18 +458,6 @@
     <dependency>
       <groupId>de.ikor.sip.foundation</groupId>
       <artifactId>sip-integration-starter</artifactId>
-      <version>3.6.3-SNAPSHOT</version>
-      <licenses>
-        <license>
-          <name>The Apache License, Version 2.0</name>
-          <url>https://raw.githubusercontent.com/IKOR-GmbH/sip-framework/develop/LICENSE</url>
-          <file>the apache license, version 2.0 - license.txt</file>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
-      <groupId>de.ikor.sip.foundation</groupId>
-      <artifactId>sip-middle-component</artifactId>
       <version>3.6.3-SNAPSHOT</version>
       <licenses>
         <license>

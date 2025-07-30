@@ -128,7 +128,6 @@
 
     <modules>
         <module>sip-core</module>
-        <module>sip-middle-component</module>
         <module>sip-security</module>
         <module>sip-integration-starter</module>
         <module>sip-starter-parent</module>
@@ -215,11 +214,6 @@
             <dependency>
                 <groupId>de.ikor.sip.foundation</groupId>
                 <artifactId>sip-core</artifactId>
-                <version>${sip-framework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.ikor.sip.foundation</groupId>
-                <artifactId>sip-middle-component</artifactId>
                 <version>${sip-framework.version}</version>
             </dependency>
             <dependency>
@@ -401,10 +395,6 @@
                             <group>
                                 <title>SIP Core</title>
                                 <packages>de.ikor.sip.foundation.core*</packages>
-                            </group>
-                            <group>
-                                <title>SIP Middle Component</title>
-                                <packages>de.ikor.sip.foundation.camel*</packages>
                             </group>
                             <group>
                                 <title>SIP Security</title>

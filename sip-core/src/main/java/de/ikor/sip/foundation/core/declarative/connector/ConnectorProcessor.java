@@ -1,30 +1,39 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.RequestProcessor;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ResponseProcessor;
-import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.apache.camel.model.RouteDefinition;
 
 /**
- * Interface that marks {@link Processor}s that can be placed within the integration flow of a
- * connector.
+ * Interface that marks extensions that can be placed within the integration flow of a connector.
  *
- * @see RequestProcessor
- * @see ResponseProcessor
+ * <p>Connector processors are a more specific type of {@link ConnectorExtension}s that are geared
+ * to work with the payload on each integration call.
+ *
+ * @see de.ikor.sip.foundation.core.declarative.annotation.connector.extension.RequestProcessor
+ * @see de.ikor.sip.foundation.core.declarative.annotation.connector.extension.ResponseProcessor
  */
-public interface ConnectorProcessor extends Processor {
+@FunctionalInterface
+public interface ConnectorProcessor extends ConnectorExtension, Processor {
+
+  /**
+   * Default implementation of {@link #accept(RouteDefinition)} that attaches this processor into
+   * the route. Should not usually be modified / overriden.
+   */
+  @Override
+  default void accept(RouteDefinition routeDefinition) {
+    routeDefinition.process(this);
+  }
+
+  /**
+   * @deprecated Override {@link #getExtensionName()} instead where necessary
+   */
+  @Deprecated(since = "4.0.0")
   default String getProcessorName() {
     return getClass().getSimpleName();
   }
 
-  /**
-   * Empty {@link ConnectorProcessor} implementation that is used for default assignments in
-   * annotations
-   */
-  final class None implements ConnectorProcessor {
-    @Override
-    public void process(final Exchange exchange) throws Exception {
-      throw new UnsupportedOperationException();
-    }
+  @Override
+  default String getExtensionName() {
+    return getProcessorName();
   }
 }
