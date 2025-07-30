@@ -753,7 +753,7 @@ public class DemoProcess extends CompositeProcessBase {
                         .withNoResponseHandling()
                         .endForLoop()
                         .split(context -> context.getLatestResponse().get().getIdList())
-                        .callConsumer(DemoScenarioConsumer2.class)
+                        .callConsumer(DemoScenarioConsumer3.class)
                         .withNoResponseHandling()
                         .endSplit();
                 });
