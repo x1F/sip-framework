@@ -77,8 +77,6 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#exception-handling">Exception handling</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#declarative-structure-in-actuator-adapter-definition-endpoint">Declarative Structure in actuator adapter definition endpoint</a>
-    </li>
         </ul>
     </li>
     </ul>
@@ -106,10 +104,6 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../soap-starter/">SOAP Starter</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../middle-component/">Middle Component</a>
                 </li>
               </ul>
               <ul>
@@ -251,7 +245,6 @@
 <li><a href="#openapi-descriptor">OpenAPI Descriptor</a></li>
 <li><a href="#sip-details-in-actuator-info-endpoint">SIP Details in actuator info endpoint</a></li>
 <li><a href="#exception-handling">Exception handling</a></li>
-<li><a href="#declarative-structure-in-actuator-adapter-definition-endpoint">Declarative Structure in actuator adapter definition endpoint</a></li>
 </ul>
 </li>
 </ul>
@@ -350,11 +343,9 @@ By default, it is named <code>sip.core.metrics.health</code>, but can be changed
 <p>SIP Core provides a possibility to manipulate adapter lifecycle in runtime by controlling registered Camel routes.</p>
 <p>All registered routes with basic info can be listed by using the following URI:</p>
 <pre class="highlight"><code>GET /actuator/adapterroutes</code></pre>
-<p>Getting only routes with sip middle component consumer (including all outbound connectors):</p>
-<pre class="highlight"><code>GET /actuator/adapterroutes/sipmc</code></pre>
 <p>More detailed info view for only one exact route can be seen by providing route id into following URI:</p>
 <pre class="highlight"><code>GET /actuator/adapterroutes/{routeId}</code></pre>
-<p>The following operations (case sensitive) can be executed per route, for all route or on sipmc:</p>
+<p>The following operations (case sensitive) can be executed per route, for all route:</p>
 <ul>
 <li>start</li>
 <li>stop</li>
@@ -367,14 +358,6 @@ By default, it is named <code>sip.core.metrics.health</code>, but can be changed
 <p>There is a possibility to execute a route lifecycle operation on an exact route, by providing route id and operation.
 This can be achieved by using following URI:</p>
 <pre class="highlight"><code>POST /actuator/adapterroutes/{routeId}/{operation}</code></pre>
-<p>It is also possible to execute desired operation on integration scenarios level via sip middle component. 
-By specifying the operation in the following URI, 
-it will be executed for all outgoing connectors inside the adapter, and any other consumer using sipmc:</p>
-<pre class="highlight"><code>POST /actuator/adapterroutes/sipmc/{operation}</code></pre>
-<p><strong>Warning:</strong>
-When using suspend or stop operation on route that has middle component as a consumer, default value (30 seconds)
-timeout will be used. Keep in mind that if route is not started for next 30 seconds after sending data to middle
-component, data could be lost.</p>
 <h3 id="logging-translation">Logging Translation<a class="headerlink" href="#logging-translation" title="Permanent link">&para;</a></h3>
 <p>Adds possibility to translate log messages. This is achieved by using a custom logging encoder, which is able to translate log messages.</p>
 <p>By default, translation service is not activated, thus in order to use it a logback.xml file should be provided in
@@ -450,7 +433,7 @@ the application.yml:</p>
         showProperties: true
         maxChars: 100</code></pre>
 <p>Exchanges will contain the "traceSet" header, which appears as a list of ordered exchange Ids,
-appended based on EIP used in a route and separated by a coma. This allows to easily track the path of an message.</p>
+appended based on EIP used in a route and separated by a coma. This allows to easily track the path of a message.</p>
 <h3 id="openapi-descriptor">OpenAPI Descriptor<a class="headerlink" href="#openapi-descriptor" title="Permanent link">&para;</a></h3>
 <p>Framework provides an Open API description of all custom, Camel's RestDSL or Spring provided endpoints within your adapter.
 Endpoints are created as extension of Spring's actuator.</p>
@@ -459,7 +442,7 @@ Endpoints are created as extension of Spring's actuator.</p>
 <p><strong>Adding Custom Swagger Docs:</strong></p>
 <p>SIP Framework provides a Swagger documentation for the actuator endpoints out of the box. In case a custom Swagger
 documentation is needed it could be added by including the Swagger Apache Camel component. This component is only
-supporting the REST DSL component. For controller classes annotated with <code>@RestController</code> an entry is added to the
+supporting the REST DSL component. For controller classes annotated with <code>@WebController</code> an entry is added to the
 default swagger docs. This might not be the expected behavior for which reason the <code>REST DSL</code> component is recommended.</p>
 <p>The custom Swagger documentation could easily be added by defining it in the <code>restConfiguration</code> as seen in the
 following listing.</p>
@@ -522,37 +505,6 @@ are stored WILL BE CLEARED on rebuild."</p>
 <p>If there is a need for additional exceptions it is highly encouraged that they have 
 one of SIP base exceptions as parent class.
 This provides uniformed data of exception origin for easier handling.</p>
-<h3 id="declarative-structure-in-actuator-adapter-definition-endpoint">Declarative Structure in actuator adapter definition endpoint<a class="headerlink" href="#declarative-structure-in-actuator-adapter-definition-endpoint" title="Permanent link">&para;</a></h3>
-<p>To see the detailed Declarative Structure of an adapter, containing all elements: <code>Integration Scenarios</code>, <code>Connectors</code> and 
-<code>Connector groups</code>, there is a following endpoint exposed through actuator:</p>
-<pre class="highlight"><code># all types
-GET /adapterdefinition
-
-# specific endpoints for each of the 3 types:
-GET /adapterdefinition/scenarios
-GET /adapterdefinition/connectors
-GET /adapterdefinition/connectorgroups</code></pre>
-<p>It will present a list of all Declarative Structure elements with details and relations between them.
-Following details are presented:</p>
-<ul>
-<li>
-<p><code>Connectors</code> - connector request and response data models, Camel routes, connector descriptions, and 
-necessary information for creating 
-<a href="https://ikor-gmbh.github.io/sip-framework/test-kit-declarative/">SIP Test Kit Declarative</a> tests.</p>
-</li>
-<li>
-<p><code>Integration Scenarios</code> - contain common domain request and response models description.</p>
-</li>
-<li>
-<p><code>Connector groups</code> - connectors belonging to that connector group </p>
-</li>
-</ul>
-<p>To enable or disable this feature the following property should be used:</p>
-<pre class="highlight"><code class="language-yaml">sip:
-  core:
-    actuator:
-      adapterdefinition:
-        enabled: true       # enabled by default</code></pre>
               
             </div>
           </div><footer>
