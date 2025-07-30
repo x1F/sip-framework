@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.api.management.ManagedCamelContext;
 import org.apache.camel.api.management.mbean.ManagedRouteMBean;
-import org.springframework.boot.actuate.endpoint.web.annotation.WebEndpoint;
+import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
  * plenty of details about each one of them.
  */
 @Component
-@WebEndpoint(id = "adapterroutes")
+@RestControllerEndpoint(id = "adapterroutes")
 @Slf4j
 public class AdapterRouteEndpoint {
   private final CamelContext camelContext;
