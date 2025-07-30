@@ -159,7 +159,7 @@ class ProcessorProxyTest {
   @Test
   void WHEN_ignoredEndpointProcessor_THEN_expectIsEndpointProcessorFalse() throws Exception {
     // arrange
-    when(outgoingEndpoint.getEndpointBaseUri()).thenReturn("sipmc:middleComponent");
+    when(outgoingEndpoint.getEndpointBaseUri()).thenReturn("direct:sth");
     processorProxySubjectOutgoing =
         new ProcessorProxy(namedNode, outgoingProcessor, proxyExtensions);
 

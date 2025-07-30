@@ -21,7 +21,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 class AdapterRouteEndpointTest {
 
   private static final String ROUTE_ID = "test";
-  private static final String SIPMC_ROUTE_URI = "sipmc:test";
+  private static final String SEDA_ROUTE_URI = "seda:test";
 
   private CamelContext camelContext;
   private AdapterRouteEndpoint subject;
@@ -66,29 +66,6 @@ class AdapterRouteEndpointTest {
 
     // assert
     assertThat(subject.routes()).isNotEmpty();
-  }
-
-  @Test
-  void When_GettingSipmcRoutes_Expect_IsNotEmpty() throws Exception {
-    // arrange
-    mockRoutesInContext();
-
-    // assert
-    assertThat(subject.sipmcRoutes()).isNotEmpty();
-  }
-
-  @Test
-  void When_ResettingSipmcRoutes_Expect_ManagedRouteResetCalled() throws Exception {
-    // arrange
-    mockRoutesInContext();
-
-    // act
-    subject.resetSipmcRoute();
-
-    // assert
-    verify(camelContext, times(1)).getRoutes();
-    verify(managedCamelContext, times(1)).getManagedRoute(ROUTE_ID);
-    verify(managedRoute, times(1)).reset();
   }
 
   @Test
@@ -163,7 +140,7 @@ class AdapterRouteEndpointTest {
     Route route = getMockedRoute();
     Endpoint mockEndpoint = mock(Endpoint.class);
     when(route.getEndpoint()).thenReturn(mockEndpoint);
-    when(mockEndpoint.getEndpointUri()).thenReturn(SIPMC_ROUTE_URI);
+    when(mockEndpoint.getEndpointUri()).thenReturn(SEDA_ROUTE_URI);
     when(camelContext.getRoutes()).thenReturn(Collections.singletonList(route));
     ReflectionTestUtils.setField(subject, "mbeanContext", managedCamelContext);
   }

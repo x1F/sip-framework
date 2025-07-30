@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 @UtilityClass
 public class CamelProcessorsHelper {
 
-  private static final String[] NON_OUTGOING_PROCESSOR_PREFIXES = {"seda", "direct", "sipmc"};
+  private static final String[] NON_OUTGOING_PROCESSOR_PREFIXES = {"seda", "direct"};
 
   /**
    * Method for determining if Camel processor has external endpoint.
@@ -39,7 +39,7 @@ public class CamelProcessorsHelper {
   }
 
   /**
-   * Method for checking if Camel endpoint has in memory component (sipmc, seda, direct).
+   * Method for checking if Camel endpoint has in memory component (seda, direct).
    *
    * @param endpointUri is uri to be checked
    * @return boolean flag (true - endpointUri has in memory component)
