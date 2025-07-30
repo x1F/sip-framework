@@ -4,12 +4,12 @@ import de.ikor.sip.foundation.core.declarative.DeclarationsRegistryApi;
 import de.ikor.sip.foundation.core.declarative.annonation.ConfigurationHandler;
 import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
 import de.ikor.sip.foundation.core.declarative.annonation.UseResponseModelMapper;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.RequestProcessor;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ResponseProcessor;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.RequestProcessor;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.ResponseProcessor;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorExtensionChainOrchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
-import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorProcessorChainOrchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -79,7 +79,7 @@ public abstract non-sealed class ConnectorBase
     if (isDeprecatedTransformationOrchestrationOverloaded()) {
       return buildDeprecatedTransformationOverloadOrchestrator();
     }
-    return ConnectorProcessorChainOrchestrator.builder()
+    return ConnectorExtensionChainOrchestrator.builder()
         .relatedConnector(() -> this)
         .applicationContext(this::getApplicationContext)
         .build();
@@ -91,7 +91,7 @@ public abstract non-sealed class ConnectorBase
    * {@link ConnectorOrchestrator} which does not contain any additional model transformation logic.
    * It is only suitable if the connectors and the common domain model share the same type.
    *
-   * @deprecated Use new connector-processor extensions via @{@link RequestProcessor} and @{@link
+   * @deprecated Use new connector-processor extensions via @{@link RequestProcessor}, and @{@link
    *     ResponseProcessor} instead
    * @return Orchestrator for the transformation between connector and common domain models.
    */

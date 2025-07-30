@@ -1,9 +1,9 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.connector;
 
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecuteAfter;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecuteBefore;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.ExecutionOrder;
-import de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.ExecuteAfter;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.ExecuteBefore;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.ExecutionOrder;
+import de.ikor.sip.foundation.core.declarative.connector.ConnectorExtension;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import de.ikor.sip.foundation.core.util.StreamHelper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -20,11 +20,11 @@ import org.apache.logging.log4j.util.Strings;
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-class ConnectorProcessorRegistryEntry {
+class ConnectorExtensionRegistryEntry {
 
-  @ToString.Include @EqualsAndHashCode.Include ConnectorProcessor processor;
+  @ToString.Include @EqualsAndHashCode.Include ConnectorExtension extension;
   @EqualsAndHashCode.Include @ToString.Include AnnotatedElement definingElement;
-  Map<String, ConnectorProcessorRegistryEntry> processorRegistry;
+  Map<String, ConnectorExtensionRegistryEntry> extensionRegistry;
 
   @Getter(lazy = true)
   boolean placedFirst = resolvePlacedFirst();
@@ -36,18 +36,18 @@ class ConnectorProcessorRegistryEntry {
   Optional<Integer> placementAbsolute = resolveAbsolutePosition();
 
   @Getter(lazy = true)
-  Optional<ConnectorProcessor> placementBeforeProcessor =
-      resolveRelativePlacedProcessor(
-          ExecuteBefore.class, ExecuteBefore::value, ExecuteBefore::processorName);
+  Optional<ConnectorExtension> placementBeforeExtension =
+      resolveRelativePlacedExtension(
+          ExecuteBefore.class, ExecuteBefore::value, ExecuteBefore::extensionName);
 
   @Getter(lazy = true)
-  Optional<ConnectorProcessor> placementAfterProcessor =
-      resolveRelativePlacedProcessor(
-          ExecuteAfter.class, ExecuteAfter::value, ExecuteAfter::processorName);
+  Optional<ConnectorExtension> placementAfterExtension =
+      resolveRelativePlacedExtension(
+          ExecuteAfter.class, ExecuteAfter::value, ExecuteAfter::extensionName);
 
   @ToString.Include
-  public String getProcessorName() {
-    return processor.getProcessorName();
+  public String getExtensionName() {
+    return extension.getExtensionName();
   }
 
   private boolean resolvePlacedFirst() {
@@ -71,28 +71,28 @@ class ConnectorProcessorRegistryEntry {
     return Optional.empty();
   }
 
-  private <T extends Annotation> Optional<ConnectorProcessor> resolveRelativePlacedProcessor(
+  private <T extends Annotation> Optional<ConnectorExtension> resolveRelativePlacedExtension(
       final Class<T> annotationClass,
-      Function<T, Class<? extends ConnectorProcessor>> procClassFetcher,
-      Function<T, String> procNameFetcher) {
+      Function<T, Class<? extends ConnectorExtension>> extensionClassFetcher,
+      Function<T, String> extensionNameFetcher) {
     final var annotation =
         DeclarativeReflectionUtils.getAnnotationIfPresent(annotationClass, definingElement);
     if (annotation.isPresent()) {
-      final Class<? extends ConnectorProcessor> relativeProcessorClass =
-          procClassFetcher.apply(annotation.orElseThrow());
-      final String relativeProcessorName = procNameFetcher.apply(annotation.orElseThrow());
-      if (!ConnectorProcessor.None.class.equals(relativeProcessorClass)) {
-        return Optional.of(findUniqueConnectorForClass(relativeProcessorClass));
+      final Class<? extends ConnectorExtension> relativeExtensionClass =
+          extensionClassFetcher.apply(annotation.orElseThrow());
+      final String relativeExtensionName = extensionNameFetcher.apply(annotation.orElseThrow());
+      if (!ConnectorExtension.None.class.equals(relativeExtensionClass)) {
+        return Optional.of(findUniqueConnectorForClass(relativeExtensionClass));
       }
-      if (Strings.isNotBlank(relativeProcessorName)) {
-        final var element = processorRegistry.get(relativeProcessorName);
+      if (Strings.isNotBlank(relativeExtensionName)) {
+        final var element = extensionRegistry.get(relativeExtensionName);
         SIPFrameworkInitializationException.throwIf(
             null == element,
-            "No matching connector named '%s' could be found for relative placement defined in annotation %s in %s",
-            relativeProcessorName,
+            "No matching extension named '%s' could be found for relative placement defined in annotation %s in %s",
+            relativeExtensionName,
             annotationClass.getSimpleName(),
             definingElement.getClass().getName());
-        return Optional.of(element.getProcessor());
+        return Optional.of(element.getExtension());
       }
       throw SIPFrameworkInitializationException.init(
           "No placement specified in annotation @%s in class %s",
@@ -101,29 +101,29 @@ class ConnectorProcessorRegistryEntry {
     return Optional.empty();
   }
 
-  private ConnectorProcessor findUniqueConnectorForClass(
-      final Class<? extends ConnectorProcessor> clazz) {
+  private ConnectorExtension findUniqueConnectorForClass(
+      final Class<? extends ConnectorExtension> clazz) {
 
-    final var matchingProcessor =
+    final var matchingExtension =
         StreamHelper.findAtMostOne(
-            processorRegistry.values().stream().map(ConnectorProcessorRegistryEntry::getProcessor),
+            extensionRegistry.values().stream().map(ConnectorExtensionRegistryEntry::getExtension),
             proc -> clazz.equals(proc.getClass()),
             () ->
                 SIPFrameworkInitializationException.init(
-                    "More than one processor matched the relative placement restriction for processor-class '%s' in %s",
+                    "More than one extension matched the relative placement restriction for extension-class '%s' in %s",
                     clazz.getName(), definingElement.getClass().getName()));
 
-    matchingProcessor.ifPresent(
+    matchingExtension.ifPresent(
         match ->
             SIPFrameworkInitializationException.throwIf(
-                processor.equals(match),
-                "Relative placement for connector processor '%s' is pointing on itself",
-                processor.getProcessorName()));
+                extension.equals(match),
+                "Relative placement for connector extension '%s' is pointing on itself",
+                extension.getExtensionName()));
 
-    return matchingProcessor.orElseThrow(
+    return matchingExtension.orElseThrow(
         () ->
             SIPFrameworkInitializationException.init(
-                "No processor found that matched the relative placement restriction for processor-class '%s' in %s",
+                "No extension found that matched the relative placement restriction for extension-class '%s' in %s",
                 clazz.getName(), definingElement.getClass().getName()));
   }
 }

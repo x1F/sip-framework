@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.annotation.connector.processor;
+package de.ikor.sip.foundation.core.declarative.annotation.connector.extension;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

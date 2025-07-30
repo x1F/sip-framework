@@ -1,7 +1,8 @@
 package de.ikor.sip.foundation.core.declarative.annotation.rest;
 
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.HeaderParameter;
-import de.ikor.sip.foundation.core.declarative.annotation.connector.processor.RequestProcessor;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.HeaderParameter;
+import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.RequestProcessor;
+import de.ikor.sip.foundation.core.declarative.connector.ConnectorExtension;
 import de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -13,11 +14,10 @@ import java.lang.annotation.Target;
  * de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase} that is used to map
  * path- and query-parameters to the request-model. *
  *
- * <p>The parameter mapping functionality is based on {@link
- * de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor} extensions as described in
- * the @{@link RequestProcessor}. Hence, this annotation is merely an alias of latter annotation.
- * Likewise, @{@link QueryParameter} and {@link PathParameter} annotations are aliases for @{@link
- * HeaderParameter}, as these parameters are placed in the message as headers by Camel.
+ * <p>The parameter mapping functionality is based on {@link ConnectorExtension} extensions as
+ * described in the @{@link RequestProcessor}. Hence, this annotation is merely an alias of latter
+ * annotation. Likewise, @{@link QueryParameter} and {@link PathParameter} annotations are aliases
+ * for @{@link HeaderParameter}, as these parameters are placed in the message as headers by Camel.
  *
  * <p>Note that parameter-mapping using this approach only works if you don't overload {@link
  * RestInboundConnectorBase#defineTransformationOrchestrator()} in your connector.
