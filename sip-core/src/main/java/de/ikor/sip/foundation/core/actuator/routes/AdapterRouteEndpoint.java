@@ -56,12 +56,12 @@ public class AdapterRouteEndpoint {
    */
   @ReadOperation
   public List<AdapterRouteSummary> routes(@Nullable List<String> ids) {
-    if(ids != null && !ids.isEmpty()) {
+    if (ids != null && !ids.isEmpty()) {
       return summary(ids);
-    }
-    else return camelContext.getRoutes().stream()
-        .map(route -> generateSummary(route.getRouteId()))
-        .toList();
+    } else
+      return camelContext.getRoutes().stream()
+          .map(route -> generateSummary(route.getRouteId()))
+          .toList();
   }
 
   /**
@@ -82,10 +82,8 @@ public class AdapterRouteEndpoint {
    * @param operation - RouteOperation
    */
   @WriteOperation
-  public void execute(
-          @Selector String routeId,
-          @Selector String operation) {
-    if("all".equals(routeId)) {
+  public void execute(@Selector String routeId, @Selector String operation) {
+    if ("all".equals(routeId)) {
       switch (operation) {
         case "start" -> startAll();
         case "stop" -> stopAll();
@@ -141,7 +139,6 @@ public class AdapterRouteEndpoint {
    *
    * @param routeId - PathVariable
    */
-
   public void reset(String routeId) {
     getRouteMBean(routeId).reset();
   }
