@@ -74,10 +74,11 @@
         <swagger-annotation.version>2.2.34</swagger-annotation.version>
         <lombok.version>1.18.38</lombok.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
-        <commons-text.version>1.10.0</commons-text.version>
+        <commons-text.version>1.14.0</commons-text.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-io.version>2.14.0</commons-io.version>
         <commons-exec.version>1.3</commons-exec.version>
+        <commons-lang3.version>3.18.0</commons-lang3.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <mockito-inline.version>5.2.0</mockito-inline.version>
         <snakeyaml.version>2.4</snakeyaml.version>
@@ -248,6 +249,11 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-exec</artifactId>
                 <version>${commons-exec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
             </dependency>
 
             <!--maven dependencies-->
@@ -502,6 +508,9 @@
                                 <version>${mapstruct.version}</version>
                             </path>
                         </annotationProcessorPaths>
+                        <compilerArgs>
+                            <arg>-parameters</arg>
+                        </compilerArgs>
                     </configuration>
                 </plugin>
 
