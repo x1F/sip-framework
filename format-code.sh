@@ -1,3 +1,3 @@
 #!/bin/bash
 
-mvn com.spotify.fmt:fmt-maven-plugin:format
+mvn com.diffplug.spotless:spotless-maven-plugin:apply
