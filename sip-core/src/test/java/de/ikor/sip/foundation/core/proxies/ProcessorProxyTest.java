@@ -140,13 +140,13 @@ class ProcessorProxyTest {
   }
 
   @Test
-  void WHEN_regularProcessor_THEN_expectIsEndpointProcessorFalse() throws Exception {
+  void WHEN_regularProcessor_THEN_expectIsEndpointProcessorFalse() {
     // assert
     assertThat(processorProxySubject.isEndpointProcessor()).isFalse();
   }
 
   @Test
-  void WHEN_regularEndpointProcessor_THEN_expectIsEndpointProcessorTrue() throws Exception {
+  void WHEN_regularEndpointProcessor_THEN_expectIsEndpointProcessorTrue() {
     // arrange
     when(outgoingEndpoint.getEndpointUri()).thenReturn("file://test.txt");
     processorProxySubjectOutgoing =
@@ -157,7 +157,7 @@ class ProcessorProxyTest {
   }
 
   @Test
-  void WHEN_ignoredEndpointProcessor_THEN_expectIsEndpointProcessorFalse() throws Exception {
+  void WHEN_ignoredEndpointProcessor_THEN_expectIsEndpointProcessorFalse() {
     // arrange
     when(outgoingEndpoint.getEndpointBaseUri()).thenReturn("direct:sth");
     processorProxySubjectOutgoing =
@@ -168,7 +168,7 @@ class ProcessorProxyTest {
   }
 
   @Test
-  void WHEN_wrappedRegularEndpointProcessor_THEN_expectIsEndpointProcessorTrue() throws Exception {
+  void WHEN_wrappedRegularEndpointProcessor_THEN_expectIsEndpointProcessorTrue() {
     // arrange
     when(outgoingEndpoint.getEndpointUri()).thenReturn("file://test.txt");
     WrapProcessor wrapProcessor = new WrapProcessor(outgoingProcessor, outgoingProcessor);
