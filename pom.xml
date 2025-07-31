@@ -105,7 +105,7 @@
         <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
         <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-        <fmt-maven-plugin.version>2.27</fmt-maven-plugin.version>
+        <spotless-maven-plugin.version>2.46.1</spotless-maven-plugin.version>
         <maven-gpg-plugin.version>3.2.6</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
         <license-maven-plugin.version>2.0.0</license-maven-plugin.version>
@@ -552,9 +552,14 @@
                 </plugin>
 
                 <plugin>
-                    <groupId>com.spotify.fmt</groupId>
-                    <artifactId>fmt-maven-plugin</artifactId>
-                    <version>${fmt-maven-plugin.version}</version>
+                    <groupId>com.diffplug.spotless</groupId>
+                    <artifactId>spotless-maven-plugin</artifactId>
+                    <version>${spotless-maven-plugin.version}</version>
+                    <configuration>
+                        <java>
+                            <googleJavaFormat/>
+                        </java>
+                    </configuration>
                 </plugin>
 
                 <plugin>
