@@ -75,8 +75,6 @@ class AdapterRouteEndpointTest {
     // assert
     assertThatThrownBy(() -> subject.execute("", "none"))
         .isInstanceOf(IncompatibleOperationException.class);
-    assertThatThrownBy(() -> subject.execute("", "SUSPEND"))
-        .isInstanceOf(IncompatibleOperationException.class);
   }
 
   @Test

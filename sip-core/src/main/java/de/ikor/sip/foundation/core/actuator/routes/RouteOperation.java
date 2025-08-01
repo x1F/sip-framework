@@ -47,6 +47,6 @@ enum RouteOperation {
             .filter(op -> op.operationId.equals(operationId))
             .findFirst();
     return rop.orElseThrow(
-        () -> new IncompatibleOperationException("Invalid operation id: " + operationId));
+        () -> new IncompatibleOperationException("Invalid operation: " + operationId));
   }
 }
