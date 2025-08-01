@@ -105,7 +105,7 @@
         <spotless-maven-plugin.version>2.46.1</spotless-maven-plugin.version>
         <maven-gpg-plugin.version>3.2.6</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
-        <license-maven-plugin.version>2.0.0</license-maven-plugin.version>
+        <license-maven-plugin.version>2.6.0</license-maven-plugin.version>
 
         <!-- sonar settings -->
         <sonar.organization>ikor-gmbh</sonar.organization>
