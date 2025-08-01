@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.actuator.routes;
 
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -83,19 +84,21 @@ public class AdapterRouteEndpoint {
    */
   @WriteOperation
   public void execute(@Selector String routeId, @Selector String operation) {
+    var operationLowerCase = operation.toLowerCase();
     if ("all".equals(routeId)) {
-      switch (operation) {
+      switch (operationLowerCase) {
         case "start" -> startAll();
         case "stop" -> stopAll();
         case "resume" -> resumeAll();
         case "suspend" -> suspendAll();
         case "reset" -> resetAll();
+        default -> throw SIPFrameworkException.init("Provided operation is not valid");
       }
     } else {
-      if ("reset".equals(operation)) {
+      if ("reset".equals(operationLowerCase)) {
         reset(routeId);
       } else {
-        RouteOperation routeOperation = RouteOperation.fromId(operation);
+        RouteOperation routeOperation = RouteOperation.fromId(operationLowerCase);
         routeOperation.execute(routeController, routeId);
       }
     }
