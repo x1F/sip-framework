@@ -74,8 +74,7 @@ public sealed interface DeclarationsRegistryApi permits DeclarationsRegistry {
       String compositeProcessID);
 
   /**
-   * Returns provider of the composite process as defined in the annotation {@link
-   * CompositeProcess}
+   * Returns provider of the composite process as defined in the annotation {@link CompositeProcess}
    *
    * @param compositeProcessID id of the process
    * @return {@link IntegrationScenarioDefinition}

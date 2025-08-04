@@ -1,10 +1,10 @@
 package de.ikor.sip.foundation.core.declarative.connectorgroup;
 
 import de.ikor.sip.foundation.core.declarative.DeclarativeElement;
+import de.ikor.sip.foundation.core.declarative.annotation.ConnectorGroup;
 import de.ikor.sip.foundation.core.declarative.annotation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annotation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.annotation.OutboundConnector;
-import de.ikor.sip.foundation.core.declarative.annotation.ConnectorGroup;
 
 /**
  * Interface defining a connector group.

@@ -6,8 +6,7 @@ import org.apache.camel.model.OnExceptionDefinition;
 /**
  * Functional interface providing a hook to {@link OnExceptionDefinition}.
  *
- * <p>Used with {@link ConnectorExceptionHandler}
- * annotation
+ * <p>Used with {@link ConnectorExceptionHandler} annotation
  *
  * @see ConnectorExceptionHandler
  */

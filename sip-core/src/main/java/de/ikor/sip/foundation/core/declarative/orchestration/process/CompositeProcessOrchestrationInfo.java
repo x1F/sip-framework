@@ -10,9 +10,8 @@ import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.RoutesDefinition;
 
 /**
- * Class that holds information to be used by orchestrators of a {@link
- * CompositeProcess} This is structural
- * information that gives orchestrator an ability to generate orchestration routes
+ * Class that holds information to be used by orchestrators of a {@link CompositeProcess} This is
+ * structural information that gives orchestrator an ability to generate orchestration routes
  *
  * @see ProcessOrchestrator
  */

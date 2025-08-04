@@ -15,8 +15,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Orchestrator meant to be attached to {@link
- * CompositeProcess}
+ * Orchestrator meant to be attached to {@link CompositeProcess}
  *
  * <p>Orchestration can be defined in orchestration DSL via {@link #forOrchestrationDsl(Consumer)}.
  *

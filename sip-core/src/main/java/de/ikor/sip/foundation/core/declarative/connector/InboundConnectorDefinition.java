@@ -17,8 +17,7 @@ import org.apache.camel.model.OptionalIdentifiedDefinition;
  * String, RoutesRegistry, DeclarationsRegistry)} method.
  *
  * <p>Adapter developers should not implement this interface directly, but rather extend one of the
- * inbound {@link ConnectorBase} subclasses and annotate it with @{@link
- * InboundConnector}.
+ * inbound {@link ConnectorBase} subclasses and annotate it with @{@link InboundConnector}.
  *
  * @param <T> Type that is required by the inbound connector to define the endpoint. This is usually
  *     a {@link org.apache.camel.model.RoutesDefinition}.

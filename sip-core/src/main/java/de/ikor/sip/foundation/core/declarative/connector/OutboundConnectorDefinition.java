@@ -14,8 +14,7 @@ import org.apache.camel.model.RouteDefinition;
  * #defineOutboundEndpoints(RouteDefinition)} method.
  *
  * <p>Adapter developers should not implement this interface directly, but rather extend one of the
- * outbound {@link ConnectorBase} subclasses and annotate it with @{@link
- * OutboundConnector}.
+ * outbound {@link ConnectorBase} subclasses and annotate it with @{@link OutboundConnector}.
  *
  * @see ConnectorDefinition
  * @see GenericOutboundConnectorBase

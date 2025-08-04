@@ -25,9 +25,8 @@ import org.apache.camel.model.RouteConfigurationDefinition;
  * }
  * }</pre>
  *
- * To mark a scenario or connector to use the handler defined here {@link
- * ConfigurationHandler} annotation should be
- * used
+ * To mark a scenario or connector to use the handler defined here {@link ConfigurationHandler}
+ * annotation should be used
  *
  * @see ConfigurationHandler
  */
