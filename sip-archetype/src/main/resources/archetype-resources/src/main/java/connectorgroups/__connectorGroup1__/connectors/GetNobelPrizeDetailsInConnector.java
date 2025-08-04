@@ -1,5 +1,11 @@
-package $
+package ${package}.connectorgroups.${connectorGroup1}.connectors;
 
+import ${package}.config.NobelPrizeMapper;
+import ${package}.connectorgroups.${connectorGroup1}.models.NobelPrizeCategory;
+import ${package}.scenarios.definitions.GetNobelPrizeAndLaureateDetails;
+import ${package}.scenarios.models.NobelPrizeCommonModel;
+import ${package}.scenarios.models.NobelPrizeRequest;
+import ${package}.scenarios.models.response.NobelPrizeResponse;
 import de.ikor.sip.foundation.core.declarative.annotation.ConnectorExceptionHandler;
 import de.ikor.sip.foundation.core.declarative.annotation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.ExecutionOrder;

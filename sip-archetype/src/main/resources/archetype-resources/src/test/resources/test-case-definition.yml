@@ -58,7 +58,7 @@ test-case-definitions:
     # Definition of test request which should be sent to the adapter (required)
     when-execute:
       # Id of connector under test (endpointId may also be used)
-      endpointId: sip-connector_GetNobelPrizeDetailsInConnector_externalEndpoint-1
+      connectorId: GetNobelPrizeDetailsInConnector
       with:
         # Add content that should be sent as request body to the adapter endpoint (plain text, JSON String)
         body:
