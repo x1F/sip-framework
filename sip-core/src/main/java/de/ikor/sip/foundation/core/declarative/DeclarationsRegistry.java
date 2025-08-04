@@ -3,7 +3,7 @@ package de.ikor.sip.foundation.core.declarative;
 import static java.util.Map.entry;
 import static java.util.function.Predicate.not;
 
-import de.ikor.sip.foundation.core.declarative.annonation.*;
+import de.ikor.sip.foundation.core.declarative.annotation.*;
 import de.ikor.sip.foundation.core.declarative.connector.*;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupBase;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;

@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 
-import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
+import de.ikor.sip.foundation.core.declarative.annotation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 
 public class DSLTestHelper {

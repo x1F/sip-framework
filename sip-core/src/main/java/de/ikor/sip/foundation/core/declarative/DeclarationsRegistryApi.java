@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import de.ikor.sip.foundation.core.declarative.annotation.CompositeProcess;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
@@ -64,7 +65,7 @@ public sealed interface DeclarationsRegistryApi permits DeclarationsRegistry {
 
   /**
    * Returns consumers of the composite process as defined in the annotation {@link
-   * de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess}
+   * CompositeProcess}
    *
    * @param compositeProcessID id of the process
    * @return List of {@link IntegrationScenarioDefinition}
@@ -73,8 +74,7 @@ public sealed interface DeclarationsRegistryApi permits DeclarationsRegistry {
       String compositeProcessID);
 
   /**
-   * Returns provider of the composite process as defined in the annotation {@link
-   * de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess}
+   * Returns provider of the composite process as defined in the annotation {@link CompositeProcess}
    *
    * @param compositeProcessID id of the process
    * @return {@link IntegrationScenarioDefinition}

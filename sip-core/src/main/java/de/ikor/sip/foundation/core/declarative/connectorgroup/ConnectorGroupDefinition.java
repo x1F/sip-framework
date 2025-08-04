@@ -1,9 +1,10 @@
 package de.ikor.sip.foundation.core.declarative.connectorgroup;
 
 import de.ikor.sip.foundation.core.declarative.DeclarativeElement;
-import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
-import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
-import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
+import de.ikor.sip.foundation.core.declarative.annotation.ConnectorGroup;
+import de.ikor.sip.foundation.core.declarative.annotation.InboundConnector;
+import de.ikor.sip.foundation.core.declarative.annotation.IntegrationScenario;
+import de.ikor.sip.foundation.core.declarative.annotation.OutboundConnector;
 
 /**
  * Interface defining a connector group.
@@ -20,6 +21,6 @@ import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
  * ConnectorGroupBase} instead.</em>
  *
  * @see ConnectorGroupBase
- * @see de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup
+ * @see ConnectorGroup
  */
 public interface ConnectorGroupDefinition extends DeclarativeElement {}

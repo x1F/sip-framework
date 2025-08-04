@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process;
 
+import de.ikor.sip.foundation.core.declarative.annotation.CompositeProcess;
 import de.ikor.sip.foundation.core.declarative.orchestration.OrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
@@ -9,9 +10,8 @@ import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.RoutesDefinition;
 
 /**
- * Class that holds information to be used by orchestrators of a {@link
- * de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess} This is structural
- * information that gives orchestrator an ability to generate orchestration routes
+ * Class that holds information to be used by orchestrators of a {@link CompositeProcess} This is
+ * structural information that gives orchestrator an ability to generate orchestration routes
  *
  * @see ProcessOrchestrator
  */

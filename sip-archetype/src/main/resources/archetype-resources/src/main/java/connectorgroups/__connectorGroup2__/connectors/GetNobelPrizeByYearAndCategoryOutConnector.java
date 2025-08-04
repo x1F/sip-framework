@@ -3,7 +3,7 @@ package ${package}.connectorgroups.${connectorGroup2}.connectors;
 import ${package}.scenarios.definitions.GetNobelPrizeByYearAndCategory;
 import ${package}.scenarios.models.NobelPrizeRequest;
 import ${package}.scenarios.models.nobelprize.NobelPrize;
-import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
+import de.ikor.sip.foundation.core.declarative.annotation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;

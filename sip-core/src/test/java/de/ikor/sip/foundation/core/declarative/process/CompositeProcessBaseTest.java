@@ -1,10 +1,9 @@
 package de.ikor.sip.foundation.core.declarative.process;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 import de.ikor.sip.foundation.core.apps.declarative.ProcessOrchestrationAdapter.getPartnerDebtById;
-import de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess;
+import de.ikor.sip.foundation.core.declarative.annotation.CompositeProcess;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import org.junit.jupiter.api.Test;
 

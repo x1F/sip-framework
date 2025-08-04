@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.annonation;
+package de.ikor.sip.foundation.core.declarative.annotation;
 
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.lang.annotation.ElementType;
