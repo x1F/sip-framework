@@ -70,11 +70,11 @@ under the License.
         <requiredProperty key="createDemoAdapter">
             <defaultValue>${createDemoAdapterDefault}</defaultValue>
         </requiredProperty>
-        <requiredProperty key="useCloudFrameworkDefault">
+        <requiredProperty key="useSipCloudFrameworkDefault">
             <defaultValue>n</defaultValue>
         </requiredProperty>
-        <requiredProperty key="useCloudFramework">
-            <defaultValue>${useCloudFrameworkDefault}</defaultValue>
+        <requiredProperty key="useSipCloudFramework">
+            <defaultValue>${useSipCloudFrameworkDefault}</defaultValue>
         </requiredProperty>
     </requiredProperties>
 
