@@ -3,9 +3,9 @@ package de.ikor.sip.foundation.core.declarative.connector;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
-import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
-import de.ikor.sip.foundation.core.declarative.annonation.UseResponseModelMapper;
+import de.ikor.sip.foundation.core.declarative.annotation.OutboundConnector;
+import de.ikor.sip.foundation.core.declarative.annotation.UseRequestModelMapper;
+import de.ikor.sip.foundation.core.declarative.annotation.UseResponseModelMapper;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;

@@ -1,8 +1,8 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.connector;
 
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
-import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
-import de.ikor.sip.foundation.core.declarative.annonation.UseResponseModelMapper;
+import de.ikor.sip.foundation.core.declarative.annotation.UseRequestModelMapper;
+import de.ikor.sip.foundation.core.declarative.annotation.UseResponseModelMapper;
 import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.*;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.ParameterMapping;
 import de.ikor.sip.foundation.core.declarative.connector.*;

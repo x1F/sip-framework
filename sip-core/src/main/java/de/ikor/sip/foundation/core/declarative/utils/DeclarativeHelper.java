@@ -7,7 +7,7 @@ import static org.apache.camel.builder.Builder.simple;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
-import de.ikor.sip.foundation.core.declarative.annonation.ConnectorExceptionHandler;
+import de.ikor.sip.foundation.core.declarative.annotation.ConnectorExceptionHandler;
 import de.ikor.sip.foundation.core.declarative.configuration.ConnectorOnExceptionDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;

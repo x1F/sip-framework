@@ -8,7 +8,7 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <!-- Attention! We need to keep this in sync with the spring-boot version set in sip-framework,
              which is transitively referenced in sip-integration-starter specified in the dependencymanagement section -->
-        <version>3.3.10</version>
+        <version>3.4.8</version>
     <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -60,12 +60,14 @@
 
         <sip-framework.version>3.6.3-SNAPSHOT</sip-framework.version>               <!-- keep in sync with framework version -->
         <mapstruct.version>1.5.5.Final</mapstruct.version>                          <!-- keep in sync with mapstruct version in framework pom -->
-        <lombok.version>1.18.34</lombok.version>                                    <!-- keep in sync with lombok version in framework pom -->
-        <cxf.version>4.0.5</cxf.version>                                            <!-- keep in sync with cxf version in framework pom -->
-        <snakeyaml.version>2.2</snakeyaml.version>                                  <!-- keep in sync with snakeyaml version in framework pom -->
+        <lombok.version>1.18.38</lombok.version>                                    <!-- keep in sync with lombok version in framework pom -->
+        <cxf.version>4.1.1</cxf.version>                                            <!-- keep in sync with cxf version in framework pom -->
+        <snakeyaml.version>2.4</snakeyaml.version>                                  <!-- keep in sync with snakeyaml version in framework pom -->
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <maven-gpg-plugin.version>3.2.6</maven-gpg-plugin.version>                  <!-- keep in sync with framework, for maven central deployment -->
         <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>  <!-- keep in sync with framework, for maven central deployment -->
+        <spotless-maven-plugin.version>2.46.1</spotless-maven-plugin.version>       <!-- keep in sync with spotless version in framework pom -->
+        <apache-commons-lang3.version>3.18.0</apache-commons-lang3.version>
     </properties>
 
     <dependencies>
@@ -146,6 +148,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apache-commons-lang3.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -187,6 +194,18 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless-maven-plugin.version}</version>
+                <configuration>
+                    <java>
+                        <googleJavaFormat/>
+                    </java>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
     <profiles>

@@ -53,3 +53,41 @@ sip.security:
 #          classname:
 #          file-path:
 
+#if (${useCloud} == "y" or ${useCloud} == "Y")
+# SIP Cloud Configuration
+sip.cloud:
+  backend-communication:
+    enabled: false
+    stage: dev
+    broker:
+      type: none #rabbitmq #kafka
+      backend-inbox: backendInbox
+      adapter-inbox: adapterInbox
+      history-inbox: historyInbox
+# Template for broker specific configuration
+#      kafka:
+#        bootstrap-servers:
+#      rabbitmq:
+#        host:
+#        port:
+#        username:
+#        password:
+# Template for broker security configuration
+#      security:
+#        sslEnabled:
+#        keystorePath:
+#        keystorePassword:
+#        truststorePath:
+#        truststorePassword:
+#        keyPassword:
+#        securityProtocol: # kafka
+#        aclUser: # kafka
+#        aclPassword: # kafka
+#        algorithm: # rabbitmq
+  data-masking:
+    enabled: true
+    keywords:
+  history:
+    enabled: true
+    limit: 100
+#end

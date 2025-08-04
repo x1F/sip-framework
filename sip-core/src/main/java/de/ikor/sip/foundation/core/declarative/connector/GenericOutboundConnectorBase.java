@@ -3,7 +3,7 @@ package de.ikor.sip.foundation.core.declarative.connector;
 import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.doesUriContainPlaceholders;
 import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
 
-import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
+import de.ikor.sip.foundation.core.declarative.annotation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;

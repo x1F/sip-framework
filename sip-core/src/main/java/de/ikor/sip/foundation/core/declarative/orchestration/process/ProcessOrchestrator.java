@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process;
 
+import de.ikor.sip.foundation.core.declarative.annotation.CompositeProcess;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding.RouteGeneratorForProcessOrchestrationDefinition;
@@ -14,8 +15,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Orchestrator meant to be attached to {@link
- * de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess}
+ * Orchestrator meant to be attached to {@link CompositeProcess}
  *
  * <p>Orchestration can be defined in orchestration DSL via {@link #forOrchestrationDsl(Consumer)}.
  *

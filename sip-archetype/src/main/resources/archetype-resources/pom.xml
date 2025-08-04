@@ -32,13 +32,19 @@
     </issueManagement>
 
     <dependencies>
-#if (${useLombok} == "y" || ${useLombok} == "Y")
+#if (${useLombok} == "y" or ${useLombok} == "Y")
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
 #end
-#if (${useSoap} == "y" || ${useSoap} == "Y")
+#if (${useCloud} == "y" or ${useCloud} == "Y")
+        <dependency>
+            <groupId>de.ikor.sip.cloud</groupId>
+            <artifactId>sip-integration-starter</artifactId>
+        </dependency>
+#end
+#if (${useSoap} == "y" or ${useSoap} == "Y")
         <dependency>
             <groupId>de.ikor.sip.foundation</groupId>
             <artifactId>sip-soap-starter</artifactId>

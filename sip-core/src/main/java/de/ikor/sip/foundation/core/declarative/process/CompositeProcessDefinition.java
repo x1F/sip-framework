@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.process;
 
 import de.ikor.sip.foundation.core.declarative.DeclarativeElement;
+import de.ikor.sip.foundation.core.declarative.annotation.CompositeProcess;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestratable;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
@@ -21,7 +22,7 @@ import java.util.List;
  * CompositeProcessBase} instead.</em>
  *
  * @see CompositeProcessBase
- * @see de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess
+ * @see CompositeProcess
  */
 public interface CompositeProcessDefinition
     extends Orchestratable<CompositeProcessOrchestrationInfo>,

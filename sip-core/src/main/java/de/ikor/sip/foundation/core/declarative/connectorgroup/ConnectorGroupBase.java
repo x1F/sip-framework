@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.connectorgroup;
 
-import de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup;
+import de.ikor.sip.foundation.core.declarative.annotation.ConnectorGroup;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 

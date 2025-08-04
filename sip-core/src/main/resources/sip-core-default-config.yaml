@@ -18,10 +18,8 @@ sip.core:
       showExchangeId: true
     log: true
   actuator:
-    endpoints: adapterroutes,adapterdefinition,tracing
+    endpoints: adapterroutes,tracing
     adapter-routes:
-      enabled: true
-    adapterdefinition:
       enabled: true
     extensions:
       info:

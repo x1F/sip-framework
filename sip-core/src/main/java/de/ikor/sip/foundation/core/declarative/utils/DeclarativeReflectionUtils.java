@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.utils;
 
-import de.ikor.sip.foundation.core.declarative.annonation.ConnectorExceptionHandler;
+import de.ikor.sip.foundation.core.declarative.annotation.ConnectorExceptionHandler;
 import de.ikor.sip.foundation.core.declarative.configuration.ConnectorOnExceptionDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.lang.annotation.Annotation;
