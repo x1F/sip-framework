@@ -70,6 +70,12 @@ under the License.
         <requiredProperty key="createDemoAdapter">
             <defaultValue>${createDemoAdapterDefault}</defaultValue>
         </requiredProperty>
+        <requiredProperty key="useCloudFrameworkDefault">
+            <defaultValue>n</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="useCloudFramework">
+            <defaultValue>${useCloudFrameworkDefault}</defaultValue>
+        </requiredProperty>
     </requiredProperties>
 
     <fileSets>
