@@ -53,14 +53,14 @@ class AdapterRouteEndpointContextTest {
   @Test
   void When_callingFilteredDetails_With_ValidRoute_Then_httpSuccessReceived() throws Exception {
     mvcBean
-        .perform(get("/actuator/adapterroutes/summary?ids=" + CoreTestApplication.TEST_ROUTE_ID))
+        .perform(get("/actuator/adapterroutes?ids=" + CoreTestApplication.TEST_ROUTE_ID))
         .andExpect(status().is2xxSuccessful());
   }
 
   @Test
   void When_callingFilteredDetails_With_InvalidRoute_Then_httpSuccessReceived() throws Exception {
     mvcBean
-        .perform(get("/actuator/adapterroutes/summary?ids=" + NON_EXISTENT_ROUTE_ID))
+        .perform(get("/actuator/adapterroutes?ids=" + NON_EXISTENT_ROUTE_ID))
         .andExpect(status().isNotFound());
   }
 }
