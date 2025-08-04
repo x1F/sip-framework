@@ -48,12 +48,15 @@ After executing given Maven command, you will be requested to insert additional 
   package naming errors.
 - **createDemoAdapter** should be set to 'y' or 'Y' when the inclusion of a demo adapter is desired.
     It will generate example classes using declarative structure, including process and scenario orchestration.
+- **useCloudFramework** should be set to 'y' or 'Y' to enable the premium version of the SIP framework. 
+  When enabled, the adapter will include the necessary dependencies for SIP Cloud Framework. 
+  For access or licensing details, please contact [sip@x1f.one](mailto:sip@x1f.one)
 
 
 _Note_: All the parameters can be provided via command line if needed:
 
 ```shell
-mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=<latest.sip-framework.version> -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT -DconnectorGroup1=group1 -DconnectorGroup2=group2 -DpackageSuffix=project -DuseLombok=y -DuseSoap=n -Dpackage=de.ikor.sip.adapter.demo.project -DcreateDemoAdapter=n
+mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=<latest.sip-framework.version> -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT -DconnectorGroup1=group1 -DconnectorGroup2=group2 -DpackageSuffix=project -DuseLombok=y -DuseSoap=n -Dpackage=de.ikor.sip.adapter.demo.project -DcreateDemoAdapter=n -DuseCloudFramework=n
 ```
 
 After a successful build, a project with the following structure will be created:
