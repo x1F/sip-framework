@@ -1,7 +1,7 @@
 package $
 
-import de.ikor.sip.foundation.core.declarative.annonation.ConnectorExceptionHandler;
-import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
+import de.ikor.sip.foundation.core.declarative.annotation.ConnectorExceptionHandler;
+import de.ikor.sip.foundation.core.declarative.annotation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.ExecutionOrder;
 import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.ResponseProcessor;
 import de.ikor.sip.foundation.core.declarative.annotation.rest.ParameterMapping;

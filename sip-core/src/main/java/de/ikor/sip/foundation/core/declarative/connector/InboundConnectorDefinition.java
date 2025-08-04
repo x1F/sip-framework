@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.core.declarative.connector;
 
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
+import de.ikor.sip.foundation.core.declarative.annotation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.OptionalIdentifiedDefinition;
@@ -17,14 +18,14 @@ import org.apache.camel.model.OptionalIdentifiedDefinition;
  *
  * <p>Adapter developers should not implement this interface directly, but rather extend one of the
  * inbound {@link ConnectorBase} subclasses and annotate it with @{@link
- * de.ikor.sip.foundation.core.declarative.annonation.InboundConnector}.
+ * InboundConnector}.
  *
  * @param <T> Type that is required by the inbound connector to define the endpoint. This is usually
  *     a {@link org.apache.camel.model.RoutesDefinition}.
  * @see ConnectorDefinition
  * @see GenericInboundConnectorBase
  * @see RestInboundConnectorBase
- * @see de.ikor.sip.foundation.core.declarative.annonation.InboundConnector
+ * @see InboundConnector
  */
 public non-sealed interface InboundConnectorDefinition<T extends OptionalIdentifiedDefinition<T>>
     extends ConnectorDefinition, IntegrationScenarioProviderDefinition {

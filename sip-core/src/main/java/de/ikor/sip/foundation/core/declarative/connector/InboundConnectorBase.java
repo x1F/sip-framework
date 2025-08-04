@@ -2,7 +2,7 @@ package de.ikor.sip.foundation.core.declarative.connector;
 
 import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
 
-import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
+import de.ikor.sip.foundation.core.declarative.annotation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;

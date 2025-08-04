@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.scenario;
 
-import de.ikor.sip.foundation.core.declarative.annonation.ConfigurationHandler;
-import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
+import de.ikor.sip.foundation.core.declarative.annotation.ConfigurationHandler;
+import de.ikor.sip.foundation.core.declarative.annotation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.AutoMagicScenarioOrchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;

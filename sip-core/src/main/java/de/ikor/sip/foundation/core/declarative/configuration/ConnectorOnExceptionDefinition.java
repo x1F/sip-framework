@@ -1,12 +1,12 @@
 package de.ikor.sip.foundation.core.declarative.configuration;
 
-import de.ikor.sip.foundation.core.declarative.annonation.ConnectorExceptionHandler;
+import de.ikor.sip.foundation.core.declarative.annotation.ConnectorExceptionHandler;
 import org.apache.camel.model.OnExceptionDefinition;
 
 /**
  * Functional interface providing a hook to {@link OnExceptionDefinition}.
  *
- * <p>Used with {@link de.ikor.sip.foundation.core.declarative.annonation.ConnectorExceptionHandler}
+ * <p>Used with {@link ConnectorExceptionHandler}
  * annotation
  *
  * @see ConnectorExceptionHandler
@@ -16,7 +16,7 @@ public interface ConnectorOnExceptionDefinition {
 
   /**
    * Define onException handler. The exception types that should be handled are provided via {@link
-   * de.ikor.sip.foundation.core.declarative.annonation.ConnectorExceptionHandler}
+   * ConnectorExceptionHandler}
    *
    * @param definition {@link OnExceptionDefinition}
    */

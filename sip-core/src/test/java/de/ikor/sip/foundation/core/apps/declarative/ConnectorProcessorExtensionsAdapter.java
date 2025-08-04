@@ -2,10 +2,10 @@ package de.ikor.sip.foundation.core.apps.declarative;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
 import de.ikor.sip.foundation.core.apps.declarative.connectorextensions.RestStringAttachmentMapper;
-import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
-import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
-import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
-import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
+import de.ikor.sip.foundation.core.declarative.annotation.InboundConnector;
+import de.ikor.sip.foundation.core.declarative.annotation.IntegrationScenario;
+import de.ikor.sip.foundation.core.declarative.annotation.OutboundConnector;
+import de.ikor.sip.foundation.core.declarative.annotation.UseRequestModelMapper;
 import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.*;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorProcessor;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;

@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
+import de.ikor.sip.foundation.core.declarative.annotation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import org.apache.camel.model.RouteDefinition;
 
@@ -14,11 +15,11 @@ import org.apache.camel.model.RouteDefinition;
  *
  * <p>Adapter developers should not implement this interface directly, but rather extend one of the
  * outbound {@link ConnectorBase} subclasses and annotate it with @{@link
- * de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector}.
+ * OutboundConnector}.
  *
  * @see ConnectorDefinition
  * @see GenericOutboundConnectorBase
- * @see de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector
+ * @see OutboundConnector
  */
 public non-sealed interface OutboundConnectorDefinition
     extends ConnectorDefinition, IntegrationScenarioConsumerDefinition {

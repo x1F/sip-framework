@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.configuration;
 
+import de.ikor.sip.foundation.core.declarative.annotation.ConfigurationHandler;
 import org.apache.camel.model.OutputDefinition;
 import org.apache.camel.model.RouteConfigurationDefinition;
 
@@ -25,10 +26,10 @@ import org.apache.camel.model.RouteConfigurationDefinition;
  * }</pre>
  *
  * To mark a scenario or connector to use the handler defined here {@link
- * de.ikor.sip.foundation.core.declarative.annonation.ConfigurationHandler} annotation should be
+ * ConfigurationHandler} annotation should be
  * used
  *
- * @see de.ikor.sip.foundation.core.declarative.annonation.ConfigurationHandler
+ * @see ConfigurationHandler
  */
 @FunctionalInterface
 public interface ConfigurationDefinition {

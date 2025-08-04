@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.annonation;
+package de.ikor.sip.foundation.core.declarative.annotation;
 
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import java.lang.annotation.ElementType;
@@ -9,16 +9,16 @@ import java.lang.annotation.Target;
 /**
  * Annotation for connectors extending {@link
  * de.ikor.sip.foundation.core.declarative.connector.ConnectorBase} to attach an automatic model
- * mapper transformation for the response
+ * mapper transformation for the request
  *
- * @see UseRequestModelMapper
+ * @see UseResponseModelMapper
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface UseResponseModelMapper {
+public @interface UseRequestModelMapper {
 
   /**
-   * @return {@link ModelMapper} to use
+   * @return (Optional) {@link ModelMapper} to use
    */
   Class<? extends ModelMapper> value();
 }

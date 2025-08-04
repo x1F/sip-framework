@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.apps.declarative;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
-import de.ikor.sip.foundation.core.declarative.annonation.*;
+import de.ikor.sip.foundation.core.declarative.annotation.*;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase;

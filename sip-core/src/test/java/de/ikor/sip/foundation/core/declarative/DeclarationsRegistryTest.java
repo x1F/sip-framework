@@ -7,11 +7,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-import de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess;
-import de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup;
-import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
-import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
-import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
+import de.ikor.sip.foundation.core.declarative.annotation.CompositeProcess;
+import de.ikor.sip.foundation.core.declarative.annotation.ConnectorGroup;
+import de.ikor.sip.foundation.core.declarative.annotation.InboundConnector;
+import de.ikor.sip.foundation.core.declarative.annotation.IntegrationScenario;
+import de.ikor.sip.foundation.core.declarative.annotation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;

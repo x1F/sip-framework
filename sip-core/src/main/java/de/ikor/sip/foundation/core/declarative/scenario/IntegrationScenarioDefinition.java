@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.scenario;
 
 import de.ikor.sip.foundation.core.declarative.DeclarativeElement;
+import de.ikor.sip.foundation.core.declarative.annotation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestratable;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import java.util.Optional;
@@ -16,7 +17,7 @@ import java.util.Optional;
  * IntegrationScenarioBase} instead.</em>
  *
  * @see IntegrationScenarioBase
- * @see de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario
+ * @see IntegrationScenario
  */
 public interface IntegrationScenarioDefinition
     extends Orchestratable<ScenarioOrchestrationInfo>, DeclarativeElement {

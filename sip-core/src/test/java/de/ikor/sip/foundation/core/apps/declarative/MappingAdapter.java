@@ -9,7 +9,7 @@ import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.FrontEndSyste
 import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.FrontEndTypes.FrontEndSystemRequestMapper;
 import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.FrontEndTypes.UserRequest;
 import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.FrontEndTypes.UserResponse;
-import de.ikor.sip.foundation.core.declarative.annonation.*;
+import de.ikor.sip.foundation.core.declarative.annotation.*;
 import de.ikor.sip.foundation.core.declarative.annotation.connector.extension.ResponseProcessor;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase;
