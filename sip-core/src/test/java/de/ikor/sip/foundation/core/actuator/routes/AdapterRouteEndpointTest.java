@@ -16,6 +16,8 @@ import org.apache.camel.api.management.ManagedCamelContext;
 import org.apache.camel.api.management.mbean.ManagedRouteMBean;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.util.ReflectionTestUtils;
 
 class AdapterRouteEndpointTest {
@@ -36,7 +38,7 @@ class AdapterRouteEndpointTest {
         mock(RouteControllerLoggingDecorator.class, CALLS_REAL_METHODS);
     camelContext = mock(CamelContext.class, RETURNS_DEEP_STUBS);
     when(camelContext.getRoute(anyString()).getEndpoint().getEndpointUri()).thenReturn("");
-    managedCamelContext = mock(ManagedCamelContext.class);
+    managedCamelContext = mock(ManagedCamelContext.class, RETURNS_DEEP_STUBS);
     ReflectionTestUtils.setField(routeControllerLoggingDecorator, "ctx", camelContext);
     routesRegistry = mock(RoutesRegistry.class, RETURNS_DEEP_STUBS);
     subject =
@@ -45,7 +47,7 @@ class AdapterRouteEndpointTest {
   }
 
   @Test
-  void When_GettingRoute_Expect_RouteDetails() throws Exception {
+  void When_GettingRoute_Expect_RouteDetails() {
     // arrange
     mockRoutesInContext();
 
@@ -57,7 +59,7 @@ class AdapterRouteEndpointTest {
   }
 
   @Test
-  void When_GettingRoutes_Expect_RoutesNotEmpty() throws Exception {
+  void When_GettingRoutes_Expect_RoutesNotEmpty() {
     // arrange
     mockManagedRoute();
     Route route = getMockedRoute();
@@ -65,15 +67,13 @@ class AdapterRouteEndpointTest {
     ReflectionTestUtils.setField(subject, "mbeanContext", managedCamelContext);
 
     // assert
-    assertThat(subject.routes()).isNotEmpty();
+    assertThat(subject.routes(null)).isNotEmpty();
   }
 
   @Test
   void When_ExecutingInvalidOperationOnRoute_Expect_IncompatibleOperationExceptionThrown() {
     // assert
     assertThatThrownBy(() -> subject.execute("", "none"))
-        .isInstanceOf(IncompatibleOperationException.class);
-    assertThatThrownBy(() -> subject.execute("", "SUSPEND"))
         .isInstanceOf(IncompatibleOperationException.class);
   }
 
@@ -89,13 +89,14 @@ class AdapterRouteEndpointTest {
     verify(camelContext, times(4)).getRouteController();
   }
 
-  @Test
-  void When_ResumingAllRoutes_Expect_CamelContextToCall_getRoutes_And_getRouteController()
-      throws Exception {
+  @ParameterizedTest
+  @ValueSource(strings = {"resume", "start", "stop", "suspend"})
+  void When_OperationOnAllRoutes_Expect_CamelContextToCall_getRoutes_And_getRouteController(
+      String operation) {
     // arrange
     mockRoutesInContext();
     // act
-    subject.resumeAll();
+    subject.execute("all", operation);
 
     // assert
     verify(camelContext, times(1)).getRoutes();
@@ -103,17 +104,27 @@ class AdapterRouteEndpointTest {
   }
 
   @Test
-  void When_SuspendingAllRoutes_Expect_CamelContextToCall_getRoutes_And_getRouteController()
-      throws Exception {
+  void
+      When_ResettingAllRoutes_Expect_CamelContextToCall_getRoutes_and_ManagedCamelContext_getManagedRoute() {
     // arrange
     mockRoutesInContext();
-
     // act
-    subject.suspendAll();
+    subject.execute("all", "reset");
 
     // assert
     verify(camelContext, times(1)).getRoutes();
-    verify(camelContext, times(1)).getRouteController();
+    verify(managedCamelContext, times(1)).getManagedRoute(ROUTE_ID);
+  }
+
+  @Test
+  void When_ResettingRoute_Expect_MBeanContext_getManagedRoute() {
+    // arrange
+    mockRoutesInContext();
+    // act
+    subject.execute(ROUTE_ID, "reset");
+
+    // assert
+    verify(managedCamelContext, times(1)).getManagedRoute(ROUTE_ID);
   }
 
   private Route getMockedRoute() {
@@ -122,7 +133,7 @@ class AdapterRouteEndpointTest {
     return route;
   }
 
-  private void mockManagedRoute() throws Exception {
+  private void mockManagedRoute() {
     managedRoute = mock(ManagedRouteMBean.class);
     when(managedRoute.getRouteId()).thenReturn(ROUTE_ID);
     when(managedRoute.getState()).thenReturn("test");
@@ -135,7 +146,7 @@ class AdapterRouteEndpointTest {
         .thenReturn(managedCamelContext);
   }
 
-  private void mockRoutesInContext() throws Exception {
+  private void mockRoutesInContext() {
     mockManagedRoute();
     Route route = getMockedRoute();
     Endpoint mockEndpoint = mock(Endpoint.class);

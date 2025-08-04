@@ -1,9 +1,6 @@
 package de.ikor.sip.foundation.core.actuator.routes;
 
-import de.ikor.sip.foundation.core.actuator.routes.annotations.RouteIdParameter;
-import de.ikor.sip.foundation.core.actuator.routes.annotations.RouteOperationParameter;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
-import io.swagger.v3.oas.annotations.Operation;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -11,13 +8,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.api.management.ManagedCamelContext;
 import org.apache.camel.api.management.mbean.ManagedRouteMBean;
-import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
+import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
+import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
+import org.springframework.boot.actuate.endpoint.annotation.Selector;
+import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -28,7 +25,7 @@ import org.springframework.web.server.ResponseStatusException;
  * plenty of details about each one of them.
  */
 @Component
-@RestControllerEndpoint(id = "adapterroutes")
+@Endpoint(id = "adapterroutes")
 @Slf4j
 public class AdapterRouteEndpoint {
   private final CamelContext camelContext;
@@ -57,48 +54,14 @@ public class AdapterRouteEndpoint {
    *
    * @return AdapterRouteSummary
    */
-  @GetMapping
-  @Operation(summary = "Get all routes", description = "Get list of Routes from Camel Context")
-  public List<AdapterRouteSummary> routes() {
-    return camelContext.getRoutes().stream()
-        .map(route -> generateSummary(route.getRouteId()))
-        .toList();
-  }
-
-  /** Stops all routes */
-  @PostMapping("/stop")
-  @Operation(summary = "Stop all routes", description = "Stops all routes in Camel Context")
-  public void stopAll() {
-    camelContext
-        .getRoutes()
-        .forEach(route -> RouteOperation.STOP.execute(routeController, route.getRouteId()));
-  }
-
-  /** Resumes all routes */
-  @PostMapping("/resume")
-  @Operation(summary = "Resume all routes", description = "Resumes all routes in Camel Context")
-  public void resumeAll() {
-    camelContext
-        .getRoutes()
-        .forEach(route -> RouteOperation.RESUME.execute(routeController, route.getRouteId()));
-  }
-
-  /** Suspends all routes */
-  @PostMapping("/suspend")
-  @Operation(summary = "Suspend all routes", description = "Suspends all routes in Camel Context")
-  public void suspendAll() {
-    camelContext
-        .getRoutes()
-        .forEach(route -> RouteOperation.SUSPEND.execute(routeController, route.getRouteId()));
-  }
-
-  /** Starts all routes */
-  @PostMapping("/start")
-  @Operation(summary = "Start all routes", description = "Starts all routes in Camel Context")
-  public void startAll() {
-    this.camelContext
-        .getRoutes()
-        .forEach(route -> RouteOperation.START.execute(this.routeController, route.getRouteId()));
+  @ReadOperation
+  public List<AdapterRouteSummary> routes(@Nullable List<String> ids) {
+    if (ids != null && !ids.isEmpty()) {
+      return summary(ids);
+    } else
+      return camelContext.getRoutes().stream()
+          .map(route -> generateSummary(route.getRouteId()))
+          .toList();
   }
 
   /**
@@ -107,9 +70,8 @@ public class AdapterRouteEndpoint {
    * @param routeId - PathVariable
    * @return AdapterRouteDetails
    */
-  @GetMapping("/{routeId}")
-  @Operation(summary = "Get route details", description = "Get route details")
-  public AdapterRouteDetails route(@RouteIdParameter @PathVariable("routeId") String routeId) {
+  @ReadOperation
+  public AdapterRouteDetails route(@Selector String routeId) {
     return new AdapterRouteDetails(getRouteMBean(routeId));
   }
 
@@ -119,18 +81,57 @@ public class AdapterRouteEndpoint {
    * @param routeId - PathVariable
    * @param operation - RouteOperation
    */
-  @PostMapping("/{routeId}/{operation}")
-  @Operation(summary = "Execute operation", description = "Executes operation on route")
-  public void execute(
-      @RouteIdParameter @PathVariable("routeId") String routeId,
-      @RouteOperationParameter @PathVariable("operation") String operation) {
-    RouteOperation routeOperation = RouteOperation.fromId(operation);
-    routeOperation.execute(routeController, routeId);
+  @WriteOperation
+  public void execute(@Selector String routeId, @Selector String operation) {
+    var operationLowerCase = operation.toLowerCase();
+    if ("all".equals(routeId)) {
+      switch (operationLowerCase) {
+        case "start" -> startAll();
+        case "stop" -> stopAll();
+        case "resume" -> resumeAll();
+        case "suspend" -> suspendAll();
+        case "reset" -> resetAll();
+        default -> throw new IncompatibleOperationException("Invalid operation: " + operation);
+      }
+    } else {
+      if ("reset".equals(operationLowerCase)) {
+        reset(routeId);
+      } else {
+        RouteOperation routeOperation = RouteOperation.fromId(operationLowerCase);
+        routeOperation.execute(routeController, routeId);
+      }
+    }
+  }
+
+  /** Stops all routes */
+  public void stopAll() {
+    camelContext
+        .getRoutes()
+        .forEach(route -> RouteOperation.STOP.execute(routeController, route.getRouteId()));
+  }
+
+  /** Resumes all routes */
+  public void resumeAll() {
+    camelContext
+        .getRoutes()
+        .forEach(route -> RouteOperation.RESUME.execute(routeController, route.getRouteId()));
+  }
+
+  /** Suspends all routes */
+  public void suspendAll() {
+    camelContext
+        .getRoutes()
+        .forEach(route -> RouteOperation.SUSPEND.execute(routeController, route.getRouteId()));
+  }
+
+  /** Starts all routes */
+  public void startAll() {
+    this.camelContext
+        .getRoutes()
+        .forEach(route -> RouteOperation.START.execute(this.routeController, route.getRouteId()));
   }
 
   /** Resets all routes */
-  @PostMapping("/reset")
-  @Operation(summary = "Reset all routes", description = "Resets all routes in Camel Context")
   public void resetAll() {
     camelContext.getRoutes().forEach(route -> getRouteMBean(route.getRouteId()).reset());
   }
@@ -140,9 +141,7 @@ public class AdapterRouteEndpoint {
    *
    * @param routeId - PathVariable
    */
-  @PostMapping("/{routeId}/reset")
-  @Operation(summary = "Reset route", description = "Reset route")
-  public void resetStatistics(@RouteIdParameter @PathVariable("routeId") String routeId) {
+  public void reset(String routeId) {
     getRouteMBean(routeId).reset();
   }
 
@@ -161,8 +160,7 @@ public class AdapterRouteEndpoint {
    * @param ids list of route ids
    * @return list of {@link AdapterRouteSummary} for provided ids
    */
-  @GetMapping("/summary")
-  public List<AdapterRouteSummary> summary(@RequestParam(value = "ids") List<String> ids) {
+  public List<AdapterRouteSummary> summary(List<String> ids) {
     return filterRoutesSummary(ids);
   }
 
