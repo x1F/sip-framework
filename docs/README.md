@@ -255,10 +255,9 @@ Notice that in case of incoming endpoints (those in "from" statement), following
 
 ### Configuration properties
 
-By default, the following properties come as a part of SIP Framework, to override them simply add them to your configuration
-file with desired values.
-
-When using a yaml configuration file, which is already available in resources, adapt the properties to its format.
+By default, the following properties are included in the SIP Framework. To override them, simply add them to your configuration file with your desired values.
+If you're using a YAML configuration file (typically found in the application module), make sure to adapt the properties to the correct YAML format.
+A complete YAML configuration file with all available properties can be found [here](./sip-config-properties.yaml).
 
 Name | Description | Value | Default |
 --- | --- | --- | --- |
