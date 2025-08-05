@@ -7,7 +7,7 @@ sip:
     actuator:
       adapter-routes:
         enabled: true
-      endpoints: adapterroutes,adapterdefinition,tracing
+      endpoints: adapterroutes,tracing
       extensions:
         health:
           enabled: true
