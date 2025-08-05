@@ -36,7 +36,7 @@ systems, but all the principles apply equally to such scenarios.
 
 ![Image of SIP connected systems](./img/SIP_readme_adapter.svg?raw=true "SIP connected systems")
 
-The integration logic is divided into different packages: 
+The integration logic is divided into different packages:
 
 **Common**
 
@@ -46,18 +46,18 @@ The **Common** package provides the common data model inside domain for both sys
 
 **Models** package should contain only simple Java objects representing the respective domain
 in which the system connectors of an adapter operate, and should not contain any integration logic.
-All connectors should adapt the data models of their systems to or from this common model, 
-depending on data flow, due to their incompatibilities. 
+All connectors should adapt the data models of their systems to or from this common model,
+depending on data flow, due to their incompatibilities.
 The domain can be seen as a kind of contract between the different system connectors,
-which ensures that they can communicate with each other. 
+which ensures that they can communicate with each other.
 It contains common data model which uniforms the data models from all integration sides.
 
 **Connector groups**
 
-Each **Connector group** is designed to contain connectors which communicate with the associated external systems, 
-thus all classes found in a connector group should only relate to their integration side. 
+Each **Connector group** is designed to contain connectors which communicate with the associated external systems,
+thus all classes found in a connector group should only relate to their integration side.
 To enable this, their local domain objects are aligned with the API of an
-external systems they communicate with. In order to send a message from one system 
+external systems they communicate with. In order to send a message from one system
 to another, the local domain objects must be mapped to the shared domain object. Furthermore, this means that a message
 from system A is mapped to the shared domain object and then from the shared domain object to the model of system B and
 vice versa, due to their bidirectional nature.
@@ -122,7 +122,7 @@ Once you have your adapter you can do the following steps:
 
 ### Framework version upgrade
 
-If you need to upgrade your adapter to a newer SIP Framework version, please follow this 
+If you need to upgrade your adapter to a newer SIP Framework version, please follow this
 [guide](./framework_version_upgrade.md).
 
 ### Adding additional Camel starters to the project
@@ -184,7 +184,7 @@ fancy-sip-adapter
 ```
 
 Easiest way would be just copying an existing connector package which contains the pre-made structure.
-This can also be done manually by creating a new package. 
+This can also be done manually by creating a new package.
 It is important that these packages are contained in connectors package.
 
 ### Development Tips
@@ -205,12 +205,12 @@ endpoint:
 
 `<in/out>` corresponds to consumers and producers respectively.
 This means in case a message is received through a route using "from", then it is a consumer and "in" is used.
-On the other hand, it is a producer when a message is sent via "to". In this case, "out" is used as key in the configuration file.  
+On the other hand, it is a producer when a message is sent via "to". In this case, "out" is used as key in the configuration file.
 
-`<external-system>` should match the name of the system or client the adapter is communicating with.  
+`<external-system>` should match the name of the system or client the adapter is communicating with.
 
 `<endpoint>` in case there are multiple endpoints for an adapter that uses the same domain and external system, additional identification
-is required. For this purpose we use an additional endpoint key to provide distinction.  
+is required. For this purpose we use an additional endpoint key to provide distinction.
 
 For example:
 
@@ -241,7 +241,7 @@ from(...)
 ```
 
 If this convention is followed in the configuration, it leads to a unified structure that makes it possible
-to identify at a single glance which systems are communicating with each other and which communication technologies are 
+to identify at a single glance which systems are communicating with each other and which communication technologies are
 being used.
 It also makes routes more descriptive and adapters much easier to maintain.
 
@@ -249,16 +249,15 @@ It also makes routes more descriptive and adapters much easier to maintain.
 
 As we can see each external endpoint, definition is followed by explicit setting of id. Although it's not mandatory,
 doing so is highly recommended especially in case of outgoing endpoints. This will provide a reference of the external
-endpoints, which can be used for different functionalities, like custom health check, testing with test-kit or other 
+endpoints, which can be used for different functionalities, like custom health check, testing with test-kit or other
 that are yet to come.
 Notice that in case of incoming endpoints (those in "from" statement), following id refers to the routeId.
 
 ### Configuration properties
 
-By default, the following properties come as a part of SIP Framework, to override them simply add them to your configuration
-file with desired values.
-
-When using a yaml configuration file, which is already available in resources, adapt the properties to its format.
+By default, the following properties are included in the SIP Framework. To override them, simply add them to your configuration file with your desired values.
+If you're using a YAML configuration file (typically found in the application module), make sure to adapt the properties to the correct YAML format.
+A complete YAML configuration file with all available properties can be found [here](../docs-snapshot/sip-config-properties.yaml).
 
 Name | Description | Value | Default |
 --- | --- | --- | --- |
