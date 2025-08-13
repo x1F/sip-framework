@@ -9,13 +9,13 @@ import org.junit.jupiter.api.Test;
 class SIPX509AuthenticationTokenTest {
 
   @Test
-  void WHEN_ctor_WITH_nullPrincipal_THEN_IllegalArgument() throws Exception {
+  void WHEN_ctor_WITH_nullPrincipal_THEN_IllegalArgument() {
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> new SIPX509AuthenticationToken(null, true));
   }
 
   @Test
-  void WHEN_ctor_WITH_validParams_THEN_correctValueslReturned() throws Exception {
+  void WHEN_ctor_WITH_validParams_THEN_correctValueslReturned() {
     // arrange
     String expectedPrincipal = UUID.randomUUID().toString();
 
@@ -28,7 +28,7 @@ class SIPX509AuthenticationTokenTest {
   }
 
   @Test
-  void WHEN_withAuthenticated_WITH_true_THEN_sameObjectWithTrueAuthReturned() throws Exception {
+  void WHEN_withAuthenticated_WITH_true_THEN_sameObjectWithTrueAuthReturned() {
     // arrange
     String expectedPrincipal = UUID.randomUUID().toString();
 

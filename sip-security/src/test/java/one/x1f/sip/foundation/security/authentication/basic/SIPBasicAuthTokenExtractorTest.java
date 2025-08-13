@@ -12,7 +12,7 @@ class SIPBasicAuthTokenExtractorTest {
   private final SIPBasicAuthTokenExtractor subject = new SIPBasicAuthTokenExtractor();
 
   @Test
-  void WHEN_extract_WITH_validAuthHeader_THEN_headerExtracted() throws Exception {
+  void WHEN_extract_WITH_validAuthHeader_THEN_headerExtracted() {
     // arrange
     String expectedUsername = "user";
     String expectedPassword = "password";
@@ -29,7 +29,7 @@ class SIPBasicAuthTokenExtractorTest {
   }
 
   @Test
-  void WHEN_extract_WITH_badAuthHeader_THEN_badCredentialsException() throws Exception {
+  void WHEN_extract_WITH_badAuthHeader_THEN_badCredentialsException() {
     // arrange
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addHeader("Authorization", "bad");
@@ -40,7 +40,7 @@ class SIPBasicAuthTokenExtractorTest {
   }
 
   @Test
-  void WHEN_extract_WITH_noHeader_THEN_badCredentialsException() throws Exception {
+  void WHEN_extract_WITH_noHeader_THEN_badCredentialsException() {
     // arrange
     MockHttpServletRequest request = new MockHttpServletRequest();
 
@@ -50,7 +50,7 @@ class SIPBasicAuthTokenExtractorTest {
   }
 
   @Test
-  void WHEN_getTokenType_THEN_returnBasicAuthype() throws Exception {
+  void WHEN_getTokenType_THEN_returnBasicAuthype() {
     assertThat(subject.getTokenType()).isEqualTo(SIPBasicAuthAuthenticationToken.class);
   }
 }

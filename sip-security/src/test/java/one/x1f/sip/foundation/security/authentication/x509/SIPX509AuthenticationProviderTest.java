@@ -13,7 +13,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 class SIPX509AuthenticationProviderTest {
 
   @Test
-  void WHEN_postConstruct_THEN_tokenExtractorAdded() throws Exception {
+  void WHEN_postConstruct_THEN_tokenExtractorAdded() {
     // arrange
     TokenExtractors extractors = mock(TokenExtractors.class);
     SIPX509AuthenticationProvider subject =

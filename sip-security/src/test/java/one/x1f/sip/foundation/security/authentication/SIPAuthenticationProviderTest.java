@@ -26,7 +26,7 @@ class SIPAuthenticationProviderTest {
   @Mock private SIPTokenValidator<SIPBasicAuthAuthenticationToken> validator;
 
   @Test
-  void WHEN_ctor_WITH_nullTokenType_THEN_IllegalArgument() throws Exception {
+  void WHEN_ctor_WITH_nullTokenType_THEN_IllegalArgument() {
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(
             () ->
@@ -34,7 +34,7 @@ class SIPAuthenticationProviderTest {
   }
 
   @Test
-  void WHEN_ctor_WITH_nullValidator_THEN_IllegalArgument() throws Exception {
+  void WHEN_ctor_WITH_nullValidator_THEN_IllegalArgument() {
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(
             () ->
@@ -43,7 +43,7 @@ class SIPAuthenticationProviderTest {
   }
 
   @Test
-  void WHEN_authenticate_WITH_validToken_THEN_authenticated() throws Exception {
+  void WHEN_authenticate_WITH_validToken_THEN_authenticated() {
     // arrange
     SIPAuthenticationProvider<SIPBasicAuthAuthenticationToken> subject =
         new SIPAuthenticationProvider<SIPBasicAuthAuthenticationToken>(
@@ -62,7 +62,7 @@ class SIPAuthenticationProviderTest {
   }
 
   @Test
-  void WHEN_authenticate_WITH_badToken_THEN_badCredentialsException() throws Exception {
+  void WHEN_authenticate_WITH_badToken_THEN_badCredentialsException() {
     // arrange
     ((Logger) LoggerFactory.getLogger(SIPAuthenticationProvider.class)).setLevel(Level.INFO);
     SIPAuthenticationProvider<SIPBasicAuthAuthenticationToken> subject =
@@ -80,8 +80,8 @@ class SIPAuthenticationProviderTest {
   }
 
   @Test
-  void WHEN_authenticate_WITH_badTokenWithDebugLogging_THEN_badCredentialsExceptionAndDebugMessage()
-      throws Exception {
+  void
+      WHEN_authenticate_WITH_badTokenWithDebugLogging_THEN_badCredentialsExceptionAndDebugMessage() {
     // arrange
     Logger logger = (Logger) LoggerFactory.getLogger(SIPAuthenticationProvider.class);
 
@@ -108,7 +108,7 @@ class SIPAuthenticationProviderTest {
   }
 
   @Test
-  void WHEN_supports_WITH_differentToken_THEN_false() throws Exception {
+  void WHEN_supports_WITH_differentToken_THEN_false() {
     // arrange
     SIPAuthenticationProvider<SIPBasicAuthAuthenticationToken> subject =
         new SIPAuthenticationProvider<SIPBasicAuthAuthenticationToken>(

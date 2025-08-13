@@ -16,7 +16,7 @@ class SIPAuthProvidersExistConditionTest {
   private SIPAuthProvidersExistCondition subject = new SIPAuthProvidersExistCondition();
 
   @Test
-  void When_getMatchOutcomeWithExistingFlag_Expect_match() throws Exception {
+  void When_getMatchOutcomeWithExistingFlag_Expect_match() {
     // arrange
     Class<?> annotatedClass = SIPBasicAuthAuthenticationProvider.class;
 
@@ -36,7 +36,7 @@ class SIPAuthProvidersExistConditionTest {
   }
 
   @Test
-  void When_getMatchOutcomeWithNonExistingFlag_Expect_noMatch() throws Exception {
+  void When_getMatchOutcomeWithNonExistingFlag_Expect_noMatch() {
     // arrange
     ConditionContext context = mock(ConditionContext.class);
     MockEnvironment environment = new MockEnvironment();

@@ -1,15 +1,26 @@
 package one.x1f.sip.foundation.mvnplugin;
 
 import static java.lang.String.format;
+import static one.x1f.sip.foundation.mvnplugin.model.ImportStatement.STATIC_PREFIX;
 
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaSource;
 import com.thoughtworks.qdox.model.impl.DefaultJavaClass;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import one.x1f.sip.foundation.mvnplugin.model.ImportStatement;
@@ -17,7 +28,6 @@ import one.x1f.sip.foundation.mvnplugin.model.ParsedJavaFile;
 
 /** Parses a source file into a {@link ParsedJavaFile} representation. */
 public final class ImportStatementParser {
-  public static final String STATIC_PREFIX = "static ";
   private static final String IMPORT_PREFIX = "import ";
   private final LineReader lineReader;
 
@@ -123,7 +133,7 @@ public final class ImportStatementParser {
     public Collection<String> lines(Path path) throws IOException {
       final Reader fileReader = Files.newBufferedReader(path, charset);
       try (final BufferedReader lineReader = new BufferedReader(fileReader)) {
-        return lineReader.lines().collect(Collectors.toList());
+        return lineReader.lines().toList();
       }
     }
   }

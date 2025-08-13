@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 class SIPAlwaysAllowValidatorTest {
 
   @Test
-  void WHEN_isValid_WITH_anyToken_THEN_trueReturned() throws Exception {
+  void WHEN_isValid_WITH_anyToken_THEN_trueReturned() {
     // arrange
     SIPAlwaysAllowValidator<SIPBasicAuthAuthenticationToken> subject =
         new SIPAlwaysAllowValidator<>();
