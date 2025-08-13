@@ -104,7 +104,7 @@ public final class ImportStatementParser {
         .filter(s -> !s.isEmpty())
         .map(s -> s.substring(IMPORT_PREFIX.length()))
         .map(importName -> toImportStatement(importName, lineNumber))
-        .collect(Collectors.toList());
+        .toList();
   }
 
   private ImportStatement toImportStatement(String importName, int lineNumber) {

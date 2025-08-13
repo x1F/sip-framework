@@ -19,13 +19,13 @@ class ImportAnalyzer {
    */
   Optional<BannedImportRecords> checkFile(ParsedJavaFile sourceFile, BannedImportGroups groups) {
     final BannedImportGroup group =
-        groups == null ? null : groups.selectGroupFor(sourceFile.getFqcn()).orElse(null);
+        groups == null ? null : groups.selectGroupFor(sourceFile.fqcn()).orElse(null);
     if (group == null) {
       return Optional.empty();
     }
 
     final List<ImportStatement> matches = new ArrayList<>();
-    for (final ImportStatement importStmt : sourceFile.getImports()) {
+    for (final ImportStatement importStmt : sourceFile.imports()) {
       if (group.isImportBanned(importStmt.getImportName())) {
         matches.add(importStmt);
       }
@@ -34,7 +34,7 @@ class ImportAnalyzer {
       return Optional.empty();
     }
     final BannedImportRecords bannedImportRecords =
-        new BannedImportRecords(sourceFile.getPath(), matches);
+        new BannedImportRecords(sourceFile.path(), matches);
     return Optional.of(bannedImportRecords);
   }
 }

@@ -32,8 +32,8 @@ class ResultsFormatter {
   private void formatGroupedMatches(StringBuilder b, List<BannedImportRecords> matches) {
     matches.forEach(
         fileMatch -> {
-          b.append("\tin file").append(": ").append(fileMatch.getSourceFile()).append("\n");
-          fileMatch.getMatchedImports().forEach(match -> appendMatch(match, b));
+          b.append("\tin file").append(": ").append(fileMatch.sourceFile()).append("\n");
+          fileMatch.matchedImports().forEach(match -> appendMatch(match, b));
         });
   }
 

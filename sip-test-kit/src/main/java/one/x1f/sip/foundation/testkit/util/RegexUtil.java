@@ -68,6 +68,7 @@ public class RegexUtil {
   }
 
   private static String removeCarriageReturns(String input) {
+
     return StringUtils.replace(input, CR, EMPTY);
   }
 }

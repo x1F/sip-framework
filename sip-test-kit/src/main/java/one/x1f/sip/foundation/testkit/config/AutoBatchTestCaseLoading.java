@@ -1,7 +1,5 @@
 package one.x1f.sip.foundation.testkit.config;
 
-import static one.x1f.sip.foundation.testkit.SIPBatchTest.SIP_BATCH_TEST;
-
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
@@ -26,7 +24,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 @Configuration
 @EnableConfigurationProperties
 @Profile("test")
-@ConditionalOnProperty(value = SIP_BATCH_TEST, havingValue = "true")
+@ConditionalOnProperty(value = "sip.testkit.batch-test", havingValue = "true")
 public class AutoBatchTestCaseLoading {
 
   private static final String YML_TEST_CASES_PATH_PROPERTY = "sip.testkit.test-cases-path";

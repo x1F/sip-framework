@@ -72,7 +72,7 @@ final class SourceTreeAnalyzer {
       Collection<Path> directories, BannedImportGroups groups) {
     return directories.stream()
         .flatMap(path -> analyzeFolder(path, groups))
-        .collect(Collectors.toList());
+        .toList();
   }
 
   private Stream<BannedImportRecords> analyzeFolder(Path srcDir, BannedImportGroups groups) {
