@@ -1,7 +1,7 @@
 package ${package};
 
 import org.springframework.boot.SpringApplication;
-import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
+import one.x1f.sip.foundation.core.annotation.SIPIntegrationAdapter;
 
 @SIPIntegrationAdapter
 public class SIPApplication {

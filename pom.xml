@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.ikor.sip.foundation</groupId>
+    <groupId>one.x1f.sip.foundation</groupId>
     <artifactId>sip-framework</artifactId>
     <version>3.6.3-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -208,27 +208,27 @@
 
             <!-- sip dependencies -->
             <dependency>
-                <groupId>de.ikor.sip.foundation</groupId>
+                <groupId>one.x1f.sip.foundation</groupId>
                 <artifactId>sip-integration-starter</artifactId>
                 <version>${sip-framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.ikor.sip.foundation</groupId>
+                <groupId>one.x1f.sip.foundation</groupId>
                 <artifactId>sip-core</artifactId>
                 <version>${sip-framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.ikor.sip.foundation</groupId>
+                <groupId>one.x1f.sip.foundation</groupId>
                 <artifactId>sip-security</artifactId>
                 <version>${sip-framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.ikor.sip.foundation</groupId>
+                <groupId>one.x1f.sip.foundation</groupId>
                 <artifactId>sip-test-kit</artifactId>
                 <version>${sip-framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.ikor.sip.foundation</groupId>
+                <groupId>one.x1f.sip.foundation</groupId>
                 <artifactId>sip-soap-starter</artifactId>
                 <version>${sip-framework.version}</version>
             </dependency>
@@ -420,15 +420,15 @@
                         <groups>
                             <group>
                                 <title>SIP Core</title>
-                                <packages>de.ikor.sip.foundation.core*</packages>
+                                <packages>one.x1f.sip.foundation.core*</packages>
                             </group>
                             <group>
                                 <title>SIP Security</title>
-                                <packages>de.ikor.sip.foundation.security*</packages>
+                                <packages>one.x1f.sip.foundation.security*</packages>
                             </group>
                             <group>
                                 <title>SIP Maven Plugin</title>
-                                <packages>de.ikor.sip.foundation.mvnplugin*</packages>
+                                <packages>one.x1f.sip.foundation.mvnplugin*</packages>
                             </group>
                         </groups>
                     </configuration>

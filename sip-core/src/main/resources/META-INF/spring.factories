@@ -1,1 +1,1 @@
-org.springframework.context.ApplicationListener=de.ikor.sip.foundation.core.actuator.config.EndpointExposureConfiguration
+org.springframework.context.ApplicationListener=one.x1f.sip.foundation.core.actuator.config.EndpointExposureConfiguration

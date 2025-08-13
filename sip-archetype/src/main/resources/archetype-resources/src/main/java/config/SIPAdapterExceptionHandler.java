@@ -1,7 +1,7 @@
 package ${package}.config;
 
-import de.ikor.sip.foundation.core.declarative.configuration.ConfigurationDefinition;
-import de.ikor.sip.foundation.core.util.exception.SIPAdapterException;
+import one.x1f.sip.foundation.core.declarative.configuration.ConfigurationDefinition;
+import one.x1f.sip.foundation.core.util.exception.SIPAdapterException;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteConfigurationBuilder;
 import org.apache.camel.model.OutputDefinition;
