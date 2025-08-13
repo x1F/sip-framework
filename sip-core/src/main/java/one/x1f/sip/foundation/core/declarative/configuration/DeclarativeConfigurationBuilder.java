@@ -3,6 +3,7 @@ package one.x1f.sip.foundation.core.declarative.configuration;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import one.x1f.sip.foundation.core.declarative.DeclarationsRegistry;
+import one.x1f.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import org.apache.camel.builder.RouteConfigurationBuilder;
 import org.apache.camel.model.OnExceptionDefinition;
 import org.springframework.context.annotation.Configuration;
@@ -13,8 +14,6 @@ import org.springframework.util.ClassUtils;
 @RequiredArgsConstructor
 public class DeclarativeConfigurationBuilder extends RouteConfigurationBuilder {
 
-  public static final String ERROR_HANDLER = "errorHandler";
-  public static final String SIP_INTERNAL_SET_PROPERTY = "sip-internal-set-property";
   private final List<ConfigurationDefinition> definitions;
   private final DeclarationsRegistry registry;
 
@@ -27,8 +26,10 @@ public class DeclarativeConfigurationBuilder extends RouteConfigurationBuilder {
         registry.registerClassForOnException(
             onExceptionDefinition, ClassUtils.getUserClass(def.getClass()).getName());
         onExceptionDefinition
-            .setProperty(ERROR_HANDLER, simple(ClassUtils.getUserClass(def.getClass()).getName()))
-            .id(SIP_INTERNAL_SET_PROPERTY);
+            .setProperty(
+                DeclarativeHelper.ERROR_HANDLER,
+                simple(ClassUtils.getUserClass(def.getClass()).getName()))
+            .id(DeclarativeHelper.SIP_INTERNAL_SET_PROPERTY);
       }
     }
   }

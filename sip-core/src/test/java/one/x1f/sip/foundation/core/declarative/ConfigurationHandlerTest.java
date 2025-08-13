@@ -1,7 +1,7 @@
 package one.x1f.sip.foundation.core.declarative;
 
 import static one.x1f.sip.foundation.core.apps.declarative.config.ConfigurationHandlersAdapter.*;
-import static one.x1f.sip.foundation.core.declarative.configuration.DeclarativeConfigurationBuilder.ERROR_HANDLER;
+import static one.x1f.sip.foundation.core.declarative.utils.DeclarativeHelper.ERROR_HANDLER;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
 import static org.assertj.core.api.Assertions.assertThat;
 

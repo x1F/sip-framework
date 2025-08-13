@@ -16,5 +16,6 @@ interface CheckedBiConsumer<T, R> {
    * @param r the second input argument
    * @throws Exception possible exception due to Apache Camel operations
    */
+  @SuppressWarnings("java:S112")
   void consume(T t, R r) throws Exception;
 }
