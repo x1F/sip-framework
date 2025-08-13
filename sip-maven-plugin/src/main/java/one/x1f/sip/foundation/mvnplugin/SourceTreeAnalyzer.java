@@ -65,9 +65,7 @@ final class SourceTreeAnalyzer {
   }
 
   private List<Path> filterDirs(Collection<Path> folders, String discriminator) {
-    return folders.stream()
-        .filter(path -> path.toString().contains(discriminator))
-        .collect(Collectors.toList());
+    return folders.stream().filter(path -> path.toString().contains(discriminator)).toList();
   }
 
   private List<BannedImportRecords> analyzeFolders(
@@ -79,7 +77,7 @@ final class SourceTreeAnalyzer {
 
   private Stream<BannedImportRecords> analyzeFolder(Path srcDir, BannedImportGroups groups) {
     try (Stream<Path> sourceFiles = listFiles(srcDir)) {
-      return sourceFiles.map(fileParser::parse).collect(Collectors.toList()).stream()
+      return sourceFiles.map(fileParser::parse).toList().stream()
           .map(parsedFile -> importAnalyzer.checkFile(parsedFile, groups))
           .filter(Optional::isPresent)
           .map(Optional::get);

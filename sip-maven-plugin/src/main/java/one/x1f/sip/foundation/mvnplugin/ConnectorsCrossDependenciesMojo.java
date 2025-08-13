@@ -81,8 +81,7 @@ public class ConnectorsCrossDependenciesMojo extends AbstractMojo {
   }
 
   Set<String> getSIPConnectorPackages(String folderPath) {
-    List<Path> javaFiles =
-        SourceTreeAnalyzer.listFiles(Paths.get(folderPath)).collect(Collectors.toList());
+    List<Path> javaFiles = SourceTreeAnalyzer.listFiles(Paths.get(folderPath)).toList();
     return javaFiles.stream()
         .filter(path -> path.toString().contains("connectors"))
         .filter(path -> path.toString().contains("java"))

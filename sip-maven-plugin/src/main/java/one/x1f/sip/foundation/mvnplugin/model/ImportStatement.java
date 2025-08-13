@@ -4,6 +4,9 @@ import static one.x1f.sip.foundation.mvnplugin.ImportStatementParser.STATIC_PREF
 
 /** Represents an import statement that has been discovered while parsing a source file. */
 public final class ImportStatement {
+
+  public static final String STATIC_PREFIX = "static ";
+
   private final String importName;
   private final int line;
   private final boolean staticImport;

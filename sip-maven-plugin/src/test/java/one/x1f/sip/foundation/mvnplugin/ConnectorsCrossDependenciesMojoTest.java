@@ -19,7 +19,7 @@ class ConnectorsCrossDependenciesMojoTest {
   private final ConnectorsCrossDependenciesMojo subject = new ConnectorsCrossDependenciesMojo();
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     mavenProject = mock(MavenProject.class, Answers.RETURNS_DEEP_STUBS);
     when(mavenProject.getCompileSourceRoots()).thenReturn(List.of("src/test/java/"));
     when(mavenProject.getProperties().get("project.build.sourceEncoding")).thenReturn("UTF-8");

@@ -2,7 +2,6 @@ package one.x1f.sip.foundation.mvnplugin.model;
 
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /** Holds the information of what imports should be banned and from which base package. */
 public final class BannedImportGroup {
@@ -11,7 +10,7 @@ public final class BannedImportGroup {
 
   public BannedImportGroup(String basePackage, List<String> bannedImports) {
     this.basePackage = basePackage.trim();
-    this.bannedImports = bannedImports.stream().map(String::trim).collect(Collectors.toList());
+    this.bannedImports = bannedImports.stream().map(String::trim).toList();
   }
 
   public String getBasePackages() {
