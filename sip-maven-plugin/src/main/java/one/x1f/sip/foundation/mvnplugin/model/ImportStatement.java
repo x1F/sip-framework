@@ -1,7 +1,5 @@
 package one.x1f.sip.foundation.mvnplugin.model;
 
-import static one.x1f.sip.foundation.mvnplugin.ImportStatementParser.STATIC_PREFIX;
-
 /** Represents an import statement that has been discovered while parsing a source file. */
 public final class ImportStatement {
 
