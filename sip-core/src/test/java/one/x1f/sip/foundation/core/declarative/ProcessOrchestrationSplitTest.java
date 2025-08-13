@@ -1,9 +1,9 @@
-package de.ikor.sip.foundation.core.declarative;
+package one.x1f.sip.foundation.core.declarative;
 
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import de.ikor.sip.foundation.core.apps.declarative.ProcessOrchestrationSplitAdapter;
+import one.x1f.sip.foundation.core.apps.declarative.ProcessOrchestrationSplitAdapter;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
 import org.apache.camel.FluentProducerTemplate;

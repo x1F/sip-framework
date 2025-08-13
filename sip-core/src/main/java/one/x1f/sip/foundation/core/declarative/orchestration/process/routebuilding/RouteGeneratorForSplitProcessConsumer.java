@@ -1,18 +1,21 @@
-package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding;
+package one.x1f.sip.foundation.core.declarative.orchestration.process.routebuilding;
 
-import static de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers.handleSplitCollection;
+import static one.x1f.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers.handleSplitCollection;
 
-import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepSplitExpression;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.*;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import one.x1f.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
+import one.x1f.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepSplitExpression;
+import one.x1f.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumer;
+import one.x1f.sip.foundation.core.declarative.orchestration.process.dsl.CallSplitStatement;
+import one.x1f.sip.foundation.core.declarative.orchestration.process.dsl.CallableWithinProcessDefinition;
+import one.x1f.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorInternalHelper;
+import one.x1f.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
+import one.x1f.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import org.apache.camel.Exchange;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.SplitDefinition;

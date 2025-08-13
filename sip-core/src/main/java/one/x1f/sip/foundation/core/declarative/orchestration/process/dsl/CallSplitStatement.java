@@ -1,12 +1,12 @@
-package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
+package one.x1f.sip.foundation.core.declarative.orchestration.process.dsl;
 
-import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepSplitExpression;
-import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Delegate;
+import one.x1f.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepSplitExpression;
+import one.x1f.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 
 /**
  * DSL class used for construction of for split statements and ending them
