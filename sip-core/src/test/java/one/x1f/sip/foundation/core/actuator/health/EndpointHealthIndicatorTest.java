@@ -22,10 +22,7 @@ class EndpointHealthIndicatorTest {
   void setup() {
     endpoint = mock(Endpoint.class);
     health = Health.up().build();
-    Function<Endpoint, Health> healthFunction =
-        endpoint -> {
-          return health;
-        };
+    Function<Endpoint, Health> healthFunction = ep -> health;
     subject = new EndpointHealthIndicator(endpoint, healthFunction);
   }
 

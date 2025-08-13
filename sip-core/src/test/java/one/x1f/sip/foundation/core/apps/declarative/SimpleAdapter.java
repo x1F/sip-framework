@@ -39,6 +39,7 @@ public class SimpleAdapter {
   public class AppendStaticMessageProvider extends GenericInboundConnectorBase {
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(this::defineRequestRoute);
@@ -63,6 +64,7 @@ public class SimpleAdapter {
   public class AppendStaticMessageConsumer extends GenericOutboundConnectorBase {
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(
@@ -100,6 +102,7 @@ public class SimpleAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(this::defineRequestRoute);
@@ -123,6 +126,7 @@ public class SimpleAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(this::defineRequestRoute);
@@ -141,6 +145,7 @@ public class SimpleAdapter {
   public class RestScenarioConsumer extends GenericOutboundConnectorBase {
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(this::defineRequestRoute)

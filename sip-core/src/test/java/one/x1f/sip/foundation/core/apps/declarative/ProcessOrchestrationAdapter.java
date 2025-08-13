@@ -30,7 +30,7 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 @ComponentScan(excludeFilters = @Filter(SIPIntegrationAdapter.class))
 public class ProcessOrchestrationAdapter {
 
-  private final String GROUP_ID = "group";
+  private static final String GROUP_ID = "group";
 
   public record PartnerNameRequest(String name) {}
 
@@ -166,6 +166,7 @@ public class ProcessOrchestrationAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(
@@ -194,6 +195,7 @@ public class ProcessOrchestrationAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setResponseRouteTransformer(
@@ -240,6 +242,7 @@ public class ProcessOrchestrationAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setResponseRouteTransformer(
@@ -268,6 +271,7 @@ public class ProcessOrchestrationAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(
@@ -295,6 +299,7 @@ public class ProcessOrchestrationAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setResponseRouteTransformer(

@@ -27,14 +27,15 @@ public final class CallSplitStatement<R> extends ProcessDslBase<CallSplitStateme
     this.processDefinition = compositeProcess;
   }
 
-  ProcessBranch<CallSplitStatement<R>> split(final CompositeProcessStepSplitExpression expression) {
+  <T> ProcessBranch<CallSplitStatement<R>> split(
+      final CompositeProcessStepSplitExpression<T> expression) {
     final var branch = new ProcessBranchStatements(expression, new ArrayList<>());
     splitProcess.add(branch);
     return new ProcessBranch<>(branch.statements, self(), processDefinition);
   }
 
-  ProcessBranch<CallSplitStatement<R>> parallelSplit(
-      final CompositeProcessStepSplitExpression expression) {
+  <T> ProcessBranch<CallSplitStatement<R>> parallelSplit(
+      final CompositeProcessStepSplitExpression<T> expression) {
     isParallel = true;
     final var branch = new ProcessBranchStatements(expression, new ArrayList<>());
     splitProcess.add(branch);
@@ -46,7 +47,7 @@ public final class CallSplitStatement<R> extends ProcessDslBase<CallSplitStateme
   }
 
   public record ProcessBranchStatements(
-      CompositeProcessStepSplitExpression expression,
+      CompositeProcessStepSplitExpression<?> expression,
       List<CallableWithinProcessDefinition> statements) {}
 
   public final class ProcessBranch<I> extends ProcessDslBase<ProcessBranch<I>, I>

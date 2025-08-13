@@ -50,6 +50,7 @@ public class ConfigurationHandlersAdapter {
     public static final String ID = "ConfiguredInConnector";
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(this::defineRequestRoute);
@@ -93,6 +94,7 @@ public class ConfigurationHandlersAdapter {
   public class ConfiguredOutConnector extends GenericOutboundConnectorBase {
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(

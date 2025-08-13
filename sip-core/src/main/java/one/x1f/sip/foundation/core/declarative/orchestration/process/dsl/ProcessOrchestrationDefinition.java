@@ -91,18 +91,20 @@ public class ProcessOrchestrationDefinition
    * @param expression Expression to determine array to split
    * @return DSL Handle
    */
-  public CallSplitStatement<ProcessOrchestrationDefinition>.ProcessBranch<
-          CallSplitStatement<ProcessOrchestrationDefinition>>
-      split(CompositeProcessStepSplitExpression expression) {
+  public <T>
+      CallSplitStatement<ProcessOrchestrationDefinition>.ProcessBranch<
+              CallSplitStatement<ProcessOrchestrationDefinition>>
+          split(CompositeProcessStepSplitExpression<T> expression) {
     final CallSplitStatement<ProcessOrchestrationDefinition> def =
         new CallSplitStatement<>(self(), getCompositeProcess());
     steps.add(def);
     return def.split(expression);
   }
 
-  public CallSplitStatement<ProcessOrchestrationDefinition>.ProcessBranch<
-          CallSplitStatement<ProcessOrchestrationDefinition>>
-      parallelSplit(CompositeProcessStepSplitExpression expression) {
+  public <T>
+      CallSplitStatement<ProcessOrchestrationDefinition>.ProcessBranch<
+              CallSplitStatement<ProcessOrchestrationDefinition>>
+          parallelSplit(CompositeProcessStepSplitExpression<T> expression) {
     final CallSplitStatement<ProcessOrchestrationDefinition> def =
         new CallSplitStatement<>(self(), getCompositeProcess());
     steps.add(def);

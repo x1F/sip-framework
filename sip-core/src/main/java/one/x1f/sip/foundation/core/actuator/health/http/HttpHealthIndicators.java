@@ -4,7 +4,8 @@ import static one.x1f.sip.foundation.core.declarative.utils.DeclarativeHelper.ap
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -65,7 +66,7 @@ public class HttpHealthIndicators {
     Health.Builder builder = new Health.Builder();
     builder.withDetails(createDetails(endpoint));
     try {
-      HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+      HttpURLConnection connection = (HttpURLConnection) new URI(url).toURL().openConnection();
       connection.setConnectTimeout(timeout);
       connection.connect();
       Optional<HttpStatus> httpStatus =
@@ -82,7 +83,7 @@ public class HttpHealthIndicators {
                   .withDetail("statusCode", status.value());
             }
           });
-    } catch (IOException e) {
+    } catch (IOException | URISyntaxException e) {
       builder.down(e);
     }
     return builder.build();

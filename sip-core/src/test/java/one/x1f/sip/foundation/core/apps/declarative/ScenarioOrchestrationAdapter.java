@@ -29,7 +29,7 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 @ComponentScan(excludeFilters = @Filter(SIPIntegrationAdapter.class))
 public class ScenarioOrchestrationAdapter {
 
-  private final String GROUP_ID = "group";
+  private static final String GROUP_ID = "group";
 
   // <-- ORCHESTRATED SCENARIO START
   @Data
@@ -208,6 +208,7 @@ public class ScenarioOrchestrationAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setResponseRouteTransformer(
@@ -232,6 +233,7 @@ public class ScenarioOrchestrationAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setResponseRouteTransformer(
@@ -256,6 +258,7 @@ public class ScenarioOrchestrationAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setResponseRouteTransformer(
@@ -298,6 +301,7 @@ public class ScenarioOrchestrationAdapter {
     public static final String ID = "autoOrchestratedOutboundConnectorOne";
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(
@@ -325,6 +329,7 @@ public class ScenarioOrchestrationAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(

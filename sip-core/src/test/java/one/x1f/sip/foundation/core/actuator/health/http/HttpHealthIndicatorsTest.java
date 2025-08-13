@@ -68,7 +68,7 @@ class HttpHealthIndicatorsTest {
   @Test
   void When_urlHealthIndicator_With_NonExistentURL_Then_StatusDown() {
     // arrange
-    when(endpoint.getEndpointKey()).thenReturn("non");
+    when(endpoint.getEndpointKey()).thenReturn("http://localhost/nonexists");
 
     // act
     Health subject = HttpHealthIndicators.urlHealthIndicator(endpoint);

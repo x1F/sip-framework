@@ -35,7 +35,7 @@ class LogProcessorInterceptStrategyTest {
   private static ExtendedCamelContext extendedCamelContext;
 
   @BeforeAll
-  public static void setup() {
+  static void setup() {
     translateMessageService = mock(SIPTranslateMessageService.class);
     subject = new LogProcessorInterceptStrategy(translateMessageService);
   }

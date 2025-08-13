@@ -68,6 +68,7 @@ public class CDMValidationAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(this::configureEndpointRoute);

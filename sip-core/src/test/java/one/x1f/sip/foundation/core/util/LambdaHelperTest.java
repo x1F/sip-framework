@@ -14,7 +14,6 @@ class LambdaHelperTest {
 
   @StandardException
   static class CheckedException extends Exception {}
-  ;
 
   @Test
   void GIVEN_string_comparator_WHEN_wrapping_as_lambda_VERIFY_order_is_equal() {

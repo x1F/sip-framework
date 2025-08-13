@@ -21,12 +21,12 @@ class CallProcessConsumerTest {
 
     CallProcessConsumer callProcessConsumer =
         new CallProcessConsumer(null, compositeProcess, getPartnerDebtById.class);
-    callProcessConsumer.withRequestPreparation((context) -> null);
+    callProcessConsumer.withRequestPreparation(context -> null);
 
     // act & assert
     assertThatThrownBy(
             () -> {
-              callProcessConsumer.withRequestPreparation((context) -> null);
+              callProcessConsumer.withRequestPreparation(context -> null);
             })
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(

@@ -18,8 +18,8 @@ import org.apache.camel.model.RouteDefinition;
 public interface ConnectorProcessor extends ConnectorExtension, Processor {
 
   /**
-   * Default implementation of {@link #accept(RouteDefinition)} that attaches this processor into
-   * the route. Should not usually be modified / overriden.
+   * Default implementation that attaches this processor into the route. Should not usually be
+   * modified / overriden.
    */
   @Override
   default void accept(RouteDefinition routeDefinition) {
@@ -30,11 +30,13 @@ public interface ConnectorProcessor extends ConnectorExtension, Processor {
    * @deprecated Override {@link #getExtensionName()} instead where necessary
    */
   @Deprecated(since = "4.0.0")
+  @SuppressWarnings("java:S1133")
   default String getProcessorName() {
     return getClass().getSimpleName();
   }
 
   @Override
+  @SuppressWarnings("java:S1874")
   default String getExtensionName() {
     return getProcessorName();
   }

@@ -221,6 +221,7 @@ class DeclarationsRegistryTest {
   }
 
   @Test
+  @Deprecated
   void WHEN_CheckingConnectorMapping_WITH_MappingsAndNoTransformation_THEN_NoExceptionThrown() {
     // arrange
     InboundConnectorMock connector = mock(InboundConnectorMock.class);

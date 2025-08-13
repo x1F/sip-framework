@@ -130,8 +130,8 @@ class FtpHealthConsumersTest {
     // act
     Exception exceptionSubject =
         catchThrowableOfType(
-            () -> FtpHealthConsumers.listDirectoryConsumer(endpoint, fileOps),
-            IntegrationManagementException.class);
+            IntegrationManagementException.class,
+            () -> FtpHealthConsumers.listDirectoryConsumer(endpoint, fileOps));
 
     // assert
     verify(fileOps, times(0)).listFiles(directoryName);

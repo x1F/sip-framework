@@ -26,7 +26,7 @@ import org.apache.camel.spi.IdAware;
 import org.apache.camel.support.SimpleEventNotifierSupport;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.stereotype.Service;
 
 /**
@@ -280,7 +280,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
     if (service instanceof Enricher enricher) {
       String enrichEndpointUri =
           getEnrichExpressionUri(enricher.getExpression(), ENRICH, enrichCounter);
-      if (StringUtils.startsWith(enrichEndpointUri, ENRICH)) {
+      if (Strings.CS.startsWith(enrichEndpointUri, ENRICH)) {
         enrichCounter++;
       }
       addToEndpointUriMaps(routeId, enrichEndpointUri);
@@ -290,7 +290,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
     if (service instanceof PollEnricher pollEnricher) {
       String pollEnrichEndpointUri =
           getEnrichExpressionUri(pollEnricher.getExpression(), POLL_ENRICH, pollEnrichCounter);
-      if (StringUtils.startsWith(pollEnrichEndpointUri, POLL_ENRICH)) {
+      if (Strings.CS.startsWith(pollEnrichEndpointUri, POLL_ENRICH)) {
         pollEnrichCounter++;
       }
       addToEndpointUriMaps(routeId, pollEnrichEndpointUri);

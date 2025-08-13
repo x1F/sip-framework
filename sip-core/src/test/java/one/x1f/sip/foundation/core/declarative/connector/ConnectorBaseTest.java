@@ -41,9 +41,9 @@ class ConnectorBaseTest {
         new ConnectorWithResponseMapperAndTransformer();
 
     // act + assert
-    assertThatThrownBy(() -> testConnectorRequest.getOrchestrator())
+    assertThatThrownBy(testConnectorRequest::getOrchestrator)
         .isInstanceOf(SIPFrameworkInitializationException.class);
-    assertThatThrownBy(() -> testConnectorResponse.getOrchestrator())
+    assertThatThrownBy(testConnectorResponse::getOrchestrator)
         .isInstanceOf(SIPFrameworkInitializationException.class);
   }
 

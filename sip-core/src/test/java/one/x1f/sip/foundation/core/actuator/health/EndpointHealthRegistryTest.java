@@ -24,7 +24,7 @@ class EndpointHealthRegistryTest {
   @BeforeEach
   void setUp() {
     subject = new EndpointHealthRegistry();
-    healthFunction = endpoint -> Health.up().build();
+    healthFunction = ep -> Health.up().build();
     endpoint = mock(Endpoint.class);
   }
 

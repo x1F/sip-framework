@@ -69,6 +69,5 @@ class CDMValidationTest {
         .hasMessage(
             "Data type mismatch in Connector 'out-CDMValidation-SIP2'. Message Type was 'java.lang.String', but the integration scenario 'CDMValidation' requires Type '%s'",
             CDMResponse.class.getName());
-    ;
   }
 }

@@ -171,6 +171,7 @@ public class ScenarioOrchestratedWithConditionsAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setResponseRouteTransformer(

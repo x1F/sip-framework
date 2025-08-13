@@ -34,6 +34,7 @@ public class DeclarativeHelperTestModels {
       return null;
     }
 
+    @SuppressWarnings("java:S1172")
     public String mapToTargetModel(String sourceModel) {
       return null;
     }

@@ -115,6 +115,7 @@ public abstract non-sealed class ConnectorBase
     return false;
   }
 
+  @SuppressWarnings("java:S1874")
   private Orchestrator<ConnectorOrchestrationInfo>
       buildDeprecatedTransformationOverloadOrchestrator() {
     getLogger()
@@ -123,8 +124,7 @@ public abstract non-sealed class ConnectorBase
             getClass().getName());
     @Deprecated final var transformationOrchestrator = defineTransformationOrchestrator();
 
-    if (transformationOrchestrator
-        instanceof @SuppressWarnings("deprecation") ConnectorOrchestrator connectorOrchestrator) {
+    if (transformationOrchestrator instanceof ConnectorOrchestrator) {
       DeclarativeReflectionUtils.getAnnotationIfPresent(UseRequestModelMapper.class, this)
           .ifPresent(
               transformer -> {

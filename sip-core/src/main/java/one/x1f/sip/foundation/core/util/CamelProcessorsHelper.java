@@ -8,7 +8,7 @@ import org.apache.camel.processor.Enricher;
 import org.apache.camel.processor.PollEnricher;
 import org.apache.camel.processor.SendDynamicProcessor;
 import org.apache.camel.processor.WireTapProcessor;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 /** Utility class to help working with specific Camel's processors. */
 @UtilityClass
@@ -48,7 +48,7 @@ public class CamelProcessorsHelper {
    * @return boolean flag (true - endpointUri has in memory component)
    */
   public static boolean isInMemoryUri(String endpointUri) {
-    return StringUtils.startsWithAny(endpointUri, NON_OUTGOING_PROCESSOR_PREFIXES);
+    return Strings.CS.startsWithAny(endpointUri, NON_OUTGOING_PROCESSOR_PREFIXES);
   }
 
   /**

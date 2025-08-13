@@ -10,6 +10,7 @@ import one.x1f.sip.foundation.core.declarative.connector.GenericOutboundConnecto
 import one.x1f.sip.foundation.core.declarative.orchestration.Orchestrator;
 import one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
 import one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
+import one.x1f.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationContext;
 import one.x1f.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import one.x1f.sip.foundation.core.declarative.orchestration.process.ProcessOrchestrator;
 import one.x1f.sip.foundation.core.declarative.process.CompositeProcessBase;
@@ -26,7 +27,7 @@ public class ProcessOrchestrationLoopAdapter {
 
   public static final String CONDITION_VALUE = "condition-name";
   private static final String ITERATIONS = "iterations";
-  private final String GROUP_ID = "loop_group";
+  private static final String GROUP_ID = "loop_group";
 
   public record CallLoopRequest(String name) {}
 
@@ -86,19 +87,14 @@ public class ProcessOrchestrationLoopAdapter {
                     context ->
                         !"aaa".equals(context.getHeader(CONDITION_VALUE, String.class).get()))
                 .callConsumer(InsideLoopScenario.class)
-                .withRequestPreparation(
-                    context -> {
-                      var response = context.getOriginalRequest();
-                      return response;
-                    })
+                .withRequestPreparation(CompositeProcessOrchestrationContext::getOriginalRequest)
                 .withNoResponseHandling()
                 .endDoWhile()
                 .forLoop(context -> context.getHeader(ITERATIONS, Integer.class).orElse(0))
                 .callConsumer(LoggingScenario.class)
                 .withRequestPreparation(
                     context -> {
-                      var response = context.getLatestResponse().get();
-                      return response;
+                      return context.getLatestResponse().get();
                     })
                 .withNoResponseHandling()
                 .endForLoop()
@@ -128,6 +124,7 @@ public class ProcessOrchestrationLoopAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(
@@ -158,6 +155,7 @@ public class ProcessOrchestrationLoopAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setResponseRouteTransformer(
@@ -187,6 +185,7 @@ public class ProcessOrchestrationLoopAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setResponseRouteTransformer(

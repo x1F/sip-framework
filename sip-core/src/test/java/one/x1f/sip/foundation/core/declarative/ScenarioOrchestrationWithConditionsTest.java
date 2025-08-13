@@ -13,6 +13,7 @@ import org.apache.camel.test.spring.junit5.DisableJmx;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.util.Strings;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,7 +52,7 @@ class ScenarioOrchestrationWithConditionsTest {
             .getMessage()
             .getBody(ScenarioOrchestratedWithConditionsAdapter.OrchestratedResponseModel.class);
     assertThat(response.getCalledConsumers())
-        .asList()
+        .asInstanceOf(InstanceOfAssertFactories.LIST)
         .contains(
             ScenarioOrchestratedWithConditionsAdapter.OrchestratedOutboundConnectorOne.class
                 .getSimpleName());
@@ -63,7 +64,7 @@ class ScenarioOrchestrationWithConditionsTest {
   void WHEN_settingRandomBodyPayload_THEN_responseContainsSecondOutboundConnector() {
     final var exchange =
         template
-            .withBody(RandomStringUtils.randomAlphanumeric(10))
+            .withBody(RandomStringUtils.insecure().nextAlphanumeric(10))
             .to(direct("orchestrate"))
             .send();
     assertThat(exchange.getException()).isNull();
@@ -72,7 +73,7 @@ class ScenarioOrchestrationWithConditionsTest {
             .getMessage()
             .getBody(ScenarioOrchestratedWithConditionsAdapter.OrchestratedResponseModel.class);
     assertThat(response.getCalledConsumers())
-        .asList()
+        .asInstanceOf(InstanceOfAssertFactories.LIST)
         .contains(
             ScenarioOrchestratedWithConditionsAdapter.OrchestratedOutboundConnectorTwo.class
                 .getSimpleName());
@@ -103,7 +104,9 @@ class ScenarioOrchestrationWithConditionsTest {
             .getMessage()
             .getBody(ScenarioOrchestratedWithConditionsAdapter.OrchestratedResponseModel.class);
     assertThat(response.isHeaderMode()).isTrue();
-    assertThat(response.getCalledConsumers()).asList().hasSize(1);
+    assertThat(response.getCalledConsumers())
+        .asInstanceOf(InstanceOfAssertFactories.LIST)
+        .hasSize(1);
     mockedLoggerConnector.expectedMessageCount(0);
   }
 
@@ -123,7 +126,7 @@ class ScenarioOrchestrationWithConditionsTest {
             .getBody(ScenarioOrchestratedWithConditionsAdapter.OrchestratedResponseModel.class);
     assertThat(response.isHeaderMode()).isTrue();
     assertThat(response.getCalledConsumers())
-        .asList()
+        .asInstanceOf(InstanceOfAssertFactories.LIST)
         .containsExactlyInAnyOrder(
             ScenarioOrchestratedWithConditionsAdapter.OrchestratedOutboundConnectorHeaderMode.class
                 .getSimpleName(),

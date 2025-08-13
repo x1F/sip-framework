@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatException;
 import java.io.IOException;
 import java.util.*;
 import org.apache.commons.codec.digest.MessageDigestAlgorithms;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
@@ -14,21 +13,11 @@ import org.springframework.core.io.Resource;
 
 class ChecksumHelperTest {
 
-  private static List<Resource> RESOURCES;
-
-  @BeforeAll
-  static void setUpResources() {
-    RESOURCES =
-        List.of(
-            new ClassPathResource("checksum/countries.json"),
-            new ClassPathResource("checksum/document.pdf"),
-            new ClassPathResource("checksum/image.jpg"));
-  }
-
-  @Test
-  void GIVEN_list_of_static_resources_VERIFY_all_exist_and_are_readable() {
-    assertThat(RESOURCES).allSatisfy(resource -> assertThat(resource.isReadable()).isTrue());
-  }
+  private static final List<Resource> RESOURCES =
+      List.of(
+          new ClassPathResource("checksum/countries.json"),
+          new ClassPathResource("checksum/document.pdf"),
+          new ClassPathResource("checksum/image.jpg"));
 
   @Test
   void GIVEN_list_of_static_resources_WHEN_changing_order_VERIFY_checksum_remains_equal()
@@ -76,8 +65,8 @@ class ChecksumHelperTest {
   }
 
   @Test
-  void GIVEN_non_existant_resource_VERIFY_exception_is_triggered() throws IOException {
-    final var resources = new ArrayList<>(RESOURCES);
+  void GIVEN_non_existant_resource_VERIFY_exception_is_triggered() {
+    final var resources = new ArrayList<>(ChecksumHelperTest.RESOURCES);
     resources.add(new ClassPathResource("does/not/exist.here"));
 
     assertThatException()

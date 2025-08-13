@@ -28,7 +28,7 @@ class AddProxyInterceptStrategyTest {
   private final CamelContext camelContext = new DefaultCamelContext();
 
   @BeforeEach
-  public void setup() {
+  void setup() {
     addProxyInterceptStrategy =
         new AddProxyInterceptStrategy(proxyRegistry, extensions, camelContext);
     when(definition.getId()).thenReturn(PROCESSOR_ID);

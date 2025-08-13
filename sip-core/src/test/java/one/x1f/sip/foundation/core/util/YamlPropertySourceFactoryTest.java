@@ -14,7 +14,7 @@ class YamlPropertySourceFactoryTest {
   private final YamlPropertSourceFactory subject = new YamlPropertSourceFactory();
 
   @Test
-  void WHEN_createPropertySource_WITH_nullResource_THEN_IllegalArgument() throws Exception {
+  void WHEN_createPropertySource_WITH_nullResource_THEN_IllegalArgument() {
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> subject.createPropertySource("name", null));
   }

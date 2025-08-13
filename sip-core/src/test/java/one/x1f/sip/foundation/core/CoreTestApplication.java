@@ -36,7 +36,6 @@ public class CoreTestApplication {
               .apiProperty("api.title", "User API")
               .apiProperty("api.version", "1.0.0");
           rest().get(REST_ENDPOINT).id(TEST_ROUTE_ID).to("mock:rest");
-          ;
         }
       };
     }

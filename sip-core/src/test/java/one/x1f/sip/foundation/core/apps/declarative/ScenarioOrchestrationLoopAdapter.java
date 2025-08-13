@@ -24,7 +24,7 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 public class ScenarioOrchestrationLoopAdapter {
 
   public static final String CONDITION_VALUE = "condition-name";
-  private final String GROUP_ID = "loop_group";
+  private static final String GROUP_ID = "loop_group";
 
   public record CallLoopRequest(String name) {}
 
@@ -83,6 +83,7 @@ public class ScenarioOrchestrationLoopAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(
@@ -112,6 +113,7 @@ public class ScenarioOrchestrationLoopAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setResponseRouteTransformer(
@@ -141,6 +143,7 @@ public class ScenarioOrchestrationLoopAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setResponseRouteTransformer(

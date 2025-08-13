@@ -31,7 +31,7 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 @ComponentScan(excludeFilters = @Filter(SIPIntegrationAdapter.class))
 public class ProcessOrchestrationConditionalAdapter {
 
-  private final String GROUP_ID = "conditional_group";
+  private static final String GROUP_ID = "conditional_group";
 
   public record PartnerNameRequest(String name) {}
 
@@ -212,6 +212,7 @@ public class ProcessOrchestrationConditionalAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(
@@ -240,6 +241,7 @@ public class ProcessOrchestrationConditionalAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setResponseRouteTransformer(
@@ -286,6 +288,7 @@ public class ProcessOrchestrationConditionalAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setResponseRouteTransformer(
@@ -313,6 +316,7 @@ public class ProcessOrchestrationConditionalAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(
@@ -340,6 +344,7 @@ public class ProcessOrchestrationConditionalAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setResponseRouteTransformer(
@@ -365,6 +370,7 @@ public class ProcessOrchestrationConditionalAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(
@@ -393,6 +399,7 @@ public class ProcessOrchestrationConditionalAdapter {
     }
 
     @Override
+    @Deprecated
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setResponseRouteTransformer(
