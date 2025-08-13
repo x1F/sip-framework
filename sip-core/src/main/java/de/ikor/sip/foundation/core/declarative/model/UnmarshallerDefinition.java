@@ -10,6 +10,8 @@ import org.apache.camel.spi.DataFormat;
 /** Class providing various way to define an unmarshaller */
 public interface UnmarshallerDefinition extends RouteDefinitionConsumer {
 
+  String SKIP_UNMARSHAL_MESSAGE = "Skip unmarshal in test mode";
+
   /**
    * Creates an unmarshaller definition from a {@link DataFormat} instance
    *
@@ -23,7 +25,7 @@ public interface UnmarshallerDefinition extends RouteDefinitionConsumer {
             .when(
                 exchange ->
                     Boolean.parseBoolean(exchange.getProperty(TEST_MODE_HEADER, String.class)))
-            .log("Skip unmarshal in test mode")
+            .log(SKIP_UNMARSHAL_MESSAGE)
             .otherwise()
             .unmarshal(dataFormat)
             .endChoice();
@@ -42,7 +44,7 @@ public interface UnmarshallerDefinition extends RouteDefinitionConsumer {
             .when(
                 exchange ->
                     Boolean.parseBoolean(exchange.getProperty(TEST_MODE_HEADER, String.class)))
-            .log("Skip unmarshal in test mode")
+            .log(SKIP_UNMARSHAL_MESSAGE)
             .otherwise()
             .unmarshal(dataFormatDefinition)
             .endChoice();
@@ -62,7 +64,7 @@ public interface UnmarshallerDefinition extends RouteDefinitionConsumer {
               .when(
                   exchange ->
                       Boolean.parseBoolean(exchange.getProperty(TEST_MODE_HEADER, String.class)))
-              .log("Skip unmarshal in test mode")
+              .log(SKIP_UNMARSHAL_MESSAGE)
               .otherwise();
 
       consumer.accept(choiceRoute.unmarshal());

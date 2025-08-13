@@ -38,6 +38,12 @@ public class CompositeProcessOrchestrationHandlers {
     return new ConsumerRequestHandler(consumerDefinition, requestPreparation);
   }
 
+  public static ConsumerWithExpressionRequestHandler handleRequestToConsumerWithExpression(
+      final IntegrationScenarioDefinition consumerDefinition,
+      final Optional<CompositeProcessStepRequestExtractor> requestPreparation) {
+    return new ConsumerWithExpressionRequestHandler(consumerDefinition, requestPreparation);
+  }
+
   public static Boolean handleConditional(
       final Exchange exchange,
       final Optional<StepResultCloner> stepResultCloner,
@@ -48,6 +54,11 @@ public class CompositeProcessOrchestrationHandlers {
   public static int handleIterations(
       final Exchange exchange, final Optional<CompositeProcessStepIterations> iterations) {
     return new IterationsHandler(iterations).determineIterations(exchange);
+  }
+
+  public static Collection handleSplitCollection(
+      final Exchange exchange, final Optional<CompositeProcessStepSplitExpression> expression) {
+    return new CollectionHandler(expression).determineCollection(exchange);
   }
 
   public static ConsumerResponseHandler handleResponseFromConsumer(
@@ -127,6 +138,33 @@ public class CompositeProcessOrchestrationHandlers {
     }
   }
 
+  static class ConsumerWithExpressionRequestHandler {
+    private final IntegrationScenarioDefinition consumerDefinition;
+    private final CompositeProcessStepRequestExtractor requestPreparation;
+
+    private ConsumerWithExpressionRequestHandler(
+        final IntegrationScenarioDefinition consumerDefinition,
+        final Optional<CompositeProcessStepRequestExtractor> requestPreparation) {
+      this.consumerDefinition = consumerDefinition;
+      this.requestPreparation =
+          requestPreparation.orElseGet(
+              ConsumerWithExpressionRequestHandler::defaultRequestExtractor);
+    }
+
+    private static CompositeProcessStepRequestExtractor defaultRequestExtractor() {
+      return context -> context.getExchange().getMessage().getBody();
+    }
+
+    @Handler
+    public synchronized <T> Object extractRequest(final T body, final Exchange exchange) {
+      retrieveCalledConsumerList(exchange).add(consumerDefinition);
+      final CompositeProcessOrchestrationContext context = retrieveOrchestrationContext(exchange);
+      var request = requestPreparation.extractStepRequest(retrieveOrchestrationContext(exchange));
+      context.addRequestForStep(consumerDefinition, request, Optional.empty());
+      return request;
+    }
+  }
+
   @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
   static class ConditionalHandler {
     private final Optional<StepResultCloner> stepResultCloner;
@@ -153,6 +191,20 @@ public class CompositeProcessOrchestrationHandlers {
         return iterations.get().determineIterations(context);
       }
       return 0;
+    }
+  }
+
+  @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+  static class CollectionHandler {
+    private final Optional<CompositeProcessStepSplitExpression> expression;
+
+    @Handler
+    public Collection determineCollection(final Exchange exchange) {
+      final CompositeProcessOrchestrationContext context = retrieveOrchestrationContext(exchange);
+      if (expression.isPresent()) {
+        return expression.get().determinePayload(context);
+      }
+      return new ArrayList<>();
     }
   }
 

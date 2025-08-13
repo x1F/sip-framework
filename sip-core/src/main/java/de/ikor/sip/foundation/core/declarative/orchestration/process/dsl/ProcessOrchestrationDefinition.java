@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.EndOfDsl;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepConditional;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepIterations;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepSplitExpression;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,5 +83,29 @@ public class ProcessOrchestrationDefinition
         new CallForLoopStatement<>(self(), getCompositeProcess());
     steps.add(def);
     return def.forLoop(expression);
+  }
+
+  /**
+   * Standard for split defined in the DSL way
+   *
+   * @param expression Expression to determine array to split
+   * @return DSL Handle
+   */
+  public CallSplitStatement<ProcessOrchestrationDefinition>.ProcessBranch<
+          CallSplitStatement<ProcessOrchestrationDefinition>>
+      split(CompositeProcessStepSplitExpression expression) {
+    final CallSplitStatement<ProcessOrchestrationDefinition> def =
+        new CallSplitStatement<>(self(), getCompositeProcess());
+    steps.add(def);
+    return def.split(expression);
+  }
+
+  public CallSplitStatement<ProcessOrchestrationDefinition>.ProcessBranch<
+          CallSplitStatement<ProcessOrchestrationDefinition>>
+      parallelSplit(CompositeProcessStepSplitExpression expression) {
+    final CallSplitStatement<ProcessOrchestrationDefinition> def =
+        new CallSplitStatement<>(self(), getCompositeProcess());
+    steps.add(def);
+    return def.parallelSplit(expression);
   }
 }
