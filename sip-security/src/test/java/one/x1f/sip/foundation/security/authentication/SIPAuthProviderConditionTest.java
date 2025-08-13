@@ -25,7 +25,7 @@ class SIPAuthProviderConditionTest {
   private SIPAuthProviderCondition subject = new SIPAuthProviderCondition();
 
   @Test
-  void WHEN_getMatchOutcome_WITH_validCondition_THEN_match() throws Exception {
+  void WHEN_getMatchOutcome_WITH_validCondition_THEN_match() {
     // arrange
     Class<?> annotatedClass = SIPBasicAuthAuthenticationProvider.class;
 
@@ -51,7 +51,7 @@ class SIPAuthProviderConditionTest {
   }
 
   @Test
-  void WHEN_getMatchOutcome_WITH_invalidCondition_THEN_noMatch() throws Exception {
+  void WHEN_getMatchOutcome_WITH_invalidCondition_THEN_noMatch() {
     // arrange
     Class<?> annotatedClass = SIPBasicAuthAuthenticationProvider.class;
     Class<?> configuredClass = SIPX509AuthenticationProvider.class;
@@ -78,8 +78,7 @@ class SIPAuthProviderConditionTest {
   }
 
   @Test
-  void WHEN_getMatchOutcome_WITH_invalidConditionWithValidationClass_THEN_noMatch()
-      throws Exception {
+  void WHEN_getMatchOutcome_WITH_invalidConditionWithValidationClass_THEN_noMatch() {
     // arrange
     Class<?> annotatedClass = SIPBasicAuthAuthenticationProvider.class;
 
@@ -107,7 +106,7 @@ class SIPAuthProviderConditionTest {
   }
 
   @Test
-  void WHEN_getMatchOutcome_WITH_validConditionWithValidationClass_THEN_match() throws Exception {
+  void WHEN_getMatchOutcome_WITH_validConditionWithValidationClass_THEN_match() {
     // arrange
     Class<?> annotatedClass = SIPBasicAuthAuthenticationProvider.class;
     Class<?> validatorClass = SIPBasicAuthFileValidator.class;
@@ -135,7 +134,7 @@ class SIPAuthProviderConditionTest {
   }
 
   @Test
-  void WHEN_getMatchOutcome_WITH_noConfig_THEN_noMatch() throws Exception {
+  void WHEN_getMatchOutcome_WITH_noConfig_THEN_noMatch() {
     // arrange
     ConditionContext context = mock(ConditionContext.class);
 

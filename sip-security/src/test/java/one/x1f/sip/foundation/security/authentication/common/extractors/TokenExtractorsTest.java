@@ -18,7 +18,7 @@ class TokenExtractorsTest {
   private final TokenExtractors subject = new TokenExtractors();
 
   @Test
-  void WHEN_addMapping_WITH_newProvider_THEN_mappingAdded() throws Exception {
+  void WHEN_addMapping_WITH_newProvider_THEN_mappingAdded() {
     // arrange
     SIPBasicAuthAuthenticationToken token =
         new SIPBasicAuthAuthenticationToken("user", "password", false);
@@ -35,7 +35,7 @@ class TokenExtractorsTest {
   }
 
   @Test
-  void WHEN_addMapping_WITH_existingProvider_THEN_illegalStateException() throws Exception {
+  void WHEN_addMapping_WITH_existingProvider_THEN_illegalStateException() {
     // arrange
     SIPBasicAuthTokenExtractor extractor = new SIPBasicAuthTokenExtractor();
     Class<?> mappingKey = Object.class;
@@ -50,8 +50,7 @@ class TokenExtractorsTest {
   }
 
   @Test
-  void WHEN_addMapping_WITH_extractorsWithSameTokenType_THEN_illegalStateException()
-      throws Exception {
+  void WHEN_addMapping_WITH_extractorsWithSameTokenType_THEN_illegalStateException() {
     // arrange
     SIPBasicAuthTokenExtractor extractor1 = new SIPBasicAuthTokenExtractor();
     Class<?> mappingKey1 = Object.class;
@@ -71,8 +70,7 @@ class TokenExtractorsTest {
   }
 
   @Test
-  void WHEN_addMapping_WITH_newProviderWithSameExtractor_THEN_illegalStateException()
-      throws Exception {
+  void WHEN_addMapping_WITH_newProviderWithSameExtractor_THEN_illegalStateException() {
     // arrange
     SIPBasicAuthTokenExtractor extractor = new SIPBasicAuthTokenExtractor();
     Class<?> mappingKey1 = Object.class;

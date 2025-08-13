@@ -9,19 +9,19 @@ import org.junit.jupiter.api.Test;
 class SIPBasicAuthAuthenticationTokenTest {
 
   @Test
-  void WHEN_ctor_WITH_nullPrincipal_THEN_exception() throws Exception {
+  void WHEN_ctor_WITH_nullPrincipal_THEN_exception() {
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> new SIPBasicAuthAuthenticationToken(null, "pw", true));
   }
 
   @Test
-  void WHEN_ctor_WITH_nullCredential_THEN_exception() throws Exception {
+  void WHEN_ctor_WITH_nullCredential_THEN_exception() {
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> new SIPBasicAuthAuthenticationToken("user", null, true));
   }
 
   @Test
-  void WHEN_ctor_WITH_validParams_THEN_correctValueslReturned() throws Exception {
+  void WHEN_ctor_WITH_validParams_THEN_correctValueslReturned() {
     // arrange
     String expectedPrincipal = UUID.randomUUID().toString();
     String expectedCredential = UUID.randomUUID().toString();
@@ -47,7 +47,7 @@ class SIPBasicAuthAuthenticationTokenTest {
   }
 
   @Test
-  void WHEN_withAuthenticated_WITH_true_THEN_sameObjectWithTrueAuthReturned() throws Exception {
+  void WHEN_withAuthenticated_WITH_true_THEN_sameObjectWithTrueAuthReturned() {
     // arrange
     String expectedPrincipal = UUID.randomUUID().toString();
     String expectedCredential = UUID.randomUUID().toString();
@@ -64,7 +64,7 @@ class SIPBasicAuthAuthenticationTokenTest {
   }
 
   @Test
-  void WHEN_setAuthenticated_THEN_unsupportedOperation() throws Exception {
+  void WHEN_setAuthenticated_THEN_unsupportedOperation() {
     // arrange
     SIPBasicAuthAuthenticationToken subject =
         new SIPBasicAuthAuthenticationToken("name", "pw", false);

@@ -19,7 +19,7 @@ class CompositeAuthenticationTokenTest {
   }
 
   @Test
-  void WHEN_ctor_WITH_validParams_THEN_correctValueslReturned() throws Exception {
+  void WHEN_ctor_WITH_validParams_THEN_correctValueslReturned() {
     // arrange
     SIPBasicAuthAuthenticationToken token =
         new SIPBasicAuthAuthenticationToken("user", "pw", false);
@@ -39,7 +39,7 @@ class CompositeAuthenticationTokenTest {
   }
 
   @Test
-  void WHEN_withAuthenticated_WITH_true_THEN_sameObjectWithTrueAuthReturned() throws Exception {
+  void WHEN_withAuthenticated_WITH_true_THEN_sameObjectWithTrueAuthReturned() {
     // arrange
     CompositeAuthenticationToken subject =
         new CompositeAuthenticationToken(Collections.emptyList());

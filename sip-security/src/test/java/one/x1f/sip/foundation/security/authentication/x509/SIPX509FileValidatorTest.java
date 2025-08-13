@@ -17,14 +17,14 @@ class SIPX509FileValidatorTest {
   private static final String X_509_TEST_BAD_ACL = "x509-test-bad.acl";
 
   @Test
-  void WHEN_ctor_WITH_badFileConfig_THEN_exception() throws Exception {
+  void WHEN_ctor_WITH_badFileConfig_THEN_exception() {
     // act + assert
     assertThatExceptionOfType(SIPFrameworkException.class)
         .isThrownBy(() -> getSipX509FileValidator(X_509_TEST_BAD_ACL));
   }
 
   @Test
-  void WHEN_isValid_WITH_validUser_THEN_true() throws Exception {
+  void WHEN_isValid_WITH_validUser_THEN_true() {
     // arrange
     SIPX509FileValidator subject = getSipX509FileValidator(X_509_TEST_GOOD_ACL);
 
@@ -42,7 +42,7 @@ class SIPX509FileValidatorTest {
   }
 
   @Test
-  void WHEN_isValid_WITH_validUserWithWildcard_THEN_true() throws Exception {
+  void WHEN_isValid_WITH_validUserWithWildcard_THEN_true() {
     // arrange
     SIPX509FileValidator subject = getSipX509FileValidator(X_509_TEST_GOOD_ACL);
 
@@ -61,7 +61,7 @@ class SIPX509FileValidatorTest {
   }
 
   @Test
-  void WHEN_isValid_WITH_invalidUser_THEN_false() throws Exception {
+  void WHEN_isValid_WITH_invalidUser_THEN_false() {
     // arrange
     SIPX509FileValidator subject = getSipX509FileValidator(X_509_TEST_GOOD_ACL);
 

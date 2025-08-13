@@ -28,7 +28,7 @@ class SIPX509TokenExtractorTest {
   private final SIPX509TokenExtractor subject = new SIPX509TokenExtractor();
 
   @Test
-  void WHEN_extract_WITH_validCert_THEN_certExtracted() throws Exception {
+  void WHEN_extract_WITH_validCert_THEN_certExtracted() {
     // arrange
     ((Logger) LoggerFactory.getLogger(SIPX509TokenExtractor.class)).setLevel(Level.INFO);
     X509Certificate certMock = mock(X509Certificate.class);
@@ -48,7 +48,7 @@ class SIPX509TokenExtractorTest {
   }
 
   @Test
-  void WHEN_extract_WITH_validCertTraceLogging_THEN_certExtracted() throws Exception {
+  void WHEN_extract_WITH_validCertTraceLogging_THEN_certExtracted() {
     // arrange
     Logger logger = (Logger) LoggerFactory.getLogger(SIPX509TokenExtractor.class);
     logger.setLevel(Level.TRACE);
@@ -76,7 +76,7 @@ class SIPX509TokenExtractorTest {
   }
 
   @Test
-  void WHEN_extract_WITH_nullCertificate_THEN_badCredentialsException() throws Exception {
+  void WHEN_extract_WITH_nullCertificate_THEN_badCredentialsException() {
     // arrange
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setAttribute(X_509_CERTIFICATE, null);
@@ -87,7 +87,7 @@ class SIPX509TokenExtractorTest {
   }
 
   @Test
-  void WHEN_extract_WITH_emptyCertificates_THEN_badCredentialsException() throws Exception {
+  void WHEN_extract_WITH_emptyCertificates_THEN_badCredentialsException() {
     // arrange
     X509Certificate[] certs = {};
 
@@ -100,7 +100,7 @@ class SIPX509TokenExtractorTest {
   }
 
   @Test
-  void WHEN_getTokenType_THEN_returnX509Type() throws Exception {
+  void WHEN_getTokenType_THEN_returnX509Type() {
     assertThat(subject.getTokenType()).isEqualTo(SIPX509AuthenticationToken.class);
   }
 }

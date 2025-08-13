@@ -20,7 +20,7 @@ class SIPBasicAuthFileValidatorTest {
   private static final String PASSWORD = "password";
 
   @Test
-  void WHEN_ctor_WITH_badFileConfig_THEN_exception() throws Exception {
+  void WHEN_ctor_WITH_badFileConfig_THEN_exception() {
     // act + assert
     assertThatExceptionOfType(SIPFrameworkException.class)
         .isThrownBy(() -> getSipBasicAuthFileValidator(BASIC_AUTH_USERS_BAD_JSON));
