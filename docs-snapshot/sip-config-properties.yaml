@@ -53,20 +53,20 @@ sip:
       ignoredEndpoints:
         - /endpoint
       authProviders:
-          - classname: de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthAuthenticationProvider
+          - classname: one.x1f.sip.foundation.security.authentication.basic.SIPBasicAuthAuthenticationProvider
             ignored-endpoints:
               - /actuator/health
               - /actuator/env
             validation:
-              classname: de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthFileValidator
+              classname: one.x1f.sip.foundation.security.authentication.basic.SIPBasicAuthFileValidator
               file-path: classpath:basic-auth-users.json
 
-          - classname: de.ikor.sip.foundation.security.authentication.x509.SIPX509AuthenticationProvider
+          - classname: one.x1f.sip.foundation.security.authentication.x509.SIPX509AuthenticationProvider
             ignored-endpoints:
               - /favicon.ico
               - /actuator/env
             validation:
-              classname: de.ikor.sip.foundation.security.authentication.x509.SIPX509FileValidator
+              classname: one.x1f.sip.foundation.security.authentication.x509.SIPX509FileValidator
               file-path: classpath:client-certs.acl
 
     ssl:

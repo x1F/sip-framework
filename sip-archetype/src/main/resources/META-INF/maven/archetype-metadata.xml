@@ -26,7 +26,7 @@ under the License.
 
     <requiredProperties>
         <requiredProperty key="groupId">
-            <defaultValue>de.ikor.sip.adapter</defaultValue>
+            <defaultValue>one.x1f.sip.adapter</defaultValue>
         </requiredProperty>
         <requiredProperty key="projectName">
             <defaultValue>${artifactId}</defaultValue>

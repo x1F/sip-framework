@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>sip-framework</artifactId>
-        <groupId>de.ikor.sip.foundation</groupId>
+        <groupId>one.x1f.sip.foundation</groupId>
         <version>3.6.3-SNAPSHOT</version>
     </parent>
 

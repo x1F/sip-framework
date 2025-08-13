@@ -2,12 +2,12 @@ package ${package}.connectorgroups.${connectorGroup2}.connectors;
 
 import ${package}.scenarios.definitions.GetLaureateById;
 import ${package}.scenarios.models.laureate.Laureate;
-import de.ikor.sip.foundation.core.declarative.annotation.OutboundConnector;
-import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
-import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
-import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
-import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
+import one.x1f.sip.foundation.core.declarative.annotation.OutboundConnector;
+import one.x1f.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
+import one.x1f.sip.foundation.core.declarative.model.UnmarshallerDefinition;
+import one.x1f.sip.foundation.core.declarative.orchestration.Orchestrator;
+import one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
+import one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.component.jackson.JacksonDataFormat;

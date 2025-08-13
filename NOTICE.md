@@ -1,7 +1,7 @@
 SIP Framework
 
-Copyright 2021 IKOR GmbH
+Copyright 2021-2025 x1F GmbH
 
 This product includes software developed at
 
-IKOR GmbH (https://www.ikor.de/).
+x1F GmbH (https://www.x1f.one/).

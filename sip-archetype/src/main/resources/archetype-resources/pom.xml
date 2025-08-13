@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>de.ikor.sip.foundation</groupId>
+        <groupId>one.x1f.sip.foundation</groupId>
         <artifactId>sip-starter-parent</artifactId>
         <version>${archetypeVersion}</version>
         <relativePath/>
@@ -40,13 +40,13 @@
 #end
 #if (${useCloud} == "y" or ${useCloud} == "Y")
         <dependency>
-            <groupId>de.ikor.sip.cloud</groupId>
+            <groupId>one.x1f.sip.cloud</groupId>
             <artifactId>sip-integration-starter</artifactId>
         </dependency>
 #end
 #if (${useSoap} == "y" or ${useSoap} == "Y")
         <dependency>
-            <groupId>de.ikor.sip.foundation</groupId>
+            <groupId>one.x1f.sip.foundation</groupId>
             <artifactId>sip-soap-starter</artifactId>
         </dependency>
         <dependency>
@@ -59,7 +59,7 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>de.ikor.sip.foundation</groupId>
+                <groupId>one.x1f.sip.foundation</groupId>
                 <artifactId>sip-maven-plugin</artifactId>
             </plugin>
             <plugin>
