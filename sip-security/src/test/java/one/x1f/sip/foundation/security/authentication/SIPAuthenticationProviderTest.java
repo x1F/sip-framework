@@ -80,7 +80,8 @@ class SIPAuthenticationProviderTest {
   }
 
   @Test
-  void WHEN_authenticate_WITH_badTokenWithDebugLogging_THEN_badCredentialsExceptionAndDebugMessage() {
+  void
+      WHEN_authenticate_WITH_badTokenWithDebugLogging_THEN_badCredentialsExceptionAndDebugMessage() {
     // arrange
     Logger logger = (Logger) LoggerFactory.getLogger(SIPAuthenticationProvider.class);
 
