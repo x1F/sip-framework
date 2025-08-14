@@ -1,6 +1,6 @@
 package ${package};
 
-import de.ikor.sip.foundation.testkit.SIPBatchTest;
+import one.x1f.sip.foundation.testkit.SIPBatchTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 @DirtiesContext

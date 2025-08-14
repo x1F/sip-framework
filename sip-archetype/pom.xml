@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>de.ikor.sip.foundation</groupId>
+        <groupId>one.x1f.sip.foundation</groupId>
         <artifactId>sip-framework</artifactId>
         <version>3.6.3-SNAPSHOT</version>
         <relativePath>../</relativePath>

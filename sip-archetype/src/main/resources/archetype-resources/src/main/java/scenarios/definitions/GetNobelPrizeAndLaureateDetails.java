@@ -3,9 +3,9 @@ package ${package}.scenarios.definitions;
 import ${package}.config.SIPAdapterExceptionHandler;
 import ${package}.scenarios.models.NobelPrizeRequest;
 import ${package}.scenarios.models.NobelPrizeCommonModel;
-import de.ikor.sip.foundation.core.declarative.annotation.ConfigurationHandler;
-import de.ikor.sip.foundation.core.declarative.annotation.IntegrationScenario;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
+import one.x1f.sip.foundation.core.declarative.annotation.ConfigurationHandler;
+import one.x1f.sip.foundation.core.declarative.annotation.IntegrationScenario;
+import one.x1f.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 
 @IntegrationScenario(
     scenarioId = GetNobelPrizeAndLaureateDetails.ID,

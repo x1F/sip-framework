@@ -12,7 +12,7 @@
     <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>de.ikor.sip.foundation</groupId>
+    <groupId>one.x1f.sip.foundation</groupId>
     <artifactId>sip-starter-parent</artifactId>
     <version>3.6.3-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -72,7 +72,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>de.ikor.sip.foundation</groupId>
+            <groupId>one.x1f.sip.foundation</groupId>
             <artifactId>sip-integration-starter</artifactId>
         </dependency>
         <dependency>
@@ -142,7 +142,7 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>de.ikor.sip.foundation</groupId>
+                <groupId>one.x1f.sip.foundation</groupId>
                 <artifactId>sip-framework</artifactId>
                 <version>${sip-framework.version}</version>
                 <type>pom</type>
@@ -160,7 +160,7 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>de.ikor.sip.foundation</groupId>
+                    <groupId>one.x1f.sip.foundation</groupId>
                     <artifactId>sip-maven-plugin</artifactId>
                     <version>${sip-framework.version}</version>
                     <executions>
