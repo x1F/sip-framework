@@ -11,6 +11,7 @@ import one.x1f.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import one.x1f.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import one.x1f.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import one.x1f.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
+import org.apache.camel.model.OnExceptionDefinition;
 
 /** API interface for {@link DeclarationsRegistry} used within the framework structure. */
 public sealed interface DeclarationsRegistryApi permits DeclarationsRegistry {
@@ -120,4 +121,12 @@ public sealed interface DeclarationsRegistryApi permits DeclarationsRegistry {
    */
   List<IntegrationScenarioConsumerDefinition> getConsumersForScenario(
       IntegrationScenarioDefinition integrationScenario);
+
+  /**
+   * Registers the class with given <code>className</code> for onException handling
+   *
+   * @param key Exception definition key
+   * @param className Class to register
+   */
+  void registerClassForOnException(OnExceptionDefinition key, String className);
 }

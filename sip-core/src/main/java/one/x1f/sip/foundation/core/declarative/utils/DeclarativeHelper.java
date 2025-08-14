@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.experimental.UtilityClass;
-import one.x1f.sip.foundation.core.declarative.DeclarationsRegistry;
+import one.x1f.sip.foundation.core.declarative.DeclarationsRegistryApi;
 import one.x1f.sip.foundation.core.declarative.RouteRole;
 import one.x1f.sip.foundation.core.declarative.RoutesRegistry;
 import one.x1f.sip.foundation.core.declarative.annotation.ConnectorExceptionHandler;
@@ -185,7 +185,7 @@ public class DeclarativeHelper {
   public static void appendOnException(
       ConnectorDefinition connectorDefinition,
       RouteDefinition routeDefinition,
-      DeclarationsRegistry declarationsRegistry) {
+      DeclarationsRegistryApi declarationsRegistry) {
     if (!connectorDefinition.getOnExceptionHandler().isEmpty()) {
       for (Method method : connectorDefinition.getOnExceptionHandler()) {
         var exceptions = method.getAnnotation(ConnectorExceptionHandler.class).value();

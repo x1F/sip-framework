@@ -36,7 +36,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   private final List<CompositeProcessDefinition> processes;
   private final List<IntegrationScenarioDefinition> scenarios;
   private final List<ConnectorDefinition> connectors;
-  private final Map<OnExceptionDefinition, String> definitionMap = new HashMap<>();
+  private final Map<OnExceptionDefinition, String> onExceptionDefinitionMap = new HashMap<>();
 
   public DeclarationsRegistry(
       List<ConnectorGroupDefinition> autowiredConnectorGroups,
@@ -302,11 +302,12 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
     return elem -> elem.getClass().isAnnotationPresent(Disabled.class);
   }
 
+  @Override
   public void registerClassForOnException(OnExceptionDefinition key, String className) {
-    definitionMap.put(key, className);
+    onExceptionDefinitionMap.put(key, className);
   }
 
   public String getClassForOnException(OnExceptionDefinition key) {
-    return definitionMap.get(key);
+    return onExceptionDefinitionMap.get(key);
   }
 }
