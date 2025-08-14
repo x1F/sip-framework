@@ -35,16 +35,16 @@
     </licenses>
 
     <organization>
-        <name>IKOR GmbH</name>
-        <url>https://ikor.one</url>
+        <name>x1F GmbH</name>
+        <url>https://x1f.one</url>
     </organization>
 
     <developers>
         <developer>
             <name>SIP Development Team</name>
-            <email>info-finsure@ikor.one</email>
-            <organization>IKOR</organization>
-            <organizationUrl>https://ikor.one/</organizationUrl>
+            <email>sip@x1f.one</email>
+            <organization>x1F GmbH</organization>
+            <organizationUrl>https://x1f.one/</organizationUrl>
         </developer>
     </developers>
 

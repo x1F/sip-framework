@@ -13,7 +13,7 @@
 
     <artifactId>sip-core</artifactId>
     <name>SIP Core</name>
-    <description>Single dependency to be included in SIP adapter. Based on Spring and Apache Camel.</description>
+    <description>SIP framework core package</description>
 
     <dependencies>
         <dependency>

@@ -10,6 +10,8 @@
     </parent>
 
     <artifactId>sip-soap-starter</artifactId>
+    <name>SIP SOAP Starter</name>
+    <description>Module for SIP integration adapters consuming or providin SOAP services</description>
 
     <dependencies>
         <dependency>
