@@ -1,13 +1,11 @@
 package one.x1f.sip.foundation.core.util;
 
-import java.io.IOException;
-import java.util.Objects;
+import lombok.NonNull;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.core.io.support.PropertySourceFactory;
-import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 /**
@@ -20,11 +18,10 @@ public class YamlPropertSourceFactory implements PropertySourceFactory {
 
   @Override
   public PropertySource<?> createPropertySource(
-      @Nullable String name, @NonNull EncodedResource encodedResource) throws IOException {
+      @Nullable String name, @NonNull EncodedResource resource) {
     YamlPropertiesFactoryBean factory = new YamlPropertiesFactoryBean();
-    factory.setResources(encodedResource.getResource());
+    factory.setResources(resource.getResource());
     return new PropertiesPropertySource(
-        name == null ? Objects.requireNonNull(encodedResource.getResource().getFilename()) : name,
-        Objects.requireNonNull(factory.getObject()));
+        name == null ? resource.getResource().getFilename() : name, factory.getObject());
   }
 }
