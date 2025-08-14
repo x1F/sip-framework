@@ -26,8 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest;
     webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public abstract class SIPBatchTest {
 
-  @Getter
-  private final TestCaseCollector testCaseCollector;
+  @Getter private final TestCaseCollector testCaseCollector;
   private final TestRunner testRunner;
   private final ReportActivityProxyExtension reportActivityProxyExtension;
 

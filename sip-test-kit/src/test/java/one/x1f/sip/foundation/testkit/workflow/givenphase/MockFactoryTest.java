@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 class MockFactoryTest {
 
-  private final String TEST_NAME = "name";
+  private static final String TEST_NAME = "name";
 
   @Test
   void When_newMockInstance_Expect_MockSet() {

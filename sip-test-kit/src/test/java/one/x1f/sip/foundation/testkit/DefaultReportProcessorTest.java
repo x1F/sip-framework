@@ -46,7 +46,7 @@ class DefaultReportProcessorTest {
   }
 
   @Test
-  void When_processTestReport_Expect_Exception() throws IOException, TemplateException {
+  void When_processTestReport_Expect_Exception() throws IOException {
     // arrange
     ListAppender<ILoggingEvent> listAppender;
     Logger logger = (Logger) LoggerFactory.getLogger(DefaultReportProcessor.class);

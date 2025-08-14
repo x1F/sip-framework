@@ -92,8 +92,7 @@ class JmsRouteInvokerTest {
   }
 
   @Test
-  void GIVEN_forbiddenHeaderInputs_WHEN_invoke_THEN_expectUnsupportedJmsHeaderException()
-      throws Exception {
+  void GIVEN_forbiddenHeaderInputs_WHEN_invoke_THEN_expectUnsupportedJmsHeaderException() {
     // arrange
     inputExchange.getMessage().setHeader(JMS_DESTINATION, "test destination");
 

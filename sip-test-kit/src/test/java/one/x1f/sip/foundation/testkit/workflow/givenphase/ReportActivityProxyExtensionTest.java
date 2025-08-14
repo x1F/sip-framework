@@ -20,7 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ReportActivityProxyExtensionTest {
-  private final String TEST_NAME = "test name";
+  private static final String TEST_NAME = "test name";
 
   TestCase testCase;
   ReportActivityProxyExtension subject;
@@ -49,17 +49,17 @@ class ReportActivityProxyExtensionTest {
     TestExecutionStatus testExecutionStatus = new TestExecutionStatus();
     when(original.getMessage()).thenReturn(message);
     when(original.getProperty(RouteInvoker.TEST_NAME_HEADER, String.class)).thenReturn(TEST_NAME);
-    String ORIGINAL_BODY = "originalbody";
-    when(message.getBody()).thenReturn(ORIGINAL_BODY);
-    String PROXY_ID = "proxy id";
-    when(proxy.getId()).thenReturn(PROXY_ID);
+    String originalBody = "originalbody";
+    when(message.getBody()).thenReturn(originalBody);
+    String proxyId = "proxy id";
+    when(proxy.getId()).thenReturn(proxyId);
     when(testCase.getTestExecutionStatus()).thenReturn(testExecutionStatus);
 
     // act
     subject.run(proxy, original, current);
 
     // assert
-    assertThat(testExecutionStatus.getMockReports().get(PROXY_ID)).isNotNull();
+    assertThat(testExecutionStatus.getMockReports().get(proxyId)).isNotNull();
   }
 
   @Test

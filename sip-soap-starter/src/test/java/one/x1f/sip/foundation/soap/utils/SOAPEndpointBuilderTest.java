@@ -68,7 +68,7 @@ class SOAPEndpointBuilderTest {
     cxfEndpoint.setAddress("");
     cxfEndpoint.setServiceClass(CustomerService.class);
     Map<String, CxfEndpoint> cxfBeans = Map.of("serviceClassName", cxfEndpoint);
-    String EXAMPLE_ADDRESS = "http://www.example.com/service";
+    String exampleAddress = "http://www.example.com/service";
 
     // act
     CxfEndpointBuilder cxfEndpointBuilder =
@@ -77,11 +77,11 @@ class SOAPEndpointBuilderTest {
             cxfBeans,
             "serviceClassName",
             "serviceClassQualifiedName",
-            EXAMPLE_ADDRESS,
+            exampleAddress,
             DataFormat.PAYLOAD);
 
     // assert
-    assertThat(cxfEndpoint.getAddress()).isEqualTo(EXAMPLE_ADDRESS);
+    assertThat(cxfEndpoint.getAddress()).isEqualTo(exampleAddress);
     assertThat(cxfEndpointBuilder.getUri()).isEqualTo("cxf://bean:serviceClassName");
   }
 

@@ -32,7 +32,7 @@ public class SOAPAdapter {
   private static final String SOAP_ADDRESS = "customAddress";
 
   @Bean("CustomerService")
-  public CxfEndpoint createCustomerServiceEndpoint() throws ClassNotFoundException {
+  public CxfEndpoint createCustomerServiceEndpoint() {
     CxfEndpoint serviceEndpoint = new CxfEndpoint();
     serviceEndpoint.setAddress(SOAP_ADDRESS);
     serviceEndpoint.setDataFormat(DataFormat.PAYLOAD);

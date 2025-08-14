@@ -34,7 +34,7 @@ class CamelBodyValidatorTest {
   private Exchange expected;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     // reset mocks
     actual = mock(Exchange.class, RETURNS_DEEP_STUBS);
     expected = mock(Exchange.class, RETURNS_DEEP_STUBS);

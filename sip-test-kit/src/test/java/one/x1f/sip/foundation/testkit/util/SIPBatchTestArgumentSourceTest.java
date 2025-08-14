@@ -27,8 +27,7 @@ class SIPBatchTestArgumentSourceTest {
     SIPBatchTestArgumentSource subject = new SIPBatchTestArgumentSource();
 
     when(extensionContext.getRequiredTestInstance()).thenReturn(sipBatchTest);
-    when(testCaseCollector.getTestCases())
-        .thenReturn(Stream.of(testCase).collect(Collectors.toList()));
+    when(testCaseCollector.getTestCases()).thenReturn(Stream.of(testCase).toList());
     String testName = "name";
     when(testCase.getTestName()).thenReturn(testName);
     when(sipBatchTest.getTestCaseCollector()).thenReturn(testCaseCollector);

@@ -23,7 +23,7 @@ class CamelHeaderValidatorTest {
   Map<String, Object> actualHeaders;
 
   @BeforeEach
-  private void setUp() {
+  void setUp() {
     expectedHeaders = new HashMap<>();
     actualHeaders = new HashMap<>();
     expectedHeaders.put(HEADER_KEY, HEADER_VALUE);

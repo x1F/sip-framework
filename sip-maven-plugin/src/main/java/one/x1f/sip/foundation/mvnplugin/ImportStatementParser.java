@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import one.x1f.sip.foundation.mvnplugin.model.ImportStatement;
 import one.x1f.sip.foundation.mvnplugin.model.ParsedJavaFile;

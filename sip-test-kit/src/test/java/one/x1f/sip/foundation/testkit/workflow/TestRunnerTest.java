@@ -18,7 +18,7 @@ class TestRunnerTest {
   @Mock private ResultProcessor resultProcessor;
 
   @BeforeEach
-  private void setup() {
+  void setup() {
     testRunner = new TestRunner(resultProcessor);
   }
 

@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.stereotype.Service;
 
 /** Util class for comparing a string to a pattern */
@@ -69,6 +69,6 @@ public class RegexUtil {
 
   private static String removeCarriageReturns(String input) {
 
-    return StringUtils.replace(input, CR, EMPTY);
+    return Strings.CS.replace(input, CR, EMPTY);
   }
 }

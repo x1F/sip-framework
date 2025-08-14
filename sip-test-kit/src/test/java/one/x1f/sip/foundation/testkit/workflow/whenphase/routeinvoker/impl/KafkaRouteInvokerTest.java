@@ -70,8 +70,7 @@ class KafkaRouteInvokerTest {
   }
 
   @Test
-  void GIVEN_bodyAndCamelKafkaSpecificHeaders_WHEN_invoke_THEN_verifyBodyAndHeaderValues()
-      throws Exception {
+  void GIVEN_bodyAndCamelKafkaSpecificHeaders_WHEN_invoke_THEN_verifyBodyAndHeaderValues() {
     // arrange
     inputExchange.getMessage().setBody("body value");
     inputExchange.getMessage().setHeader(TOPIC, "custom_topic");
@@ -89,7 +88,7 @@ class KafkaRouteInvokerTest {
   }
 
   @Test
-  void GIVEN_customHeaders_WHEN_invoke_THEN_verifyHeaderValues() throws Exception {
+  void GIVEN_customHeaders_WHEN_invoke_THEN_verifyHeaderValues() {
     // arrange
     KafkaHeaderSerializer kafkaHeaderSerializer = new DefaultKafkaHeaderSerializer();
     String customHeaderValue = "test";
@@ -104,7 +103,7 @@ class KafkaRouteInvokerTest {
   }
 
   @Test
-  void GIVEN_testKitHeadersAsCustomHeaders_WHEN_invoke_THEN_verifyHeaderValues() throws Exception {
+  void GIVEN_testKitHeadersAsCustomHeaders_WHEN_invoke_THEN_verifyHeaderValues() {
     // arrange
     inputExchange.getMessage().setHeader(TEST_NAME_HEADER, "test1");
     inputExchange.getMessage().setHeader(TEST_MODE_HEADER, "true");

@@ -46,14 +46,14 @@ class TestKitHelperTest {
 
   @Test
   void GIVEN_simpleBody_WHEN_mapToMessageProperties_THEN_expectValidBody() {
-    Exchange exchange = mock(Exchange.class);
+    Exchange mockExchange = mock(Exchange.class);
     Map<String, Object> headers = new HashMap<>();
     Message message = mock(Message.class);
-    when(exchange.getMessage()).thenReturn(message);
+    when(mockExchange.getMessage()).thenReturn(message);
     when(message.getBody()).thenReturn(BODY);
     when(message.getHeaders()).thenReturn(headers);
 
-    MessageProperties actual = MessageProperties.mapToMessageProperties(exchange);
+    MessageProperties actual = MessageProperties.mapToMessageProperties(mockExchange);
 
     assertThat(actual.getBody()).isEqualTo(BODY);
     assertThat(actual.getHeaders()).isEqualTo(headers);
@@ -141,29 +141,30 @@ class TestKitHelperTest {
   @Test
   void GIVEN_PersonJsonRequestModel_WHEN_unmarshallExchangeBodyFromJson_THEN_expectPersonPojo() {
     // arrange
-    Exchange exchange = TestKitHelper.parseExchangeProperties(null, camelContext);
-    exchange.getMessage().setBody(JSON_MODEL_PAYLOAD_BODY);
+    Exchange mockExchange = TestKitHelper.parseExchangeProperties(null, camelContext);
+    mockExchange.getMessage().setBody(JSON_MODEL_PAYLOAD_BODY);
 
     // act
     unmarshallExchangeBodyFromJson(
-        exchange, new ObjectMapper(), DirectRouteInvokerTest.Person.class);
+        mockExchange, new ObjectMapper(), DirectRouteInvokerTest.Person.class);
 
     // assert
-    assertThat(exchange.getMessage().getBody()).isInstanceOf(DirectRouteInvokerTest.Person.class);
+    assertThat(mockExchange.getMessage().getBody())
+        .isInstanceOf(DirectRouteInvokerTest.Person.class);
   }
 
   @Test
   void
       GIVEN_NoJsonRequestModel_WHEN_unmarshallExchangeBodyFromJson_THEN_expectSIPFrameworkException() {
     // arrange
-    Exchange exchange = TestKitHelper.parseExchangeProperties(null, camelContext);
-    exchange.getMessage().setBody("string value");
+    Exchange mockExchange = TestKitHelper.parseExchangeProperties(null, camelContext);
+    mockExchange.getMessage().setBody("string value");
 
     // act && assert
     assertThatThrownBy(
             () -> {
               unmarshallExchangeBodyFromJson(
-                  exchange, new ObjectMapper(), DirectRouteInvokerTest.Person.class);
+                  mockExchange, new ObjectMapper(), DirectRouteInvokerTest.Person.class);
             })
         .isInstanceOf(SIPFrameworkException.class);
   }

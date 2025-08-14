@@ -28,10 +28,7 @@ class SoapOperationOutboundConnectorBaseTest {
 
     // act & assert
     // act & assert
-    assertThatThrownBy(
-            () -> {
-              outboundConnector.getServiceInterfaceClass();
-            })
+    assertThatThrownBy(outboundConnector::getServiceInterfaceClass)
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
             String.format(

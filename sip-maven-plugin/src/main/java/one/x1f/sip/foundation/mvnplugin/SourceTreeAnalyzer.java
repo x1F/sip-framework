@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import one.x1f.sip.foundation.mvnplugin.model.AnalyzeResult;
 import one.x1f.sip.foundation.mvnplugin.model.BannedImportGroups;
@@ -70,9 +69,7 @@ final class SourceTreeAnalyzer {
 
   private List<BannedImportRecords> analyzeFolders(
       Collection<Path> directories, BannedImportGroups groups) {
-    return directories.stream()
-        .flatMap(path -> analyzeFolder(path, groups))
-        .toList();
+    return directories.stream().flatMap(path -> analyzeFolder(path, groups)).toList();
   }
 
   private Stream<BannedImportRecords> analyzeFolder(Path srcDir, BannedImportGroups groups) {
