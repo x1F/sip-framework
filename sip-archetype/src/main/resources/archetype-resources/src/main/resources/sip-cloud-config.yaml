@@ -1,0 +1,43 @@
+#set( $dollar = '$' )
+# SIP Cloud Configuration
+# Template for configuration in case SIP Cloud is used with the adapter
+
+sip.cloud:
+  data-masking:
+    enabled: true
+    keywords:
+  history:
+    enabled: true
+    limit: 100
+    maxPayloadSize: 1000000 # 1 MB
+  tracing:
+    enabled: ${dollar}{sip.cloud.history.enabled} # must be true when enabling history
+  backend-communication:
+    enabled: true
+    stage: dev
+    broker:
+      backend-inbox: backendInbox
+      adapter-inbox: adapterInbox
+      history-inbox: historyInbox
+      type: none # supported values: none, rabbitmq, kafka
+
+# Template for broker specific configuration
+#      kafka:
+#        bootstrap-servers:
+#      rabbitmq:
+#        host:
+#        port:
+#        username:
+#        password:
+# Template for broker security configuration
+#      security:
+#        sslEnabled:
+#        keystorePath:
+#        keystorePassword:
+#        truststorePath:
+#        truststorePassword:
+#        keyPassword:
+#        securityProtocol: # kafka
+#        aclUser: # kafka
+#        aclPassword: # kafka
+#        algorithm: # rabbitmq
