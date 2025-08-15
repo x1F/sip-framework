@@ -20,7 +20,7 @@ the plugin in your pom:
     <plugins>
     ...
         <plugin>
-            <groupId>de.ikor.sip.foundation</groupId>
+            <groupId>one.x1f.sip.foundation</groupId>
             <artifactId>sip-maven-plugin</artifactId>
     </plugin>
 ```
@@ -32,7 +32,7 @@ In that case, the adapter will inherit following config from its parent:
     <plugins>
     ...
         <plugin>
-            <groupId>de.ikor.sip.foundation</groupId>
+            <groupId>one.x1f.sip.foundation</groupId>
             <artifactId>sip-maven-plugin</artifactId>
             <version>${sip-framework.version}</version>
             <executions>

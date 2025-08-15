@@ -1,5 +1,0 @@
-{
-  "author": "MartinBuchheim",
-  "pullrequestId": "283",
-  "message": "New API to extend the integration flow within connectors via Camel DSL"
-}

@@ -16,7 +16,7 @@ This project should be used as parent for SIP Adapters.
 
 ```xml
 <parent>
-    <groupId>de.ikor.sip.foundation</groupId>
+    <groupId>one.x1f.sip.foundation</groupId>
     <artifactId>sip-starter-parent</artifactId>
     <version>${sip.starter.parent}</version>
 </parent>

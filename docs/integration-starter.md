@@ -8,7 +8,7 @@ Starter project used to add necessary predefined dependencies for development of
 
 ## Includes
 
-- IKOR SIP Framework dependencies
+- x1F SIP Framework dependencies
 - Camel dependencies
 - Spring dependencies
 
@@ -18,7 +18,7 @@ Add sip-integration-starter dependency to project.
 
 ```xml
 <dependency>
-    <groupId>de.ikor.sip.foundation</groupId>
+    <groupId>one.x1f.sip.foundation</groupId>
     <artifactId>sip-integration-starter</artifactId>
     <version>${sip.integration.starter}</version>
 </dependency>

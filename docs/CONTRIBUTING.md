@@ -26,7 +26,7 @@ Please handle possibly security vulnerabilities with special care as described b
 
 If you think you have found a security vulnerability please *DO NOT* disclose it publicly until we've had a chance to fix it as this may result in an unnecessary security threat. We will handle these requests with special care.
 
-Please contact us with templated bug report via email at: opensource@ikor.de
+Please contact us with templated bug report via email at: sip@x1f.one
 
 ### Requesting features
 

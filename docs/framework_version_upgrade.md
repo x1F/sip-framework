@@ -2,7 +2,36 @@
 
 [TOC]
 
-## Upgrade from 3.6.1 to x.y.z
+## Upgrade from 3.6.2 to 4.0.0
+
+4.0.0 is a new major release that focuses mainly on SIP Cloud and SIP Cockpit related features.
+
+Due to the merger of IKOR with x1F, all artifacts and packages have been moved to the `one.x1f.sip` namespace. 
+This requires changes in the class imports as well as the Maven dependency structure (see below). Apart from those changes,
+no substantial changes in the sources of existing adapters are required to make them work with the new framework release.
+
+### Update Maven dependencies to x1f namespace
+
+All listed dependencies in existing `pom.xml` files, as well as the parent declaration, must have their SIP related `<groupId>`switched
+from `de.ikor.sip.foundation` to `one.x1f.sip.foundation`.
+
+### Update imported framework classes to x1f namespace
+
+All Java files importing SIP framework packages must switch those import statements from `de.ikor.sip.foundation` to `one.x1f.sip.foundation`.
+We recommend using search / replace in your IDE if you have a lot of `.java` files importing SIP framework classes.
+
+### Update annotation class imports due to typo
+
+In older SIP framework releases, some annotations resided in the mistyped `de.ikor.sip.foundation.core.declarative.annonation` package. 
+We used the opportunity of the global namespace migration to move these annotations to `one.x1f.sip.foundation.core.declarative.annotation`, so
+imports need to be changed where necessary.
+
+### Attribute name change in ConnectorProcessor ordering annotations
+
+The attribute in `@ExecuteBefore` and `@ExecuteAfter` annotations used for relative connector-processor ordering has been changed
+from `processorName` to `extensionName`. This has been done as those annotations are also available for use with the broader connector-extensions API introduced in this release.
+ 
+## Upgrade from 3.6.1 to 3.6.2
 
 Building REST inbound connectors was changed. 
 Usage of multiple HTTP methods in REST DSL of a single connector is no longer allowed.

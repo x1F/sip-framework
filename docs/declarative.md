@@ -273,18 +273,22 @@ Typical tasks include:
 - Attaching data from the message header to the model (such as query- or path-parameters)
 - Verifying information retrieved with a request (such as authorization tokens)
 
-##### Attaching Connector Processors
+##### Attaching Connector Extensions
 
-SIP allows to implement and attach processors to (inbound- and outbound-) connectors in a variety of ways.
+SIP allows to implement and attach extensions to (inbound- and outbound-) connectors in a variety of ways.
 
-Internally, all processors rely on the `ConnectorProcessor` interface, but it is not always necessary for adapter developers to
+Internally, all processors rely on the `ConnectorExtension` interface, but it is not always necessary for adapter developers to
 implement this interface themselves.
 
-Connector processors are attached to either the _request_- or the _response_-flow of a connector, typically using the respective `@RequestProcessor`
-and `@ResponseProcessor` annotations.
+Depending on the specific use-case, one of the two following variants should be selected:
 
-If multiple processors are attached to a connector, the ordering in which they are processed can often be important.
-Chapter [Ordering Connector Processors](#ordering-connector-processors) describes how the correct oder can be specified.
+- _Standard extensions_, attached via `@RequestExtension` or `@ResponseExtension`, provide a Camel DSL handle to attach additional steps to the request- or response flow. 
+
+- _Processor extensions_ are more specific, and allow to attach processors to the request- or response flow, which are triggered on any individual integration call. 
+They are attached via `@RequestProcessor` or `@ResponseProcessor`, and internally implement the `ConnectorExtension` interface as well.
+
+If multiple extension are attached to a connector, the ordering in which they are processed can often be important.
+Chapter [Ordering Connector Extensions](#ordering-connector-extensions) describes how the correct oder can be specified.
 
 ###### Using model mappers
 
@@ -294,7 +298,7 @@ are used to transform from a system-specific data model to the common domain mod
 A mapper is usually attached to a connector by annotation the connector-class with either `@UseRequestModelMapper` or `@UseResponseModelMapper`.
 
 Any class implementing `ModelMapper` is automatically a `ConnectorProcessor` as well, and can therefore also be placed in the
-[correct order](#ordering-connector-processors) with any other processors used within the connector.
+[correct order](#ordering-connector-extensions) with any other extensions used within the connector.
 
 ```java
 public class SysUserMapper implements ModelMapper<SystemUser, User> {
@@ -320,9 +324,24 @@ public class SysUserInboundConnector extends GenericInboundConnectorBase {
 }
 ```
 
-###### Annotating methods inside a connector class
+###### Attaching extensions via methods inside a connector class
 
-Any public method inside a connector's class can be annotated with either `@RequestProcessor` or `@ResponseProcessor`. The SIP framework
+Any public method inside a connector's class can be annotated with either `@RequestExtension` or `@ResponseExtension`. SIP framework
+will then automatically attach it to the respective flow of that connector.
+
+The method must return `void` and takes the `RouteDefinition` DSL handle as it's sole parameter. This handle is used within the method body
+to attach the required extensions.
+
+```java
+@RequestExtension
+public void writeToLogsExtension(RouteDefinition routeDef) {
+  routeDef.log("New exchange received: ${exchangeId}");
+}
+```
+
+###### Attaching processors via methods inside a connector class
+
+Any public method inside a connector's class can be annotated with either `@RequestProcessor` or `@ResponseProcessor`. SIP framework
 will then automatically attach it to the respective flow of that connector.
 
 Following variants are supported:
@@ -333,7 +352,7 @@ Following variants are supported:
 
     - Parameters of type `Message` or `Exchange` will receive the respective instance.
     - Parameters annotated with `@HeaderParameter(String)` will receive the content of the respectively named header-field in the declared type.
-    - Any other parameter will retrieve the current content of the body in the declared type. `@Nullable` can be added if `null` be legal for that parameter.
+    - Any other parameter will retrieve the current content of the body in the declared type. `@Nullable` can be added if `null` is legal for that parameter.
 
 3. The method does have a return type which is not a `ConnectorProcessor` instance and any number of arguments. This will behave identically to approach 2, but additionally uses the returned object as the new message body, effectively making it a simple model mapper.
 
@@ -377,6 +396,25 @@ Note that instead of using `@RequestProcessor` and `@HeaderParameter` annotation
 there are also `@ParameterMapping`, `@PathParameter`, and `@QueryParameter` annotations available (as described in the [REST Connector](#rest-connector)
 chapter).
 
+###### Attaching an extension bean to a connector
+
+It is possible to attach a bean implementing `ConnectorExtension` to a connector by referencing the connector's id
+or class within the `@RequestExtension` or `@ResponseExtension` annotation. This can be helpful if the connector can
+or should not be modified.
+
+```java
+@Component
+@ResponseExtension(ClosedSourceOutboundConnector.class)
+class MessageSigner implements ConnectorExtension {
+
+    @Override
+    public void accept(final RouteDefinition routeDefinition) {
+      routeDefinition.transform(simple("signed: ${body}"));
+    }
+
+}
+```
+
 ###### Attaching a processor bean to a connector
 
 It is possible to attach a bean implementing `ConnectorProcessor` to a connector by referencing the connector's id
@@ -397,26 +435,26 @@ class MessagePeek implements ConnectorProcessor {
 }
 ```
 
-##### Ordering Connector Processors
+##### Ordering Connector Extensions
 
-Ordering of connector processors can be achieved via specific annotations, which can be applied in combination with all annotations
-used to attach processors (i.e. `@RequestProcessor`, `@ResponseProcessor`, `@ParameterMapping`, `@UseRequestModelMapper`, and `@UseResponseModelMapper`).
+Ordering of connector extensions can be achieved via specific annotations, which can be applied in combination with all annotations
+used to attach extensions (i.e. `@RequestExtension`, `@ResponseExtension`, `@RequestProcessor`, `@ResponseProcessor`, `@ParameterMapping`, `@UseRequestModelMapper`, and `@UseResponseModelMapper`).
 
-Ordering can either be defined using an _absolute_ order (i.e. numbering the connector processor), or _relative_ ordering of the processors
+Ordering can either be defined using an _absolute_ order (i.e. numbering the connector extensions), or _relative_ ordering of the extensions
 in relation to each other.
 
 It is also possible to combine absolute and relative ordering. In this case, the absolute orderings are applied first, and the
 relative orderings are applied afterward.
 
-The placement of processors without any ordering annotation is non-deterministic.
+The placement of extensions without any ordering annotation is non-deterministic.
 
 ###### Absolute ordering
 
-The `@ExecutionOrder` annotation can be utilized to provide absolute ordering for a connector processor. The annotation supports three variants:
+The `@ExecutionOrder` annotation can be utilized to provide absolute ordering for a connector extension. The annotation supports three variants:
 
-1. By supplying the order-number of this processor's execution. The processors will be executed in the order from the lowest to the highest number. A continuous numbering is not required. If there are multiple processors with the same ordering number, their execution order is non-deterministic.
-2. By setting `@ExecutionOrder(first = true)`. This processor will always be executed before any other. This may only be specified once per connector.
-3. By setting `@ExecutionOrder(last = true)`. This processor will always be last after any other. This may only be specified once per connector.
+1. By supplying the order-number of this extension's execution. The extensions will be executed in the order from the lowest to the highest number. A continuous numbering is not required. If there are multiple extensions with the same ordering number, their execution order is non-deterministic.
+2. By setting `@ExecutionOrder(first = true)`. This extension will always be executed before any other. This may only be specified once per connector.
+3. By setting `@ExecutionOrder(last = true)`. This extension will always be last after any other. This may only be specified once per connector.
 
 ```java
 @InboundConnector(requestModel = String.class)
@@ -429,12 +467,15 @@ public class StringManipulatingInboundProcessor extends GenericInboundConnectorB
         return StaticEndpointBuilders.file("/folder/to/watch");
     }
 
-    @ExecutionOrder(first = true)
+    @RequestProcessor
+    @ExecutionOrder(first = true)    
     public ConnectorProcessor authorizeRequest() { /* ... */ }
 
+    @RequestProcessor
     @ExecutionOrder(2)
     public String fileToUpper(String fileContent) { return fileContent.toUpperCase(); }
 
+    @RequestProcessor
     @ExecutionOrder(1)
     public void verifyReadable(File file) { if (!file.canRead()) throw new IllegalArgumentException();  }
 
@@ -445,9 +486,9 @@ In this example, _authorizeRequest_ will be called first, followed by _verifyRea
 
 ###### Relative ordering
 
-The `@ExecuteBefore` and `@ExecuteAfter` annotations can be utilized to specify ordering of connector processors relative to each other. These annotations
-expect either the class or processor-name as a pointer to the processor which should be used for the relative ordering. When using method-based
-connector processors, the name of the method serves as the processor-name that can be used.
+The `@ExecuteBefore` and `@ExecuteAfter` annotations can be utilized to specify ordering of connector extensions relative to each other. These annotations
+expect either the class or extension-name as a pointer to the extension which should be used for the relative ordering. When using method-based
+connector extensions, the name of the method serves as the extension-name that can be used.
 
 Below is the previous example rewritten with relative ordering.
 
@@ -461,13 +502,16 @@ public class StringManipulatingInboundProcessor extends GenericInboundConnectorB
         return StaticEndpointBuilders.file("/folder/to/watch");
     }
 
-    @ExecuteBefore(processorName = "verifyReadable")
+    @RequestProcessor
+    @ExecuteBefore(extensionName = "verifyReadable")
     public ConnectorProcessor authorizeRequest() { /* ... */ }
 
+    @RequestProcessor
     @ExecuteBefore(StringToCdmMapper.class)
     public String fileToUpper(String fileContent) { return request.toUpperCase(); }
 
-    @ExecuteBefore(processorName = "authorizeRequest")
+    @RequestProcessor
+    @ExecuteBefore(extensionName = "authorizeRequest")
     public void verifyReadable(File file) { if (!file.canRead()) throw new IllegalArgumentException();  }
 
 }
@@ -689,6 +733,9 @@ public class DemoProcess extends CompositeProcessBase {
 - *forLoop* is used to enter looping statement equivalent to 'for' from DSL. It accepts a predicate
   which should be evaluated into an integer marking the number of iterations. To return to previous scope and end the loop
   *endForLoop* should be used.
+- *split* is used to enter looping statement equivalent to 'split' and 'parallelSplit' from DSL. It accepts a predicate which should be
+  evaluated into a Collection of object which will be individually processed by the consumer(s).
+  To return to previous scope and end the loop *endSplit* should be used.
 
 ```java
 public class DemoProcess extends CompositeProcessBase {
@@ -704,7 +751,11 @@ public class DemoProcess extends CompositeProcessBase {
                         .forLoop(context -> context.getLatestResponse().get().getIterationNumber())
                         .callConsumer(DemoScenarioConsumer2.class)
                         .withNoResponseHandling()
-                        .endForLoop();
+                        .endForLoop()
+                        .split(context -> context.getLatestResponse().get().getIdList())
+                        .callConsumer(DemoScenarioConsumer3.class)
+                        .withNoResponseHandling()
+                        .endSplit();
                 });
     }
 

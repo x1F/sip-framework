@@ -1,5 +1,0 @@
-{
-  "author": "MartinBuchheim",
-  "pullrequestId": "288",
-  "message": "Build process improvement: allow manually given release version as an option to automatic computation"
-}

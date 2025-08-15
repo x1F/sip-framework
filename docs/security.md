@@ -18,7 +18,7 @@ Implementing code and configuration on top of Spring Security should help you ju
 Adding the Maven dependency for SIP Security should be enough to boostrap it. For proper configuration please refer to the "Configuration" chapter.
 ```xml
 <dependency>
-    <groupId>de.ikor.sip.foundation</groupId>
+    <groupId>one.x1f.sip.foundation</groupId>
     <artifactId>sip-security</artifactId>
 </dependency>
 ```
@@ -112,12 +112,12 @@ These are the basic building blocks of authentication mechanism:
   sip.security:
       authentication:
           auth-providers: #authentication functionality is enabled if valid providers are defined
-              - classname: de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthAuthenticationProvider
+              - classname: one.x1f.sip.foundation.security.authentication.basic.SIPBasicAuthAuthenticationProvider
                 ignored-endpoints: #a list of endpoints which are ignored by this specific authenticator based on Spring´s AntPathMatchers implementation
                   - /actuator/health
                   - /actuator/env
                 validation:
-                  classname: de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthFileValidator #FQCN of the validator to be used
+                  classname: one.x1f.sip.foundation.security.authentication.basic.SIPBasicAuthFileValidator #FQCN of the validator to be used
                   file-path: classpath:basic-auth-users.json  # possible resource strings are classpath:, file:, http:, _none_
   ```
   Sample file `basic-auth-users.json`:
@@ -132,12 +132,12 @@ These are the basic building blocks of authentication mechanism:
   sip.security:
       authentication:
           auth-providers: #authentication functionality is enabled if valid providers are defined
-              - classname: de.ikor.sip.foundation.security.authentication.x509.SIPX509AuthenticationProvider
+              - classname: one.x1f.sip.foundation.security.authentication.x509.SIPX509AuthenticationProvider
                 ignored-endpoints: #a list of endpoints which are ignored by this specific authenticator based on Spring´s AntPathMatchers implementation
                   - /favicon.ico
                   - /actuator/env
                 validation:
-                  classname: de.ikor.sip.foundation.security.authentication.x509.SIPX509FileValidator #FQCN of the validator to be used
+                  classname: one.x1f.sip.foundation.security.authentication.x509.SIPX509FileValidator #FQCN of the validator to be used
                   file-path: classpath:client-certs.acl  # possible resource strings are classpath:, file:, http:, _none_
   ```
   Sample file `client-certs.acl`:

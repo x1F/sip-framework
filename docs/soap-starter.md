@@ -26,7 +26,7 @@ then this manual steps are needed:
 
 ```xml
 <dependency>
-  <groupId>de.ikor.sip.foundation</groupId>
+  <groupId>one.x1f.sip.foundation</groupId>
   <artifactId>sip-soap-starter</artifactId>
 </dependency>
 ```

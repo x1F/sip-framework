@@ -176,7 +176,7 @@ resources. In this file we can specify that the adapter uses a custom logging en
 <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <!-- encoders are  by default assigned the type
          ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
-    <encoder class="de.ikor.sip.foundation.core.translate.logging.SIPPatternLayoutEncoder">
+    <encoder class="one.x1f.sip.foundation.core.translate.logging.SIPPatternLayoutEncoder">
         <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}: %msg%n</pattern>
     </encoder>
 </appender>
