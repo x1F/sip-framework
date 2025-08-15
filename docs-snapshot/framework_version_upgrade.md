@@ -30,8 +30,6 @@ imports need to be changed where necessary.
 
 The attribute in `@ExecuteBefore` and `@ExecuteAfter` annotations used for relative connector-processor ordering has been changed
 from `processorName` to `extensionName`. This has been done as those annotations are also available for use with the broader connector-extensions API introduced in this release.
-
-
  
 ## Upgrade from 3.6.1 to 3.6.2
 
