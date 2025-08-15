@@ -20,7 +20,7 @@ from `de.ikor.sip.foundation` to `one.x1f.sip.foundation`.
 All Java files importing SIP framework packages must switch those import statements from `de.ikor.sip.foundation` to `one.x1f.sip.foundation`.
 We recommend using search / replace in your IDE if you have a lot of `.java` files importing SIP framework classes.
 
-### Updated annotation class imports due to typo
+### Update annotation class imports due to typo
 
 In older SIP framework releases, some annotations resided in the mistyped `de.ikor.sip.foundation.core.declarative.annonation` package. 
 We used the opportunity of the global namespace migration to move these annotations to `one.x1f.sip.foundation.core.declarative.annotation`, so
