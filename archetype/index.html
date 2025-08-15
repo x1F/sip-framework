@@ -115,6 +115,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/4.0.0/index.html">JavaDoc 4.0.0</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/3.6.2/index.html">JavaDoc 3.6.2</a>
                 </li>
               </ul>
@@ -225,15 +229,15 @@
 <h2 id="how-to-create-a-sip-adapter-using-sip-archetype">How to create a SIP Adapter using SIP Archetype<a class="headerlink" href="#how-to-create-a-sip-adapter-using-sip-archetype" title="Permanent link">&para;</a></h2>
 <p>In order to make setting up a new integration adapter project an easy task, we have created a dedicated SIP (Adapter) Maven archetype, that gives the ability to quickly bootstrap a new integration adapter, along with all needed Maven dependencies and goodies, as well as the recommended, preferred organization of the project.</p>
 <p>You can create a SIP Adapter by using the following Maven command:</p>
-<pre class="highlight"><code class="language-shell">  mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=&lt;latest.sip-framework.version&gt; -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT</code></pre>
+<pre class="highlight"><code class="language-shell">  mvn archetype:generate -DarchetypeGroupId=one.x1f.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=&lt;latest.sip-framework.version&gt; -DgroupId=one.x1f.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT</code></pre>
 <p>When executing the command, pay attention to use the latest archetype version for the <code>-DarchetypeVersion</code> parameter.
-Check available versions <a href="https://search.maven.org/search?q=de.ikor.sip.foundation">here</a>.</p>
+Check available versions <a href="https://search.maven.org/search?q=one.x1f.sip.foundation">here</a>.</p>
 <p><strong>Overview of the command</strong>
 <pre class="highlight"><code class="language-shell">mvn archetype:generate
--DarchetypeGroupId=de.ikor.sip.foundation
+-DarchetypeGroupId=one.x1f.sip.foundation
 -DarchetypeArtifactId=sip-archetype
 -DarchetypeVersion=&lt;latest.sip-archetype.version&gt;
--DgroupId=de.ikor.sip.adapter
+-DgroupId=one.x1f.sip.adapter
 -DartifactId=demo
 -DprojectName=DemoAdapter
 -Dversion=1.0.0-SNAPSHOT</code></pre></p>
@@ -241,9 +245,9 @@ Check available versions <a href="https://search.maven.org/search?q=de.ikor.sip.
 as they set the properties for the adapter. It is recommended to follow the Maven naming convention since they are going to be presented in the <em>pom.xml</em> file of the generated adapter.</p>
 <p>After executing given Maven command, you will be requested to insert additional parameters about project structure:</p>
 <ul>
-<li><strong>connectorGroup1</strong>/<strong>connectorGroup2</strong> are representing names of your connector group packages inside the project. It will also be reflected in the generated package structure (for example - all of the sources for connectorGroup1 will be in the <em>de.ikor.sip.adapter.sufix.connectorGroup1</em> package)</li>
+<li><strong>connectorGroup1</strong>/<strong>connectorGroup2</strong> are representing names of your connector group packages inside the project. It will also be reflected in the generated package structure (for example - all of the sources for connectorGroup1 will be in the <em>one.x1f.sip.adapter.sufix.connectorGroup1</em> package)</li>
 <li><strong>packageSuffix</strong> is used to create project package name by concatenating its value to the <strong>groupId</strong>. There is a strict validation
-  for using only lower case letters and should be a single word. This will reflect the generated package structure for the generated project files. (for example - all of the sources will be in the <em>de.ikor.sip.adapter.sufix</em> java package) </li>
+  for using only lower case letters and should be a single word. This will reflect the generated package structure for the generated project files. (for example - all of the sources will be in the <em>one.x1f.sip.adapter.sufix</em> java package) </li>
 <li><strong>useLombok</strong> is used for including or excluding Lombok dependency in adapter. Lombok is included by default. If you wish to exclude lombok you should set 
   useLombok to anything other than 'y' or 'Y'.</li>
 <li><strong>useSoap</strong> is used for including or excluding <em>SIP SOAP Starter</em> dependency in adapter. It is useful to include this starter if the adapter is planned to use SOAP since it has pre-built bootstrap elements included. It is false by default.</li>
@@ -252,9 +256,12 @@ as they set the properties for the adapter. It is recommended to follow the Mave
   package naming errors.</li>
 <li><strong>createDemoAdapter</strong> should be set to 'y' or 'Y' when the inclusion of a demo adapter is desired.
     It will generate example classes using declarative structure, including process and scenario orchestration.</li>
+<li><strong>useSipCloudFramework</strong> should be set to 'y' or 'Y' to enable the premium version of the SIP framework. 
+  When enabled, the adapter will include the necessary dependencies for SIP Cloud Framework. 
+  For access or licensing details, please contact <a href="mailto:sip@x1f.one">sip@x1f.one</a></li>
 </ul>
 <p><em>Note</em>: All the parameters can be provided via command line if needed:</p>
-<pre class="highlight"><code class="language-shell">mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=&lt;latest.sip-framework.version&gt; -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT -DconnectorGroup1=group1 -DconnectorGroup2=group2 -DpackageSuffix=project -DuseLombok=y -DuseSoap=n -Dpackage=de.ikor.sip.adapter.demo.project -DcreateDemoAdapter=n</code></pre>
+<pre class="highlight"><code class="language-shell">mvn archetype:generate -DarchetypeGroupId=one.x1f.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=&lt;latest.sip-framework.version&gt; -DgroupId=one.x1f.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT -DconnectorGroup1=group1 -DconnectorGroup2=group2 -DpackageSuffix=project -DuseLombok=y -DuseSoap=n -Dpackage=one.x1f.sip.adapter.demo.project -DcreateDemoAdapter=n -DuseSipCloudFramework=n</code></pre>
 <p>After a successful build, a project with the following structure will be created:</p>
 <ul>
 <li>SIPApplication.java</li>

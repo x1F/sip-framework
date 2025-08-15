@@ -1,0 +1,92 @@
+sip:
+  adapter:
+    camel-endpoint-context-path:
+    camel-cxf-endpoint-context-path:
+
+  core:
+    actuator:
+      adapter-routes:
+        enabled: true
+      endpoints: adapterroutes,tracing
+      extensions:
+        health:
+          enabled: true
+        info:
+          enabled: true
+
+    declarativestructure:
+      enabled: true
+
+    metrics:
+      external-endpoint-health-check:
+        enabled: true
+        scheduler:
+          fixed-delay: 900000
+          initial-delay: 5000
+      gauge:
+        name: sip.core.metrics.health
+    proxy:
+      enabled: true
+
+    tracing:
+      enabled: false
+      exchange-formatter:
+        showExchangeId: true
+        showHeaders: true
+      log: true
+
+    translation:
+      enabled: true
+      default-encoding: UTF-8
+      fallback-to-system-locale: false
+      fileLocations: classpath:translations/translated-messages
+      lang: en
+      sipFileLocations:
+        - classpath:translations/sip-core-messages
+        - classpath:translations/sip-test-kit-messages
+        - classpath:translations/sip-security-messages
+      use-code-as-default-message: true
+
+  security:
+    authentication:
+      disableCsrf: false
+      ignoredEndpoints:
+        - /endpoint
+      authProviders:
+          - classname: one.x1f.sip.foundation.security.authentication.basic.SIPBasicAuthAuthenticationProvider
+            ignored-endpoints:
+              - /actuator/health
+              - /actuator/env
+            validation:
+              classname: one.x1f.sip.foundation.security.authentication.basic.SIPBasicAuthFileValidator
+              file-path: classpath:basic-auth-users.json
+
+          - classname: one.x1f.sip.foundation.security.authentication.x509.SIPX509AuthenticationProvider
+            ignored-endpoints:
+              - /favicon.ico
+              - /actuator/env
+            validation:
+              classname: one.x1f.sip.foundation.security.authentication.x509.SIPX509FileValidator
+              file-path: classpath:client-certs.acl
+
+    ssl:
+      enabled: false
+      client:
+        enabled: false
+        key-store:
+        key-store-password:
+        key-store-type:
+        key-alias:
+        key-password:
+      server:
+        client-auth: none
+        key-store:
+        key-store-password:
+        key-store-type:
+        key-alias:
+        key-password:
+
+  testkit:
+    batch-test: false
+    enabled: false
+    test-cases-path: test-case-definition.yml

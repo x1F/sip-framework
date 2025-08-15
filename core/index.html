@@ -135,6 +135,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/4.0.0/index.html">JavaDoc 4.0.0</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/3.6.2/index.html">JavaDoc 3.6.2</a>
                 </li>
               </ul>
@@ -365,7 +369,7 @@ resources. In this file we can specify that the adapter uses a custom logging en
 <pre class="highlight"><code class="language-xml">&lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"&gt;
     &lt;!-- encoders are  by default assigned the type
          ch.qos.logback.classic.encoder.PatternLayoutEncoder --&gt;
-    &lt;encoder class="de.ikor.sip.foundation.core.translate.logging.SIPPatternLayoutEncoder"&gt;
+    &lt;encoder class="one.x1f.sip.foundation.core.translate.logging.SIPPatternLayoutEncoder"&gt;
         &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}: %msg%n&lt;/pattern&gt;
     &lt;/encoder&gt;
 &lt;/appender&gt;</code></pre>

@@ -167,6 +167,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/4.0.0/index.html">JavaDoc 4.0.0</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/3.6.2/index.html">JavaDoc 3.6.2</a>
                 </li>
               </ul>
@@ -292,13 +296,15 @@
 </li>
 <li><a href="#orchestration_1">Orchestration</a><ul>
 <li><a href="#connector-orchestration">Connector Orchestration</a><ul>
-<li><a href="#attaching-connector-processors">Attaching Connector Processors</a><ul>
+<li><a href="#attaching-connector-extensions">Attaching Connector Extensions</a><ul>
 <li><a href="#using-model-mappers">Using model mappers</a></li>
-<li><a href="#annotating-methods-inside-a-connector-class">Annotating methods inside a connector class</a></li>
+<li><a href="#attaching-extensions-via-methods-inside-a-connector-class">Attaching extensions via methods inside a connector class</a></li>
+<li><a href="#attaching-processors-via-methods-inside-a-connector-class">Attaching processors via methods inside a connector class</a></li>
+<li><a href="#attaching-an-extension-bean-to-a-connector">Attaching an extension bean to a connector</a></li>
 <li><a href="#attaching-a-processor-bean-to-a-connector">Attaching a processor bean to a connector</a></li>
 </ul>
 </li>
-<li><a href="#ordering-connector-processors">Ordering Connector Processors</a><ul>
+<li><a href="#ordering-connector-extensions">Ordering Connector Extensions</a><ul>
 <li><a href="#absolute-ordering">Absolute ordering</a></li>
 <li><a href="#relative-ordering">Relative ordering</a></li>
 </ul>
@@ -533,20 +539,28 @@ Typical tasks include:</p>
 <li>Attaching data from the message header to the model (such as query- or path-parameters)</li>
 <li>Verifying information retrieved with a request (such as authorization tokens)</li>
 </ul>
-<h5 id="attaching-connector-processors">Attaching Connector Processors<a class="headerlink" href="#attaching-connector-processors" title="Permanent link">&para;</a></h5>
-<p>SIP allows to implement and attach processors to (inbound- and outbound-) connectors in a variety of ways.</p>
-<p>Internally, all processors rely on the <code>ConnectorProcessor</code> interface, but it is not always necessary for adapter developers to
+<h5 id="attaching-connector-extensions">Attaching Connector Extensions<a class="headerlink" href="#attaching-connector-extensions" title="Permanent link">&para;</a></h5>
+<p>SIP allows to implement and attach extensions to (inbound- and outbound-) connectors in a variety of ways.</p>
+<p>Internally, all processors rely on the <code>ConnectorExtension</code> interface, but it is not always necessary for adapter developers to
 implement this interface themselves.</p>
-<p>Connector processors are attached to either the <em>request</em>- or the <em>response</em>-flow of a connector, typically using the respective <code>@RequestProcessor</code>
-and <code>@ResponseProcessor</code> annotations.</p>
-<p>If multiple processors are attached to a connector, the ordering in which they are processed can often be important.
-Chapter <a href="#ordering-connector-processors">Ordering Connector Processors</a> describes how the correct oder can be specified.</p>
+<p>Depending on the specific use-case, one of the two following variants should be selected:</p>
+<ul>
+<li>
+<p><em>Standard extensions</em>, attached via <code>@RequestExtension</code> or <code>@ResponseExtension</code>, provide a Camel DSL handle to attach additional steps to the request- or response flow. </p>
+</li>
+<li>
+<p><em>Processor extensions</em> are more specific, and allow to attach processors to the request- or response flow, which are triggered on any individual integration call. 
+They are attached via <code>@RequestProcessor</code> or <code>@ResponseProcessor</code>, and internally implement the <code>ConnectorExtension</code> interface as well.</p>
+</li>
+</ul>
+<p>If multiple extension are attached to a connector, the ordering in which they are processed can often be important.
+Chapter <a href="#ordering-connector-extensions">Ordering Connector Extensions</a> describes how the correct oder can be specified.</p>
 <h6 id="using-model-mappers">Using model mappers<a class="headerlink" href="#using-model-mappers" title="Permanent link">&para;</a></h6>
 <p>The <code>ModelMapper</code> interface allows to implement mappers that transform data from a source- to a target-model. Typically, they
 are used to transform from a system-specific data model to the common domain model used in an integration scenario.</p>
 <p>A mapper is usually attached to a connector by annotation the connector-class with either <code>@UseRequestModelMapper</code> or <code>@UseResponseModelMapper</code>.</p>
 <p>Any class implementing <code>ModelMapper</code> is automatically a <code>ConnectorProcessor</code> as well, and can therefore also be placed in the
-<a href="#ordering-connector-processors">correct order</a> with any other processors used within the connector.</p>
+<a href="#ordering-connector-extensions">correct order</a> with any other extensions used within the connector.</p>
 <pre class="highlight"><code class="language-java">public class SysUserMapper implements ModelMapper&lt;SystemUser, User&gt; {
 
     @Override
@@ -568,8 +582,17 @@ public class SysUserInboundConnector extends GenericInboundConnectorBase {
     }
 
 }</code></pre>
-<h6 id="annotating-methods-inside-a-connector-class">Annotating methods inside a connector class<a class="headerlink" href="#annotating-methods-inside-a-connector-class" title="Permanent link">&para;</a></h6>
-<p>Any public method inside a connector's class can be annotated with either <code>@RequestProcessor</code> or <code>@ResponseProcessor</code>. The SIP framework
+<h6 id="attaching-extensions-via-methods-inside-a-connector-class">Attaching extensions via methods inside a connector class<a class="headerlink" href="#attaching-extensions-via-methods-inside-a-connector-class" title="Permanent link">&para;</a></h6>
+<p>Any public method inside a connector's class can be annotated with either <code>@RequestExtension</code> or <code>@ResponseExtension</code>. SIP framework
+will then automatically attach it to the respective flow of that connector.</p>
+<p>The method must return <code>void</code> and takes the <code>RouteDefinition</code> DSL handle as it's sole parameter. This handle is used within the method body
+to attach the required extensions.</p>
+<pre class="highlight"><code class="language-java">@RequestExtension
+public void writeToLogsExtension(RouteDefinition routeDef) {
+  routeDef.log("New exchange received: ${exchangeId}");
+}</code></pre>
+<h6 id="attaching-processors-via-methods-inside-a-connector-class">Attaching processors via methods inside a connector class<a class="headerlink" href="#attaching-processors-via-methods-inside-a-connector-class" title="Permanent link">&para;</a></h6>
+<p>Any public method inside a connector's class can be annotated with either <code>@RequestProcessor</code> or <code>@ResponseProcessor</code>. SIP framework
 will then automatically attach it to the respective flow of that connector.</p>
 <p>Following variants are supported:</p>
 <ol>
@@ -581,7 +604,7 @@ will then automatically attach it to the respective flow of that connector.</p>
 <ul>
 <li>Parameters of type <code>Message</code> or <code>Exchange</code> will receive the respective instance.</li>
 <li>Parameters annotated with <code>@HeaderParameter(String)</code> will receive the content of the respectively named header-field in the declared type.</li>
-<li>Any other parameter will retrieve the current content of the body in the declared type. <code>@Nullable</code> can be added if <code>null</code> be legal for that parameter.</li>
+<li>Any other parameter will retrieve the current content of the body in the declared type. <code>@Nullable</code> can be added if <code>null</code> is legal for that parameter.</li>
 </ul>
 </li>
 <li>
@@ -623,6 +646,20 @@ public class UserRequestInboundConnector extends RestConnectorBase {
 <p>Note that instead of using <code>@RequestProcessor</code> and <code>@HeaderParameter</code> annotations for the parameter mapping (as shown above),
 there are also <code>@ParameterMapping</code>, <code>@PathParameter</code>, and <code>@QueryParameter</code> annotations available (as described in the <a href="#rest-connector">REST Connector</a>
 chapter).</p>
+<h6 id="attaching-an-extension-bean-to-a-connector">Attaching an extension bean to a connector<a class="headerlink" href="#attaching-an-extension-bean-to-a-connector" title="Permanent link">&para;</a></h6>
+<p>It is possible to attach a bean implementing <code>ConnectorExtension</code> to a connector by referencing the connector's id
+or class within the <code>@RequestExtension</code> or <code>@ResponseExtension</code> annotation. This can be helpful if the connector can
+or should not be modified.</p>
+<pre class="highlight"><code class="language-java">@Component
+@ResponseExtension(ClosedSourceOutboundConnector.class)
+class MessageSigner implements ConnectorExtension {
+
+    @Override
+    public void accept(final RouteDefinition routeDefinition) {
+      routeDefinition.transform(simple("signed: ${body}"));
+    }
+
+}</code></pre>
 <h6 id="attaching-a-processor-bean-to-a-connector">Attaching a processor bean to a connector<a class="headerlink" href="#attaching-a-processor-bean-to-a-connector" title="Permanent link">&para;</a></h6>
 <p>It is possible to attach a bean implementing <code>ConnectorProcessor</code> to a connector by referencing the connector's id
 or class within the <code>@RequestProcessor</code> or <code>@ResponseProcessor</code> annotation. This can be helpful if the connector can
@@ -638,20 +675,20 @@ class MessagePeek implements ConnectorProcessor {
     }
 
 }</code></pre>
-<h5 id="ordering-connector-processors">Ordering Connector Processors<a class="headerlink" href="#ordering-connector-processors" title="Permanent link">&para;</a></h5>
-<p>Ordering of connector processors can be achieved via specific annotations, which can be applied in combination with all annotations
-used to attach processors (i.e. <code>@RequestProcessor</code>, <code>@ResponseProcessor</code>, <code>@ParameterMapping</code>, <code>@UseRequestModelMapper</code>, and <code>@UseResponseModelMapper</code>).</p>
-<p>Ordering can either be defined using an <em>absolute</em> order (i.e. numbering the connector processor), or <em>relative</em> ordering of the processors
+<h5 id="ordering-connector-extensions">Ordering Connector Extensions<a class="headerlink" href="#ordering-connector-extensions" title="Permanent link">&para;</a></h5>
+<p>Ordering of connector extensions can be achieved via specific annotations, which can be applied in combination with all annotations
+used to attach extensions (i.e. <code>@RequestExtension</code>, <code>@ResponseExtension</code>, <code>@RequestProcessor</code>, <code>@ResponseProcessor</code>, <code>@ParameterMapping</code>, <code>@UseRequestModelMapper</code>, and <code>@UseResponseModelMapper</code>).</p>
+<p>Ordering can either be defined using an <em>absolute</em> order (i.e. numbering the connector extensions), or <em>relative</em> ordering of the extensions
 in relation to each other.</p>
 <p>It is also possible to combine absolute and relative ordering. In this case, the absolute orderings are applied first, and the
 relative orderings are applied afterward.</p>
-<p>The placement of processors without any ordering annotation is non-deterministic.</p>
+<p>The placement of extensions without any ordering annotation is non-deterministic.</p>
 <h6 id="absolute-ordering">Absolute ordering<a class="headerlink" href="#absolute-ordering" title="Permanent link">&para;</a></h6>
-<p>The <code>@ExecutionOrder</code> annotation can be utilized to provide absolute ordering for a connector processor. The annotation supports three variants:</p>
+<p>The <code>@ExecutionOrder</code> annotation can be utilized to provide absolute ordering for a connector extension. The annotation supports three variants:</p>
 <ol>
-<li>By supplying the order-number of this processor's execution. The processors will be executed in the order from the lowest to the highest number. A continuous numbering is not required. If there are multiple processors with the same ordering number, their execution order is non-deterministic.</li>
-<li>By setting <code>@ExecutionOrder(first = true)</code>. This processor will always be executed before any other. This may only be specified once per connector.</li>
-<li>By setting <code>@ExecutionOrder(last = true)</code>. This processor will always be last after any other. This may only be specified once per connector.</li>
+<li>By supplying the order-number of this extension's execution. The extensions will be executed in the order from the lowest to the highest number. A continuous numbering is not required. If there are multiple extensions with the same ordering number, their execution order is non-deterministic.</li>
+<li>By setting <code>@ExecutionOrder(first = true)</code>. This extension will always be executed before any other. This may only be specified once per connector.</li>
+<li>By setting <code>@ExecutionOrder(last = true)</code>. This extension will always be last after any other. This may only be specified once per connector.</li>
 </ol>
 <pre class="highlight"><code class="language-java">@InboundConnector(requestModel = String.class)
 @UseRequestModelMapper(StringToCdmMapper.class)
@@ -663,21 +700,24 @@ public class StringManipulatingInboundProcessor extends GenericInboundConnectorB
         return StaticEndpointBuilders.file("/folder/to/watch");
     }
 
-    @ExecutionOrder(first = true)
+    @RequestProcessor
+    @ExecutionOrder(first = true)    
     public ConnectorProcessor authorizeRequest() { /* ... */ }
 
+    @RequestProcessor
     @ExecutionOrder(2)
     public String fileToUpper(String fileContent) { return fileContent.toUpperCase(); }
 
+    @RequestProcessor
     @ExecutionOrder(1)
     public void verifyReadable(File file) { if (!file.canRead()) throw new IllegalArgumentException();  }
 
 }</code></pre>
 <p>In this example, <em>authorizeRequest</em> will be called first, followed by <em>verifyReadable</em>, <em>fileToUpper</em> and finally the attached <code>StringToCdmMapper</code> instance.</p>
 <h6 id="relative-ordering">Relative ordering<a class="headerlink" href="#relative-ordering" title="Permanent link">&para;</a></h6>
-<p>The <code>@ExecuteBefore</code> and <code>@ExecuteAfter</code> annotations can be utilized to specify ordering of connector processors relative to each other. These annotations
-expect either the class or processor-name as a pointer to the processor which should be used for the relative ordering. When using method-based
-connector processors, the name of the method serves as the processor-name that can be used.</p>
+<p>The <code>@ExecuteBefore</code> and <code>@ExecuteAfter</code> annotations can be utilized to specify ordering of connector extensions relative to each other. These annotations
+expect either the class or extension-name as a pointer to the extension which should be used for the relative ordering. When using method-based
+connector extensions, the name of the method serves as the extension-name that can be used.</p>
 <p>Below is the previous example rewritten with relative ordering.</p>
 <pre class="highlight"><code class="language-java">@InboundConnector(requestModel = String.class)
 @UseRequestModelMapper(StringToCdmMapper.class)
@@ -688,13 +728,16 @@ public class StringManipulatingInboundProcessor extends GenericInboundConnectorB
         return StaticEndpointBuilders.file("/folder/to/watch");
     }
 
-    @ExecuteBefore(processorName = "verifyReadable")
+    @RequestProcessor
+    @ExecuteBefore(extensionName = "verifyReadable")
     public ConnectorProcessor authorizeRequest() { /* ... */ }
 
+    @RequestProcessor
     @ExecuteBefore(StringToCdmMapper.class)
     public String fileToUpper(String fileContent) { return request.toUpperCase(); }
 
-    @ExecuteBefore(processorName = "authorizeRequest")
+    @RequestProcessor
+    @ExecuteBefore(extensionName = "authorizeRequest")
     public void verifyReadable(File file) { if (!file.canRead()) throw new IllegalArgumentException();  }
 
 }</code></pre>
@@ -889,6 +932,9 @@ public class DemoProcess extends CompositeProcessBase {
 <li><em>forLoop</em> is used to enter looping statement equivalent to 'for' from DSL. It accepts a predicate
   which should be evaluated into an integer marking the number of iterations. To return to previous scope and end the loop
   <em>endForLoop</em> should be used.</li>
+<li><em>split</em> is used to enter looping statement equivalent to 'split' and 'parallelSplit' from DSL. It accepts a predicate which should be
+  evaluated into a Collection of object which will be individually processed by the consumer(s).
+  To return to previous scope and end the loop <em>endSplit</em> should be used.</li>
 </ul>
 <pre class="highlight"><code class="language-java">public class DemoProcess extends CompositeProcessBase {
 
@@ -903,7 +949,11 @@ public class DemoProcess extends CompositeProcessBase {
                         .forLoop(context -&gt; context.getLatestResponse().get().getIterationNumber())
                         .callConsumer(DemoScenarioConsumer2.class)
                         .withNoResponseHandling()
-                        .endForLoop();
+                        .endForLoop()
+                        .split(context -&gt; context.getLatestResponse().get().getIdList())
+                        .callConsumer(DemoScenarioConsumer3.class)
+                        .withNoResponseHandling()
+                        .endSplit();
                 });
     }
 
