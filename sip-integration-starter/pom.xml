@@ -16,7 +16,7 @@
     <description>Starter project adding necessary dependencies for SIP integration adapters</description>
 
     <dependencies>
-        <!-- ikor dependencies -->
+        <!-- SIP dependencies -->
         <dependency>
             <groupId>one.x1f.sip.foundation</groupId>
             <artifactId>sip-core</artifactId>

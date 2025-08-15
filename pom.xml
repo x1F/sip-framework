@@ -108,7 +108,7 @@
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <spotless-maven-plugin.version>2.46.1</spotless-maven-plugin.version>
         <maven-gpg-plugin.version>3.2.6</maven-gpg-plugin.version>
-        <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
+        <sonatype-central-publishing-plugin.version>0.8.0</sonatype-central-publishing-plugin.version>
         <license-maven-plugin.version>2.6.0</license-maven-plugin.version>
 
         <!-- sonar settings -->
@@ -605,7 +605,6 @@
                         </execution>
                     </executions>
                 </plugin>
-
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
@@ -626,19 +625,20 @@
                         </gpgArguments>
                     </configuration>
                 </plugin>
-
                 <plugin>
-                    <groupId>org.sonatype.plugins</groupId>
-                    <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>${nexus-staging-maven-plugin.version}</version>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>${sonatype-central-publishing-plugin.version}</version>
                     <extensions>true</extensions>
                     <configuration>
-                        <serverId>maven-central</serverId>
-                        <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                        <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        <publishingServerId>maven-central</publishingServerId>
+                        <ignorePublishedComponents>true</ignorePublishedComponents>
+                        <!--
+                        <autoPublish>true</autoPublish>
+                        <waitUntil>validated</waitUntil>
+                        -->
                     </configuration>
                 </plugin>
-
             </plugins>
         </pluginManagement>
     </build>
@@ -685,8 +685,8 @@
                         <artifactId>maven-gpg-plugin</artifactId>
                     </plugin>
                     <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>
