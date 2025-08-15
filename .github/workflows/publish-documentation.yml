@@ -14,8 +14,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: 3.x
       - name: copy root markdown files to docs
@@ -24,7 +24,7 @@ jobs:
           cp CHANGELOG.md docs/changelog.md
       - run: pip install mkdocs plantuml-markdown pymdown-extensions
       - run: mkdocs build
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           # disabling shallow clone, otherwise we cannot pull/push as we need to
           fetch-depth: 0
@@ -39,7 +39,7 @@ jobs:
           git checkout -- javadoc
           mv ../site/*  .
           git add .
-          git config --global user.email "sip-dev@ikor.de"
+          git config --global user.email "sip@x1f.one"
           git config --global user.name "GitHub Actions"
           git commit -m "update documentation"
           git push

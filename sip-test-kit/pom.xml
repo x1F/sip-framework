@@ -13,6 +13,7 @@
 
     <artifactId>sip-test-kit</artifactId>
     <name>SIP Test Kit</name>
+    <description>Module providing test-kit functionality for SIP integration adapters</description>
 
     <dependencies>
         <dependency>

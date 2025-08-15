@@ -14,8 +14,8 @@
     <artifactId>sip-archetype</artifactId>
     <packaging>maven-archetype</packaging>
 
-    <name>sip-archetype</name>
-    <description>An archetype for creating an opinionated maven project for a sip adapter</description>
+    <name>SIP Archetype</name>
+    <description>Archetype for creating an opinionated project structure for SIP integration adapters</description>
 
     <build>
         <extensions>
