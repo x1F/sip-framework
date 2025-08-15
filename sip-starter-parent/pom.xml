@@ -65,7 +65,7 @@
         <snakeyaml.version>2.4</snakeyaml.version>                                  <!-- keep in sync with snakeyaml version in framework pom -->
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <maven-gpg-plugin.version>3.2.6</maven-gpg-plugin.version>                  <!-- keep in sync with framework, for maven central deployment -->
-        <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>  <!-- keep in sync with framework, for maven central deployment -->
+        <sonatype-central-publishing-plugin.version>0.8.0</sonatype-central-publishing-plugin.version>  <!-- keep in sync with framework, for maven central deployment -->
         <spotless-maven-plugin.version>2.46.1</spotless-maven-plugin.version>       <!-- keep in sync with spotless version in framework pom -->
         <apache-commons-lang3.version>3.18.0</apache-commons-lang3.version>
     </properties>
@@ -211,13 +211,6 @@
     <profiles>
         <profile>
             <id>package-deployment</id>
-            <distributionManagement>
-                <snapshotRepository>
-                    <id>maven-central</id>
-                    <name>GitHub Packages</name>
-                    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-                </snapshotRepository>
-            </distributionManagement>
             <build>
                 <plugins>
                     <plugin>
@@ -241,14 +234,15 @@
                         </configuration>
                     </plugin>
                     <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>${nexus-staging-maven-plugin.version}</version>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${sonatype-central-publishing-plugin.version}</version>
                         <extensions>true</extensions>
                         <configuration>
-                            <serverId>maven-central</serverId>
-                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                            <publishingServerId>maven-central</publishingServerId>
+                            <ignorePublishedComponents>true</ignorePublishedComponents>
+                            <autoPublish>true</autoPublish>
+                            <waitUntil>validated</waitUntil>
                         </configuration>
                     </plugin>
                 </plugins>
