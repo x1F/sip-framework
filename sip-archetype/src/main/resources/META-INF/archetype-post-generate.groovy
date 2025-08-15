@@ -9,6 +9,7 @@ Path projectPath = Paths.get(request.outputDirectory, request.artifactId)
 // the properties available to the archetype
 Properties properties = request.getProperties()
 String generateOptionalFile = properties.get("createDemoAdapter")
+String useSipCloudFramework = properties.get("useSipCloudFramework")
 
 String packageName = properties.get("package")
 String projectName = properties.get("artifactId")
@@ -17,6 +18,8 @@ String connectorGroup2 = properties.get("connectorGroup2")
 String basePackage = packageName.replace(".", "/")
 
 String packagePath = projectName + "/src/main/java/" + basePackage
+String packageResourcePath = projectName + "/src/main/resources/"
+
 def projectRoot = new File(".").canonicalFile
 
 def filePaths = [packagePath + "/connectorgroups/" + connectorGroup1 + "/connectors",
@@ -84,4 +87,9 @@ else {
             }
         }
     }
+}
+
+if (useSipCloudFramework != "y" && useSipCloudFramework != "Y") {
+    Path configPath = Paths.get(packageResourcePath, "sip-cloud-config.yaml")
+    Files.deleteIfExists(configPath)
 }
