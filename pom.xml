@@ -633,10 +633,8 @@
                     <configuration>
                         <publishingServerId>maven-central</publishingServerId>
                         <ignorePublishedComponents>true</ignorePublishedComponents>
-                        <!--
                         <autoPublish>true</autoPublish>
                         <waitUntil>validated</waitUntil>
-                        -->
                     </configuration>
                 </plugin>
             </plugins>
