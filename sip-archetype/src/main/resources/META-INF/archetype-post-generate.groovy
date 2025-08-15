@@ -58,7 +58,6 @@ if (generateOptionalFile != "y" && generateOptionalFile != "Y") {
             sourceDir.delete()
         }
     }
-    Files.deleteIfExists projectPath.resolve("src/test/java/" + basePackage + "/TestKitTest.java")
 }
 else {
     filePaths.each { element ->
