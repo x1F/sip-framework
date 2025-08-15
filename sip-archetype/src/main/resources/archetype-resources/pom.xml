@@ -38,7 +38,7 @@
             <artifactId>lombok</artifactId>
         </dependency>
 #end
-#if (${useCloud} == "y" or ${useCloud} == "Y")
+#if (${useSipCloudFramework} == "y" or ${useSipCloudFramework} == "Y")
         <dependency>
             <groupId>one.x1f.sip.cloud</groupId>
             <artifactId>sip-integration-starter</artifactId>
