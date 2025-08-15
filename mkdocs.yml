@@ -1,9 +1,9 @@
 site_name: SIP Framework Documentation
 site_description: 'Documentation for using & developing with the SIP Framework'
-site_author: 'IKOR'
+site_author: 'x1F'
 repo_url: 'https://github.com/IKOR-GmbH/sip-framework'
 edit_uri: 'edit/main/docs/'
-copyright:  © Copyright 2021, <a href="https://ikor.one">IKOR GmbH</a> & contributors
+copyright:  © Copyright 2021-2025, <a href="https://x1f.one">x1F GmbH</a> & contributors
 
 nav:
     - Introduction: README.md
@@ -40,8 +40,8 @@ nav:
     - JavaDoc 2.0.2: './javadoc/2.0.2/index.html'
     - JavaDoc 2.0.0: './javadoc/2.0.0/index.html'
     - JavaDoc 1.0.0: './javadoc/1.0.0/index.html'
-    - Find out more about IKOR: 'https://ikor.one/produkt/system-integration-platform'
-    - Impressum: 'https://ikor.one/impressum/'
+    - Find out more about x1F: 'https://www.x1f.one'
+    - Impressum: 'https://www.x1f.one/impressum/'
 
 collapse_navigation: false
 
