@@ -468,54 +468,6 @@
       </licenses>
     </dependency>
     <dependency>
-      <groupId>one.x1f.sip.foundation</groupId>
-      <artifactId>sip-core</artifactId>
-      <version>3.6.3-SNAPSHOT</version>
-      <licenses>
-        <license>
-          <name>The Apache License, Version 2.0</name>
-          <url>https://raw.githubusercontent.com/IKOR-GmbH/sip-framework/develop/LICENSE</url>
-          <file>the apache license, version 2.0 - license.txt</file>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
-      <groupId>one.x1f.sip.foundation</groupId>
-      <artifactId>sip-integration-starter</artifactId>
-      <version>3.6.3-SNAPSHOT</version>
-      <licenses>
-        <license>
-          <name>The Apache License, Version 2.0</name>
-          <url>https://raw.githubusercontent.com/IKOR-GmbH/sip-framework/develop/LICENSE</url>
-          <file>the apache license, version 2.0 - license.txt</file>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
-      <groupId>one.x1f.sip.foundation</groupId>
-      <artifactId>sip-security</artifactId>
-      <version>3.6.3-SNAPSHOT</version>
-      <licenses>
-        <license>
-          <name>The Apache License, Version 2.0</name>
-          <url>https://raw.githubusercontent.com/IKOR-GmbH/sip-framework/develop/LICENSE</url>
-          <file>the apache license, version 2.0 - license.txt</file>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
-      <groupId>one.x1f.sip.foundation</groupId>
-      <artifactId>sip-test-kit</artifactId>
-      <version>3.6.3-SNAPSHOT</version>
-      <licenses>
-        <license>
-          <name>The Apache License, Version 2.0</name>
-          <url>https://raw.githubusercontent.com/IKOR-GmbH/sip-framework/develop/LICENSE</url>
-          <file>the apache license, version 2.0 - license.txt</file>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-commons</artifactId>
       <version>1.14.9</version>
@@ -930,6 +882,54 @@
           <distribution>repo</distribution>
           <file>the apache software license, version 2.0 - license-2.0.txt</file>
           <comments>All files under Apache 2</comments>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>one.x1f.sip.foundation</groupId>
+      <artifactId>sip-core</artifactId>
+      <version>3.6.3-SNAPSHOT</version>
+      <licenses>
+        <license>
+          <name>The Apache License, Version 2.0</name>
+          <url>https://raw.githubusercontent.com/IKOR-GmbH/sip-framework/develop/LICENSE</url>
+          <file>the apache license, version 2.0 - license.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>one.x1f.sip.foundation</groupId>
+      <artifactId>sip-integration-starter</artifactId>
+      <version>3.6.3-SNAPSHOT</version>
+      <licenses>
+        <license>
+          <name>The Apache License, Version 2.0</name>
+          <url>https://raw.githubusercontent.com/IKOR-GmbH/sip-framework/develop/LICENSE</url>
+          <file>the apache license, version 2.0 - license.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>one.x1f.sip.foundation</groupId>
+      <artifactId>sip-security</artifactId>
+      <version>3.6.3-SNAPSHOT</version>
+      <licenses>
+        <license>
+          <name>The Apache License, Version 2.0</name>
+          <url>https://raw.githubusercontent.com/IKOR-GmbH/sip-framework/develop/LICENSE</url>
+          <file>the apache license, version 2.0 - license.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>one.x1f.sip.foundation</groupId>
+      <artifactId>sip-test-kit</artifactId>
+      <version>3.6.3-SNAPSHOT</version>
+      <licenses>
+        <license>
+          <name>The Apache License, Version 2.0</name>
+          <url>https://raw.githubusercontent.com/IKOR-GmbH/sip-framework/develop/LICENSE</url>
+          <file>the apache license, version 2.0 - license.txt</file>
         </license>
       </licenses>
     </dependency>
