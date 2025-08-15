@@ -2,6 +2,12 @@
 spring:
   application:
     name: ${projectName}
+  config:
+    import:
+      - optional:classpath:/sip-security-config.yaml
+#if (${useSipCloudFramework} == "y" or ${useSipCloudFramework} == "Y")
+      - classpath:/sip-cloud-config.yaml
+#end
 
 camel:
   rest:
@@ -16,34 +22,7 @@ camel:
     api-property[api.title]: ${projectName}
     api-property[api.version]: ${version}
 
-# SIP Security configuration
-# This configuration represents the template to use for configuring security. If security is not needed, all
-# configuration properties below under sip.security can be deleted.
-sip.security:
-  # Template for SSL configuration. By default SSL is disabled.
-  ssl:
-    enabled: false # SSL will be enabled by simply setting this value to true
-
-    # These settings have to be set by the application, by default ssl is disabled
-    server:
-      client-auth: none
-      key-store:
-      key-store-password:
-      key-store-type:
-      key-alias:
-      key-password:
-
-    # If the adapter requires different setups for outgoing traffic (http client) and server, values for the following
-    # client properties should be added. By default, the outgoing traffic properties will fallback to sip.ssl.server configuration.
-    client:
-      enabled: false
-      key-store:
-      key-store-password:
-      key-store-type:
-      key-alias:
-      key-password:
-
-  # Template for authentication configuration. For using it uncomment the configuratio and fill in the proper values
+# Template for REST authentication configuration
 #  authentication:
 #    disable-csrf:
 #    auth-providers:
@@ -53,41 +32,4 @@ sip.security:
 #          classname:
 #          file-path:
 
-#if (${useCloud} == "y" or ${useCloud} == "Y")
-# SIP Cloud Configuration
-sip.cloud:
-  backend-communication:
-    enabled: false
-    stage: dev
-    broker:
-      type: none #rabbitmq #kafka
-      backend-inbox: backendInbox
-      adapter-inbox: adapterInbox
-      history-inbox: historyInbox
-# Template for broker specific configuration
-#      kafka:
-#        bootstrap-servers:
-#      rabbitmq:
-#        host:
-#        port:
-#        username:
-#        password:
-# Template for broker security configuration
-#      security:
-#        sslEnabled:
-#        keystorePath:
-#        keystorePassword:
-#        truststorePath:
-#        truststorePassword:
-#        keyPassword:
-#        securityProtocol: # kafka
-#        aclUser: # kafka
-#        aclPassword: # kafka
-#        algorithm: # rabbitmq
-  data-masking:
-    enabled: true
-    keywords:
-  history:
-    enabled: true
-    limit: 100
-#end
+
