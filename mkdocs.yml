@@ -15,6 +15,7 @@ nav:
     - Starter Parent: starter-parent.md
     - Security: security.md
     - Test Kit: test-kit.md
+    - Test Kit Declarative: test-kit-declarative.md
     - SOAP Starter: soap-starter.md
     - Maven Plugin: maven-plugin.md
     - Framework Version Upgrade: framework_version_upgrade.md

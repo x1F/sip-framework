@@ -138,6 +138,12 @@ All registered routes with basic info can be listed by using the following URI:
 GET /actuator/adapterroutes
 ```
 
+Or for a details about specific routes a query parameter can be added:
+
+```
+GET /actuator/adapterroutes?ids=route1,route2
+```
+
 More detailed info view for only one exact route can be seen by providing route id into following URI:
 
 ```
@@ -155,7 +161,7 @@ The following operations (case sensitive) can be executed per route, for all rou
 To execute an operation on all routes, use following URIs:
 
 ```
-POST /actuator/adapterroutes/{operation}
+POST /actuator/adapterroutes/all/{operation}
 ```
 
 There is a possibility to execute a route lifecycle operation on an exact route, by providing route id and operation.
@@ -377,9 +383,11 @@ or new IntelliJ repository used.
 
 Check the image and additional warning message by IntelliJ:
 
-"WARNING!
-If option 'Clear output directory on rebuild' is enabled, the entire contents of directories where generated sources
-are stored WILL BE CLEARED on rebuild."
+> **WARNING**
+> 
+> If option *Clear output directory on rebuild* is enabled, the entire contents of directories where generated sources
+> are stored **WILL BE CLEARED** on rebuild.
+
 
 ![Image of SIP connected systems](./img/intellij_setting_clear_on_rebuild.png "IntelliJ rebuild settings")
 
