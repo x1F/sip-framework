@@ -26,6 +26,11 @@ In older SIP framework releases, some annotations resided in the mistyped `de.ik
 We used the opportunity of the global namespace migration to move these annotations to `one.x1f.sip.foundation.core.declarative.annotation`, so
 imports need to be changed where necessary.
 
+### Update connector processors annotation imports to extensions
+
+Due to renaming connector processor annotation classes that were in `de.ikor.sip.foundation.core.declarative.annotation.connector.processor` package
+are now moved to `one.x1f.sip.foundation.core.declarative.annotation.connector.extension` package.
+
 ### Attribute name change in ConnectorProcessor ordering annotations
 
 The attribute in `@ExecuteBefore` and `@ExecuteAfter` annotations used for relative connector-processor ordering has been changed
