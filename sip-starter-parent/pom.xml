@@ -12,11 +12,6 @@
     <distributionManagement>
         <relocation>
             <groupId>one.x1f.sip.foundation</groupId>
-            <artifactId>sip-starter-parent</artifactId>
-            <version>4.0.0</version>
-            <message>
-                Artifact moved to one.x1f.sip.foundation
-            </message>
         </relocation>
     </distributionManagement>
 </project>

@@ -30,12 +30,11 @@ jobs:
         run: mvn ${MAVEN_ARGS} verify
 
   do-maven-release:
-    needs:
-      - build
+    needs: build
     if: ${{ github.event.inputs.do-release == 'true' }}
     runs-on: ubuntu-latest
     outputs:
-      release-version: 4.0.0
+      release-version: ${{ steps.release-step.outputs.release_version }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -44,15 +43,13 @@ jobs:
       - uses: ./.github/workflows/actions/java-maven-action
         with:
           gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
-      - name: Install jq
-        run: sudo apt-get install jq
       - name: Create framework relocation notice release
         id: release-step
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONATYPE_CENTRAL_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
           SONATYPE_CENTRAL_USERNAME: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
         run: |
           RELEASE_VERSION=4.0.0
-          git tag -a releases/relocation-${RELEASE_VERSION} -m "Relocation notice for sip-framework version ${RELEASE_VERSION}"
+          echo "Release version=$RELEASE_VERSION"
           mvn ${MAVEN_ARGS} clean deploy -DskipTests -Ppackage-deployment
