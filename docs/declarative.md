@@ -375,18 +375,18 @@ public class UserRequestInboundConnector extends RestConnectorBase {
         return TokenValidator.INSTANCE;
     }
 
-    // Variant 3
-    @RequestProcessor
-    public UserRequest mapPathIdToUserRequest(@HeaderParameter("userid") String id) {
-        return UserRequest.builder().id(id).build();
-    }
-
     // Variant 2
     @ResponseProcessor
     public void obfuscateVipUserData(User retrievedUser) {
         if (retrievedUser.isVip()) {
             VipObfuscator.INSTANCE.obfuscatePersonalData(retrievedUser);
         }
+    }
+
+    // Variant 3
+    @RequestProcessor
+    public UserRequest mapPathIdToUserRequest(@HeaderParameter("userid") String id) {
+      return UserRequest.builder().id(id).build();
     }
 
 }
@@ -519,7 +519,8 @@ public class StringManipulatingInboundProcessor extends GenericInboundConnectorB
 
 ##### DEPRECATED: Orchestration via defineTransformationOrchestrator()
 
-> [!WARNING]   
+> **WARNING**
+> 
 > This variant of connector orchestration is deprecated since 3.4.0, and support might be removed in the future.
 > This approach is also mutually exclusive with the [Connector Processor](#implementing-connector-processors) features described above, so either
 > one or the other can be used for any connector.
@@ -660,6 +661,22 @@ Then, annotate the class with `@CompositeProcess` and fill in the required field
 - *consumers* (array) - represents integration scenarios that consume data from the process
 - *pathToDocumentationResource* (optional) - provides path to process documentation files
   (By default it will look for file in _document/structure/processes/<composite-process-id>.md_)
+
+For each consumer, a request or response transformation can be defined.
+Request preparation (withRequestPreparation) is optional and can be omitted if not required. 
+During this step, orchestration context is provided, containing requests and responses 
+from all preceding steps along with the current process response. 
+The request preparation must return a value, which will be forwarded to the consumer.
+
+The process response represents the final orchestration result. 
+Using a common model is recommended, as it simplifies response aggregation and is especially useful in looped or iterative flows. 
+Regardless of its structure, the process response is always what is returned once orchestration completes.
+
+For handling consumer responses, one of the following must be specified:
+- withResponseHandling – to apply custom response transformation logic.
+- withNoResponseHandling – to explicitly skip response handling.
+
+Specifying one of these is required, as it marks the end of the consumer’s processing within the orchestration.
 
 ```java
 @CompositeProcess(processId = "demo-process", consumers = {DemoScenarioConsumer1.class, DemoScenarioConsumer2.class},

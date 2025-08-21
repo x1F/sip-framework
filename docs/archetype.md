@@ -79,9 +79,9 @@ After a successful build, a project with the following structure will be created
     - transformers
     - validators
 - scenarios
-  - models
-  - definitions
-  - processes
+    - models
+    - definitions
+    - processes
     
 
 More about packages and internal SIP structure can be found [here](./README.md).

@@ -127,36 +127,6 @@ sip:
     enabled: false
 ```
 
-
-### Important development note!
-To be able to fully utilize the Test Kit and write test case definitions properly, all the endpoints written with 
-Camel code need to have a defined ID which will be referenced in the endpointId parameter of the test case.
-
-**How to initialize `endpointId` for input endpoints in Camel code?**
-
-```
-from("rest:POST:/say/hello")      // Adapters input endpoint
-    .routeId("say_hello_id")      // Providing endpointId for endpoint
-                                  // Value 'say_hello_id' is endpointId which is used in test case definition
-```
-
-**How to initialize `endpointId` for output endpoints in  Camel code?**
-
-Providing `endpointId` for output endpoints is done through simple Camel mechanism, just by providing id for the Camel 
-processor which is calling the external endpoint.
-
-```
-from("...")
-    .
-    .
-    .
-    .to(http://otherSystem/hi)   // Adapter calling output endpoint
-    .id("other_system_hi_id")    // Providing endpointId for endpoint
-    .                            // Value 'other_system_hi_id' is endpointId which is used in test case definition
-    .
-    .
-```
-
 # Defining a Test Case
 
 The TestCaseDefinition file starts with `test-case-definitions` property, which consists of a list of test cases.

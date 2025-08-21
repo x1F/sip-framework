@@ -9,7 +9,7 @@ developed from more than a decade of project years of experience with standardiz
 The framework enables building light-weight integration adapters to achieve a technical and non-technical decoupling of
 systems, using microservices and is therefore highly scalable.
 
-It builds on [Apache Camel Framework](https://camel.apache.org/manual/) and extends it with a lot of usable features to create a standardized integration
+It builds on [Apache Camel Framework](https://camel.apache.org/) and extends it with a lot of usable features to create a standardized integration
 approach for all adapters.
 
 [TOC]
@@ -158,27 +158,26 @@ The project structure usually looks like this:
 ```text
 fancy-sip-adapter
 ├───src/main/java/<package-path>
-│   ├───common
-│   │   ├───config
-│   │   └───util
+│   ├───config
 │   ├───connectorgroups
 │   │   ├───connectorGroup1
 │   │   │   ├───config
-│   │   │   ├───transformer
-│   │   │   ├───processors
 │   │   │   ├───connectors
-│   │   │   ├───validators
-│   │   │   └───models
+│   │   │   ├───models
+│   │   │   ├───processors
+│   │   │   ├───transformer
+│   │   │   └───validators
 │   │   └───connectorGroup2
-│   │       ├───config
-│   │       ├───transformer
-│   │       ├───processors
-│   │       ├───connectors
-│   │       ├───validators
-│   │       └───models
+│   │   │   ├───config
+│   │   │   ├───connectors
+│   │   │   ├───models
+│   │   │   ├───processors
+│   │   │   ├───transformer
+│   │   │   └───validators
 │   ├───scenarios
+│   │   ├───definitions
 │   │   ├───models
-│   │   └───definitions
+│   │   └───processes
 │   └───SIPApplication.java
 └───pom.xml
 ```
@@ -191,7 +190,7 @@ It is important that these packages are contained in connectors package.
 
 **Endpoint Configuration**
 
-When it comes to working with URIs in routes, it is recommended to use property placeholders, which makes the routes configurable.
+When it comes to working with URIs in routes, it is recommended to use property placeholders, which makes the routes configurable and dynamic.
 Additionally, it would make much sense to follow suggested configuration convention for defining endpoint configuration.
 
 ```yaml
@@ -199,8 +198,7 @@ endpoint:
   <in/out>:
     <external-system>:
       <endpoint>: # optional - if more endpoints on single external-system are involved in integration
-        id: <externalSystem>
-        uri: ftp://...
+        uri: 0.0.0.0
 ```
 
 `<in/out>` corresponds to consumers and producers respectively.
@@ -218,40 +216,30 @@ For example:
 endpoint:
   in:
     my-assurance-co:
-      id: my-assurance-co
-      uri: ftp://...
+      uri: 0.0.0.0
   out:
     their-assurance-co:
-      id: their-assurance-co
-      uri: https://...
+      uri: 0.0.0.0
 ```
 
-Using this configuration can be easily achieved in Camel by following their placeholder syntax.
+Using this configuration can be easily achieved in a Connector by following their placeholder syntax.
 Here's what the example from above would look like in the Camel route:
 
 ```java
-from("{{endpoint.in.my-assurance-co.uri}}")
-    .id("{{endpoint.in.my-assurance-co.id}}")
-    .to(...);
-
-from(...)
-    .process(...)    
-    .to("{{endpoint.out.their-assurance-co.uri}}")
-    .id("{{endpoint.out.their-assurance-co.id}}")
+// inbound connector
+protected EndpointConsumerBuilder defineInitiatingEndpoint() {
+    return StaticEndpointBuilders.ftp("{{endpoint.in.my-assurance-co.uri}}");
+}
+// outbound connector
+protected EndpointProducerBuilder defineOutgoingEndpoint() {
+    return StaticEndpointBuilders.http("{{endpoint.out.their-assurance-co.uri}}");
+}
 ```
 
 If this convention is followed in the configuration, it leads to a unified structure that makes it possible
 to identify at a single glance which systems are communicating with each other and which communication technologies are
 being used.
 It also makes routes more descriptive and adapters much easier to maintain.
-
-**Setting processor and route IDs**
-
-As we can see each external endpoint, definition is followed by explicit setting of id. Although it's not mandatory,
-doing so is highly recommended especially in case of outgoing endpoints. This will provide a reference of the external
-endpoints, which can be used for different functionalities, like custom health check, testing with test-kit or other
-that are yet to come.
-Notice that in case of incoming endpoints (those in "from" statement), following id refers to the routeId.
 
 ### Configuration properties
 
