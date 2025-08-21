@@ -103,6 +103,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../test-kit-declarative/">Test Kit Declarative</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../soap-starter/">SOAP Starter</a>
                 </li>
               </ul>
@@ -347,6 +351,8 @@ By default, it is named <code>sip.core.metrics.health</code>, but can be changed
 <p>SIP Core provides a possibility to manipulate adapter lifecycle in runtime by controlling registered Camel routes.</p>
 <p>All registered routes with basic info can be listed by using the following URI:</p>
 <pre class="highlight"><code>GET /actuator/adapterroutes</code></pre>
+<p>Or for a details about specific routes a query parameter can be added:</p>
+<pre class="highlight"><code>GET /actuator/adapterroutes?ids=route1,route2</code></pre>
 <p>More detailed info view for only one exact route can be seen by providing route id into following URI:</p>
 <pre class="highlight"><code>GET /actuator/adapterroutes/{routeId}</code></pre>
 <p>The following operations (case sensitive) can be executed per route, for all route:</p>
@@ -358,7 +364,7 @@ By default, it is named <code>sip.core.metrics.health</code>, but can be changed
 <li>reset</li>
 </ul>
 <p>To execute an operation on all routes, use following URIs:</p>
-<pre class="highlight"><code>POST /actuator/adapterroutes/{operation}</code></pre>
+<pre class="highlight"><code>POST /actuator/adapterroutes/all/{operation}</code></pre>
 <p>There is a possibility to execute a route lifecycle operation on an exact route, by providing route id and operation.
 This can be achieved by using following URI:</p>
 <pre class="highlight"><code>POST /actuator/adapterroutes/{routeId}/{operation}</code></pre>
@@ -496,10 +502,12 @@ Or for example in IntelliJ IDE by updating the specific settings:</p>
 Build, Execution, Deployment -&gt; Compiler. Keep in mind that this setup has to be done with every new adapter created
 or new IntelliJ repository used.</p>
 <p>Check the image and additional warning message by IntelliJ:</p>
-<p>"WARNING!
-If option 'Clear output directory on rebuild' is enabled, the entire contents of directories where generated sources
-are stored WILL BE CLEARED on rebuild."</p>
-<p><img alt="Image of SIP connected systems" src="./img/intellij_setting_clear_on_rebuild.png" title="IntelliJ rebuild settings" /></p>
+<blockquote>
+<p><strong>WARNING</strong></p>
+<p>If option <em>Clear output directory on rebuild</em> is enabled, the entire contents of directories where generated sources
+are stored <strong>WILL BE CLEARED</strong> on rebuild.</p>
+</blockquote>
+<p><img alt="Image of SIP connected systems" src="../img/intellij_setting_clear_on_rebuild.png" title="IntelliJ rebuild settings" /></p>
 <h3 id="exception-handling">Exception handling<a class="headerlink" href="#exception-handling" title="Permanent link">&para;</a></h3>
 <p>SIP Framework offers a few types of exceptions. The base ones are:
 - SIPFrameworkException - used for exceptions that may occur in the framework

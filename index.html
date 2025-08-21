@@ -103,6 +103,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="test-kit-declarative/">Test Kit Declarative</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="soap-starter/">SOAP Starter</a>
                 </li>
               </ul>
@@ -241,7 +245,7 @@
 developed from more than a decade of project years of experience with standardized integration of core and peripheral systems.</p>
 <p>The framework enables building light-weight integration adapters to achieve a technical and non-technical decoupling of
 systems, using microservices and is therefore highly scalable.</p>
-<p>It builds on <a href="https://camel.apache.org/manual/">Apache Camel Framework</a> and extends it with a lot of usable features to create a standardized integration
+<p>It builds on <a href="https://camel.apache.org/">Apache Camel Framework</a> and extends it with a lot of usable features to create a standardized integration
 approach for all adapters.</p>
 <div class="toc">
 <ul>
@@ -377,27 +381,26 @@ additional connector groups to the project structure.</p>
 <p>The project structure usually looks like this:</p>
 <pre class="highlight"><code class="language-text">fancy-sip-adapter
 ├───src/main/java/&lt;package-path&gt;
-│   ├───common
-│   │   ├───config
-│   │   └───util
+│   ├───config
 │   ├───connectorgroups
 │   │   ├───connectorGroup1
 │   │   │   ├───config
-│   │   │   ├───transformer
-│   │   │   ├───processors
 │   │   │   ├───connectors
-│   │   │   ├───validators
-│   │   │   └───models
+│   │   │   ├───models
+│   │   │   ├───processors
+│   │   │   ├───transformer
+│   │   │   └───validators
 │   │   └───connectorGroup2
-│   │       ├───config
-│   │       ├───transformer
-│   │       ├───processors
-│   │       ├───connectors
-│   │       ├───validators
-│   │       └───models
+│   │   │   ├───config
+│   │   │   ├───connectors
+│   │   │   ├───models
+│   │   │   ├───processors
+│   │   │   ├───transformer
+│   │   │   └───validators
 │   ├───scenarios
+│   │   ├───definitions
 │   │   ├───models
-│   │   └───definitions
+│   │   └───processes
 │   └───SIPApplication.java
 └───pom.xml</code></pre>
 <p>Easiest way would be just copying an existing connector package which contains the pre-made structure.
@@ -405,14 +408,13 @@ This can also be done manually by creating a new package.
 It is important that these packages are contained in connectors package.</p>
 <h3 id="development-tips">Development Tips<a class="headerlink" href="#development-tips" title="Permanent link">&para;</a></h3>
 <p><strong>Endpoint Configuration</strong></p>
-<p>When it comes to working with URIs in routes, it is recommended to use property placeholders, which makes the routes configurable.
+<p>When it comes to working with URIs in routes, it is recommended to use property placeholders, which makes the routes configurable and dynamic.
 Additionally, it would make much sense to follow suggested configuration convention for defining endpoint configuration.</p>
 <pre class="highlight"><code class="language-yaml">endpoint:
   &lt;in/out&gt;:
     &lt;external-system&gt;:
       &lt;endpoint&gt;: # optional - if more endpoints on single external-system are involved in integration
-        id: &lt;externalSystem&gt;
-        uri: ftp://...</code></pre>
+        uri: 0.0.0.0</code></pre>
 <p><code>&lt;in/out&gt;</code> corresponds to consumers and producers respectively.
 This means in case a message is received through a route using "from", then it is a consumer and "in" is used.
 On the other hand, it is a producer when a message is sent via "to". In this case, "out" is used as key in the configuration file.</p>
@@ -423,32 +425,24 @@ is required. For this purpose we use an additional endpoint key to provide disti
 <pre class="highlight"><code class="language-yaml">endpoint:
   in:
     my-assurance-co:
-      id: my-assurance-co
-      uri: ftp://...
+      uri: 0.0.0.0
   out:
     their-assurance-co:
-      id: their-assurance-co
-      uri: https://...</code></pre>
-<p>Using this configuration can be easily achieved in Camel by following their placeholder syntax.
+      uri: 0.0.0.0</code></pre>
+<p>Using this configuration can be easily achieved in a Connector by following their placeholder syntax.
 Here's what the example from above would look like in the Camel route:</p>
-<pre class="highlight"><code class="language-java">from("{{endpoint.in.my-assurance-co.uri}}")
-    .id("{{endpoint.in.my-assurance-co.id}}")
-    .to(...);
-
-from(...)
-    .process(...)    
-    .to("{{endpoint.out.their-assurance-co.uri}}")
-    .id("{{endpoint.out.their-assurance-co.id}}")</code></pre>
+<pre class="highlight"><code class="language-java">// inbound connector
+protected EndpointConsumerBuilder defineInitiatingEndpoint() {
+    return StaticEndpointBuilders.ftp("{{endpoint.in.my-assurance-co.uri}}");
+}
+// outbound connector
+protected EndpointProducerBuilder defineOutgoingEndpoint() {
+    return StaticEndpointBuilders.http("{{endpoint.out.their-assurance-co.uri}}");
+}</code></pre>
 <p>If this convention is followed in the configuration, it leads to a unified structure that makes it possible
 to identify at a single glance which systems are communicating with each other and which communication technologies are
 being used.
 It also makes routes more descriptive and adapters much easier to maintain.</p>
-<p><strong>Setting processor and route IDs</strong></p>
-<p>As we can see each external endpoint, definition is followed by explicit setting of id. Although it's not mandatory,
-doing so is highly recommended especially in case of outgoing endpoints. This will provide a reference of the external
-endpoints, which can be used for different functionalities, like custom health check, testing with test-kit or other
-that are yet to come.
-Notice that in case of incoming endpoints (those in "from" statement), following id refers to the routeId.</p>
 <h3 id="configuration-properties">Configuration properties<a class="headerlink" href="#configuration-properties" title="Permanent link">&para;</a></h3>
 <p>By default, the following properties are included in the SIP Framework. To override them, simply add them to your configuration file with your desired values.
 If you're using a YAML configuration file (typically found in the application module), make sure to adapt the properties to the correct YAML format.
@@ -742,5 +736,5 @@ A complete YAML configuration file with all available properties can be found <a
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2025-08-15 15:14:49.057090+00:00
+Build Date UTC : 2025-08-21 09:29:38.383780+00:00
 -->

@@ -135,6 +135,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../test-kit-declarative/">Test Kit Declarative</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../soap-starter/">SOAP Starter</a>
                 </li>
               </ul>
@@ -628,18 +632,18 @@ public class UserRequestInboundConnector extends RestConnectorBase {
         return TokenValidator.INSTANCE;
     }
 
-    // Variant 3
-    @RequestProcessor
-    public UserRequest mapPathIdToUserRequest(@HeaderParameter("userid") String id) {
-        return UserRequest.builder().id(id).build();
-    }
-
     // Variant 2
     @ResponseProcessor
     public void obfuscateVipUserData(User retrievedUser) {
         if (retrievedUser.isVip()) {
             VipObfuscator.INSTANCE.obfuscatePersonalData(retrievedUser);
         }
+    }
+
+    // Variant 3
+    @RequestProcessor
+    public UserRequest mapPathIdToUserRequest(@HeaderParameter("userid") String id) {
+      return UserRequest.builder().id(id).build();
     }
 
 }</code></pre>
@@ -743,8 +747,8 @@ public class StringManipulatingInboundProcessor extends GenericInboundConnectorB
 }</code></pre>
 <h5 id="deprecated-orchestration-via-definetransformationorchestrator">DEPRECATED: Orchestration via defineTransformationOrchestrator()<a class="headerlink" href="#deprecated-orchestration-via-definetransformationorchestrator" title="Permanent link">&para;</a></h5>
 <blockquote>
-<p>[!WARNING] <br />
-This variant of connector orchestration is deprecated since 3.4.0, and support might be removed in the future.
+<p><strong>WARNING</strong></p>
+<p>This variant of connector orchestration is deprecated since 3.4.0, and support might be removed in the future.
 This approach is also mutually exclusive with the <a href="#implementing-connector-processors">Connector Processor</a> features described above, so either
 one or the other can be used for any connector.</p>
 </blockquote>
@@ -865,6 +869,18 @@ Then, annotate the class with <code>@CompositeProcess</code> and fill in the req
 <li><em>pathToDocumentationResource</em> (optional) - provides path to process documentation files
   (By default it will look for file in <em>document/structure/processes/<composite-process-id>.md</em>)</li>
 </ul>
+<p>For each consumer, a request or response transformation can be defined.
+Request preparation (withRequestPreparation) is optional and can be omitted if not required. 
+During this step, orchestration context is provided, containing requests and responses 
+from all preceding steps along with the current process response. 
+The request preparation must return a value, which will be forwarded to the consumer.</p>
+<p>The process response represents the final orchestration result. 
+Using a common model is recommended, as it simplifies response aggregation and is especially useful in looped or iterative flows. 
+Regardless of its structure, the process response is always what is returned once orchestration completes.</p>
+<p>For handling consumer responses, one of the following must be specified:
+- withResponseHandling – to apply custom response transformation logic.
+- withNoResponseHandling – to explicitly skip response handling.</p>
+<p>Specifying one of these is required, as it marks the end of the consumer’s processing within the orchestration.</p>
 <pre class="highlight"><code class="language-java">@CompositeProcess(processId = "demo-process", consumers = {DemoScenarioConsumer1.class, DemoScenarioConsumer2.class},
         provider = DemoScenario.class)
 public class DemoProcess extends CompositeProcessBase {

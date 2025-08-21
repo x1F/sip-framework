@@ -77,6 +77,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../test-kit-declarative/">Test Kit Declarative</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../soap-starter/">SOAP Starter</a>
                 </li>
               </ul>
@@ -94,6 +98,8 @@
     <li class="toctree-l3"><a class="reference internal" href="#update-imported-framework-classes-to-x1f-namespace">Update imported framework classes to x1f namespace</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#update-annotation-class-imports-due-to-typo">Update annotation class imports due to typo</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#update-connector-processors-annotation-imports-to-extensions">Update connector processors annotation imports to extensions</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#attribute-name-change-in-connectorprocessor-ordering-annotations">Attribute name change in ConnectorProcessor ordering annotations</a>
     </li>
@@ -244,6 +250,7 @@
 <li><a href="#update-maven-dependencies-to-x1f-namespace">Update Maven dependencies to x1f namespace</a></li>
 <li><a href="#update-imported-framework-classes-to-x1f-namespace">Update imported framework classes to x1f namespace</a></li>
 <li><a href="#update-annotation-class-imports-due-to-typo">Update annotation class imports due to typo</a></li>
+<li><a href="#update-connector-processors-annotation-imports-to-extensions">Update connector processors annotation imports to extensions</a></li>
 <li><a href="#attribute-name-change-in-connectorprocessor-ordering-annotations">Attribute name change in ConnectorProcessor ordering annotations</a></li>
 </ul>
 </li>
@@ -273,6 +280,9 @@ We recommend using search / replace in your IDE if you have a lot of <code>.java
 <p>In older SIP framework releases, some annotations resided in the mistyped <code>de.ikor.sip.foundation.core.declarative.annonation</code> package. 
 We used the opportunity of the global namespace migration to move these annotations to <code>one.x1f.sip.foundation.core.declarative.annotation</code>, so
 imports need to be changed where necessary.</p>
+<h3 id="update-connector-processors-annotation-imports-to-extensions">Update connector processors annotation imports to extensions<a class="headerlink" href="#update-connector-processors-annotation-imports-to-extensions" title="Permanent link">&para;</a></h3>
+<p>Due to renaming connector processor annotation classes that were in <code>de.ikor.sip.foundation.core.declarative.annotation.connector.processor</code> package
+are now moved to <code>one.x1f.sip.foundation.core.declarative.annotation.connector.extension</code> package.</p>
 <h3 id="attribute-name-change-in-connectorprocessor-ordering-annotations">Attribute name change in ConnectorProcessor ordering annotations<a class="headerlink" href="#attribute-name-change-in-connectorprocessor-ordering-annotations" title="Permanent link">&para;</a></h3>
 <p>The attribute in <code>@ExecuteBefore</code> and <code>@ExecuteAfter</code> annotations used for relative connector-processor ordering has been changed
 from <code>processorName</code> to <code>extensionName</code>. This has been done as those annotations are also available for use with the broader connector-extensions API introduced in this release.</p>

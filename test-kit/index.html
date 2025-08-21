@@ -79,6 +79,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../test-kit-declarative/">Test Kit Declarative</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../soap-starter/">SOAP Starter</a>
                 </li>
               </ul>
@@ -222,10 +226,7 @@
 <li><a href="#endpoint-reports">Endpoint reports</a></li>
 </ul>
 </li>
-<li><a href="#how-to-use">How to use</a><ul>
-<li><a href="#important-development-note">Important development note!</a></li>
-</ul>
-</li>
+<li><a href="#how-to-use">How to use</a></li>
 <li><a href="#defining-a-test-case">Defining a Test Case</a><ul>
 <li><a href="#when-execute">WHEN-execute</a></li>
 <li><a href="#with-mocks">WITH-mocks</a></li>
@@ -340,25 +341,6 @@ by setting the following property inside adapter configuration:
 <pre class="highlight"><code class="language-yaml">sip:
   testkit:
     enabled: false</code></pre></p>
-<h3 id="important-development-note">Important development note!<a class="headerlink" href="#important-development-note" title="Permanent link">&para;</a></h3>
-<p>To be able to fully utilize the Test Kit and write test case definitions properly, all the endpoints written with 
-Camel code need to have a defined ID which will be referenced in the endpointId parameter of the test case.</p>
-<p><strong>How to initialize <code>endpointId</code> for input endpoints in Camel code?</strong></p>
-<pre class="highlight"><code>from("rest:POST:/say/hello")      // Adapters input endpoint
-    .routeId("say_hello_id")      // Providing endpointId for endpoint
-                                  // Value 'say_hello_id' is endpointId which is used in test case definition</code></pre>
-<p><strong>How to initialize <code>endpointId</code> for output endpoints in  Camel code?</strong></p>
-<p>Providing <code>endpointId</code> for output endpoints is done through simple Camel mechanism, just by providing id for the Camel 
-processor which is calling the external endpoint.</p>
-<pre class="highlight"><code>from("...")
-    .
-    .
-    .
-    .to(http://otherSystem/hi)   // Adapter calling output endpoint
-    .id("other_system_hi_id")    // Providing endpointId for endpoint
-    .                            // Value 'other_system_hi_id' is endpointId which is used in test case definition
-    .
-    .</code></pre>
 <h1 id="defining-a-test-case">Defining a Test Case<a class="headerlink" href="#defining-a-test-case" title="Permanent link">&para;</a></h1>
 <p>The TestCaseDefinition file starts with <code>test-case-definitions</code> property, which consists of a list of test cases.</p>
 <h2 id="when-execute">WHEN-execute<a class="headerlink" href="#when-execute" title="Permanent link">&para;</a></h2>
@@ -555,7 +537,7 @@ supported.</p>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../security/" class="btn btn-neutral float-left" title="Security"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../soap-starter/" class="btn btn-neutral float-right" title="SOAP Starter">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../test-kit-declarative/" class="btn btn-neutral float-right" title="Test Kit Declarative">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -586,7 +568,7 @@ supported.</p>
       <span><a href="../security/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../soap-starter/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../test-kit-declarative/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
