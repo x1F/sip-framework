@@ -1,1 +1,0 @@
-Test Documentation for a connector group

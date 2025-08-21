@@ -1,8 +1,0 @@
-cxf:
-  servlet:
-    enabled: true
-  path: /soap-ws/
-sip:
-  security:
-    authentication:
-      disable-csrf: true

@@ -1,5 +1,0 @@
-blank_issues_enabled: true #set to false if a template has to be chosen
-contact_links:
-  - name: sip@x1f.one
-    url: https://www.x1f.one
-    about: Please report security vulnerabilities here instead of creating an issue.

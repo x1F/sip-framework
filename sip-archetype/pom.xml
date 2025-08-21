@@ -4,25 +4,20 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>one.x1f.sip.foundation</groupId>
-        <artifactId>sip-framework</artifactId>
-        <version>4.0.1-SNAPSHOT</version>
-        <relativePath>../</relativePath>
-    </parent>
-
+    <groupId>de.ikor.sip.foundation</groupId>
+    <version>4.0.0</version>
     <artifactId>sip-archetype</artifactId>
-    <packaging>maven-archetype</packaging>
+    <packaging>pom</packaging>
 
-    <name>SIP Archetype</name>
-    <description>Archetype for creating an opinionated project structure for SIP integration adapters</description>
 
-    <build>
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.archetype</groupId>
-                <artifactId>archetype-packaging</artifactId>
-            </extension>
-        </extensions>
-    </build>
+    <distributionManagement>
+        <relocation>
+            <groupId>one.x1f.sip.foundation</groupId>
+            <artifactId>sip-archetype</artifactId>
+            <version>4.0.0</version>
+            <message>
+                Artifact moved to one.x1f.sip.foundation
+            </message>
+        </relocation>
+    </distributionManagement>
 </project>

@@ -4,94 +4,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>one.x1f.sip.foundation</groupId>
-        <artifactId>sip-framework</artifactId>
-        <version>4.0.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
-
+    <groupId>de.ikor.sip.foundation</groupId>
+    <version>4.0.0</version>
     <artifactId>sip-integration-starter</artifactId>
-    <name>SIP Integration Starter</name>
-    <description>Starter project adding necessary dependencies for SIP integration adapters</description>
+    <packaging>pom</packaging>
 
-    <dependencies>
-        <!-- SIP dependencies -->
-        <dependency>
+    <distributionManagement>
+        <relocation>
             <groupId>one.x1f.sip.foundation</groupId>
-            <artifactId>sip-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>one.x1f.sip.foundation</groupId>
-            <artifactId>sip-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>one.x1f.sip.foundation</groupId>
-            <artifactId>sip-test-kit</artifactId>
-        </dependency>
-
-        <!-- camel -->
-        <dependency>
-            <groupId>org.apache.camel.springboot</groupId>
-            <artifactId>camel-spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel.springboot</groupId>
-            <artifactId>camel-jackson-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel.springboot</groupId>
-            <artifactId>camel-jmx-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel.springboot</groupId>
-            <artifactId>camel-openapi-java-starter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>io.swagger.core.v3</groupId>
-                    <artifactId>swagger-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.swagger.core.v3</groupId>
-                    <artifactId>swagger-models</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.swagger.core.v3</groupId>
-                    <artifactId>swagger-core-jakarta</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.swagger.parser.v3</groupId>
-                    <artifactId>swagger-parser-v3</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.swagger</groupId>
-                    <artifactId>swagger-compat-spec-parser</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.swagger.parser.v3</groupId>
-                    <artifactId>swagger-parser</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- spring boot starters-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <!-- additional dependencies -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-        </dependency>
-    </dependencies>
+            <artifactId>sip-integration-starter</artifactId>
+            <version>4.0.0</version>
+            <message>
+                Artifact moved to one.x1f.sip.foundation
+            </message>
+        </relocation>
+    </distributionManagement>
 </project>

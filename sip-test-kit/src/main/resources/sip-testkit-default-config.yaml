@@ -1,7 +1,0 @@
-sip:
-  testkit:
-    enabled: true
-    test-cases-path: test-case-definition.yml
-  adapter:
-    camel-endpoint-context-path: ${server.servlet.context-path}${camel.servlet.mapping.context-path}
-    camel-cxf-endpoint-context-path: ${server.servlet.context-path}${cxf.path:"/services"}
