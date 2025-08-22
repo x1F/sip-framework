@@ -47,8 +47,8 @@ jobs:
         id: release-step
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
-          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          SONATYPE_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          SONATYPE_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
         run: |
           RELEASE_VERSION=4.0.0
           echo "Release version=$RELEASE_VERSION"

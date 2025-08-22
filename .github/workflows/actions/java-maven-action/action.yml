@@ -19,8 +19,8 @@ runs:
           # env variable for GPG private key passphrase, used with mvn deploy command
         gpg-passphrase: MAVEN_GPG_PASSPHRASE
         server-id: maven-central
-        server-username: MAVEN_CENTRAL_USERNAME
-        server-password: MAVEN_CENTRAL_PASSWORD
+        server-username: SONATYPE_CENTRAL_USERNAME
+        server-password: SONATYPE_CENTRAL_PASSWORD
     - name: Cache Maven packages
       uses: actions/cache@v4
       with:
