@@ -73,6 +73,7 @@
                         <ignorePublishedComponents>true</ignorePublishedComponents>
                         <autoPublish>true</autoPublish>
                         <waitUntil>validated</waitUntil>
+                        <centralBaseUrl>https://s01.oss.sonatype.org/</centralBaseUrl>
                     </configuration>
                 </plugin>
             </plugins>
