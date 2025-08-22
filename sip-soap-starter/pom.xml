@@ -4,6 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>de.ikor.sip.foundation</groupId>
+        <artifactId>sip-framework</artifactId>
+        <version>4.0.0</version>
+        <relativePath>../</relativePath>
+    </parent>
+
     <groupId>de.ikor.sip.foundation</groupId>
     <version>4.0.0</version>
     <artifactId>sip-soap-starter</artifactId>
