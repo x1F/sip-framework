@@ -113,6 +113,7 @@ public class SecurityConfig {
    */
   @Bean
   public SecurityFilterChain sipDefaultSecurityFilterChain(HttpSecurity http) throws Exception {
+    http.securityMatcher(config.getMatcherPatterns());
     // disable sessions completely
     http.sessionManagement(
         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -129,7 +130,7 @@ public class SecurityConfig {
             authorizationManagerRequestMatcherRegistry ->
                 authorizationManagerRequestMatcherRegistry.anyRequest().authenticated());
 
-    return http.build();
+    return new OrderedSecurityFilterChain(config.getOrder(), http.build());
   }
 
   /**
