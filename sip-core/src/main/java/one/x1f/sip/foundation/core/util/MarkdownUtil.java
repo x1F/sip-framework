@@ -33,7 +33,9 @@ public class MarkdownUtil {
   public String readMarkdownFileAndEmbedLocalImages(final ClassPathResource markdownResource)
       throws IOException {
     final var markdownWithEmbedded = new StringBuilder();
-    final var content = markdownResource.getContentAsString(StandardCharsets.UTF_8);
+    var content = markdownResource.getContentAsString(StandardCharsets.UTF_8);
+    content = content.replaceAll("(?s)<!--.*?-->", "");
+    content = content.replaceAll("\\[//\\]: # \\([^)]*\\)", "");
     final var matcher = MARKDOWN_IMAGE_PATTERN.matcher(content);
     while (matcher.find()) {
       final var imageUri = URI.create(matcher.group("uri"));

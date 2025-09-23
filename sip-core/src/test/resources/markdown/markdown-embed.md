@@ -17,3 +17,5 @@ Next up is a broken internal link, which should not lead to an `IOException`:
 
 ![Broken Image Link](/this/file/does/not/exist.jpg?raw=true)
 
+[//]: # (Commented text type 1)
+<!-- Commented text type 2 -->
