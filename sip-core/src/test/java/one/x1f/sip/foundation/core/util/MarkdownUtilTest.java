@@ -18,6 +18,6 @@ class MarkdownUtilTest {
     assertThat(markdownString)
         .isNotBlank()
         .contains("Karte_Odenwaldexpress.png", "/this/file/does/not/exist.jpg")
-        .doesNotContain("OdenwaldexpressMudau.jpg");
+        .doesNotContain("OdenwaldexpressMudau.jpg", "Commented text type");
   }
 }
