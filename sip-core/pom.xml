@@ -7,7 +7,7 @@
     <parent>
         <groupId>one.x1f.sip.foundation</groupId>
         <artifactId>sip-framework</artifactId>
-        <version>4.0.1-SNAPSHOT</version>
+        <version>4.0.1</version>
         <relativePath>../</relativePath>
     </parent>
 

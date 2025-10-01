@@ -31,6 +31,31 @@ Note: Spring Security dependency will also be added as a transitive one.
 
 Following description shows SIP Security functionalities and configuration. Valid configuration is needed to be able to properly utilize SIP security, no additional coding is required.
 
+### Common properties
+
+To make SIP Security have smoother compatibility with Spring's SecurityFilterChain the following can be configured:
+
+```yaml
+sip.security:
+  authentication:
+    # Represents the bean order when using Spring's Ordered interface or @Order annotation.
+    # If default SecurityFilterChain is created, this value must be lower that its order.
+    order: 2 
+    # Ant-style matcher patterns passed to HttpSecurity#securityMatcher.
+    matcher-patterns:
+      - /hello/**
+      - /actuator/info
+```
+
+> *Important:*  Do not include the Apache Camel servlet context path (e.g. /adapter) in the matcher patterns.
+> Camel automatically mounts your REST endpoints under the servlet mapping.
+> 
+> For example, given the endpoint:
+>
+> `GET http://localhost:8080/adapter/hello/world`
+> - Correct matcher pattern: "/hello/\**"
+> - Incorrect matcher pattern: "/adapter/hello/\**"
+
 ### SSL
 SSL is by default turned off. It can be activated by turning it on explicitly either on a client or on a sever side.
 

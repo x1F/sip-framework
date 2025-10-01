@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "306",
-  "message": "Add HttpSecurity#securityMatcher to default SecurityFilterChain and possibility to define its bean order."
-}
