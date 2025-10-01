@@ -318,13 +318,13 @@ The reason for this is that for detected HTTP(S) endpoints a GET request is exec
 of the system to be invoked. Thus, for this behavior to not occur, health checks should be added explicitly.
 To add an explicit Health Check for a URL it can be done in the following way.</p>
 <pre class="highlight"><code class="language-java">@Bean
-EndpointHealthConfigurer enableHttpHealthCheckForIKOR() {
-  return registry -&gt; registry.register("https://www.ikor.de",
+EndpointHealthConfigurer enableHttpHealthCheckForX1F() {
+  return registry -&gt; registry.register("https://x1f.one",
          HttpHealthIndicators::urlHealthIndicator);
 }</code></pre>
-<p>In case the URL https://ikor.one/kontakt/ is requested by the adapter, then on the one hand the explicit URL could be passed as
+<p>In case the URL https://www.x1f.one/kontakt/ is requested by the adapter, then on the one hand the explicit URL could be passed as
 a parameter to <code>register()</code> or wildcards could be used to add a Health Check for this URL and at the same
-time also matches https://ikor.one/karriere/. The passed argument to <code>register()</code> would look like this <code>https://www.ikor.one/**</code>.
+time also matches https://www.x1f.one/impressum/. The passed argument to <code>register()</code> would look like this <code>https://x1f.one/**</code>.
 However, HTTP(S) Health Checks can only be added for URLs that have also been detected in the adapter. In order to find out
 what URLs have been discovered one could inspect the result of <code>{base_url}/actuator/health</code>.</p>
 <p><strong>How to configure endpoint health checks:</strong></p>
