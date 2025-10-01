@@ -32,6 +32,10 @@ import org.springframework.util.PathMatcher;
 @AllArgsConstructor
 public class SecurityConfigProperties {
 
+  private String[] matcherPatterns = {"/**"};
+
+  private int order = 1;
+
   /** endpoints that should be left out of the complete authentication checks */
   private List<String> ignoredEndpoints = Collections.emptyList();
 

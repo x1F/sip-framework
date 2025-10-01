@@ -23,10 +23,6 @@
         </dependency>
         <dependency>
             <groupId>one.x1f.sip.foundation</groupId>
-            <artifactId>sip-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>one.x1f.sip.foundation</groupId>
             <artifactId>sip-test-kit</artifactId>
         </dependency>
 
