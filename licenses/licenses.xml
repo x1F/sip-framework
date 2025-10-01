@@ -40,6 +40,7 @@
         <license>
           <name>GNU Lesser General Public License</name>
           <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
+          <file>gnu lesser general public license - lgpl-2.1.html</file>
         </license>
       </licenses>
     </dependency>
@@ -888,7 +889,7 @@
     <dependency>
       <groupId>one.x1f.sip.foundation</groupId>
       <artifactId>sip-core</artifactId>
-      <version>4.0.1-SNAPSHOT</version>
+      <version>4.0.2-SNAPSHOT</version>
       <licenses>
         <license>
           <name>The Apache License, Version 2.0</name>
@@ -900,7 +901,7 @@
     <dependency>
       <groupId>one.x1f.sip.foundation</groupId>
       <artifactId>sip-integration-starter</artifactId>
-      <version>4.0.1-SNAPSHOT</version>
+      <version>4.0.2-SNAPSHOT</version>
       <licenses>
         <license>
           <name>The Apache License, Version 2.0</name>
@@ -912,7 +913,7 @@
     <dependency>
       <groupId>one.x1f.sip.foundation</groupId>
       <artifactId>sip-test-kit</artifactId>
-      <version>4.0.1-SNAPSHOT</version>
+      <version>4.0.2-SNAPSHOT</version>
       <licenses>
         <license>
           <name>The Apache License, Version 2.0</name>
