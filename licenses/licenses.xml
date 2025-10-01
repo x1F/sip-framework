@@ -911,18 +911,6 @@
     </dependency>
     <dependency>
       <groupId>one.x1f.sip.foundation</groupId>
-      <artifactId>sip-security</artifactId>
-      <version>4.0.1-SNAPSHOT</version>
-      <licenses>
-        <license>
-          <name>The Apache License, Version 2.0</name>
-          <url>https://raw.githubusercontent.com/IKOR-GmbH/sip-framework/develop/LICENSE</url>
-          <file>the apache license, version 2.0 - license.txt</file>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
-      <groupId>one.x1f.sip.foundation</groupId>
       <artifactId>sip-test-kit</artifactId>
       <version>4.0.1-SNAPSHOT</version>
       <licenses>
