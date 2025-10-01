@@ -6,7 +6,7 @@
 
 Using Test Kit with **Declarative Structure** is explained here and the content of this file should be treated as 
 extension of base documentation
-[SIP Test Kit](https://ikor-gmbh.github.io/sip-framework/test-kit/).
+[SIP Test Kit](https://x1f.github.io/sip-framework/test-kit/).
 
 Understanding material from the suggested link is a **prerequisite**!
 
