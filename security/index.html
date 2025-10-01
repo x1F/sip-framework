@@ -77,6 +77,8 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a>
         <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#common-properties">Common properties</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#ssl">SSL</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#authentication">Authentication</a>
@@ -132,6 +134,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/latest/index.html">JavaDoc Latest Development</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/4.0.1/index.html">JavaDoc 4.0.1</a>
                 </li>
               </ul>
               <ul>
@@ -241,6 +247,7 @@
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#installation">Installation</a></li>
 <li><a href="#configuration">Configuration</a><ul>
+<li><a href="#common-properties">Common properties</a></li>
 <li><a href="#ssl">SSL</a></li>
 <li><a href="#authentication">Authentication</a><ul>
 <li><a href="#definitions">Definitions</a></li>
@@ -272,6 +279,25 @@ Implementing code and configuration on top of Spring Security should help you ju
 <p>Note: Spring Security dependency will also be added as a transitive one.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p>Following description shows SIP Security functionalities and configuration. Valid configuration is needed to be able to properly utilize SIP security, no additional coding is required.</p>
+<h3 id="common-properties">Common properties<a class="headerlink" href="#common-properties" title="Permanent link">&para;</a></h3>
+<p>To make SIP Security have smoother compatibility with Spring's SecurityFilterChain the following can be configured:</p>
+<pre class="highlight"><code class="language-yaml">sip.security:
+  authentication:
+    # Represents the bean order when using Spring's Ordered interface or @Order annotation.
+    # If default SecurityFilterChain is created, this value must be lower that its order.
+    order: 2 
+    # Ant-style matcher patterns passed to HttpSecurity#securityMatcher.
+    matcher-patterns:
+      - /hello/**
+      - /actuator/info</code></pre>
+<blockquote>
+<p><em>Important:</em>  Do not include the Apache Camel servlet context path (e.g. /adapter) in the matcher patterns.
+Camel automatically mounts your REST endpoints under the servlet mapping.</p>
+<p>For example, given the endpoint:</p>
+<p><code>GET http://localhost:8080/adapter/hello/world</code>
+- Correct matcher pattern: "/hello/*<em>"
+- Incorrect matcher pattern: "/adapter/hello/*</em>"</p>
+</blockquote>
 <h3 id="ssl">SSL<a class="headerlink" href="#ssl" title="Permanent link">&para;</a></h3>
 <p>SSL is by default turned off. It can be activated by turning it on explicitly either on a client or on a sever side.</p>
 <p>Client SSL is by default using a server certificate. If no server certificate is set a client certificate is mandatory when turning on client SSL.</p>
