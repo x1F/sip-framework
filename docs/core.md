@@ -83,15 +83,15 @@ To add an explicit Health Check for a URL it can be done in the following way.
 
 ```java
 @Bean
-EndpointHealthConfigurer enableHttpHealthCheckForIKOR() {
-  return registry -> registry.register("https://www.ikor.de",
+EndpointHealthConfigurer enableHttpHealthCheckForX1F() {
+  return registry -> registry.register("https://x1f.one",
          HttpHealthIndicators::urlHealthIndicator);
 }
 ```
 
-In case the URL https://ikor.one/kontakt/ is requested by the adapter, then on the one hand the explicit URL could be passed as
+In case the URL https://www.x1f.one/kontakt/ is requested by the adapter, then on the one hand the explicit URL could be passed as
 a parameter to `register()` or wildcards could be used to add a Health Check for this URL and at the same
-time also matches https://ikor.one/karriere/. The passed argument to `register()` would look like this `https://www.ikor.one/**`.
+time also matches https://www.x1f.one/impressum/. The passed argument to `register()` would look like this `https://x1f.one/**`.
 However, HTTP(S) Health Checks can only be added for URLs that have also been detected in the adapter. In order to find out
 what URLs have been discovered one could inspect the result of `{base_url}/actuator/health`.
 

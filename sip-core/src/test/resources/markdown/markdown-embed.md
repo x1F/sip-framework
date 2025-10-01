@@ -1,6 +1,6 @@
 # Markdown image embedding test
 
-This is a test file for the [markdown unit test](../../java/de/ikor/sip/cloud/core/util/MarkdownResourceReaderTest.java).
+This is a test file for the [markdown unit test](../../java/one/x1f/sip/cloud/core/util/MarkdownResourceReaderTest.java).
 
 ## External image embedding
 Here is an external image, that should not be embedded via base64-stream:

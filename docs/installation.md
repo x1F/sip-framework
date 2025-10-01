@@ -30,7 +30,7 @@ Both Intellij and Eclipse are supported.
 
 ## Create a SIP Adapter using SIP Archetype
 
-Guide for creating a new SIP Adapter from archetype can be found [here](https://ikor-gmbh.github.io/sip-framework/archetype/).
+Guide for creating a new SIP Adapter from archetype can be found [here](https://x1f.github.io/sip-framework/archetype/).
 
 
 
