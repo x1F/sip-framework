@@ -76,8 +76,11 @@ under the License.
         <requiredProperty key="useSipCloudFramework">
             <defaultValue>${useSipCloudFrameworkDefault}</defaultValue>
         </requiredProperty>
-        <requiredProperty key="useJibPlugin">
+        <requiredProperty key="useJibPluginDefault">
             <defaultValue>n</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="useJibPlugin">
+            <defaultValue>${useJibPluginDefault}</defaultValue>
         </requiredProperty>
     </requiredProperties>
 

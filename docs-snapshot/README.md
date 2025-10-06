@@ -241,6 +241,43 @@ to identify at a single glance which systems are communicating with each other a
 being used.
 It also makes routes more descriptive and adapters much easier to maintain.
 
+### Docker
+
+You can build a Docker image for an adapter using the [Jib Maven Plugin](https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin).
+
+#### Enabling Jib
+When generating an adapter with the [SIP archetype](https://x1f.github.io/sip-framework/archetype/),
+set the property **`useJibPlugin`** to `y` (or `Y`). This will add the Jib plugin to the generated `pom.xml`.
+
+#### Building the image
+Run the following command to build a Docker image:
+
+```bash
+mvn package
+```
+By default, the image is created in your local Docker daemon.
+
+#### Pushing to a registry
+
+To push the image directly to a Docker registry, configure the `to.image` property in your `pom.xml`:
+
+Adjust image according to your Docker registry
+```xml
+<configuration>
+  <to>
+    <image>your-docker-registry.io/sip-adapter:latest</image>
+  </to>
+</configuration>
+```
+Use *build* instead of *dockerBuild* as `goal`
+```xml
+<goals>
+  <goal>build</goal> 
+</goals>
+```
+
+For additional information visit the official [documentation](https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin).
+
 ### Configuration properties
 
 By default, the following properties are included in the SIP Framework. To override them, simply add them to your configuration file with your desired values.
