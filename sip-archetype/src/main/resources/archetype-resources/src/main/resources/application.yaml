@@ -19,8 +19,8 @@ camel:
     context-path: /adapter
     api-context-path: /api-doc
     api-context-route-id: api-docs-route-id
-    api-property[api.title]: ${projectName}
-    api-property[api.version]: ${version}
+    api-property[api.title]: ${dollar}{spring.application.name:${projectName}}
+    api-property[api.version]: @project.version@
 
 # Template for REST authentication configuration
 #  authentication:
