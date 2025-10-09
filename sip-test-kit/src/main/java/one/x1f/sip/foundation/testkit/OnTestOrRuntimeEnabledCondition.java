@@ -20,7 +20,7 @@ public class OnTestOrRuntimeEnabledCondition extends SpringBootCondition {
     }
 
     boolean isEnabled =
-        context.getEnvironment().getProperty("runtime.enabled", Boolean.class, false);
+        context.getEnvironment().getProperty("sip.testkit.enabled", Boolean.class, false);
     if (ClassUtils.isPresent(CLOUD_TESTKIT_AUTOCONFIGURATION_CLASS, context.getClassLoader())
         && isEnabled) {
 
