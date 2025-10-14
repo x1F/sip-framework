@@ -128,6 +128,7 @@
         <module>sip-test-kit</module>
         <module>sip-maven-plugin</module>
         <module>sip-soap-starter</module>
+        <module>sip-annotation-processor</module>
     </modules>
 
     <dependencyManagement>
