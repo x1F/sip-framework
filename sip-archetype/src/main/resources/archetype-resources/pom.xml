@@ -84,6 +84,11 @@
                             <artifactId>mapstruct-processor</artifactId>
                             <version>${mapstruct.version}</version>
                         </path>
+                        <path>
+                            <groupId>one.x1f.sip.foundation</groupId>
+                            <artifactId>sip-annotation-processor</artifactId>
+                            <version>${parent.version}</version>
+                        </path>
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
