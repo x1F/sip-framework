@@ -33,6 +33,7 @@ public class SIPAnnotationProcessor extends AbstractProcessor {
           "one.x1f.sip.foundation.core.declarative.annotation.ConnectorGroup",
               "one.x1f.sip.foundation.core.declarative.connectorgroup.ConnectorGroupBase");
 
+  @SuppressWarnings("java:S3516")
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     if (roundEnv.processingOver()) {
@@ -54,18 +55,15 @@ public class SIPAnnotationProcessor extends AbstractProcessor {
       if (element.getKind() != ElementKind.CLASS) continue;
 
       TypeElement classElement = (TypeElement) element;
-      if (element.getKind() == ElementKind.CLASS) {
-
-        if (!extendsClass(classElement, expectedParent)) {
-          processingEnv
-              .getMessager()
-              .printMessage(
-                  Diagnostic.Kind.ERROR,
-                  String.format(
-                      "Class %s annotated with @%s must extend %s",
-                      classElement.getQualifiedName(), annotation.getSimpleName(), expectedParent),
-                  element);
-        }
+      if (element.getKind() == ElementKind.CLASS && !extendsClass(classElement, expectedParent)) {
+        processingEnv
+            .getMessager()
+            .printMessage(
+                Diagnostic.Kind.ERROR,
+                String.format(
+                    "Class %s annotated with @%s must extend %s",
+                    classElement.getQualifiedName(), annotation.getSimpleName(), expectedParent),
+                element);
       }
     }
   }
