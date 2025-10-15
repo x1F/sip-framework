@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "315",
+  "message": "Added an annotation processor that validates during compilation that all classes with declarative structure annotations extend their corresponding parent classes."
+}
