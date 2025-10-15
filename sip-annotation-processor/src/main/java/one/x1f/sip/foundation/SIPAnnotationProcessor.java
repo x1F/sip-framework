@@ -60,17 +60,7 @@ public class SIPAnnotationProcessor extends AbstractProcessor {
                                     expectedParent),
                             element
                     );
-                } else {
-                    processingEnv.getMessager().printMessage(
-                            Diagnostic.Kind.NOTE,
-                            String.format("Class %s annotated with @%s extends %s",
-                                    classElement.getQualifiedName(),
-                                    annotation.getSimpleName(),
-                                    expectedParent),
-                            element
-                    );
                 }
-
             }
         }
     }
