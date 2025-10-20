@@ -53,6 +53,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.github.javaparser</groupId>
+            <artifactId>javaparser-symbol-solver-core</artifactId>
+            <version>3.27.1</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
@@ -70,6 +75,11 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>one.x1f.sip.foundation</groupId>
+            <artifactId>sip-core</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
