@@ -44,6 +44,12 @@
             <artifactId>sip-integration-starter</artifactId>
         </dependency>
 #end
+#if (${useSipSecurity} == "y" or ${useSipSecurity} == "Y")
+        <dependency>
+            <groupId>one.x1f.sip.foundation</groupId>
+            <artifactId>sip-security</artifactId>
+        </dependency>
+#end
 #if (${useSoap} == "y" or ${useSoap} == "Y")
         <dependency>
             <groupId>one.x1f.sip.foundation</groupId>

@@ -64,6 +64,12 @@ under the License.
             <defaultValue>${useSoapDefault}</defaultValue>
         </requiredProperty>
         <requiredProperty key="archetypeVersion"> </requiredProperty>
+        <requiredProperty key="useSipSecurityDefault">
+            <defaultValue>y</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="useSipSecurity">
+            <defaultValue>${useSipSecurityDefault}</defaultValue>
+        </requiredProperty>
         <requiredProperty key="createDemoAdapterDefault">
             <defaultValue>n</defaultValue>
         </requiredProperty>
