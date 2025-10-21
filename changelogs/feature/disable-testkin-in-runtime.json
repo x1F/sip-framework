@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "313",
+  "message": "Prevent loading TestKit beans in runtime"
+}
