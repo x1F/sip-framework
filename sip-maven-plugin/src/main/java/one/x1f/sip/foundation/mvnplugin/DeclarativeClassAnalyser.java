@@ -96,9 +96,8 @@ public class DeclarativeClassAnalyser {
       String ancestorName = invalidAncestorMatches.get(0);
       String second =
           String.format(
-              "Class %s which implements %s must be annotated with @%s",
+              "Class %s must be annotated with @%s to match the required base class.",
               resolved.getQualifiedName(),
-              ancestorName,
               expectedAnnotationClasses.get(ancestorName));
       return new ClassAnalysisResult(true, second);
     }
@@ -116,10 +115,9 @@ public class DeclarativeClassAnalyser {
       if (!doesAnnotatedClassHaveMatchingParent(ancestors, annotationName)) {
         String message =
             String.format(
-                "Class %s annotated with @%s must implement %s",
+                "Class %s annotated with @%s does not extend the required base type.",
                 resolved.getQualifiedName(),
-                annotationName,
-                expectedParentInterfaces.get(annotationName));
+                annotationName);
         return new ClassAnalysisResult(true, message);
       }
     }
