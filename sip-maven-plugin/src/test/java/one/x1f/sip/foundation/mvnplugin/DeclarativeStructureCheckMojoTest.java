@@ -49,10 +49,10 @@ class DeclarativeStructureCheckMojoTest {
     verify(log)
         .error(
             contains(
-                "Class one.x1f.sip.foundation.connectors.con1.NoParentConnector annotated with @InboundConnector must implement one.x1f.sip.foundation.core.declarative.connector.InboundConnectorDefinition"));
+                "Class one.x1f.sip.foundation.connectors.con1.NoParentConnector annotated with @InboundConnector does not extend the required base type."));
     verify(log)
         .error(
             contains(
-                "Class one.x1f.sip.foundation.connectors.con1.NoAnnotationConnector which implements one.x1f.sip.foundation.core.declarative.connector.OutboundConnectorDefinition must be annotated with @OutboundConnector"));
+                "Class one.x1f.sip.foundation.connectors.con1.NoAnnotationConnector must be annotated with @OutboundConnector to match the required base class."));
   }
 }
