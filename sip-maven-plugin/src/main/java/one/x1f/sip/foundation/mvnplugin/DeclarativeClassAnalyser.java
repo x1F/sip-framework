@@ -97,8 +97,7 @@ public class DeclarativeClassAnalyser {
       String second =
           String.format(
               "Class %s must be annotated with @%s to match the required base class.",
-              resolved.getQualifiedName(),
-              expectedAnnotationClasses.get(ancestorName));
+              resolved.getQualifiedName(), expectedAnnotationClasses.get(ancestorName));
       return new ClassAnalysisResult(true, second);
     }
     return null;
@@ -116,8 +115,7 @@ public class DeclarativeClassAnalyser {
         String message =
             String.format(
                 "Class %s annotated with @%s does not extend the required base type.",
-                resolved.getQualifiedName(),
-                annotationName);
+                resolved.getQualifiedName(), annotationName);
         return new ClassAnalysisResult(true, message);
       }
     }
