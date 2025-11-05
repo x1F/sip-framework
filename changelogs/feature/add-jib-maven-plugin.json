@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "310",
-  "message": "Add an option to include Jib maven plugin for creating docker images in SIP archetype"
-}

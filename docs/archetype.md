@@ -46,17 +46,20 @@ After executing given Maven command, you will be requested to insert additional 
 - **package** (optional) is used to override previous package naming and provide full package name. This can be skipped by leaving value empty.
   It is strongly recommended to follow package naming convention, otherwise your project will be created but it will have
   package naming errors.
+- **useSipSecurity** should be set to 'y' or 'Y' to include _SIP Security_ dependency in adapter.
 - **createDemoAdapter** should be set to 'y' or 'Y' when the inclusion of a demo adapter is desired.
     It will generate example classes using declarative structure, including process and scenario orchestration.
 - **useSipCloudFramework** should be set to 'y' or 'Y' to enable the premium version of the SIP framework. 
   When enabled, the adapter will include the necessary dependencies for SIP Cloud Framework. 
   For access or licensing details, please contact [sip@x1f.one](mailto:sip@x1f.one)
+- **useJibPlugin** should be set to 'y' or 'Y' to add [Jib Maven Plugin](https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin) 
+  to the adapter. This plugin can build Docker image of the adapter.
 
 
 _Note_: All the parameters can be provided via command line if needed:
 
 ```shell
-mvn archetype:generate -DarchetypeGroupId=one.x1f.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=<latest.sip-framework.version> -DgroupId=one.x1f.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT -DconnectorGroup1=group1 -DconnectorGroup2=group2 -DpackageSuffix=project -DuseLombok=y -DuseSoap=n -Dpackage=one.x1f.sip.adapter.demo.project -DcreateDemoAdapter=n -DuseSipCloudFramework=n
+mvn archetype:generate -DarchetypeGroupId=one.x1f.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=<latest.sip-framework.version> -DgroupId=one.x1f.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT -DconnectorGroup1=group1 -DconnectorGroup2=group2 -DpackageSuffix=project -DuseLombok=y -DuseSoap=n -Dpackage=one.x1f.sip.adapter.demo.project -DuseSipSecurity=y -DcreateDemoAdapter=n -DuseSipCloudFramework=n -DuseJibPlugin=n
 ```
 
 After a successful build, a project with the following structure will be created:

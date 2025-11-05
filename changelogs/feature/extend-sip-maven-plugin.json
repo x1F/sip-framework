@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "316",
-  "message": "Add a new goal declarative-structure-check in SIP Maven plugin, which checks whether declarative structure classes are valid."
-}

@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "314",
-  "message": "Add useSipSecurity property to SIP Archetype which will include sip-security dependency in the generated adapter."
-}
