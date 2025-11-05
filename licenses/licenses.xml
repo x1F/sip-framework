@@ -3585,7 +3585,6 @@
         <license>
           <name>BSD-3-Clause</name>
           <url>https://asm.ow2.io/license.html</url>
-          <file>bsd-3-clause - license.html</file>
         </license>
       </licenses>
     </dependency>
