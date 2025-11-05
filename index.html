@@ -63,6 +63,16 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#development-tips">Development Tips</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#docker">Docker</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#enabling-jib">Enabling Jib</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#building-the-image">Building the image</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#pushing-to-a-registry">Pushing to a registry</a>
+    </li>
+        </ul>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#configuration-properties">Configuration properties</a>
     </li>
         </ul>
@@ -136,6 +146,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="" href="javadoc/latest/index.html">JavaDoc Latest Development</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="javadoc/4.1.0/index.html">JavaDoc 4.1.0</a>
                 </li>
               </ul>
               <ul>
@@ -265,6 +279,12 @@ approach for all adapters.</p>
 <li><a href="#adding-additional-camel-starters-to-the-project">Adding additional Camel starters to the project</a></li>
 <li><a href="#adding-new-connector-groups">Adding new Connector Groups</a></li>
 <li><a href="#development-tips">Development Tips</a></li>
+<li><a href="#docker">Docker</a><ul>
+<li><a href="#enabling-jib">Enabling Jib</a></li>
+<li><a href="#building-the-image">Building the image</a></li>
+<li><a href="#pushing-to-a-registry">Pushing to a registry</a></li>
+</ul>
+</li>
 <li><a href="#configuration-properties">Configuration properties</a></li>
 </ul>
 </li>
@@ -447,6 +467,28 @@ protected EndpointProducerBuilder defineOutgoingEndpoint() {
 to identify at a single glance which systems are communicating with each other and which communication technologies are
 being used.
 It also makes routes more descriptive and adapters much easier to maintain.</p>
+<h3 id="docker">Docker<a class="headerlink" href="#docker" title="Permanent link">&para;</a></h3>
+<p>You can build a Docker image for an adapter using the <a href="https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin">Jib Maven Plugin</a>.</p>
+<h4 id="enabling-jib">Enabling Jib<a class="headerlink" href="#enabling-jib" title="Permanent link">&para;</a></h4>
+<p>When generating an adapter with the <a href="https://x1f.github.io/sip-framework/archetype/">SIP archetype</a>,
+set the property <strong><code>useJibPlugin</code></strong> to <code>y</code> (or <code>Y</code>). This will add the Jib plugin to the generated <code>pom.xml</code>.</p>
+<h4 id="building-the-image">Building the image<a class="headerlink" href="#building-the-image" title="Permanent link">&para;</a></h4>
+<p>Run the following command to build a Docker image:</p>
+<p><pre class="highlight"><code class="language-bash">mvn package</code></pre>
+By default, the image is created in your local Docker daemon.</p>
+<h4 id="pushing-to-a-registry">Pushing to a registry<a class="headerlink" href="#pushing-to-a-registry" title="Permanent link">&para;</a></h4>
+<p>To push the image directly to a Docker registry, configure the <code>to.image</code> property in your <code>pom.xml</code>:</p>
+<p>Adjust image according to your Docker registry
+<pre class="highlight"><code class="language-xml">&lt;configuration&gt;
+  &lt;to&gt;
+    &lt;image&gt;your-docker-registry.io/sip-adapter:latest&lt;/image&gt;
+  &lt;/to&gt;
+&lt;/configuration&gt;</code></pre>
+Use <em>build</em> instead of <em>dockerBuild</em> as <code>goal</code>
+<pre class="highlight"><code class="language-xml">&lt;goals&gt;
+  &lt;goal&gt;build&lt;/goal&gt; 
+&lt;/goals&gt;</code></pre></p>
+<p>For additional information visit the official <a href="https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin">documentation</a>.</p>
 <h3 id="configuration-properties">Configuration properties<a class="headerlink" href="#configuration-properties" title="Permanent link">&para;</a></h3>
 <p>By default, the following properties are included in the SIP Framework. To override them, simply add them to your configuration file with your desired values.
 If you're using a YAML configuration file (typically found in the application module), make sure to adapt the properties to the correct YAML format.
@@ -740,5 +782,5 @@ A complete YAML configuration file with all available properties can be found <a
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2025-10-01 13:26:36.734259+00:00
+Build Date UTC : 2025-11-05 10:34:51.231564+00:00
 -->

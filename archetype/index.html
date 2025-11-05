@@ -119,6 +119,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/4.1.0/index.html">JavaDoc 4.1.0</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/4.0.1/index.html">JavaDoc 4.0.1</a>
                 </li>
               </ul>
@@ -262,14 +266,17 @@ as they set the properties for the adapter. It is recommended to follow the Mave
 <li><strong>package</strong> (optional) is used to override previous package naming and provide full package name. This can be skipped by leaving value empty.
   It is strongly recommended to follow package naming convention, otherwise your project will be created but it will have
   package naming errors.</li>
+<li><strong>useSipSecurity</strong> should be set to 'y' or 'Y' to include <em>SIP Security</em> dependency in adapter.</li>
 <li><strong>createDemoAdapter</strong> should be set to 'y' or 'Y' when the inclusion of a demo adapter is desired.
     It will generate example classes using declarative structure, including process and scenario orchestration.</li>
 <li><strong>useSipCloudFramework</strong> should be set to 'y' or 'Y' to enable the premium version of the SIP framework. 
   When enabled, the adapter will include the necessary dependencies for SIP Cloud Framework. 
   For access or licensing details, please contact <a href="mailto:sip@x1f.one">sip@x1f.one</a></li>
+<li><strong>useJibPlugin</strong> should be set to 'y' or 'Y' to add <a href="https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin">Jib Maven Plugin</a> 
+  to the adapter. This plugin can build Docker image of the adapter.</li>
 </ul>
 <p><em>Note</em>: All the parameters can be provided via command line if needed:</p>
-<pre class="highlight"><code class="language-shell">mvn archetype:generate -DarchetypeGroupId=one.x1f.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=&lt;latest.sip-framework.version&gt; -DgroupId=one.x1f.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT -DconnectorGroup1=group1 -DconnectorGroup2=group2 -DpackageSuffix=project -DuseLombok=y -DuseSoap=n -Dpackage=one.x1f.sip.adapter.demo.project -DcreateDemoAdapter=n -DuseSipCloudFramework=n</code></pre>
+<pre class="highlight"><code class="language-shell">mvn archetype:generate -DarchetypeGroupId=one.x1f.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=&lt;latest.sip-framework.version&gt; -DgroupId=one.x1f.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT -DconnectorGroup1=group1 -DconnectorGroup2=group2 -DpackageSuffix=project -DuseLombok=y -DuseSoap=n -Dpackage=one.x1f.sip.adapter.demo.project -DuseSipSecurity=y -DcreateDemoAdapter=n -DuseSipCloudFramework=n -DuseJibPlugin=n</code></pre>
 <p>After a successful build, a project with the following structure will be created:</p>
 <ul>
 <li>SIPApplication.java</li>
