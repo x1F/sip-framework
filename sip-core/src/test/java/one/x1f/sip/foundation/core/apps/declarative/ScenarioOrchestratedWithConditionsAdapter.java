@@ -11,6 +11,7 @@ import one.x1f.sip.foundation.core.annotation.SIPIntegrationAdapter;
 import one.x1f.sip.foundation.core.declarative.annotation.InboundConnector;
 import one.x1f.sip.foundation.core.declarative.annotation.IntegrationScenario;
 import one.x1f.sip.foundation.core.declarative.annotation.OutboundConnector;
+import one.x1f.sip.foundation.core.declarative.annotation.connector.extension.ResponseProcessor;
 import one.x1f.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import one.x1f.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import one.x1f.sip.foundation.core.declarative.orchestration.Orchestrator;
@@ -20,6 +21,7 @@ import one.x1f.sip.foundation.core.declarative.orchestration.scenario.ScenarioOr
 import one.x1f.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrator;
 import one.x1f.sip.foundation.core.declarative.orchestration.scenario.dsl.ScenarioOrchestrationDefinition;
 import one.x1f.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
@@ -72,6 +74,8 @@ public class ScenarioOrchestratedWithConditionsAdapter {
           .elseIfCase(ctx -> ctx.getResponse().isEmpty()) // also empty on purpose
           .elseCase()
           .callOutboundConnector(OrchestratedOutboundConnectorLog.class)
+          .andNoResponseHandling()
+          .callOutboundConnector(DynamicOutboundConnector.class)
           .andNoResponseHandling();
     }
   }
@@ -178,6 +182,26 @@ public class ScenarioOrchestratedWithConditionsAdapter {
               def -> {
                 def.setBody(body -> new OrchestratedResponseModel());
               });
+    }
+  }
+
+  @OutboundConnector(
+      integrationScenario = OrchestratedScenario.ID,
+      connectorId = DynamicOutboundConnector.ID,
+      requestModel = String.class,
+      connectorGroup = "orchestration-log")
+  public class DynamicOutboundConnector extends GenericOutboundConnectorBase {
+
+    public static final String ID = "DynamicOutboundConnector";
+
+    @Override
+    protected EndpointProducerBuilder defineOutgoingEndpoint() {
+      return StaticEndpointBuilders.log("${body}");
+    }
+
+    @ResponseProcessor
+    public void setResponse(Exchange exchange) {
+      exchange.getMessage().setBody(new OrchestratedResponseModel());
     }
   }
 }
