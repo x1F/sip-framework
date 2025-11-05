@@ -75,7 +75,7 @@ class DeclarativeHelperTest {
         DeclarativeHelper.resolveForbiddenEndpoint(jmsEndpoint);
 
     // assert
-    assertThat(endpointConsumerBuilder.getUri()).contains("bridgeErrorHandler=false");
+    assertThat(endpointConsumerBuilder.getRawUri()).contains("bridgeErrorHandler=false");
   }
 
   @Test
