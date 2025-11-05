@@ -24,6 +24,7 @@
         <license>
           <name>GNU Lesser General Public License</name>
           <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
+          <file>gnu lesser general public license - lgpl-2.1.html</file>
         </license>
       </licenses>
     </dependency>
@@ -40,6 +41,7 @@
         <license>
           <name>GNU Lesser General Public License</name>
           <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
+          <file>gnu lesser general public license - lgpl-2.1.html</file>
         </license>
       </licenses>
     </dependency>
@@ -680,13 +682,11 @@
           <name>Eclipse Public License 2.0</name>
           <url>https://projects.eclipse.org/license/epl-2.0</url>
           <distribution>repo</distribution>
-          <file>eclipse public license 2.0 - epl-2.0.html</file>
         </license>
         <license>
           <name>GNU General Public License, version 2 with the GNU Classpath Exception</name>
           <url>https://projects.eclipse.org/license/secondary-gpl-2.0-cp</url>
           <distribution>repo</distribution>
-          <file>gnu general public license, version 2 with the gnu classpath exception - secondary-gpl-2.0-cp.html</file>
         </license>
       </licenses>
     </dependency>
