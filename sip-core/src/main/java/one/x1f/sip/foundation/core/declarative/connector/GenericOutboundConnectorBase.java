@@ -38,7 +38,7 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
   public final void defineOutboundEndpoints(final RouteDefinition routeDefinition) {
     defineRequestMarshalling().ifPresent(marshaller -> marshaller.accept(routeDefinition));
     EndpointProducerBuilder endpoint = defineOutgoingEndpoint();
-    if (doesUriContainPlaceholders(endpoint.getUri())) {
+    if (doesUriContainPlaceholders(endpoint.getRawUri())) {
       routeDefinition.toD(endpoint).id(routeDefinition.getRouteId());
     } else {
       routeDefinition.to(endpoint).id(routeDefinition.getRouteId());

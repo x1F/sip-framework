@@ -31,7 +31,7 @@ class SOAPEndpointBuilderTest {
             DataFormat.PAYLOAD);
 
     // assert
-    assertThat(cxfEndpointBuilder.getUri())
+    assertThat(cxfEndpointBuilder.getRawUri())
         .isEqualTo("cxf://address?dataFormat=PAYLOAD&serviceClass=serviceClassQualifiedName");
   }
 
@@ -82,7 +82,7 @@ class SOAPEndpointBuilderTest {
 
     // assert
     assertThat(cxfEndpoint.getAddress()).isEqualTo(exampleAddress);
-    assertThat(cxfEndpointBuilder.getUri()).isEqualTo("cxf://bean:serviceClassName");
+    assertThat(cxfEndpointBuilder.getRawUri()).isEqualTo("cxf://bean:serviceClassName");
   }
 
   @Test
