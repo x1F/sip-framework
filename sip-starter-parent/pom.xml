@@ -167,6 +167,7 @@
                         <execution>
                             <goals>
                                 <goal>connectors-cross-dependencies-check</goal>
+                                <goal>declarative-structure-check</goal>
                             </goals>
                         </execution>
                     </executions>
