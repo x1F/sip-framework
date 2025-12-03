@@ -150,11 +150,9 @@ final class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGenerat
     }
 
     routeDef.bean(ScenarioOrchestrationHandlers.handleErrorThrownIfNoConsumerWasCalled());
-    routeDef.bean(
-          ScenarioOrchestrationHandlers.handleContextClearing(getIntegrationScenario()));
+    routeDef.bean(ScenarioOrchestrationHandlers.handleContextClearing(getIntegrationScenario()));
 
-
-      if (!overallUnhandledScenarioConsumers.isEmpty()) {
+    if (!overallUnhandledScenarioConsumers.isEmpty()) {
       log.warn(
           "Orchestration for integration-scenario '{}' does not call scenario-consumers '{}' for calls coming in from '{}'",
           getIntegrationScenarioId(),

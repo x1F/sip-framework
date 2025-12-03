@@ -30,16 +30,14 @@ public class ScenarioOrchestrationHandlers {
   private final String INITIAL_CONTEXT_PROPERTY = "_SipInitialContext";
   private final String PROVIDER_CONTEXT_HISTORY_PROPERTY = "_SipProviderContextHistory";
 
-
   public static ContextInitializer handleContextInitialization(
       final IntegrationScenarioDefinition scenario) {
     return new ContextInitializer(scenario);
   }
 
-    public static ContextCleaner handleContextClearing(
-            final IntegrationScenarioDefinition scenario) {
-        return new ContextCleaner(scenario);
-    }
+  public static ContextCleaner handleContextClearing(final IntegrationScenarioDefinition scenario) {
+    return new ContextCleaner(scenario);
+  }
 
   public static <M> ConsumerRequestHandler<M> handleRequestToConsumer(
       final IntegrationScenarioConsumerDefinition consumerDefinition,
@@ -91,54 +89,56 @@ public class ScenarioOrchestrationHandlers {
     @Handler
     public <T> void initializeOrchestrationContext(final T body, final Exchange exchange) {
       String previousContextId = "";
-      var previousContext = exchange.getProperty(ScenarioOrchestrationContext.PROPERTY_NAME, ScenarioOrchestrationContext.class);
+      var previousContext =
+          exchange.getProperty(
+              ScenarioOrchestrationContext.PROPERTY_NAME, ScenarioOrchestrationContext.class);
       if (previousContext != null) {
-          previousContextId = previousContext.getIntegrationScenario().getId();
+        previousContextId = previousContext.getIntegrationScenario().getId();
       }
       exchange.setProperty(
           CALLED_CONSUMER_LIST_PROPERTY,
           Collections.synchronizedList(new ArrayList<IntegrationScenarioConsumerDefinition>()));
-        ScenarioOrchestrationContext<Object> orchestrationContext = ScenarioOrchestrationContext.builder()
-                .integrationScenario(integrationScenario)
-                .originalRequest(body)
-                .exchange(exchange)
-                .previousScenarioContext(previousContextId)
-                .build();
-        exchange.setProperty(
-          ScenarioOrchestrationContext.PROPERTY_NAME,
-                orchestrationContext);
-        if (exchange.getProperty(INITIAL_CONTEXT_PROPERTY) == null) {
-            exchange.setProperty(INITIAL_CONTEXT_PROPERTY, orchestrationContext);
-        }
-        if (exchange.getProperty(PROVIDER_CONTEXT_HISTORY_PROPERTY) == null) {
-            Map<String, ScenarioOrchestrationContext> contextHistory = new HashMap<>();
-            contextHistory.put(integrationScenario.getId(), orchestrationContext);
-            exchange.setProperty(PROVIDER_CONTEXT_HISTORY_PROPERTY, contextHistory);
-        } else {
-            Map<String, ScenarioOrchestrationContext> contextHistory =
-                    exchange.getProperty(PROVIDER_CONTEXT_HISTORY_PROPERTY, Map.class);
-            contextHistory.put(integrationScenario.getId(), orchestrationContext);
-        }
+      ScenarioOrchestrationContext<Object> orchestrationContext =
+          ScenarioOrchestrationContext.builder()
+              .integrationScenario(integrationScenario)
+              .originalRequest(body)
+              .exchange(exchange)
+              .previousScenarioContext(previousContextId)
+              .build();
+      exchange.setProperty(ScenarioOrchestrationContext.PROPERTY_NAME, orchestrationContext);
+      if (exchange.getProperty(INITIAL_CONTEXT_PROPERTY) == null) {
+        exchange.setProperty(INITIAL_CONTEXT_PROPERTY, orchestrationContext);
+      }
+      if (exchange.getProperty(PROVIDER_CONTEXT_HISTORY_PROPERTY) == null) {
+        Map<String, ScenarioOrchestrationContext> contextHistory = new HashMap<>();
+        contextHistory.put(integrationScenario.getId(), orchestrationContext);
+        exchange.setProperty(PROVIDER_CONTEXT_HISTORY_PROPERTY, contextHistory);
+      } else {
+        Map<String, ScenarioOrchestrationContext> contextHistory =
+            exchange.getProperty(PROVIDER_CONTEXT_HISTORY_PROPERTY, Map.class);
+        contextHistory.put(integrationScenario.getId(), orchestrationContext);
+      }
     }
   }
 
-    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-    static class ContextCleaner {
+  @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+  static class ContextCleaner {
 
-        private final IntegrationScenarioDefinition integrationScenario;
+    private final IntegrationScenarioDefinition integrationScenario;
 
-        @Handler
-        public <T> void clearOrchestrationContext(final T body, final Exchange exchange) {
-            var providerContext = exchange.getProperty(INITIAL_CONTEXT_PROPERTY, ScenarioOrchestrationContext.class);
-            if(StringUtils.isNotEmpty(providerContext.getPreviousScenarioContext())) {
-                Map<String, ScenarioOrchestrationContext> contextHistory =
-                        exchange.getProperty(PROVIDER_CONTEXT_HISTORY_PROPERTY, Map.class);
-                exchange.setProperty(
-                        ScenarioOrchestrationContext.PROPERTY_NAME,
-                        contextHistory.get(providerContext.getPreviousScenarioContext()));
-            }
-        }
+    @Handler
+    public <T> void clearOrchestrationContext(final T body, final Exchange exchange) {
+      var providerContext =
+          exchange.getProperty(INITIAL_CONTEXT_PROPERTY, ScenarioOrchestrationContext.class);
+      if (StringUtils.isNotEmpty(providerContext.getPreviousScenarioContext())) {
+        Map<String, ScenarioOrchestrationContext> contextHistory =
+            exchange.getProperty(PROVIDER_CONTEXT_HISTORY_PROPERTY, Map.class);
+        exchange.setProperty(
+            ScenarioOrchestrationContext.PROPERTY_NAME,
+            contextHistory.get(providerContext.getPreviousScenarioContext()));
+      }
     }
+  }
 
   static class ConsumerRequestHandler<M> {
     private final IntegrationScenarioConsumerDefinition consumerDefinition;
