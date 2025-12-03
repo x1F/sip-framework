@@ -45,14 +45,15 @@ class DeclarativeStructureCheckMojoTest {
     MojoExecutionException ex = assertThrows(MojoExecutionException.class, subject::execute);
     assertEquals("Error analysing declarative structure.", ex.getMessage());
 
-    verify(log, times(2)).error(anyString());
+    verify(log, times(1)).error(anyString());
+    verify(log, times(1)).warn(anyString());
     verify(log)
         .error(
             contains(
                 "Class one.x1f.sip.foundation.connectors.con1.NoParentConnector annotated with @InboundConnector does not extend the required base type."));
     verify(log)
-        .error(
+        .warn(
             contains(
-                "Class one.x1f.sip.foundation.connectors.con1.NoAnnotationConnector must be annotated with @OutboundConnector to match the required base class."));
+                "Class one.x1f.sip.foundation.connectors.con1.NoAnnotationConnector might need to be annotated with @OutboundConnector to match the required base class or made abstract."));
   }
 }

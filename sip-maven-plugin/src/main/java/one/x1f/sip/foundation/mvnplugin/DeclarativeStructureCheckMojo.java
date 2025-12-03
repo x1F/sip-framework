@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Stream;
+import one.x1f.sip.foundation.mvnplugin.model.ClassAnalysisOutcome;
 import one.x1f.sip.foundation.mvnplugin.model.ClassAnalysisResult;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
@@ -80,28 +81,31 @@ public class DeclarativeStructureCheckMojo extends AbstractMojo {
     try {
       Optional<CompilationUnit> result = parser.parse(path).getResult();
       if (result.isEmpty()) {
-        return new ClassAnalysisResult(false, null);
+        return new ClassAnalysisResult(ClassAnalysisOutcome.SUCCESS, null);
       }
       for (ClassOrInterfaceDeclaration clazz :
           result.get().findAll(ClassOrInterfaceDeclaration.class)) {
         var classAnalysisResult = declarativeClassAnalyser.doAnalysis(clazz);
-        if (classAnalysisResult.error()) {
+        if (classAnalysisResult.outcome().equals(ClassAnalysisOutcome.ERROR)
+            || classAnalysisResult.outcome().equals(ClassAnalysisOutcome.WARNING)) {
           return classAnalysisResult;
         }
       }
     } catch (Exception e) {
       getLog().warn("Failed to parse " + path + ": " + e.getMessage());
     }
-    return new ClassAnalysisResult(false, null);
+    return new ClassAnalysisResult(ClassAnalysisOutcome.SUCCESS, null);
   }
 
   private void validate(List<ClassAnalysisResult> analyseResult) throws MojoExecutionException {
     boolean hasErrors = false;
 
     for (ClassAnalysisResult res : analyseResult) {
-      if (res.error()) {
+      if (res.outcome().equals(ClassAnalysisOutcome.ERROR)) {
         getLog().error(res.message());
         hasErrors = true;
+      } else if (res.outcome().equals(ClassAnalysisOutcome.WARNING)) {
+        getLog().warn(res.message());
       }
     }
 
