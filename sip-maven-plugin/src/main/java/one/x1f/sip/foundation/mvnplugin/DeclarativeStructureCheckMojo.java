@@ -43,6 +43,7 @@ public class DeclarativeStructureCheckMojo extends AbstractMojo {
 
   @Override
   public void execute() throws MojoExecutionException {
+    declarativeClassAnalyser.setProjectGroupId(mavenProject.getGroupId());
     try {
       CombinedTypeSolver typeSolver = new CombinedTypeSolver();
       typeSolver.add(new ReflectionTypeSolver());

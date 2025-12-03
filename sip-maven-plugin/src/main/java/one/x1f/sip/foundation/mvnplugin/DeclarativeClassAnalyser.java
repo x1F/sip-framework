@@ -13,6 +13,7 @@ import one.x1f.sip.foundation.mvnplugin.model.ClassAnalysisOutcome;
 import one.x1f.sip.foundation.mvnplugin.model.ClassAnalysisResult;
 
 public class DeclarativeClassAnalyser {
+  private String projectGroupId;
 
   private final Map<String, String> expectedParentInterfaces =
       Map.of(
@@ -54,7 +55,7 @@ public class DeclarativeClassAnalyser {
     try {
       String name = current.getQualifiedName();
 
-      if (!name.startsWith(X1F_SIP_GROUP)) return;
+      if (!name.startsWith(X1F_SIP_GROUP) && !name.startsWith(projectGroupId)) return;
 
       ancestors.add(current);
       current
@@ -136,5 +137,9 @@ public class DeclarativeClassAnalyser {
     return annotations.stream()
         .anyMatch(
             annotationName -> annotationName.equals(expectedAnnotationClasses.get(interfaceName)));
+  }
+
+  public void setProjectGroupId(String projectGroupId) {
+    this.projectGroupId = projectGroupId;
   }
 }
