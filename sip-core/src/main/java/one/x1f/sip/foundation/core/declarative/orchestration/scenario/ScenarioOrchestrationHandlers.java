@@ -27,8 +27,8 @@ import org.apache.commons.lang3.StringUtils;
 public class ScenarioOrchestrationHandlers {
 
   private final String CALLED_CONSUMER_LIST_PROPERTY = "_SipCalledConsumersList";
-  private final String INITIAL_CONTEXT_PROPERTY = "_SipInitialContext";
-  private final String PROVIDER_CONTEXT_HISTORY_PROPERTY = "_SipProviderContextHistory";
+  private final String SCENARIO_ORCHESTRATION_CONTEXT_HISTORY_PROPERTY =
+      "_SipScenarioOrchestrationContextHistory";
 
   public static ContextInitializer handleContextInitialization(
       final IntegrationScenarioDefinition scenario) {
@@ -106,16 +106,13 @@ public class ScenarioOrchestrationHandlers {
               .previousScenarioContext(previousContextId)
               .build();
       exchange.setProperty(ScenarioOrchestrationContext.PROPERTY_NAME, orchestrationContext);
-      if (exchange.getProperty(INITIAL_CONTEXT_PROPERTY) == null) {
-        exchange.setProperty(INITIAL_CONTEXT_PROPERTY, orchestrationContext);
-      }
-      if (exchange.getProperty(PROVIDER_CONTEXT_HISTORY_PROPERTY) == null) {
+      if (exchange.getProperty(SCENARIO_ORCHESTRATION_CONTEXT_HISTORY_PROPERTY) == null) {
         Map<String, ScenarioOrchestrationContext> contextHistory = new HashMap<>();
         contextHistory.put(integrationScenario.getId(), orchestrationContext);
-        exchange.setProperty(PROVIDER_CONTEXT_HISTORY_PROPERTY, contextHistory);
+        exchange.setProperty(SCENARIO_ORCHESTRATION_CONTEXT_HISTORY_PROPERTY, contextHistory);
       } else {
         Map<String, ScenarioOrchestrationContext> contextHistory =
-            exchange.getProperty(PROVIDER_CONTEXT_HISTORY_PROPERTY, Map.class);
+            exchange.getProperty(SCENARIO_ORCHESTRATION_CONTEXT_HISTORY_PROPERTY, Map.class);
         contextHistory.put(integrationScenario.getId(), orchestrationContext);
       }
     }
@@ -129,10 +126,11 @@ public class ScenarioOrchestrationHandlers {
     @Handler
     public <T> void clearOrchestrationContext(final T body, final Exchange exchange) {
       var providerContext =
-          exchange.getProperty(INITIAL_CONTEXT_PROPERTY, ScenarioOrchestrationContext.class);
+          exchange.getProperty(
+              ScenarioOrchestrationContext.PROPERTY_NAME, ScenarioOrchestrationContext.class);
       if (StringUtils.isNotEmpty(providerContext.getPreviousScenarioContext())) {
         Map<String, ScenarioOrchestrationContext> contextHistory =
-            exchange.getProperty(PROVIDER_CONTEXT_HISTORY_PROPERTY, Map.class);
+            exchange.getProperty(SCENARIO_ORCHESTRATION_CONTEXT_HISTORY_PROPERTY, Map.class);
         exchange.setProperty(
             ScenarioOrchestrationContext.PROPERTY_NAME,
             contextHistory.get(providerContext.getPreviousScenarioContext()));
