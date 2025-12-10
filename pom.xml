@@ -104,6 +104,7 @@
         <maven-gpg-plugin.version>3.2.6</maven-gpg-plugin.version>
         <sonatype-central-publishing-plugin.version>0.8.0</sonatype-central-publishing-plugin.version>
         <license-maven-plugin.version>2.6.0</license-maven-plugin.version>
+        <central.autoPublish>false</central.autoPublish>
 
         <!-- sonar settings -->
         <sonar.organization>ikor-gmbh</sonar.organization>
@@ -639,7 +640,7 @@
                     <configuration>
                         <publishingServerId>maven-central</publishingServerId>
                         <ignorePublishedComponents>true</ignorePublishedComponents>
-                        <autoPublish>true</autoPublish>
+                        <autoPublish>${central.autoPublish}</autoPublish>
                         <waitUntil>validated</waitUntil>
                     </configuration>
                 </plugin>

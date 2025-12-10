@@ -1,0 +1,229 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'releases/*'
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      release-ref:
+        description: Tag/ref to release (defaults to the triggering ref)
+        required: false
+      release-version:
+        description: Override release version (defaults to tag name without prefix)
+        required: false
+      dry-run:
+        description: Run checks only, do not publish artifacts
+        required: true
+        default: 'false'
+      auto-publish:
+        description: Auto publish Sonatype Central staging repository
+        required: true
+        default: 'false'
+      run-formatting:
+        description: Run formatting check
+        required: true
+        default: 'true'
+      run-javadoc-check:
+        description: Run aggregated Javadoc lint check
+        required: true
+        default: 'true'
+      run-license-check:
+        description: Run license whitelist check
+        required: true
+        default: 'true'
+      run-spring-boot-check:
+        description: Ensure root and starter use same Spring Boot version
+        required: true
+        default: 'true'
+      publish-javadoc:
+        description: Publish aggregated Javadoc to gh-pages
+        required: true
+        default: 'true'
+
+env:
+  MAVEN_ARGS: "--batch-mode --no-transfer-progress"
+  MAVEN_GPG_PASSPHRASE: ${{ secrets.MVN_GPG_KEY_PASSWORD }}
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      release_ref: ${{ steps.compute.outputs.release_ref }}
+      tag_name: ${{ steps.compute.outputs.tag_name }}
+      release_version: ${{ steps.compute.outputs.release_version }}
+      dry_run: ${{ steps.compute.outputs.dry_run }}
+      auto_publish: ${{ steps.compute.outputs.auto_publish }}
+      run_formatting: ${{ steps.compute.outputs.run_formatting }}
+      run_javadoc_check: ${{ steps.compute.outputs.run_javadoc_check }}
+      run_license_check: ${{ steps.compute.outputs.run_license_check }}
+      run_spring_boot_check: ${{ steps.compute.outputs.run_spring_boot_check }}
+      publish_javadoc: ${{ steps.compute.outputs.publish_javadoc }}
+      make_latest: ${{ steps.compute.outputs.make_latest }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Compute release inputs
+        id: compute
+        shell: bash
+        run: |
+          REF_INPUT="${{ github.event.inputs['release-ref'] || '' }}"
+          REF="${REF_INPUT:-${GITHUB_REF}}"
+
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" && -z "${REF}" ]]; then
+            echo "release-ref must be set when manually dispatching."
+            exit 1
+          fi
+
+          if [[ "${REF}" != refs/tags/* ]]; then
+            echo "Release ref must be a tag (refs/tags/...), got: ${REF}"
+            exit 1
+          fi
+
+          TAG_NAME="${REF#refs/tags/}"
+          VERSION_INPUT="${{ github.event.inputs['release-version'] || '' }}"
+          if [[ -n "${VERSION_INPUT}" ]]; then
+            RELEASE_VERSION="${VERSION_INPUT}"
+          else
+            RELEASE_VERSION="${TAG_NAME}"
+            RELEASE_VERSION="${RELEASE_VERSION#releases/}"
+            RELEASE_VERSION="${RELEASE_VERSION#v}"
+          fi
+
+          if ! echo "${RELEASE_VERSION}" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-.+)?$'; then
+            echo "Release version '${RELEASE_VERSION}' is not a valid semver string."
+            exit 1
+          fi
+
+          # Determine latest semver tag to control makeLatest flag
+          ALL_TAGS=$(git tag -l 'releases/*' 'v*' | sed -E 's@^releases/@@; s@^v@@' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+(-.+)?$' || true)
+          MAYBE_LATEST=$(printf "%s\n%s\n" "${ALL_TAGS}" "${RELEASE_VERSION}" | sed '/^$/d' | sort -V | tail -n1)
+          MAKE_LATEST=false
+          if [[ "${MAYBE_LATEST}" == "${RELEASE_VERSION}" ]]; then
+            MAKE_LATEST=true
+          fi
+
+          echo "release_ref=${REF}" >> "${GITHUB_OUTPUT}"
+          echo "tag_name=${TAG_NAME}" >> "${GITHUB_OUTPUT}"
+          echo "release_version=${RELEASE_VERSION}" >> "${GITHUB_OUTPUT}"
+          echo "dry_run=${{ github.event.inputs['dry-run'] || 'false' }}" >> "${GITHUB_OUTPUT}"
+          echo "auto_publish=${{ github.event.inputs['auto-publish'] || 'false' }}" >> "${GITHUB_OUTPUT}"
+          echo "run_formatting=${{ github.event.inputs['run-formatting'] || 'true' }}" >> "${GITHUB_OUTPUT}"
+          echo "run_javadoc_check=${{ github.event.inputs['run-javadoc-check'] || 'true' }}" >> "${GITHUB_OUTPUT}"
+          echo "run_license_check=${{ github.event.inputs['run-license-check'] || 'true' }}" >> "${GITHUB_OUTPUT}"
+          echo "run_spring_boot_check=${{ github.event.inputs['run-spring-boot-check'] || 'true' }}" >> "${GITHUB_OUTPUT}"
+          echo "publish_javadoc=${{ github.event.inputs['publish-javadoc'] || 'true' }}" >> "${GITHUB_OUTPUT}"
+          echo "make_latest=${MAKE_LATEST}" >> "${GITHUB_OUTPUT}"
+
+  release:
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.prepare.outputs.tag_name }}
+      - uses: ./.github/workflows/actions/java-maven-action
+        with:
+          gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+
+      - name: Check release is not a snapshot
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          if echo "${VERSION}" | grep -q "SNAPSHOT"; then
+            echo "Release version must not be a SNAPSHOT. Found ${VERSION}"
+            exit 1
+          fi
+
+      - name: Run formatter check
+        if: ${{ needs.prepare.outputs.run_formatting == 'true' }}
+        run: mvn ${MAVEN_ARGS} com.diffplug.spotless:spotless-maven-plugin:check
+
+      - name: Run aggregated Javadoc check
+        if: ${{ needs.prepare.outputs.run_javadoc_check == 'true' }}
+        run: mvn ${MAVEN_ARGS} javadoc:aggregate -Pjavadoc-lint-html
+
+      - name: Check license whitelist
+        if: ${{ needs.prepare.outputs.run_license_check == 'true' }}
+        run: ./.github/workflows/check-licenses.sh
+
+      - name: Check Spring Boot alignment
+        if: ${{ needs.prepare.outputs.run_spring_boot_check == 'true' }}
+        run: test "$(mvn help:evaluate -Dexpression=spring.boot.version -q -DforceStdout)" = "$(mvn help:evaluate -pl sip-starter-parent -Dexpression=project.parent.version -q -DforceStdout)"
+
+      - name: Build & test
+        run: mvn ${MAVEN_ARGS} verify -Psip-developer
+
+      - name: Deploy artifacts
+        if: ${{ needs.prepare.outputs.dry_run != 'true' }}
+        env:
+          SONATYPE_CENTRAL_USERNAME: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          SONATYPE_CENTRAL_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
+        run: mvn ${MAVEN_ARGS} clean deploy -DskipTests -Ppackage-deployment -Dcentral.autoPublish=${{ needs.prepare.outputs.auto_publish }}
+
+      - name: Dry-run package validation (no deploy)
+        if: ${{ needs.prepare.outputs.dry_run == 'true' }}
+        run: mvn ${MAVEN_ARGS} clean verify -DskipTests -Ppackage-deployment -Dcentral.autoPublish=false -Dgpg.skip=true
+
+  github-release:
+    needs: release
+    if: ${{ needs.prepare.outputs.dry_run != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.prepare.outputs.tag_name }}
+      - name: Select release notes file
+        id: notes
+        run: |
+          BODY=""
+          if [[ -f changelogs/current-release-changelog.md ]]; then
+            BODY="changelogs/current-release-changelog.md"
+          fi
+          echo "body_file=${BODY}" >> "${GITHUB_OUTPUT}"
+      - uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ needs.prepare.outputs.tag_name }}
+          name: SIP-Framework ${{ needs.prepare.outputs.release_version }}
+          bodyFile: ${{ steps.notes.outputs.body_file }}
+          allowUpdates: true
+          makeLatest: ${{ needs.prepare.outputs.make_latest }}
+          generateReleaseNotes: ${{ steps.notes.outputs.body_file == '' }}
+
+  publish-javadoc:
+    needs:
+      - release
+      - github-release
+    if: ${{ needs.prepare.outputs.dry_run != 'true' && needs.prepare.outputs.publish_javadoc == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.prepare.outputs.tag_name }}
+      - uses: ./.github/workflows/actions/java-maven-action
+        with:
+          gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+      - name: Aggregate javadoc
+        run: mvn ${MAVEN_ARGS} javadoc:aggregate
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: gh-pages
+          token: ${{ secrets.GH_ADMIN_TOKEN }}
+          path: "apidocs"
+      - name: Publish javadocs
+        run: |
+          cd apidocs
+          git rm -r javadoc/${{ needs.prepare.outputs.release_version }} || true
+          mkdir -p javadoc/${{ needs.prepare.outputs.release_version }}
+          mv ../target/site/apidocs/* javadoc/${{ needs.prepare.outputs.release_version }}
+          git add javadoc/${{ needs.prepare.outputs.release_version }}
+          git commit -m "update javadocs for release ${{ needs.prepare.outputs.release_version }}"
+          git push

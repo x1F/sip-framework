@@ -68,6 +68,7 @@
         <sonatype-central-publishing-plugin.version>0.8.0</sonatype-central-publishing-plugin.version>  <!-- keep in sync with framework, for maven central deployment -->
         <spotless-maven-plugin.version>2.46.1</spotless-maven-plugin.version>       <!-- keep in sync with spotless version in framework pom -->
         <apache-commons-lang3.version>3.18.0</apache-commons-lang3.version>
+        <central.autoPublish>false</central.autoPublish>
     </properties>
 
     <dependencies>
@@ -235,18 +236,18 @@
                         </configuration>
                     </plugin>
                     <plugin>
-                        <groupId>org.sonatype.central</groupId>
-                        <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>${sonatype-central-publishing-plugin.version}</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <publishingServerId>maven-central</publishingServerId>
-                            <ignorePublishedComponents>true</ignorePublishedComponents>
-                            <autoPublish>true</autoPublish>
-                            <waitUntil>validated</waitUntil>
-                        </configuration>
-                    </plugin>
-                </plugins>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>${sonatype-central-publishing-plugin.version}</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <publishingServerId>maven-central</publishingServerId>
+                        <ignorePublishedComponents>true</ignorePublishedComponents>
+                        <autoPublish>${central.autoPublish}</autoPublish>
+                        <waitUntil>validated</waitUntil>
+                    </configuration>
+                </plugin>
+            </plugins>
             </build>
         </profile>
     </profiles>
