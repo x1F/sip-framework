@@ -11,13 +11,18 @@
   "osvVulnerabilityAlerts": true,
   "packageRules": [
     {
-      "matchUpdateTypes": ["major", "minor"],
-      "enabled": false
+      "matchUpdateTypes": ["minor"],
+      "groupName": "minor dependencies"
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "groupName": "major dependencies"
     },
     {
       "matchUpdateTypes": ["patch"],
-      "groupName": "all patch dependencies"
+      "groupName": "patch/hotfix dependencies"
     }
   ],
-  "ignoreDeps": ["one.x1f.sip.cloud:sip-integration-starter"]
+  "ignoreDeps": ["one.x1f.sip.cloud:sip-integration-starter"],
+  "draftPR": true
 }
