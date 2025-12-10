@@ -294,7 +294,6 @@
         <license>
           <name>ISC</name>
           <url>https://github.com/mwiede/jsch/blob/master/LICENSE.jBCrypt.txt</url>
-          <file>isc - license.jbcrypt.html</file>
         </license>
       </licenses>
     </dependency>
