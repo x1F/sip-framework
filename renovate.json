@@ -28,6 +28,10 @@
     {
       "matchUpdateTypes": ["patch"],
       "groupName": "patch/hotfix dependencies"
+    },
+    {
+      "matchManagers": ["github-actions", "gitlabci", "circleci"],
+      "groupName": "CI/CD configuration"
     }
   ],
   "ignoreDeps": ["one.x1f.sip.cloud:sip-integration-starter"],
