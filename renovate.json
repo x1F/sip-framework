@@ -11,12 +11,12 @@
   "osvVulnerabilityAlerts": true,
   "packageRules": [
     {
-      "matchUpdateTypes": ["major"],
+      "matchUpdateTypes": ["major", "minor"],
       "enabled": false
     },
     {
-      "matchUpdateTypes": ["minor", "patch"],
-      "groupName": "all non-major dependencies"
+      "matchUpdateTypes": ["patch"],
+      "groupName": "all patch dependencies"
     }
   ]
 }
