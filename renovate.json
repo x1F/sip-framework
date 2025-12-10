@@ -18,5 +18,6 @@
       "matchUpdateTypes": ["patch"],
       "groupName": "all patch dependencies"
     }
-  ]
+  ],
+  "ignoreDeps": ["one.x1f.sip.cloud:sip-integration-starter"]
 }
