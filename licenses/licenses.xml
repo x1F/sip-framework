@@ -4142,6 +4142,7 @@
           <name>MIT</name>
           <url>https://github.com/webjars/webjars-locator-lite/blob/main/LICENSE.md</url>
           <distribution>repo</distribution>
+          <file>mit - license.html</file>
         </license>
       </licenses>
     </dependency>
