@@ -9,9 +9,11 @@ import com.github.javaparser.ast.nodeTypes.NodeWithName;
 import com.github.javaparser.resolution.declarations.ResolvedReferenceTypeDeclaration;
 import com.github.javaparser.resolution.types.ResolvedReferenceType;
 import java.util.*;
+import one.x1f.sip.foundation.mvnplugin.model.ClassAnalysisOutcome;
 import one.x1f.sip.foundation.mvnplugin.model.ClassAnalysisResult;
 
 public class DeclarativeClassAnalyser {
+  private String projectGroupId;
 
   private final Map<String, String> expectedParentInterfaces =
       Map.of(
@@ -45,7 +47,7 @@ public class DeclarativeClassAnalyser {
     List<ResolvedReferenceType> ancestors = new ArrayList<>();
     resolved.getAncestors().forEach(ancestor -> addResolvableAncestor(ancestor, ancestors));
 
-    return analyseDeclarativeStructure(resolved, annotations, ancestors);
+    return analyseDeclarativeStructure(clazz, resolved, annotations, ancestors);
   }
 
   private void addResolvableAncestor(
@@ -53,7 +55,7 @@ public class DeclarativeClassAnalyser {
     try {
       String name = current.getQualifiedName();
 
-      if (!name.startsWith(X1F_SIP_GROUP)) return;
+      if (!name.startsWith(X1F_SIP_GROUP) && !name.startsWith(projectGroupId)) return;
 
       ancestors.add(current);
       current
@@ -69,19 +71,21 @@ public class DeclarativeClassAnalyser {
   }
 
   private ClassAnalysisResult analyseDeclarativeStructure(
+      ClassOrInterfaceDeclaration clazz,
       ResolvedReferenceTypeDeclaration resolved,
       NodeList<AnnotationExpr> annotations,
       List<ResolvedReferenceType> ancestors) {
     List<String> annotationNames = annotations.stream().map(NodeWithName::getNameAsString).toList();
     ClassAnalysisResult result = analyseAnnotations(resolved, ancestors, annotationNames);
     if (result != null) return result;
-    result = analyseAncestors(resolved, ancestors, annotationNames);
+    result = analyseAncestors(clazz, resolved, ancestors, annotationNames);
     if (result != null) return result;
 
-    return new ClassAnalysisResult(false, resolved.getQualifiedName());
+    return new ClassAnalysisResult(ClassAnalysisOutcome.SUCCESS, resolved.getQualifiedName());
   }
 
   private ClassAnalysisResult analyseAncestors(
+      ClassOrInterfaceDeclaration clazz,
       ResolvedReferenceTypeDeclaration resolved,
       List<ResolvedReferenceType> ancestors,
       List<String> annotationNames) {
@@ -92,13 +96,13 @@ public class DeclarativeClassAnalyser {
             .filter(
                 ancestor -> !doesImplementedClassHaveMatchingAnnotation(annotationNames, ancestor))
             .toList();
-    if (!invalidAncestorMatches.isEmpty()) {
+    if (!invalidAncestorMatches.isEmpty() && !clazz.isAbstract()) {
       String ancestorName = invalidAncestorMatches.get(0);
       String second =
           String.format(
-              "Class %s must be annotated with @%s to match the required base class.",
+              "Class %s might need to be annotated with @%s to match the required base class or made abstract.",
               resolved.getQualifiedName(), expectedAnnotationClasses.get(ancestorName));
-      return new ClassAnalysisResult(true, second);
+      return new ClassAnalysisResult(ClassAnalysisOutcome.WARNING, second);
     }
     return null;
   }
@@ -116,7 +120,7 @@ public class DeclarativeClassAnalyser {
             String.format(
                 "Class %s annotated with @%s does not extend the required base type.",
                 resolved.getQualifiedName(), annotationName);
-        return new ClassAnalysisResult(true, message);
+        return new ClassAnalysisResult(ClassAnalysisOutcome.ERROR, message);
       }
     }
     return null;
@@ -133,5 +137,9 @@ public class DeclarativeClassAnalyser {
     return annotations.stream()
         .anyMatch(
             annotationName -> annotationName.equals(expectedAnnotationClasses.get(interfaceName)));
+  }
+
+  public void setProjectGroupId(String projectGroupId) {
+    this.projectGroupId = projectGroupId;
   }
 }
