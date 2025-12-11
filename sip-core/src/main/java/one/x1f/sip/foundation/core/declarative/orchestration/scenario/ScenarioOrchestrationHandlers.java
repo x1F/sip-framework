@@ -107,11 +107,11 @@ public class ScenarioOrchestrationHandlers {
               .build();
       exchange.setProperty(ScenarioOrchestrationContext.PROPERTY_NAME, orchestrationContext);
       if (exchange.getProperty(SCENARIO_ORCHESTRATION_CONTEXT_HISTORY_PROPERTY) == null) {
-        Map<String, ScenarioOrchestrationContext> contextHistory = new HashMap<>();
+        Map<String, ScenarioOrchestrationContext<?>> contextHistory = new HashMap<>();
         contextHistory.put(integrationScenario.getId(), orchestrationContext);
         exchange.setProperty(SCENARIO_ORCHESTRATION_CONTEXT_HISTORY_PROPERTY, contextHistory);
       } else {
-        Map<String, ScenarioOrchestrationContext> contextHistory =
+        Map<String, ScenarioOrchestrationContext<?>> contextHistory =
             exchange.getProperty(SCENARIO_ORCHESTRATION_CONTEXT_HISTORY_PROPERTY, Map.class);
         contextHistory.put(integrationScenario.getId(), orchestrationContext);
       }
@@ -129,7 +129,7 @@ public class ScenarioOrchestrationHandlers {
           exchange.getProperty(
               ScenarioOrchestrationContext.PROPERTY_NAME, ScenarioOrchestrationContext.class);
       if (StringUtils.isNotEmpty(providerContext.getPreviousScenarioContext())) {
-        Map<String, ScenarioOrchestrationContext> contextHistory =
+        Map<String, ScenarioOrchestrationContext<?>> contextHistory =
             exchange.getProperty(SCENARIO_ORCHESTRATION_CONTEXT_HISTORY_PROPERTY, Map.class);
         exchange.setProperty(
             ScenarioOrchestrationContext.PROPERTY_NAME,
