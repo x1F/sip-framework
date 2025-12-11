@@ -11,8 +11,10 @@ import one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvok
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
+import org.apache.camel.component.cxf.jaxws.CxfComponent;
 import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Component;
 
 /** Invoker class for triggering Camel CXF(SOAP) route */
 @Component
+@ConditionalOnClass(CxfComponent.class)
 @RequiredArgsConstructor
 @Slf4j
 public class CxfRouteInvoker implements RouteInvoker {

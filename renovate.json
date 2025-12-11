@@ -1,0 +1,39 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security"],
+    "transitiveRemediation": true
+  },
+  "osvVulnerabilityAlerts": true,
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ],
+      "groupName": "major dependencies"
+    },
+    {
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "minor dependencies"
+    },
+    {
+      "matchUpdateTypes": ["patch"],
+      "groupName": "patch/hotfix dependencies"
+    },
+    {
+      "matchManagers": ["github-actions", "gitlabci", "circleci"],
+      "groupName": "CI/CD configuration"
+    }
+  ],
+  "ignoreDeps": ["one.x1f.sip.cloud:sip-integration-starter"],
+  "draftPR": true
+}
