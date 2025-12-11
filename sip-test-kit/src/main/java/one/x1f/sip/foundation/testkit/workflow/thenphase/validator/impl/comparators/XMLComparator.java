@@ -4,6 +4,7 @@ import static java.lang.String.format;
 
 import lombok.extern.slf4j.Slf4j;
 import one.x1f.sip.foundation.testkit.workflow.thenphase.validator.impl.comparators.util.SilentDocumentFactory;
+import org.springframework.stereotype.Component;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.DefaultNodeMatcher;
 import org.xmlunit.diff.Diff;
@@ -17,6 +18,7 @@ import org.xmlunit.diff.ElementSelectors;
  * the differences if they are not.
  */
 @Slf4j
+@Component
 public class XMLComparator implements StringComparator {
 
   /**

@@ -10,6 +10,7 @@ import com.google.common.collect.Maps;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 /**
  * A comparator for comparing JSON strings, based on Jackson object mapper.
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
  * description of the differences if they are not.
  */
 @Slf4j
+@Component
 public class JsonComparator implements StringComparator {
   private final ObjectMapper mapper = new ObjectMapper();
 

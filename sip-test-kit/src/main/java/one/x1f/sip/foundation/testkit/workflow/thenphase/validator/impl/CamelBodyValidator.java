@@ -9,6 +9,7 @@ import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 
 import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import one.x1f.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
 import one.x1f.sip.foundation.testkit.workflow.thenphase.validator.ExchangeValidator;
@@ -19,11 +20,11 @@ import org.springframework.stereotype.Component;
 /** Validator for body of a request in Camel */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class CamelBodyValidator implements ExchangeValidator {
   public static final String BODY_VALIDATION_UNSUCCESSFUL = "Body validation unsuccessful";
   public static final String BODY_VALIDATION_SUCCESSFUL = "Body validation successful";
-  private final List<StringComparator> comparators =
-      List.of(new XMLComparator(), new JsonComparator(), new RegexComparator());
+  private final List<StringComparator> comparators;
 
   /**
    * Invokes compare body content
