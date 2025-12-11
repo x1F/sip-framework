@@ -9,19 +9,19 @@
     <version>4.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SIP Framework</name>
-    <url>https://github.com/IKOR-GmbH/sip-framework</url>
+    <url>https://github.com/x1F/sip-framework</url>
     <description>A framework for easy creation of spring-boot/camel based integration adapters</description>
 
     <scm>
-        <connection>scm:git:git://github.com/IKOR-GmbH/sip-framework.git</connection>
-        <developerConnection>scm:git:ssh:IKOR-GmbH/sip-framework.git</developerConnection>
-        <url>https://github.com/IKOR-GmbH/sip-framework/tree/main</url>
+        <connection>scm:git:git://github.com/x1F/sip-framework.git</connection>
+        <developerConnection>scm:git:ssh:x1F/sip-framework.git</developerConnection>
+        <url>https://github.com/x1F/sip-framework/tree/main</url>
     </scm>
 
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
-            <url>https://raw.githubusercontent.com/IKOR-GmbH/sip-framework/develop/LICENSE</url>
+            <url>https://raw.githubusercontent.com/x1F/sip-framework/develop/LICENSE</url>
         </license>
     </licenses>
 
@@ -41,7 +41,7 @@
 
     <issueManagement>
         <system>GitHub Issues</system>
-        <url>https://github.com/IKOR-GmbH/sip-framework/issues</url>
+        <url>https://github.com/x1F/sip-framework/issues</url>
     </issueManagement>
 
     <properties>

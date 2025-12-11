@@ -5,12 +5,12 @@ RELEASE_VERSION=$1
 function writeChangelogLine() {
     echo "handling file $1"
     MSG=$(jq -r '.message' $1)
-    PR=$(jq -r '"[#\(.pullrequestId)](https://github.com/IKOR-GmbH/sip-framework/pull/\(.pullrequestId))"' $1)
+    PR=$(jq -r '"[#\(.pullrequestId)](https://github.com/x1F/sip-framework/pull/\(.pullrequestId))"' $1)
     ISSUE=$(jq -r '.issue' $1)
     if test $(echo $ISSUE | grep null); then
       ISSUE=""
     else
-      ISSUE="/[#$ISSUE](https://github.com/IKOR-GmbH/sip-framework/issues/$ISSUE)"
+      ISSUE="/[#$ISSUE](https://github.com/x1F/sip-framework/issues/$ISSUE)"
     fi
     AUTHOR=$(jq -r '"[\(.author)](https://github.com/\(.author))"' $1)
     echo "- $MSG $PR$ISSUE by $AUTHOR"  >> current-release-changelog.md
