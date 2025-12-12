@@ -19,7 +19,7 @@ on:
         required: true
         default: false
         type: boolean
-      run-formatting:
+      run-formatting-check:
         description: Run formatting check
         required: true
         default: true
@@ -68,7 +68,7 @@ jobs:
       release_version: ${{ steps.compute.outputs.release_version }}
       dry_run: ${{ steps.compute.outputs.dry_run }}
       auto_publish: ${{ steps.compute.outputs.auto_publish }}
-      run_formatting: ${{ steps.compute.outputs.run_formatting }}
+      run_formatting_check: ${{ steps.compute.outputs.run_formatting_check }}
       run_javadoc_check: ${{ steps.compute.outputs.run_javadoc_check }}
       run_license_check: ${{ steps.compute.outputs.run_license_check }}
       run_spring_boot_check: ${{ steps.compute.outputs.run_spring_boot_check }}
@@ -126,7 +126,7 @@ jobs:
           echo "release_version=${RELEASE_VERSION}" >> "${GITHUB_OUTPUT}"
           echo "dry_run=${{ inputs.dry-run }}" >> "${GITHUB_OUTPUT}"
           echo "auto_publish=${{ inputs.auto-publish }}" >> "${GITHUB_OUTPUT}"
-          echo "run_formatting=${{ inputs.run-formatting }}" >> "${GITHUB_OUTPUT}"
+          echo "run_formatting_check=${{ inputs.run-formatting_check }}" >> "${GITHUB_OUTPUT}"
           echo "run_javadoc_check=${{ inputs.run-javadoc-check }}" >> "${GITHUB_OUTPUT}"
           echo "run_license_check=${{ inputs.run-license-check }}" >> "${GITHUB_OUTPUT}"
           echo "run_spring_boot_check=${{ inputs.run-spring-boot-check }}" >> "${GITHUB_OUTPUT}"
@@ -231,7 +231,7 @@ jobs:
           ./.github/scripts/check-versions.sh "${{ needs.prepare.outputs.release_version }}"
 
       - name: Run formatter check
-        if: ${{ needs.prepare.outputs.run_formatting == 'true' }}
+        if: ${{ needs.prepare.outputs.run_formatting_check == 'true' }}
         run: mvn ${MAVEN_ARGS} com.diffplug.spotless:spotless-maven-plugin:check
 
       - name: Run aggregated Javadoc check
