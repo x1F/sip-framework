@@ -52,13 +52,13 @@ jobs:
         run: |
           if [ -n "${BASE_REF}" ]; then
             TARGET="origin/${BASE_REF}"
-          else  
+          else
             TARGET=$(git merge-base HEAD origin/develop 2>/dev/null || true)
             if [ -z "${TARGET}" ]; then
               TARGET="origin/develop"
             fi
           fi
-          if test ! $(git diff "${TARGET}" --diff-filter=A --name-only changelogs/ | wc -l) = 0; then
+          if test $(git diff "${TARGET}" --diff-filter=A --name-only changelogs/ | wc -l) = 0; then
             echo "Changelog fragments must be added for this change."
             exit 1
           fi

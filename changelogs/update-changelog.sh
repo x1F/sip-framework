@@ -90,7 +90,7 @@ add_line_to_file() {
 merge_fragments_into_changelog() {
   # Merge all fragment files into the target changelog file, creating sections as needed.
   local target_file=$1
-  for dir in major feature bugfix documentation; do
+  for dir in major feature bugfix documentation other; do
     if test -n "$(find "${dir}" -name '*.json' -print -quit 2>/dev/null)"; then
       local section
       section=$(section_title "${dir}")

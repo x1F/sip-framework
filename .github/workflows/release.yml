@@ -165,43 +165,26 @@ jobs:
           server-username: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
           server-password: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
 
-      - name: Verify changelog is up to date and no fragments remain
+      - name: Validate release branch metadata
         run: |
-          if find changelogs/{major,feature,bugfix,documentation} -name '*.json' -print -quit 2>/dev/null | grep -q .; then
-            echo "Changelog fragments are still present. Please run update-changelog on the release branch before releasing."
-            exit 1
-          fi
           if [ ! -f .release-base ]; then
-            echo "Missing .release-base (develop base commit). Please regenerate prepare step."
+            echo "ERROR: Missing .release-base (develop base commit). Please regenerate prepare step."
             exit 1
           fi
           if [ ! -f .release-develop-head ]; then
-            echo "Missing .release-develop-head (develop head at branch cut). Please regenerate prepare step."
+            echo "ERROR: Missing .release-develop-head (develop head at branch cut). Please regenerate prepare step."
             exit 1
           fi
           # Ensure recorded base is still an ancestor of this branch
           if ! git merge-base --is-ancestor "$(cat .release-base)" HEAD; then
-            echo "Recorded .release-base is not an ancestor of current HEAD. Re-run prepare after rebasing the release branch."
+            echo "ERROR: Recorded .release-base is not an ancestor of current HEAD. Re-run prepare after rebasing the release branch."
             exit 1
           fi
-          if ! git diff --quiet -- changelogs/current-release-changelog.md CHANGELOG.md; then
-            echo "Changelog is not up to date with current-release-changelog.md and CHANGELOG.md. Please regenerate on the release branch."
-            git diff --stat -- changelogs/current-release-changelog.md CHANGELOG.md
-            exit 1
-          fi
+          echo "✓ Release branch metadata validated"
 
       - name: Fail stale mainline release if superseded
         if: ${{ needs.prepare.outputs.make_latest == 'false' }}
         run: |
-          if [ ! -f .release-base ]; then
-            echo "ERROR: Missing .release-base marker file"
-            exit 1
-          fi
-          if [ ! -f .release-develop-head ]; then
-            echo "ERROR: Missing .release-develop-head marker file"
-            exit 1
-          fi
-
           BASE_COMMIT=$(cat .release-base)
           DEV_HEAD=$(cat .release-develop-head)
 
@@ -215,6 +198,18 @@ jobs:
             exit 1
           else
             echo "This is a backport release (base != develop head), proceeding with release."
+          fi
+
+      - name: Verify changelog is up to date and no fragments remain
+        run: |
+          if find changelogs/{major,feature,bugfix,documentation} -name '*.json' -print -quit 2>/dev/null | grep -q .; then
+            echo "Changelog fragments are still present. Please run update-changelog on the release branch before releasing."
+            exit 1
+          fi
+          if ! git diff --quiet -- changelogs/current-release-changelog.md CHANGELOG.md; then
+            echo "Changelog is not up to date with current-release-changelog.md and CHANGELOG.md. Please regenerate on the release branch."
+            git diff --stat -- changelogs/current-release-changelog.md CHANGELOG.md
+            exit 1
           fi
 
       - name: Ensure changelog differs from develop for latest
