@@ -1,73 +1,45 @@
 # SIP Framework Release Process
 
-This project supports two release flows:
+Supports two flows:
+- **Mainline** (from `develop`)
+- **Backport/hotfix** (from an older train/tag)
 
-- **Mainline releases** (cut from `develop`)
-- **Backport/hotfix releases** (cut from an older train/tag)
+## Mainline (from `develop`)
 
-Below is the end-to-end process and the key guardrails built into the workflows.
+1) Create `release/<version>` branch; push it. `prepare-release` runs:
+   - Records provenance (`.release-base`, `.release-develop-head`).
+   - Sets all module versions to `<version>`.
+   - Initializes `changelogs/current-release-changelog.md` for that version (if needed).
+   - Builds or updates changelog from fragments, removes them, commits, pushes.
 
-## Mainline release (from `develop`)
+2) Avoid changing the release branch; if you must (preferably don’t for mainline), re-run prepare to consume any new fragments.
 
-1. **Create the release branch**  
-   - Branch name: `release/<version>` (e.g., `release/4.2.0`).  
-   - Push the branch; the `prepare-release` workflow runs and:
-     - Records the develop base commit (`.release-base`, `.release-develop-head`).
-     - Stamps all modules to `<version>`.
-     - Initializes `changelogs/current-release-changelog.md` for the version.
-     - Applies Spotless (optional toggle).
-     - Generates the release changelog from fragments and removes them.
-     - Commits and pushes the changes.
+3) Manually trigger `Release` on the branch (inputs: dry-run, auto-publish, check toggles, optional next snapshot override).
+   - Guards: no fragments, changelog up-to-date, versions match; stale-mainline fails if a higher semver exists and branch was cut from develop head; provenance files required; base must be ancestor (rebases require re-running prepare).
+   - Execution order (non-dry-run):
+     - Build/test/validate (formatter, javadoc, licenses, Spring Boot alignment).
+     - Create tag `releases/<version>`.
+     - GitHub release (Latest only if semver-highest).
+     - Publish Javadoc to gh-pages.
+     - Sync changelog to `develop` by prepending the release block (newer fragments on develop are kept); update `mkdocs.yml`.
+     - Bump `develop` to next patch `-SNAPSHOT` (or override if provided).
+     - Deploy to Maven Central (last step, after everything else succeeds).
 
-2. **Verify / add changes if needed**  
-   - Avoid changing a mainline release branch after prepare; changes there will **not** flow back to `develop`. If you must, re-run the prepare workflow to consume any new fragments.
+4) Post-release: don’t touch the release branch after tagging; re-releasing under the same tag is not supported.
 
-3. **Trigger the release workflow manually**  
-   - Run `Release` workflow_dispatch targeting your `release/<version>` branch.
-   - Inputs: `dry-run`, `auto-publish`, and check toggles remain available.
-   - The workflow checks:
-     - No changelog fragments remain.
-     - `current-release-changelog.md` and `CHANGELOG.md` are up to date.
-     - Version matches POMs/modules.
-     - Guard: if a higher semver tag already exists and this branch was cut from develop head, it fails (stale mainline).
-   - On non-dry-run it:
-     - Builds/tests, deploys (with optional auto-publish to Sonatype).
-     - Tags `releases/<version>`.
-     - Creates GitHub release (only marked “Latest” if semver-highest).
-     - Syncs the release changelog to `develop` by prepending the release block, leaving newer fragments on `develop` untouched.
-     - Bumps `develop` to the next patch `-SNAPSHOT`.
+## Backport / hotfix (older train)
 
-4. **Post-release**  
-   - Do not modify the release branch after it’s tagged; re-releasing under the same tag is not supported.
+1) Create `release/<older-version>` from the target commit/tag; push. `prepare-release` runs the same steps (versions, changelog, fragments removal, commit).
+2) Trigger `Release` on that branch. It will not sync changelog or bump `develop` (since it’s not latest). Stale-mainline guard won’t block backports.
+3) Post-release: keep changes confined to the backport branch; they won’t propagate to `develop`. Don’t modify after tagging.
 
-## Backport / hotfix release (older train)
+## Failure recovery (mainline)
+- If the release fails before tagging: fix and rerun; nothing external published.
+- If tagging/GitHub release/Javadoc/changelog sync/snapshot bump succeed but Maven Central deploy fails: rerun release to retry deploy, or deploy manually; changelog/snapshot/tag already exist.
+- If deploy succeeds but earlier steps failed (shouldn’t happen with current ordering): manual cleanup required (tag/GitHub release/changelog/snapshot).
 
-1. **Create the branch**  
-   - Branch name: `release/<older-version>` based on the target commit/tag.
-   - `prepare-release` runs with the same steps as mainline (versions, changelog, fragments removal, commit).
-
-2. **Release**  
-   - Manually trigger `Release` workflow on that branch.  
-   - Guards:
-     - It will **not** sync changelog or bump `develop` (because `make_latest` is false).
-     - Higher-semver guard does not block backports (it only blocks stale mainline).
-
-3. **Post-release**  
-   - Keep changes confined to the backport branch; they won’t propagate to `develop`.
-   - Don’t modify the branch after tagging; re-releasing under the same tag isn’t supported.
-
-## Notes and cautions
-
-- Changelog fragments (`changelogs/major|feature|bugfix|documentation`) are consumed during prepare. Keep fragments on the release branch until it’s ready; re-running prepare is safe (additive).
-- Release workflow is read-only on the release branch; it fails if preparation wasn’t done.
-- Concurrency: avoid multiple mainline release branches at once; stale mainline is blocked.
-- If you rebase a release branch onto a newer develop, re-run prepare to refresh `.release-base`/`.release-develop-head`.
-
-## Quick commands (local preview)
-
-- Regenerate changelog on a release branch (non-destructive if fragments remain):  
-  ```bash
-  cd changelogs
-  ./update-changelog.sh <version>
-  ```
-- Dry-run release workflow: trigger `Release` with `dry-run=true` (no deploy/tag).
+## Notes
+- Changelog fragments (`changelogs/major|feature|bugfix|documentation|other`) are consumed during prepare; re-running is additive.
+- Release workflow is read-only on the release branch; it fails if prep is incomplete.
+- Concurrency: one release workflow at a time across branches.
+- Rebase a release branch? Re-run prepare to refresh `.release-base`/`.release-develop-head`.
