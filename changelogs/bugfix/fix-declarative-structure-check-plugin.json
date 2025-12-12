@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "318",
-  "message": "Prevent compilation failure and instead print a warning in declarative-structure-check when there is class without matching annotation."
-}
