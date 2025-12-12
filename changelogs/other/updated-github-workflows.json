@@ -1,0 +1,5 @@
+{
+  "author": "MartinBuchheim",
+  "pullrequestId": "332",
+  "message": "Re-designed GitHub CI/CD and release workflow. Backport releases are now supported."
+}
