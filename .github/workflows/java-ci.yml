@@ -4,16 +4,7 @@ on:
   push:
     branches: [ develop ]
   pull_request:
-    branches: [ develop ]
-  workflow_dispatch:
-    inputs:
-      do-release:
-        description: indicates if a release should be done
-        required: true
-        default: 'false'
-      manual-version:
-        description: manually specify release version (optional)
-        required: false
+    branches: [ develop, "release/*" ]
 
 env:
   MAVEN_ARGS: "--batch-mode --no-transfer-progress"
@@ -24,15 +15,18 @@ jobs:
     if: ${{ github.event.pull_request.head.repo.full_name == null || github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      # Disabling shallow clone is recommended for improving relevancy of reporting
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - uses: ./.github/workflows/actions/java-maven-action
         with:
           gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.MVN_GPG_KEY_PASSWORD }}
+          server-id: maven-central
+          server-username: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
       - name: Cache SonarCloud packages
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
@@ -43,59 +37,77 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn ${MAVEN_ARGS} verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=IKOR-GmbH_sip-framework -Dsonar.organization=ikor-gmbh -Psip-developer,package-deployment
     
-  build-from-fork:
-    if: ${{ github.event.pull_request.head.repo.full_name != null && github.event.pull_request.head.repo.full_name != github.repository }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/workflows/actions/java-maven-action
-      - name: Build and analyze
-        run: mvn ${MAVEN_ARGS} verify -Psip-developer
-
   check-changelogs:
     if: ${{ github.ref != 'refs/heads/develop' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Install jq
         run: sudo apt-get install jq
       - name: Check pull request contains changelog entry
-        run: test ! $(git diff origin/develop --diff-filter=A --name-only changelogs/ | wc -l) = 0
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if [ -n "${BASE_REF}" ]; then
+            TARGET="origin/${BASE_REF}"
+          else
+            TARGET=$(git merge-base HEAD origin/develop 2>/dev/null || true)
+            if [ -z "${TARGET}" ]; then
+              TARGET="origin/develop"
+            fi
+          fi
+          if test $(git diff "${TARGET}" --diff-filter=A --name-only changelogs/ | wc -l) = 0; then
+            echo "Changelog fragments must be added for this change."
+            exit 1
+          fi
 
   check-snapshot-version:
+    if: ${{ github.ref == 'refs/heads/develop' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/workflows/actions/java-maven-action
         with:
           gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.MVN_GPG_KEY_PASSWORD }}
+          server-id: maven-central
+          server-username: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
       - name: Check is snapshot version
         run: find . -name "pom.xml" -not -path "./sip-archetype/*" | xargs -I {} sh -c "mvn -f {} exec:exec -Dexec.executable=echo -Dexec.args='\${project.artifactId}-\${project.version}' -q --non-recursive | grep SNAPSHOT"
 
   check-formatting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/workflows/actions/java-maven-action
         with:
           gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.MVN_GPG_KEY_PASSWORD }}
+          server-id: maven-central
+          server-username: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
       - name: "check formatting"
         run: mvn ${MAVEN_ARGS} com.diffplug.spotless:spotless-maven-plugin:check
 
   check-javadocs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/workflows/actions/java-maven-action
         with:
           gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.MVN_GPG_KEY_PASSWORD }}
+          server-id: maven-central
+          server-username: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
       - name: "check javadocs"
         run: mvn ${MAVEN_ARGS} javadoc:aggregate -Pjavadoc-lint-html
       - name: 'Upload Javadoc Artifact'
         if: ${{ github.ref == 'refs/heads/develop' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: javadoc
           path: target/site/apidocs/*
@@ -108,7 +120,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/develop'}}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           ref: gh-pages
@@ -118,7 +130,7 @@ jobs:
           git rm -r javadoc/latest || true
           mkdir -p javadoc/latest
       - name: Download newer javadoc
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: javadoc
           path: javadoc/latest
@@ -133,22 +145,30 @@ jobs:
   check-spring-boot-version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/workflows/actions/java-maven-action
         with:
           gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.MVN_GPG_KEY_PASSWORD }}
+          server-id: maven-central
+          server-username: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
       - name: check root has same spring-boot version as sip-starter-parent
         run: test "$(mvn help:evaluate -Dexpression=spring.boot.version -q -DforceStdout)" = "$(mvn help:evaluate -pl sip-starter-parent -Dexpression=project.parent.version -q -DforceStdout)"
 
   check-licenses:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/workflows/actions/java-maven-action
         with:
           gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.MVN_GPG_KEY_PASSWORD }}
+          server-id: maven-central
+          server-username: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
       - name: check all dependencies follow our license whitelist
-        run: ./.github/workflows/check-licenses.sh
+        run: ./.github/scripts/check-licenses.sh
 
   publish-deps-license-updates:
     needs:
@@ -157,7 +177,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/develop'}}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.GH_ADMIN_TOKEN }}
@@ -180,105 +200,3 @@ jobs:
               git push
             fi
           fi
-
-  do-maven-release:
-    needs:
-      - build
-      - check-javadocs
-      - check-formatting
-      - check-snapshot-version
-      - check-spring-boot-version
-      - check-licenses
-    if: ${{ github.ref == 'refs/heads/develop' && github.event.inputs.do-release == 'true' }}
-    runs-on: ubuntu-latest
-    outputs:
-      release-version: ${{ steps.release-step.outputs.version }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GH_ADMIN_TOKEN }}
-      - uses: ./.github/workflows/actions/java-maven-action
-        with:
-          gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
-      - name: Install jq
-        run: sudo apt-get install jq
-      - name: Create framework release
-        id: release-step
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          STARTER_POM: sip-starter-parent
-          SONATYPE_CENTRAL_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
-          SONATYPE_CENTRAL_USERNAME: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
-        run: |
-          RELEASE_VERSION="${{ github.event.inputs.manual-version }}"
-          if [ -z "$RELEASE_VERSION" ]; then
-            RELEASE_VERSION=$(./.github/workflows/computeReleaseVersion.sh)
-          fi
-          mvn ${MAVEN_ARGS} versions:set -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false
-          sed -i "s/<sip-framework\.version>.*-SNAPSHOT<\/sip-framework\.version>/<sip-framework\.version>${RELEASE_VERSION}<\/sip-framework\.version>/g" pom.xml sip-starter-parent/pom.xml
-          mvn ${MAVEN_ARGS} versions:set -pl ${STARTER_POM} -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false -DprocessDependencies=false
-          cd changelogs && ./update-changelog.sh ${RELEASE_VERSION}
-          cd ..
-          sed -i "/.*JAVADOC_RELEASES.*/a \ \ \ \ - JavaDoc ${RELEASE_VERSION}: './javadoc/${RELEASE_VERSION}/index.html'" mkdocs.yml
-          git add .
-          git mv -fk docs-snapshot/*.yaml docs
-          git mv -fk docs-snapshot/*.md docs
-          git mv -fk docs-snapshot/img/* docs/img
-          git commit -m "Updated sip-framework version to ${RELEASE_VERSION}"
-          git tag -a releases/${RELEASE_VERSION} -m "Released new sip-framework version ${RELEASE_VERSION}"
-          echo "::set-output name=version::${RELEASE_VERSION}"
-          mvn ${MAVEN_ARGS} clean deploy -DskipTests -Ppackage-deployment
-          mvn ${MAVEN_ARGS} versions:set -DnextSnapshot=true -DgenerateBackupPoms=false
-          SNAPSHOT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          mvn ${MAVEN_ARGS} versions:set-property -Dproperty=sip-framework.version -DnewVersion=${SNAPSHOT_VERSION}
-          mvn ${MAVEN_ARGS} versions:set -pl ${STARTER_POM} -DnewVersion=${SNAPSHOT_VERSION} -DgenerateBackupPoms=false -DprocessDependencies=false
-          mvn ${MAVEN_ARGS} versions:set-property -pl ${STARTER_POM} -Dproperty=sip-dependency.version -DnewVersion=${SNAPSHOT_VERSION}
-          git add .
-          git commit -m "Updated sip-framework version to next snapshot ${SNAPSHOT_VERSION}"
-          git pull --rebase
-          git push
-          git push origin releases/${RELEASE_VERSION}
-
-  do-github-release:
-    needs: do-maven-release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: refs/tags/releases/${{ needs.do-maven-release.outputs.release-version }}
-      - uses: ncipollo/release-action@v1
-        with:
-          bodyFile: "changelogs/current-release-changelog.md"
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: releases/${{ needs.do-maven-release.outputs.release-version }}
-          name: SIP-Framework ${{ needs.do-maven-release.outputs.release-version }}
-          makeLatest: "true"
-
-  do-javadoc-release:
-    needs: do-maven-release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: refs/tags/releases/${{ needs.do-maven-release.outputs.release-version }}
-      - uses: ./.github/workflows/actions/java-maven-action
-        with:
-          gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
-      - name: Aggregate javadoc
-        run: mvn ${MAVEN_ARGS} javadoc:aggregate
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: gh-pages
-          token: ${{ secrets.GH_ADMIN_TOKEN }}
-          path: "apidocs"
-      - name: Move docs to gh_pages checkout & commit & push docs
-        run: |
-          cd apidocs
-          git rm -r javadoc/${{ needs.do-maven-release.outputs.release-version }} || true
-          mkdir -p javadoc/${{ needs.do-maven-release.outputs.release-version }}
-          mv ../target/site/apidocs/* javadoc/${{ needs.do-maven-release.outputs.release-version }}
-          git add javadoc/${{ needs.do-maven-release.outputs.release-version }}
-          git commit -m "update javadocs for release ${{ needs.do-maven-release.outputs.release-version }}"
-          git push

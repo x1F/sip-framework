@@ -284,14 +284,17 @@
         <license>
           <name>Revised BSD</name>
           <url>https://github.com/mwiede/jsch/blob/master/LICENSE.txt</url>
+          <file>revised bsd - license.html</file>
         </license>
         <license>
           <name>Revised BSD</name>
           <url>https://github.com/mwiede/jsch/blob/master/LICENSE.JZlib.txt</url>
+          <file>revised bsd - license.jzlib.html</file>
         </license>
         <license>
           <name>ISC</name>
           <url>https://github.com/mwiede/jsch/blob/master/LICENSE.jBCrypt.txt</url>
+          <file>isc - license.jbcrypt.html</file>
         </license>
       </licenses>
     </dependency>
@@ -789,6 +792,7 @@
           <name>CDDL/GPLv2+CE</name>
           <url>https://github.com/javaee/activation/blob/master/LICENSE.txt</url>
           <distribution>repo</distribution>
+          <file>cddl_gplv2+ce - license.html</file>
           <comments>CDDL or GPL version 2 plus the Classpath Exception</comments>
         </license>
       </licenses>
@@ -926,7 +930,7 @@
       <licenses>
         <license>
           <name>The Apache License, Version 2.0</name>
-          <url>https://raw.githubusercontent.com/IKOR-GmbH/sip-framework/develop/LICENSE</url>
+          <url>https://raw.githubusercontent.com/x1F/sip-framework/develop/LICENSE</url>
           <file>the apache license, version 2.0 - license.txt</file>
         </license>
       </licenses>
@@ -938,7 +942,7 @@
       <licenses>
         <license>
           <name>The Apache License, Version 2.0</name>
-          <url>https://raw.githubusercontent.com/IKOR-GmbH/sip-framework/develop/LICENSE</url>
+          <url>https://raw.githubusercontent.com/x1F/sip-framework/develop/LICENSE</url>
           <file>the apache license, version 2.0 - license.txt</file>
         </license>
       </licenses>
@@ -950,7 +954,7 @@
       <licenses>
         <license>
           <name>The Apache License, Version 2.0</name>
-          <url>https://raw.githubusercontent.com/IKOR-GmbH/sip-framework/develop/LICENSE</url>
+          <url>https://raw.githubusercontent.com/x1F/sip-framework/develop/LICENSE</url>
           <file>the apache license, version 2.0 - license.txt</file>
         </license>
       </licenses>
@@ -3531,6 +3535,7 @@
           <name>The MIT License</name>
           <url>https://github.com/mockito/mockito/blob/main/LICENSE</url>
           <distribution>repo</distribution>
+          <file>the mit license - license.html</file>
         </license>
       </licenses>
     </dependency>
@@ -4137,6 +4142,7 @@
           <name>MIT</name>
           <url>https://github.com/webjars/webjars-locator-lite/blob/main/LICENSE.md</url>
           <distribution>repo</distribution>
+          <file>mit - license.html</file>
         </license>
       </licenses>
     </dependency>

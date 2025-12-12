@@ -1,0 +1,473 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release-ref:
+        description: Release branch to build from (defaults to the triggering ref)
+        required: false
+      release-version:
+        description: Override release version (defaults to branch name suffix)
+        required: false
+      dry-run:
+        description: Run checks only, do not publish artifacts
+        required: true
+        default: false
+        type: boolean
+      auto-publish:
+        description: Auto publish Sonatype Central staging repository
+        required: true
+        default: false
+        type: boolean
+      run-formatting-check:
+        description: Run formatting check
+        required: true
+        default: true
+        type: boolean
+      run-javadoc-check:
+        description: Run aggregated Javadoc lint check
+        required: true
+        default: true
+        type: boolean
+      run-license-check:
+        description: Run license whitelist check
+        required: true
+        default: true
+        type: boolean
+      run-spring-boot-check:
+        description: Ensure root and starter use same Spring Boot version
+        required: true
+        default: true
+        type: boolean
+      publish-javadoc:
+        description: Publish aggregated Javadoc to gh-pages
+        required: true
+        default: true
+        type: boolean
+      next-snapshot-version:
+        description: Override next snapshot version (defaults to next patch SNAPSHOT)
+        required: false
+
+env:
+  MAVEN_ARGS: "--batch-mode --no-transfer-progress"
+  MAVEN_GPG_PASSPHRASE: ${{ secrets.MVN_GPG_KEY_PASSWORD }}
+
+permissions:
+  contents: write
+  id-token: write
+concurrency:
+  group: release-${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      release_ref: ${{ steps.compute.outputs.release_ref }}
+      tag_name: ${{ steps.compute.outputs.tag_name }}
+      release_version: ${{ steps.compute.outputs.release_version }}
+      dry_run: ${{ steps.compute.outputs.dry_run }}
+      auto_publish: ${{ steps.compute.outputs.auto_publish }}
+      run_formatting_check: ${{ steps.compute.outputs.run_formatting_check }}
+      run_javadoc_check: ${{ steps.compute.outputs.run_javadoc_check }}
+      run_license_check: ${{ steps.compute.outputs.run_license_check }}
+      run_spring_boot_check: ${{ steps.compute.outputs.run_spring_boot_check }}
+      publish_javadoc: ${{ steps.compute.outputs.publish_javadoc }}
+      make_latest: ${{ steps.compute.outputs.make_latest }}
+      next_snapshot_version: ${{ steps.compute.outputs.next_snapshot_version }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Compute release inputs
+        id: compute
+        shell: bash
+        run: |
+          REF_INPUT="${{ github.event.inputs['release-ref'] || '' }}"
+          REF="${REF_INPUT:-${GITHUB_REF}}"
+
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" && -z "${REF}" ]]; then
+            echo "release-ref must be set when manually dispatching."
+            exit 1
+          fi
+
+          if [[ "${REF}" == refs/heads/release/* ]]; then
+            :
+          elif [[ "${GITHUB_REF}" == refs/heads/release/* && -z "${REF_INPUT}" ]]; then
+            REF="${GITHUB_REF}"
+          else
+            echo "Release must run from a release/* branch. Got: ${REF}"
+            exit 1
+          fi
+
+          TAG_NAME="${REF#refs/heads/}"
+          VERSION_INPUT="${{ github.event.inputs['release-version'] || '' }}"
+          if [[ -n "${VERSION_INPUT}" ]]; then
+            RELEASE_VERSION="${VERSION_INPUT}"
+          else
+            RELEASE_VERSION="${TAG_NAME#release/}"
+          fi
+
+          if ! echo "${RELEASE_VERSION}" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-.+)?$'; then
+            echo "Release version '${RELEASE_VERSION}' is not a valid semver string."
+            exit 1
+          fi
+
+          # Determine latest semver tag to control makeLatest flag
+          ALL_TAGS=$(git tag -l 'releases/*' 'v*' | sed -E 's@^releases/@@; s@^v@@' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+(-.+)?$' || true)
+          MAYBE_LATEST=$(printf "%s\n%s\n" "${ALL_TAGS}" "${RELEASE_VERSION}" | sed '/^$/d' | sort -V | tail -n1)
+          MAKE_LATEST=false
+          if [[ "${MAYBE_LATEST}" == "${RELEASE_VERSION}" ]]; then
+            MAKE_LATEST=true
+          fi
+
+          echo "release_ref=${REF}" >> "${GITHUB_OUTPUT}"
+          echo "tag_name=releases/${RELEASE_VERSION}" >> "${GITHUB_OUTPUT}"
+          echo "release_version=${RELEASE_VERSION}" >> "${GITHUB_OUTPUT}"
+          echo "dry_run=${{ inputs.dry-run }}" >> "${GITHUB_OUTPUT}"
+          echo "auto_publish=${{ inputs.auto-publish }}" >> "${GITHUB_OUTPUT}"
+          echo "run_formatting_check=${{ inputs.run-formatting_check }}" >> "${GITHUB_OUTPUT}"
+          echo "run_javadoc_check=${{ inputs.run-javadoc-check }}" >> "${GITHUB_OUTPUT}"
+          echo "run_license_check=${{ inputs.run-license-check }}" >> "${GITHUB_OUTPUT}"
+          echo "run_spring_boot_check=${{ inputs.run-spring-boot-check }}" >> "${GITHUB_OUTPUT}"
+          echo "publish_javadoc=${{ inputs.publish-javadoc }}" >> "${GITHUB_OUTPUT}"
+          echo "make_latest=${MAKE_LATEST}" >> "${GITHUB_OUTPUT}"
+          echo "next_snapshot_version=${{ inputs.next-snapshot-version }}" >> "${GITHUB_OUTPUT}"
+
+      - name: Ensure release branch is based on develop when latest
+        if: ${{ steps.compute.outputs.make_latest == 'true' }}
+        run: |
+          BASE_COMMIT=$(git merge-base HEAD origin/develop)
+          if [ -z "${BASE_COMMIT}" ]; then
+            echo "Cannot determine merge-base with origin/develop; ensure develop is fetched."
+            exit 1
+          fi
+          # prevent running a "latest" release if a higher semver tag already exists
+          HIGHER=$(git tag -l 'releases/*' 'v*' | sed -E 's@^releases/@@; s@^v@@' | sort -V | awk -v cur="${{ steps.compute.outputs.release_version }}" '$1>cur{print; exit}')
+          if [ -n "${HIGHER}" ]; then
+            echo "A higher release tag (${HIGHER}) already exists; skipping latest release actions for ${{ steps.compute.outputs.release_version }}."
+            exit 1
+          fi
+
+  validate:
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.prepare.outputs.release_ref }}
+      - uses: ./.github/workflows/actions/java-maven-action
+        with:
+          gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.MVN_GPG_KEY_PASSWORD }}
+          server-id: maven-central
+          server-username: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
+
+      - name: Validate release branch metadata
+        run: |
+          if [ ! -f .release-base ]; then
+            echo "ERROR: Missing .release-base (develop base commit). Please regenerate prepare step."
+            exit 1
+          fi
+          if [ ! -f .release-develop-head ]; then
+            echo "ERROR: Missing .release-develop-head (develop head at branch cut). Please regenerate prepare step."
+            exit 1
+          fi
+          # Ensure recorded base is still an ancestor of this branch
+          if ! git merge-base --is-ancestor "$(cat .release-base)" HEAD; then
+            echo "ERROR: Recorded .release-base is not an ancestor of current HEAD. Re-run prepare after rebasing the release branch."
+            exit 1
+          fi
+          echo "✓ Release branch metadata validated"
+
+      - name: Fail stale mainline release if superseded
+        if: ${{ needs.prepare.outputs.make_latest == 'false' }}
+        run: |
+          BASE_COMMIT=$(cat .release-base)
+          DEV_HEAD=$(cat .release-develop-head)
+
+          echo "Release base commit: ${BASE_COMMIT}"
+          echo "Develop head at branch cut: ${DEV_HEAD}"
+
+          # If the branch was cut from develop head (base == recorded develop head) but is no longer latest, fail.
+          if [ "${BASE_COMMIT}" = "${DEV_HEAD}" ]; then
+            echo "This release branch was cut from develop head but is no longer the latest version."
+            echo "A newer mainline release has been tagged; this release is now stale."
+            exit 1
+          else
+            echo "This is a backport release (base != develop head), proceeding with release."
+          fi
+
+      - name: Verify changelog is up to date and no fragments remain
+        run: |
+          if find changelogs/{major,feature,bugfix,documentation} -name '*.json' -print -quit 2>/dev/null | grep -q .; then
+            echo "Changelog fragments are still present. Please run update-changelog on the release branch before releasing."
+            exit 1
+          fi
+          if ! git diff --quiet -- changelogs/current-release-changelog.md CHANGELOG.md; then
+            echo "Changelog is not up to date with current-release-changelog.md and CHANGELOG.md. Please regenerate on the release branch."
+            git diff --stat -- changelogs/current-release-changelog.md CHANGELOG.md
+            exit 1
+          fi
+
+      - name: Ensure changelog differs from develop for latest
+        if: ${{ needs.prepare.outputs.make_latest == 'true' }}
+        run: |
+          git fetch origin develop
+          if git diff --quiet origin/develop -- CHANGELOG.md; then
+            echo "CHANGELOG.md has no differences vs origin/develop; ensure release changelog was synced."
+            exit 1
+          fi
+
+      - name: Check release version is set correctly
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          if echo "${VERSION}" | grep -q "SNAPSHOT"; then
+            echo "Release version must not be a SNAPSHOT. Found ${VERSION}"
+            exit 1
+          fi
+          ./.github/scripts/check-versions.sh "${{ needs.prepare.outputs.release_version }}"
+
+      - name: Run formatter check
+        if: ${{ needs.prepare.outputs.run_formatting_check == 'true' }}
+        run: mvn ${MAVEN_ARGS} com.diffplug.spotless:spotless-maven-plugin:check
+
+      - name: Run aggregated Javadoc check
+        if: ${{ needs.prepare.outputs.run_javadoc_check == 'true' }}
+        run: mvn ${MAVEN_ARGS} javadoc:aggregate -Pjavadoc-lint-html
+
+      - name: Check license whitelist
+        if: ${{ needs.prepare.outputs.run_license_check == 'true' }}
+        run: ./.github/scripts/check-licenses.sh
+
+      - name: Check Spring Boot alignment
+        if: ${{ needs.prepare.outputs.run_spring_boot_check == 'true' }}
+        run: test "$(mvn help:evaluate -Dexpression=spring.boot.version -q -DforceStdout)" = "$(mvn help:evaluate -pl sip-starter-parent -Dexpression=project.parent.version -q -DforceStdout)"
+
+      - name: Build & test
+        run: mvn ${MAVEN_ARGS} verify -Psip-developer
+
+      - name: Package validation (dry-run mode)
+        if: ${{ needs.prepare.outputs.dry_run == 'true' }}
+        run: mvn ${MAVEN_ARGS} clean verify -DskipTests -Ppackage-deployment -Dcentral.autoPublish=false -Dgpg.skip=true
+
+  create-tag:
+    needs:
+      - prepare
+      - validate
+    if: ${{ needs.prepare.outputs.dry_run != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.prepare.outputs.release_ref }}
+          token: ${{ secrets.GH_ADMIN_TOKEN }}
+
+      - name: Ensure tag does not already exist
+        run: |
+          if git rev-parse -q --verify "refs/tags/${{ needs.prepare.outputs.tag_name }}" >/dev/null; then
+            echo "Tag ${{ needs.prepare.outputs.tag_name }} already exists."
+            exit 1
+          fi
+
+      - name: Create and push tag
+        run: |
+          git tag -a "${{ needs.prepare.outputs.tag_name }}" -m "Release ${{ needs.prepare.outputs.release_version }}"
+          git push origin "${{ needs.prepare.outputs.tag_name }}"
+
+  github-release:
+    needs:
+      - prepare
+      - validate
+      - create-tag
+    if: ${{ needs.prepare.outputs.dry_run != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.prepare.outputs.tag_name }}
+      - name: Select release notes file
+        id: notes
+        run: |
+          BODY=""
+          if [[ -f changelogs/current-release-changelog.md ]]; then
+            BODY="changelogs/current-release-changelog.md"
+          fi
+          echo "body_file=${BODY}" >> "${GITHUB_OUTPUT}"
+      - uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ needs.prepare.outputs.tag_name }}
+          name: SIP-Framework ${{ needs.prepare.outputs.release_version }}
+          bodyFile: ${{ steps.notes.outputs.body_file }}
+          allowUpdates: true
+          makeLatest: ${{ needs.prepare.outputs.make_latest }}
+          generateReleaseNotes: ${{ steps.notes.outputs.body_file == '' }}
+
+  publish-javadoc:
+    needs:
+      - prepare
+      - validate
+      - create-tag
+      - github-release
+    if: ${{ needs.prepare.outputs.dry_run != 'true' && needs.prepare.outputs.publish_javadoc == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.prepare.outputs.tag_name }}
+      - uses: ./.github/workflows/actions/java-maven-action
+        with:
+          gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.MVN_GPG_KEY_PASSWORD }}
+          server-id: maven-central
+          server-username: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
+      - name: Aggregate javadoc
+        run: mvn ${MAVEN_ARGS} javadoc:aggregate
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: gh-pages
+          token: ${{ secrets.GH_ADMIN_TOKEN }}
+          path: "apidocs"
+      - name: Publish javadocs
+        run: |
+          cd apidocs
+          git rm -r javadoc/${{ needs.prepare.outputs.release_version }} || true
+          mkdir -p javadoc/${{ needs.prepare.outputs.release_version }}
+          mv ../target/site/apidocs/* javadoc/${{ needs.prepare.outputs.release_version }}
+          git add javadoc/${{ needs.prepare.outputs.release_version }}
+          git commit -m "update javadocs for release ${{ needs.prepare.outputs.release_version }}"
+          git push
+
+  sync-develop-changelog:
+    needs:
+      - prepare
+      - validate
+      - create-tag
+    if: ${{ needs.prepare.outputs.dry_run != 'true' && needs.prepare.outputs.make_latest == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: develop
+          token: ${{ secrets.GH_ADMIN_TOKEN }}
+
+      - name: Sync changelog from release branch
+        env:
+          RELEASE_REF: ${{ needs.prepare.outputs.release_ref }}
+          RELEASE_VERSION: ${{ needs.prepare.outputs.release_version }}
+        run: |
+          RELEASE_BRANCH="${RELEASE_REF#refs/heads/}"
+          git fetch origin "${RELEASE_BRANCH}"
+          
+          # Extract the specific release notes and prepend them to develop's CHANGELOG
+          git show FETCH_HEAD:changelogs/current-release-changelog.md > release_notes.md
+          cat release_notes.md CHANGELOG.md > CHANGELOG.tmp && mv CHANGELOG.tmp CHANGELOG.md
+          cp release_notes.md changelogs/current-release-changelog.md
+          
+          BASE_COMMIT=$(git show "FETCH_HEAD:.release-base")
+          if git rev-parse -q --verify "origin/develop" >/dev/null; then git fetch origin develop; fi
+          BASE_FILES=$(git ls-tree -r --name-only "${BASE_COMMIT}" -- changelogs/major changelogs/feature changelogs/bugfix changelogs/documentation || true)
+          if [ -n "${BASE_FILES}" ]; then
+            echo "${BASE_FILES}" | while read -r f; do
+              if [ -f "${f}" ]; then git rm -f "${f}"; fi
+            done
+          fi
+
+          # Update mkdocs.yml with link to new Javadoc version
+          sed -i "/.*JAVADOC_RELEASES.*/a \ \ \ \ - JavaDoc ${RELEASE_VERSION}: './javadoc/${RELEASE_VERSION}/index.html'" mkdocs.yml
+
+          git add CHANGELOG.md changelogs/current-release-changelog.md mkdocs.yml
+
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No changelog changes to sync."
+            exit 0
+          fi
+          git commit -m "Sync changelog for ${RELEASE_VERSION}"
+          
+          # Pull rebase to handle concurrent changes on develop
+          git pull --rebase origin develop
+          git push
+
+  bump-develop-snapshot:
+    needs:
+      - prepare
+      - validate
+      - sync-develop-changelog
+    if: ${{ needs.prepare.outputs.dry_run != 'true' && needs.prepare.outputs.make_latest == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: develop
+          token: ${{ secrets.GH_ADMIN_TOKEN }}
+      - uses: ./.github/workflows/actions/java-maven-action
+        with:
+          gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.MVN_GPG_KEY_PASSWORD }}
+          server-id: maven-central
+          server-username: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
+      - name: Update develop to next snapshot
+        env:
+          RELEASE_VERSION: ${{ needs.prepare.outputs.release_version }}
+          NEXT_SNAPSHOT_INPUT: ${{ needs.prepare.outputs.next_snapshot_version }}
+        run: |
+          git pull --rebase
+
+          # Determine next snapshot version
+          if [ -n "${NEXT_SNAPSHOT_INPUT}" ]; then
+            NEXT="${NEXT_SNAPSHOT_INPUT}"
+          else
+            BASE="${RELEASE_VERSION%%-*}"
+            IFS='.' read -r MAJOR MINOR PATCH <<< "${BASE}"
+            PATCH=$((PATCH+1))
+            NEXT="${MAJOR}.${MINOR}.${PATCH}-SNAPSHOT"
+          fi
+
+          echo "Bumping develop to ${NEXT}"
+          mvn ${MAVEN_ARGS} versions:set -DnewVersion=${NEXT} -DgenerateBackupPoms=false
+          mvn ${MAVEN_ARGS} versions:set-property -Dproperty=sip-framework.version -DnewVersion=${NEXT}
+          mvn ${MAVEN_ARGS} versions:set -pl sip-starter-parent -DnewVersion=${NEXT} -DgenerateBackupPoms=false -DprocessDependencies=false
+          mvn ${MAVEN_ARGS} versions:set-property -pl sip-starter-parent -Dproperty=sip-dependency.version -DnewVersion=${NEXT}
+          git add .
+          git commit -m "Bump version to ${NEXT} after ${RELEASE_VERSION} release"
+          git push
+
+  release:
+    needs:
+      - prepare
+      - validate
+      - create-tag
+      - github-release
+      - publish-javadoc
+      - sync-develop-changelog
+      - bump-develop-snapshot
+    # Always run after all jobs complete (or skip)
+    if: ${{ always() && needs.prepare.outputs.dry_run != 'true' && needs.validate.result == 'success' && needs.create-tag.result == 'success' && needs.github-release.result == 'success' && (needs.publish-javadoc.result == 'success' || needs.publish-javadoc.result == 'skipped') && (needs.sync-develop-changelog.result == 'success' || needs.sync-develop-changelog.result == 'skipped') && (needs.bump-develop-snapshot.result == 'success' || needs.bump-develop-snapshot.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.prepare.outputs.tag_name }}
+      - uses: ./.github/workflows/actions/java-maven-action
+        with:
+          gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.MVN_GPG_KEY_PASSWORD }}
+          server-id: maven-central
+          server-username: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
+
+      - name: Deploy to Maven Central
+        env:
+          SONATYPE_CENTRAL_USERNAME: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          SONATYPE_CENTRAL_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
+        run: mvn ${MAVEN_ARGS} clean deploy -DskipTests -Ppackage-deployment -Dcentral.autoPublish=${{ needs.prepare.outputs.auto_publish }}
