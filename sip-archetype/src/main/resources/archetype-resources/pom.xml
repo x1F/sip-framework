@@ -43,6 +43,16 @@
             <groupId>one.x1f.sip.cloud</groupId>
             <artifactId>sip-integration-starter</artifactId>
         </dependency>
+<!-- Enable if using Apache Kafka for backend communication -->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.camel.springboot</groupId>-->
+<!--            <artifactId>camel-kafka-starter</artifactId>-->
+<!--        </dependency>-->
+<!-- Enable if using RabbitMQ for backend communication -->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.camel.springboot</groupId>-->
+<!--            <artifactId>camel-spring-rabbitmq-starter</artifactId>-->
+<!--        </dependency>-->
 #end
 #if (${useSipSecurity} == "y" or ${useSipSecurity} == "Y")
         <dependency>

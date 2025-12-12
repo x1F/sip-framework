@@ -7,7 +7,11 @@ import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import one.x1f.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
+import one.x1f.sip.foundation.testkit.workflow.thenphase.validator.impl.comparators.JsonComparator;
+import one.x1f.sip.foundation.testkit.workflow.thenphase.validator.impl.comparators.RegexComparator;
+import one.x1f.sip.foundation.testkit.workflow.thenphase.validator.impl.comparators.XMLComparator;
 import org.apache.camel.Exchange;
 import org.apache.commons.io.FileUtils;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -29,13 +33,16 @@ class CamelBodyValidatorTest {
   private static final ValidationResult VALIDATION_RESULT_UNSUCCESSFUL =
       new ValidationResult(false, "Body validation unsuccessful");
 
-  private final CamelBodyValidator bodyValidatorSubject = new CamelBodyValidator();
+  private CamelBodyValidator bodyValidatorSubject;
   private Exchange actual;
   private Exchange expected;
 
   @BeforeEach
   void setUp() {
     // reset mocks
+    bodyValidatorSubject =
+        new CamelBodyValidator(
+            List.of(new XMLComparator(), new JsonComparator(), new RegexComparator()));
     actual = mock(Exchange.class, RETURNS_DEEP_STUBS);
     expected = mock(Exchange.class, RETURNS_DEEP_STUBS);
   }
