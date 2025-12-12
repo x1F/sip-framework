@@ -4,7 +4,7 @@ on:
   push:
     branches: [ develop ]
   pull_request:
-    branches: [ develop ]
+    branches: [ develop, "release/*" ]
 
 env:
   MAVEN_ARGS: "--batch-mode --no-transfer-progress"
@@ -15,13 +15,16 @@ jobs:
     if: ${{ github.event.pull_request.head.repo.full_name == null || github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      # Disabling shallow clone is recommended for improving relevancy of reporting
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - uses: ./.github/workflows/actions/java-maven-action
         with:
           gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.MVN_GPG_KEY_PASSWORD }}
+          server-id: maven-central
+          server-username: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
       - name: Cache SonarCloud packages
         uses: actions/cache@v4
         with:
@@ -34,59 +37,77 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn ${MAVEN_ARGS} verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=IKOR-GmbH_sip-framework -Dsonar.organization=ikor-gmbh -Psip-developer,package-deployment
     
-  build-from-fork:
-    if: ${{ github.event.pull_request.head.repo.full_name != null && github.event.pull_request.head.repo.full_name != github.repository }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/workflows/actions/java-maven-action
-      - name: Build and analyze
-        run: mvn ${MAVEN_ARGS} verify -Psip-developer
-
   check-changelogs:
     if: ${{ github.ref != 'refs/heads/develop' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Install jq
         run: sudo apt-get install jq
       - name: Check pull request contains changelog entry
-        run: test ! $(git diff origin/develop --diff-filter=A --name-only changelogs/ | wc -l) = 0
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if [ -n "${BASE_REF}" ]; then
+            TARGET="origin/${BASE_REF}"
+          else  
+            TARGET=$(git merge-base HEAD origin/develop 2>/dev/null || true)
+            if [ -z "${TARGET}" ]; then
+              TARGET="origin/develop"
+            fi
+          fi
+          if test ! $(git diff "${TARGET}" --diff-filter=A --name-only changelogs/ | wc -l) = 0; then
+            echo "Changelog fragments must be added for this change."
+            exit 1
+          fi
 
   check-snapshot-version:
+    if: ${{ github.ref == 'refs/heads/develop' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/workflows/actions/java-maven-action
         with:
           gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.MVN_GPG_KEY_PASSWORD }}
+          server-id: maven-central
+          server-username: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
       - name: Check is snapshot version
         run: find . -name "pom.xml" -not -path "./sip-archetype/*" | xargs -I {} sh -c "mvn -f {} exec:exec -Dexec.executable=echo -Dexec.args='\${project.artifactId}-\${project.version}' -q --non-recursive | grep SNAPSHOT"
 
   check-formatting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/workflows/actions/java-maven-action
         with:
           gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.MVN_GPG_KEY_PASSWORD }}
+          server-id: maven-central
+          server-username: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
       - name: "check formatting"
         run: mvn ${MAVEN_ARGS} com.diffplug.spotless:spotless-maven-plugin:check
 
   check-javadocs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/workflows/actions/java-maven-action
         with:
           gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.MVN_GPG_KEY_PASSWORD }}
+          server-id: maven-central
+          server-username: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
       - name: "check javadocs"
         run: mvn ${MAVEN_ARGS} javadoc:aggregate -Pjavadoc-lint-html
       - name: 'Upload Javadoc Artifact'
         if: ${{ github.ref == 'refs/heads/develop' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: javadoc
           path: target/site/apidocs/*
@@ -99,7 +120,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/develop'}}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           ref: gh-pages
@@ -109,7 +130,7 @@ jobs:
           git rm -r javadoc/latest || true
           mkdir -p javadoc/latest
       - name: Download newer javadoc
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: javadoc
           path: javadoc/latest
@@ -124,22 +145,30 @@ jobs:
   check-spring-boot-version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/workflows/actions/java-maven-action
         with:
           gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.MVN_GPG_KEY_PASSWORD }}
+          server-id: maven-central
+          server-username: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
       - name: check root has same spring-boot version as sip-starter-parent
         run: test "$(mvn help:evaluate -Dexpression=spring.boot.version -q -DforceStdout)" = "$(mvn help:evaluate -pl sip-starter-parent -Dexpression=project.parent.version -q -DforceStdout)"
 
   check-licenses:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/workflows/actions/java-maven-action
         with:
           gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.MVN_GPG_KEY_PASSWORD }}
+          server-id: maven-central
+          server-username: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
       - name: check all dependencies follow our license whitelist
-        run: ./.github/workflows/check-licenses.sh
+        run: ./.github/scripts/check-licenses.sh
 
   publish-deps-license-updates:
     needs:
@@ -148,7 +177,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/develop'}}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.GH_ADMIN_TOKEN }}
