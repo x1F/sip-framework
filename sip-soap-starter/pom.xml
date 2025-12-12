@@ -6,7 +6,7 @@
     <parent>
         <groupId>one.x1f.sip.foundation</groupId>
         <artifactId>sip-framework</artifactId>
-        <version>4.2.0</version>
+        <version>4.2.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>sip-soap-starter</artifactId>
