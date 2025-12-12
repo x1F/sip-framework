@@ -5,6 +5,7 @@ import io.swagger.v3.oas.models.Paths;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.apache.camel.CamelContext;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
@@ -26,7 +27,9 @@ public class OpenApiContextPathResolver {
     if (openAPICamelConfig.getPaths() != null && contextPath != null) {
       openAPICamelConfig
           .getPaths()
-          .forEach((path, pathItem) -> paths.put(contextPath.concat(path), pathItem));
+          .forEach(
+              (path, pathItem) ->
+                  paths.put(contextPath.concat(StringUtils.isNotEmpty(path) ? path : ""), pathItem));
       openAPICamelConfig.setPaths(paths);
     }
   }
