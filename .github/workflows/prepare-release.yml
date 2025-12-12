@@ -69,9 +69,8 @@ jobs:
           RELEASE_VERSION: ${{ steps.version.outputs.release_version }}
         run: |
           mvn ${MAVEN_ARGS} versions:set -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false
-          mvn ${MAVEN_ARGS} versions:set-property -Dproperty=sip-framework.version -DnewVersion=${RELEASE_VERSION}
-          mvn ${MAVEN_ARGS} versions:set -pl sip-starter-parent -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false -DprocessDependencies=false
-          mvn ${MAVEN_ARGS} versions:set-property -pl sip-starter-parent -Dproperty=sip-dependency.version -DnewVersion=${RELEASE_VERSION}
+          sed -i "s/<sip-framework\.version>.*-SNAPSHOT<\/sip-framework\.version>/<sip-framework\.version>${RELEASE_VERSION}<\/sip-framework\.version>/g" pom.xml sip-starter-parent/pom.xml
+          mvn ${MAVEN_ARGS} versions:set -pl sip-starter-parent -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false -DprocessDependencies=false          
 
       - name: Initialize release changelog file
         env:
@@ -96,7 +95,8 @@ jobs:
           RELEASE_VERSION: ${{ steps.version.outputs.release_version }}
         run: ./.github/scripts/check-versions.sh "${RELEASE_VERSION}"
 
-      - name: Commit changes
+      - name: Commit & push changes
+        if: success()
         env:
           RELEASE_VERSION: ${{ steps.version.outputs.release_version }}
         run: |
@@ -107,16 +107,5 @@ jobs:
           fi
           git add .
           git commit -m "Prepare release ${RELEASE_VERSION}"
-
-      - name: Push changes
-        if: success()
-        run: |
-          if [ -z "$(git status --porcelain)" ]; then
-            echo "Nothing to push."
-            exit 0
-          fi
-          # Only pull if the branch already exists remotely
-          if git ls-remote --exit-code --heads origin "${GITHUB_REF#refs/heads/}" >/dev/null 2>&1; then
-            git pull --rebase
-          fi
+          git pull --rebase
           git push

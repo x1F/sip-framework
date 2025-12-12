@@ -15,12 +15,11 @@ fi
 echo "✓ Root version: ${ROOT_VERSION}"
 
 # Check module versions
-MODULES_RAW=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.modules | tail -n1)
-MODULES=$(echo "${MODULES_RAW}" | tr -d '[]' | tr ',' ' ' | xargs)
+MODULES=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.modules | sed -n 's:.*<string>\(.*\)</string>.*:\1:p' | xargs)
 
 if [ -n "${MODULES}" ]; then
   for MODULE in ${MODULES}; do
-    VERSION=$(mvn -q -pl "${MODULE}" -N -DforceStdout help:evaluate -Dexpression=project.version | tail -n1)
+    VERSION=$(mvn -q -pl "${MODULE}" -DforceStdout help:evaluate -Dexpression=project.version | tail -n1)
     if [ "${VERSION}" != "${EXPECTED_VERSION}" ]; then
       echo "ERROR: Module ${MODULE} is at version ${VERSION}, expected ${EXPECTED_VERSION}"
       exit 1
