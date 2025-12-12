@@ -1,0 +1,122 @@
+name: Prepare Release Branch
+
+on:
+  push:
+    branches:
+      - 'release/*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Explicit release version (defaults to branch name)
+        required: false
+      run-changelog:
+        description: Generate changelog for this release
+        required: true
+        default: true
+        type: boolean
+
+env:
+  MAVEN_ARGS: "--batch-mode --no-transfer-progress"
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+          token: ${{ secrets.GH_ADMIN_TOKEN }}
+      - name: Record develop base commit
+        run: |
+          git fetch origin develop
+          BASE=$(git merge-base HEAD origin/develop)
+          echo "${BASE}" > .release-base
+          echo "$(git rev-parse origin/develop)" > .release-develop-head
+
+      - name: Determine release version
+        id: version
+        shell: bash
+        run: |
+          BRANCH_REF="${GITHUB_REF}"
+          VERSION_INPUT="${{ github.event.inputs.version || '' }}"
+          if [ -n "${VERSION_INPUT}" ]; then
+            VERSION="${VERSION_INPUT}"
+          else
+            VERSION="${BRANCH_REF#refs/heads/}"
+            VERSION="${VERSION#release/}"
+          fi
+          if ! echo "${VERSION}" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-.+)?$'; then
+            echo "Branch/version '${VERSION}' is not a valid semver string."
+            exit 1
+          fi
+          echo "release_version=${VERSION}" >> "${GITHUB_OUTPUT}"
+
+      - uses: ./.github/workflows/actions/java-maven-action
+        with:
+          gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.MVN_GPG_KEY_PASSWORD }}
+          server-id: maven-central
+          server-username: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
+
+      - name: Set release version in all modules
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.release_version }}
+        run: |
+          mvn ${MAVEN_ARGS} versions:set -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false
+          mvn ${MAVEN_ARGS} versions:set-property -Dproperty=sip-framework.version -DnewVersion=${RELEASE_VERSION}
+          mvn ${MAVEN_ARGS} versions:set -pl sip-starter-parent -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false -DprocessDependencies=false
+          mvn ${MAVEN_ARGS} versions:set-property -pl sip-starter-parent -Dproperty=sip-dependency.version -DnewVersion=${RELEASE_VERSION}
+
+      - name: Initialize release changelog file
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.release_version }}
+        run: |
+          FILE=changelogs/current-release-changelog.md
+          if [ ! -f "${FILE}" ] || ! head -n1 "${FILE}" | grep -q "## ${RELEASE_VERSION} "; then
+            echo "## ${RELEASE_VERSION} - $(date +%Y-%m-%d)" > "${FILE}"
+            echo "" >> "${FILE}"
+          fi
+
+      - name: Generate release changelog
+        if: ${{ inputs.run-changelog }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+          cd changelogs
+          CLEAN_FRAGMENTS=true ./update-changelog.sh ${{ steps.version.outputs.release_version }}
+
+      - name: Verify versions match
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.release_version }}
+        run: ./.github/scripts/check-versions.sh "${RELEASE_VERSION}"
+
+      - name: Commit changes
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.release_version }}
+        run: |
+          git status --short
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git add .
+          git commit -m "Prepare release ${RELEASE_VERSION}"
+
+      - name: Push changes
+        if: success()
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Nothing to push."
+            exit 0
+          fi
+          # Only pull if the branch already exists remotely
+          if git ls-remote --exit-code --heads origin "${GITHUB_REF#refs/heads/}" >/dev/null 2>&1; then
+            git pull --rebase
+          fi
+          git push

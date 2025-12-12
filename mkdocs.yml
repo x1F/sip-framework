@@ -1,7 +1,7 @@
 site_name: SIP Framework Documentation
 site_description: 'Documentation for using & developing with the SIP Framework'
 site_author: 'x1F'
-repo_url: 'https://github.com/IKOR-GmbH/sip-framework'
+repo_url: 'https://github.com/x1F/sip-framework'
 edit_uri: 'edit/main/docs/'
 copyright:  © Copyright 2021-2025, <a href="https://x1f.one">x1F GmbH</a> & contributors
 
