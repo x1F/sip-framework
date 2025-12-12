@@ -29,7 +29,8 @@ public class OpenApiContextPathResolver {
           .getPaths()
           .forEach(
               (path, pathItem) ->
-                  paths.put(contextPath.concat(StringUtils.isNotEmpty(path) ? path : ""), pathItem));
+                  paths.put(
+                      contextPath.concat(StringUtils.isNotEmpty(path) ? path : ""), pathItem));
       openAPICamelConfig.setPaths(paths);
     }
   }
