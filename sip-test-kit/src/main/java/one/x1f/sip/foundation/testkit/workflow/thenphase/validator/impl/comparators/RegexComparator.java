@@ -1,7 +1,9 @@
 package one.x1f.sip.foundation.testkit.workflow.thenphase.validator.impl.comparators;
 
 import one.x1f.sip.foundation.testkit.util.RegexUtil;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RegexComparator implements StringComparator {
   @Override
   public ComparatorResult compare(String expected, String actual) {
