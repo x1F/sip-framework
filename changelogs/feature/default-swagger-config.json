@@ -1,5 +1,5 @@
 {
   "author": "Nemikor",
   "pullrequestId": "338",
-  "message": "Replace 'camel.rest.port' and 'camel.rest.host' with 'camel.rest.host-name-resolver' and 'use-x-forward-headers'."
+  "message": "Replace 'camel.rest.port' and 'camel.rest.host' with 'camel.rest.host-name-resolver' and 'use-x-forward-headers' in adapter's default configuration."
 }
