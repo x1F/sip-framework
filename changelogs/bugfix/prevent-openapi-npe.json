@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "334",
-  "message": "Prevent NPE when using REST connector with empty path value in HTTP method."
-}
