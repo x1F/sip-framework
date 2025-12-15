@@ -17,6 +17,16 @@
         <appender-ref ref="STDOUT"/>
     </root>
 
+    <!-- Set level to DEBUG for debug profile -->
+    <springProfile name="debug">
+        <root level="DEBUG"/>
+    </springProfile>
+
+    <!-- Set level to TRACE for trace profile -->
+    <springProfile name="trace">
+        <root level="TRACE"/>
+    </springProfile>
+
     <!-- Turn on debug logging for our HikariCP connection pool. -->
     <logger name="com.zaxxer.hikari" level="DEBUG"/>
 
