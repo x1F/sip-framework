@@ -1,0 +1,5 @@
+{
+"author": "Nemikor",
+"pullrequestId": "337",
+"message": "Use logback-spring.xml instead of logback.xml in SIP Archetype and reflect log level to profile that is set."
+}
