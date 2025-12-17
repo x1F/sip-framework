@@ -56,7 +56,10 @@ Test kit is enabled by default when the adapter is generated from SIP archetype.
 A test class needs to be created inside test package of the adapter, which extends SIPBatchTest. 
 Running this class would execute the test, but also it will be executed in the testing step during build time.
 
+_Note:_ It is recommended to add `@DirtiesContext` to ensure a clean application context.
+
 ```java
+@DirtiesContext
 public class TFWTest extends SIPBatchTest { }
 ```
 
