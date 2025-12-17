@@ -70,7 +70,7 @@ public class SIPExchangeHelper extends DefaultExchangeHolder {
     try {
       objectMapper.writeValue(new ByteArrayOutputStream(), value);
     } catch (IOException e) {
-      log.warn("sip.core.util.nonserializablevalue_{}", headerName);
+      log.debug("sip.core.util.nonserializablevalue_{}", headerName);
       return SERIALIZABLE_DEFAULT_VALUE;
     }
     return value;
