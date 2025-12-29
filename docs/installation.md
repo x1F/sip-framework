@@ -8,7 +8,7 @@ Before getting started to develop a first adapter with SIP the following require
 
 ### Java Virtual Machine
 
-- Mandatory usage of Java 17 or higher <https://jdk.java.net/17/>
+- Mandatory usage of Java 21 or higher <https://jdk.java.net/21/>
 
 ### Maven
 
