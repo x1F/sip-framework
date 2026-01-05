@@ -301,7 +301,9 @@ For each test report in the <code>endpoints</code> section there will be an over
 <p>Test kit is enabled by default when the adapter is generated from SIP archetype.</p>
 <p>A test class needs to be created inside test package of the adapter, which extends SIPBatchTest. 
 Running this class would execute the test, but also it will be executed in the testing step during build time.</p>
-<pre class="highlight"><code class="language-java">public class TFWTest extends SIPBatchTest { }</code></pre>
+<p><em>Note:</em> It is recommended to add <code>@DirtiesContext</code> to ensure a clean application context.</p>
+<pre class="highlight"><code class="language-java">@DirtiesContext
+public class TFWTest extends SIPBatchTest { }</code></pre>
 <p>Configuring Spring profile is needed. Make sure that the following configuration property inside your test resources is defined:
 <pre class="highlight"><code class="language-yaml">spring:
   profiles:
