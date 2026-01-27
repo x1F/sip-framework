@@ -58,11 +58,11 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- manage all versions via properties, so that they can be overridden in a project if necessary -->
-        <spring.boot.version>3.5.7</spring.boot.version>
-        <camel.version>4.14.2</camel.version>
+        <spring.boot.version>3.5.10</spring.boot.version>
+        <camel.version>4.14.4</camel.version>
         <jackson-jsr310.version>2.19.2</jackson-jsr310.version>
-        <springdoc-openapi-starter-common.version>2.8.9</springdoc-openapi-starter-common.version>
-        <springdoc-openapi-starter-webmvc-ui.version>2.8.9</springdoc-openapi-starter-webmvc-ui.version>
+        <springdoc-openapi-starter-common.version>2.8.13</springdoc-openapi-starter-common.version>
+        <springdoc-openapi-starter-webmvc-ui.version>2.8.13</springdoc-openapi-starter-webmvc-ui.version>
         <swagger-annotation.version>2.2.34</swagger-annotation.version>
         <lombok.version>1.18.38</lombok.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
