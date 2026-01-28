@@ -82,8 +82,8 @@
         <checher-qual.version>3.51.1</checher-qual.version> <!-- Maintain with java-parser -->
 
 
-        <cxf.version>4.1.1</cxf.version>                         <!-- keep in sync with camel-dependencies cxf-version property -->
-        <woodstox-core.version>7.1.0</woodstox-core.version>
+        <cxf.version>4.1.4</cxf.version>                         <!-- keep in sync with camel-dependencies cxf-version property -->
+        <woodstox-core.version>7.1.1</woodstox-core.version>
 
         <!-- maven dependencies -->
         <maven-core.version>3.9.9</maven-core.version>

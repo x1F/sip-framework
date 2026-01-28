@@ -61,7 +61,7 @@
         <sip-framework.version>4.2.1-SNAPSHOT</sip-framework.version>               <!-- keep in sync with framework version -->
         <mapstruct.version>1.5.5.Final</mapstruct.version>                          <!-- keep in sync with mapstruct version in framework pom -->
         <lombok.version>1.18.38</lombok.version>                                    <!-- keep in sync with lombok version in framework pom -->
-        <cxf.version>4.1.1</cxf.version>                                            <!-- keep in sync with cxf version in framework pom -->
+        <cxf.version>4.1.4</cxf.version>                                            <!-- keep in sync with cxf version in framework pom -->
         <snakeyaml.version>2.4</snakeyaml.version>                                  <!-- keep in sync with snakeyaml version in framework pom -->
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <maven-gpg-plugin.version>3.2.6</maven-gpg-plugin.version>                  <!-- keep in sync with framework, for maven central deployment -->
