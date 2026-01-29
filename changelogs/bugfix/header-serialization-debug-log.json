@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "339",
-  "message": "Use DEBUG level instead of WARN for messages in SIPExchangeHelper."
-}
