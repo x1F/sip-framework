@@ -31,9 +31,6 @@ import org.springframework.context.ApplicationContext;
 public final class ConnectorExtensionChainOrchestrator
     implements Orchestrator<ConnectorOrchestrationInfo> {
 
-  public static final String EXTENSION_ID_REQUEST = "%s-extension-request-%s";
-  public static final String EXTENSION_ID_RESPONSE = "%s-extension-response-%s";
-
   final Supplier<ConnectorDefinition> relatedConnector;
   final Supplier<ApplicationContext> applicationContext;
   final DeclarationsRegistry declarationsRegistry;
@@ -61,9 +58,6 @@ public final class ConnectorExtensionChainOrchestrator
     if (!orderedRequestExtensions.isEmpty()) {
       var requestRoute = info.getRequestRouteDefinition();
       for (var extension : orderedRequestExtensions) {
-        String extensionId =
-            String.format(EXTENSION_ID_REQUEST, connector.getId(), extension.getExtensionName());
-        requestRoute = requestRoute.id(extensionId);
         extension.accept(requestRoute);
       }
     }
@@ -80,9 +74,6 @@ public final class ConnectorExtensionChainOrchestrator
             String.format("Order of response-extensions for connector %s: ", connector.getId()),
             orderedResponseExtensions);
         for (var extension : orderedResponseExtensions) {
-          String extensionId =
-              String.format(EXTENSION_ID_RESPONSE, connector.getId(), extension.getExtensionName());
-          responseRoute = responseRoute.id(extensionId);
           extension.accept(responseRoute);
         }
       }
