@@ -77,7 +77,7 @@ class TestCaseBatchDefinitionTest {
   @Test
   void WHEN_noEndpointIdAndNoConnectorIdForWhenExecuteSection_THEN_SIPFrameworkException() {
     // arrange
-    EndpointProperties endpointProperties = new EndpointProperties(null, "", null);
+    EndpointProperties endpointProperties = new EndpointProperties(null, "", null, false);
     testCaseDefinition.setWhenExecute(endpointProperties);
 
     // act & assert
@@ -89,7 +89,8 @@ class TestCaseBatchDefinitionTest {
   @Test
   void WHEN_givenBothEndpointIdAndConnectorIdForWhenExecuteSection_THEN_SIPFrameworkException() {
     // arrange
-    EndpointProperties endpointProperties = new EndpointProperties(ENDPOINT_ID, CONNECTOR_ID, null);
+    EndpointProperties endpointProperties =
+        new EndpointProperties(ENDPOINT_ID, CONNECTOR_ID, null, false);
     testCaseDefinition.setWhenExecute(endpointProperties);
 
     // act & assert
@@ -101,7 +102,7 @@ class TestCaseBatchDefinitionTest {
   @Test
   void WHEN_noEndpointIdAndNoConnectorIdForWithMocksSection_THEN_SIPFrameworkException() {
     // arrange
-    EndpointProperties endpointProperties = new EndpointProperties("", null, null);
+    EndpointProperties endpointProperties = new EndpointProperties("", null, null, false);
     testCaseDefinition.setWithMocks(List.of(endpointProperties));
 
     // act & assert
@@ -113,7 +114,8 @@ class TestCaseBatchDefinitionTest {
   @Test
   void WHEN_givenBothEndpointIdAndConnectorIdForWithMocksSection_THEN_SIPFrameworkException() {
     // arrange
-    EndpointProperties endpointProperties = new EndpointProperties(ENDPOINT_ID, CONNECTOR_ID, null);
+    EndpointProperties endpointProperties =
+        new EndpointProperties(ENDPOINT_ID, CONNECTOR_ID, null, false);
     testCaseDefinition.setWithMocks(List.of(endpointProperties));
 
     // act & assert
@@ -125,7 +127,7 @@ class TestCaseBatchDefinitionTest {
   @Test
   void WHEN_noEndpointIdAndNoConnectorIdForThenExpectSection_THEN_SIPFrameworkException() {
     // arrange
-    EndpointProperties endpointProperties = new EndpointProperties(null, "", null);
+    EndpointProperties endpointProperties = new EndpointProperties(null, "", null, false);
     testCaseDefinition.setThenExpect(List.of(endpointProperties));
 
     // act & assert
@@ -137,7 +139,8 @@ class TestCaseBatchDefinitionTest {
   @Test
   void WHEN_givenBothEndpointIdAndConnectorIdForThenExpectSection_THEN_SIPFrameworkException() {
     // arrange
-    EndpointProperties endpointProperties = new EndpointProperties(ENDPOINT_ID, CONNECTOR_ID, null);
+    EndpointProperties endpointProperties =
+        new EndpointProperties(ENDPOINT_ID, CONNECTOR_ID, null, false);
     testCaseDefinition.setThenExpect(List.of(endpointProperties));
 
     // act & assert
@@ -161,7 +164,7 @@ class TestCaseBatchDefinitionTest {
   private TestCaseDefinition createValidTestCaseDefinition() {
     TestCaseDefinition definition = new TestCaseDefinition();
     definition.setTitle(TEST_NAME);
-    EndpointProperties endpointProperties = new EndpointProperties(ENDPOINT_ID, null, null);
+    EndpointProperties endpointProperties = new EndpointProperties(ENDPOINT_ID, null, null, false);
     definition.setWhenExecute(endpointProperties);
     definition.setWithMocks(List.of(endpointProperties));
     definition.setThenExpect(List.of(endpointProperties));

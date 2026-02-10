@@ -1,8 +1,10 @@
 package one.x1f.sip.foundation.core.declarative.model;
 
 import static one.x1f.sip.foundation.core.proxies.ProcessorProxy.TEST_MODE_HEADER;
+import static one.x1f.sip.foundation.core.proxies.ProcessorProxy.TEST_MODE_PREDICATE;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import org.apache.camel.builder.DataFormatClause;
 import org.apache.camel.model.DataFormatDefinition;
 import org.apache.camel.spi.DataFormat;
@@ -22,9 +24,7 @@ public interface UnmarshallerDefinition extends RouteDefinitionConsumer {
     return routeBuilder ->
         routeBuilder
             .choice()
-            .when(
-                exchange ->
-                    Boolean.parseBoolean(exchange.getProperty(TEST_MODE_HEADER, String.class)))
+            .when(shouldSkipUnmarshalInTestMode())
             .log(SKIP_UNMARSHAL_MESSAGE)
             .otherwise()
             .unmarshal(dataFormat)
@@ -41,9 +41,7 @@ public interface UnmarshallerDefinition extends RouteDefinitionConsumer {
     return routeBuilder ->
         routeBuilder
             .choice()
-            .when(
-                exchange ->
-                    Boolean.parseBoolean(exchange.getProperty(TEST_MODE_HEADER, String.class)))
+            .when(shouldSkipUnmarshalInTestMode())
             .log(SKIP_UNMARSHAL_MESSAGE)
             .otherwise()
             .unmarshal(dataFormatDefinition)
@@ -61,9 +59,7 @@ public interface UnmarshallerDefinition extends RouteDefinitionConsumer {
       var choiceRoute =
           routeBuilder
               .choice()
-              .when(
-                  exchange ->
-                      Boolean.parseBoolean(exchange.getProperty(TEST_MODE_HEADER, String.class)))
+              .when(shouldSkipUnmarshalInTestMode())
               .log(SKIP_UNMARSHAL_MESSAGE)
               .otherwise();
 
@@ -71,5 +67,13 @@ public interface UnmarshallerDefinition extends RouteDefinitionConsumer {
 
       choiceRoute.endChoice();
     };
+  }
+
+  private static org.apache.camel.Predicate shouldSkipUnmarshalInTestMode() {
+    //noinspection unchecked
+    return exchange ->
+        exchange.getProperty(TEST_MODE_HEADER, boolean.class)
+            && exchange.getProperty(TEST_MODE_PREDICATE, Predicate.class) != null
+            && exchange.getProperty(TEST_MODE_PREDICATE, Predicate.class).test(exchange);
   }
 }

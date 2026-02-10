@@ -4,6 +4,8 @@ import com.google.common.collect.Iterables;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -14,6 +16,8 @@ import org.apache.camel.AsyncCallback;
 import org.apache.camel.Exchange;
 import org.apache.camel.NamedNode;
 import org.apache.camel.Processor;
+import org.apache.camel.model.ChoiceDefinition;
+import org.apache.camel.spi.RouteIdAware;
 import org.apache.camel.support.AsyncProcessorSupport;
 import org.apache.camel.support.ExchangeHelper;
 import org.slf4j.Logger;
@@ -22,9 +26,10 @@ import org.slf4j.LoggerFactory;
 /** Proxy for Apache Camel Processors */
 public class ProcessorProxy extends AsyncProcessorSupport {
   private static final Logger logger = LoggerFactory.getLogger(ProcessorProxy.class);
-  public static final String TEST_MODE_HEADER = "test-mode";
+  public static final String TEST_MODE_HEADER = "_SipTestMode";
+  public static final String MOCK_IGNORE_LIST = "_SipMockIgnoreList";
+  public static final String TEST_MODE_PREDICATE = "_SipTestModePredicate";
   public static final UnaryOperator<Exchange> DEFAULT_MOCK_FUNCTION = exchange -> exchange;
-
   private final NamedNode nodeDefinition;
   private final Processor wrappedProcessor;
   // Processor can already be wrapped by Camel so we unwrap it and store it here
@@ -99,10 +104,21 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     if (isTestMode(exchange) && exchange.getProperty(TEST_MODE_HEADER) == null) {
       exchange.setProperty(TEST_MODE_HEADER, "true");
       exchange.setProperty("test-name", exchange.getMessage().getHeader("test-name"));
+//      exchange.setProperty(MOCK_IGNORE_LIST, exchange.getMessage().getHeader(MOCK_IGNORE_LIST));
+//    }
+//
+//    if (nodeDefinition instanceof ChoiceDefinition && isTestMode(exchange)) {
+//      Predicate<Exchange> predicate =
+//          e ->
+//              originalProcessor instanceof RouteIdAware idAware
+//                  && shouldNotSkipMock(e, idAware.getRouteId());
+//      exchange.setProperty(TEST_MODE_PREDICATE, predicate);
     }
 
     Exchange originalExchange = exchange.copy();
-
+//      if (isTestMode(exchange)
+//              && hasMockFunction()
+//              && shouldNotSkipMock(exchange, nodeDefinition.getId())) {
     if (isTestMode(exchange) && hasMockFunction()) {
       mockProcessing(exchange);
     } else {
@@ -116,6 +132,9 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     }
 
     callback.done(true);
+    if (exchange.getProperty(TEST_MODE_PREDICATE) != null) {
+      exchange.removeProperty(TEST_MODE_PREDICATE);
+    }
     return true;
   }
 
@@ -144,5 +163,10 @@ public class ProcessorProxy extends AsyncProcessorSupport {
       mockCycle = Iterables.cycle(mockFunction).iterator();
     }
     ExchangeHelper.copyResults(exchange, mockCycle.next().apply(exchange));
+  }
+
+  private boolean shouldNotSkipMock(Exchange exchange, String id) {
+    List<String> mockIgnoreList = exchange.getProperty(MOCK_IGNORE_LIST, List.class);
+    return mockIgnoreList == null || mockIgnoreList.isEmpty() || !mockIgnoreList.contains(id);
   }
 }

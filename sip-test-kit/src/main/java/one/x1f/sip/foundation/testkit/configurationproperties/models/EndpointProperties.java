@@ -15,6 +15,8 @@ public class EndpointProperties {
 
   private MessageProperties requestMessage = new MessageProperties();
 
+  private boolean disableMock;
+
   public void setWith(MessageProperties message) {
     this.setRequestMessage(message);
   }

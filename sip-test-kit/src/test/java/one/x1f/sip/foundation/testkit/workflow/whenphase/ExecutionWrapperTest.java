@@ -3,6 +3,7 @@ package one.x1f.sip.foundation.testkit.workflow.whenphase;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import one.x1f.sip.foundation.core.proxies.ProcessorProxy;
 import one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
@@ -25,7 +26,8 @@ class ExecutionWrapperTest {
     when(camelContext.getCamelContextExtension()).thenReturn(mock(ExtendedCamelContext.class));
     Exchange inputExchange = createEmptyExchange();
     RouteInvoker routeInvoker = mock(RouteInvoker.class);
-    ExecutionWrapper subject = new ExecutionWrapper(TEST_NAME, inputExchange, routeInvoker);
+    ExecutionWrapper subject =
+        new ExecutionWrapper(TEST_NAME, inputExchange, routeInvoker, new ArrayList<>());
     when(routeInvoker.invoke(any(Exchange.class))).thenReturn(Optional.of(inputExchange));
 
     // act
@@ -45,7 +47,8 @@ class ExecutionWrapperTest {
     when(camelContext.getCamelContextExtension()).thenReturn(mock(ExtendedCamelContext.class));
     Exchange inputExchange = createEmptyExchange();
     RouteInvoker routeInvoker = mock(RouteInvoker.class);
-    ExecutionWrapper subject = new ExecutionWrapper(TEST_NAME, inputExchange, routeInvoker);
+    ExecutionWrapper subject =
+        new ExecutionWrapper(TEST_NAME, inputExchange, routeInvoker, new ArrayList<>());
     when(routeInvoker.invoke(any(Exchange.class))).thenReturn(Optional.of(inputExchange));
 
     // act
