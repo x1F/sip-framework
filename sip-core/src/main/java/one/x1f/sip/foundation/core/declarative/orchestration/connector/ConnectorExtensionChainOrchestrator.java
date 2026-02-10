@@ -183,15 +183,19 @@ public final class ConnectorExtensionChainOrchestrator
 
   private void placeRelativeOrderedExtensionInList(
       final ConnectorExtensionRegistryEntry entry, final List<ConnectorExtension> orderedList) {
-    if (entry.getPlacementBeforeExtension().isPresent()) {
-      var indexBefore = orderedList.indexOf(entry.getPlacementBeforeExtension().get());
+    var optionalPlacementBeforeExtension = entry.getPlacementBeforeExtension();
+    if (optionalPlacementBeforeExtension.isPresent()) {
+      var placementBeforeExtension = optionalPlacementBeforeExtension.get();
+      var indexBefore = orderedList.indexOf(placementBeforeExtension);
       if (indexBefore > -1) {
         orderedList.add(indexBefore, entry.getExtension());
         return;
       }
     }
-    if (entry.getPlacementAfterExtension().isPresent()) {
-      var indexBefore = orderedList.indexOf(entry.getPlacementAfterExtension().get());
+    var optionalPlacementAfterExtension = entry.getPlacementAfterExtension();
+    if (optionalPlacementAfterExtension.isPresent()) {
+      var placementAfterExtension = optionalPlacementAfterExtension.get();
+      var indexBefore = orderedList.indexOf(placementAfterExtension);
       if (indexBefore > -1) {
         orderedList.add(indexBefore + 1, entry.getExtension());
         return;
