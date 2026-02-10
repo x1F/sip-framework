@@ -90,7 +90,15 @@ public class TestCasesConfig {
 
     try {
       RouteInvoker invoker = routeInvokerFactory.getInstance(exchange);
-      testCase.setExecutionWrapper(new ExecutionWrapper(testName, exchange, invoker));
+      testCase.setExecutionWrapper(
+          new ExecutionWrapper(
+              testName,
+              exchange,
+              invoker,
+              testCaseDefinition.getWithMocks().stream()
+                  .filter(EndpointProperties::isDisableMock)
+                  .map(EndpointProperties::getEndpointId)
+                  .toList()));
     } catch (NoRouteInvokerException e) {
       testCase.reportExecutionException(e);
     }
