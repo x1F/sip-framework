@@ -78,9 +78,11 @@ public class TestKitHelper extends SIPExchangeHelper {
     if (properties == null) {
       return anExchange(camelContext).build();
     }
-    ExchangeBuilder exchangeBuilder =
-        anExchange(camelContext).withBody(properties.getRequestMessage().getBody());
-    properties.getRequestMessage().getHeaders().forEach(exchangeBuilder::withHeader);
+    ExchangeBuilder exchangeBuilder = anExchange(camelContext);
+    if (properties.getRequestMessage() != null) {
+      exchangeBuilder.withBody(properties.getRequestMessage().getBody());
+      properties.getRequestMessage().getHeaders().forEach(exchangeBuilder::withHeader);
+    }
     exchangeBuilder.withProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, properties.getEndpointId());
     exchangeBuilder.withProperty(CONNECTOR_ID_EXCHANGE_PROPERTY, properties.getConnectorId());
     return exchangeBuilder.build();
