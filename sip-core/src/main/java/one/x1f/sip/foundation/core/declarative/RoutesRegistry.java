@@ -54,6 +54,8 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
   private final Map<String, RouteRole> roleForRouteIdRegister = new HashMap<>();
   private final MultiValuedMap<String, String> endpointsForRouteId = new HashSetValuedHashMap<>();
   private final MultiValuedMap<String, String> routeIdsForEndpoints = new HashSetValuedHashMap<>();
+  private final MultiValuedMap<String, String> processorExtensionsForConnectors =
+      new HashSetValuedHashMap<>();
 
   // Map of outgoing endpoints and their processor ids
   private final Map<String, IdAware> outgoingEndpointIds = new HashMap<>();
@@ -189,6 +191,10 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
   public String getConnectorIdByRouteId(String routeId) {
     ConnectorDefinition connector = connectorForRouteIdRegister.get(routeId);
     return connector != null ? connector.getId() : null;
+  }
+
+  public void addProcessorExtension(String connectorId, String extensionId) {
+    processorExtensionsForConnectors.put(connectorId, extensionId);
   }
 
   public List<EndpointInfo> getExternalEndpointInfosForConnector(

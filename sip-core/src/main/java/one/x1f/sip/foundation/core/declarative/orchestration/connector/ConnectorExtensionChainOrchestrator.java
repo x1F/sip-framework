@@ -6,12 +6,9 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import one.x1f.sip.foundation.core.declarative.DeclarationsRegistry;
+import one.x1f.sip.foundation.core.declarative.RoutesRegistry;
 import one.x1f.sip.foundation.core.declarative.annotation.UseRequestModelMapper;
 import one.x1f.sip.foundation.core.declarative.annotation.UseResponseModelMapper;
 import one.x1f.sip.foundation.core.declarative.annotation.connector.extension.*;
@@ -22,6 +19,7 @@ import one.x1f.sip.foundation.core.declarative.orchestration.Orchestrator;
 import one.x1f.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import one.x1f.sip.foundation.core.util.StreamHelper;
 import one.x1f.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
+import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.context.ApplicationContext;
 
@@ -36,8 +34,11 @@ public final class ConnectorExtensionChainOrchestrator
 
   final Supplier<ConnectorDefinition> relatedConnector;
   final Supplier<ApplicationContext> applicationContext;
-  final DeclarationsRegistry declarationsRegistry;
+
+  @Getter
   final Map<String, ConnectorExtensionRegistryEntry> requestExtensionsRegistry = new HashMap<>();
+
+  @Getter
   final Map<String, ConnectorExtensionRegistryEntry> responseExtensionsRegistry = new HashMap<>();
 
   @Override
@@ -49,6 +50,8 @@ public final class ConnectorExtensionChainOrchestrator
   public void doOrchestrate(ConnectorOrchestrationInfo info) {
     final var connector = relatedConnector.get();
     final var context = applicationContext.get();
+
+    RoutesRegistry routesRegistry = context.getBean(RoutesRegistry.class);
 
     buildExtensionRegistryForConnector(connector, context);
 
@@ -63,8 +66,8 @@ public final class ConnectorExtensionChainOrchestrator
       for (var extension : orderedRequestExtensions) {
         String extensionId =
             String.format(EXTENSION_ID_REQUEST, connector.getId(), extension.getExtensionName());
-        requestRoute = requestRoute.id(extensionId);
-        extension.accept(requestRoute);
+        routesRegistry.addProcessorExtension(connector.getId(), extensionId);
+        requestRoute.to(StaticEndpointBuilders.direct(extensionId));
       }
     }
 
@@ -82,8 +85,8 @@ public final class ConnectorExtensionChainOrchestrator
         for (var extension : orderedResponseExtensions) {
           String extensionId =
               String.format(EXTENSION_ID_RESPONSE, connector.getId(), extension.getExtensionName());
-          responseRoute = responseRoute.id(extensionId);
-          extension.accept(responseRoute);
+          routesRegistry.addProcessorExtension(connector.getId(), extensionId);
+          responseRoute.to(StaticEndpointBuilders.direct(extensionId));
         }
       }
     }
@@ -192,15 +195,17 @@ public final class ConnectorExtensionChainOrchestrator
 
   private void placeRelativeOrderedExtensionInList(
       final ConnectorExtensionRegistryEntry entry, final List<ConnectorExtension> orderedList) {
-    if (entry.getPlacementBeforeExtension().isPresent()) {
-      var indexBefore = orderedList.indexOf(entry.getPlacementBeforeExtension().get());
+    Optional<ConnectorExtension> placementBeforeExtension = entry.getPlacementBeforeExtension();
+    if (placementBeforeExtension.isPresent()) {
+      var indexBefore = orderedList.indexOf(placementBeforeExtension.get());
       if (indexBefore > -1) {
         orderedList.add(indexBefore, entry.getExtension());
         return;
       }
     }
-    if (entry.getPlacementAfterExtension().isPresent()) {
-      var indexBefore = orderedList.indexOf(entry.getPlacementAfterExtension().get());
+    Optional<ConnectorExtension> placementAfterExtension = entry.getPlacementAfterExtension();
+    if (placementAfterExtension.isPresent()) {
+      var indexBefore = orderedList.indexOf(placementAfterExtension.get());
       if (indexBefore > -1) {
         orderedList.add(indexBefore + 1, entry.getExtension());
         return;

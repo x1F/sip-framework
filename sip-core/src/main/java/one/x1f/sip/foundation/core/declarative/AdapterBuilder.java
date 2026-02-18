@@ -1,19 +1,25 @@
 package one.x1f.sip.foundation.core.declarative;
 
+import static one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorExtensionChainOrchestrator.EXTENSION_ID_REQUEST;
+import static one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorExtensionChainOrchestrator.EXTENSION_ID_RESPONSE;
 import static one.x1f.sip.foundation.core.declarative.utils.DeclarativeHelper.appendOnException;
 import static one.x1f.sip.foundation.core.declarative.utils.DeclarativeHelper.joinConfigurationIds;
 import static one.x1f.sip.foundation.core.declarative.validator.CDMValidator.FROM_CDM_EXCEPTION_MESSAGE;
 import static one.x1f.sip.foundation.core.declarative.validator.CDMValidator.TO_CDM_EXCEPTION_MESSAGE;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import one.x1f.sip.foundation.core.declarative.annotation.connector.CleanupHeaders;
 import one.x1f.sip.foundation.core.declarative.connector.ConnectorDefinition;
+import one.x1f.sip.foundation.core.declarative.connector.ConnectorExtension;
 import one.x1f.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import one.x1f.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
+import one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorExtensionChainOrchestrator;
+import one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorExtensionRegistryEntry;
 import one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
 import one.x1f.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import one.x1f.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
@@ -230,6 +236,7 @@ public final class AdapterBuilder extends RouteBuilder {
 
     if (inboundConnector.getOrchestrator().canOrchestrate(orchestrationInfo)) {
       inboundConnector.getOrchestrator().doOrchestrate(orchestrationInfo);
+      buildConnectorExtensions(inboundConnector);
     }
     requestRouteDefinition.to(StaticEndpointBuilders.direct(scenarioHandoffRouteId));
   }
@@ -301,6 +308,7 @@ public final class AdapterBuilder extends RouteBuilder {
         new OrchestrationRoutes(requestRouteDefinition, Optional.of(responseRouteDefinition));
     if (outboundConnector.getOrchestrator().canOrchestrate(orchestrationInfo)) {
       outboundConnector.getOrchestrator().doOrchestrate(orchestrationInfo);
+      buildConnectorExtensions(outboundConnector);
     }
     requestRouteDefinition.to(StaticEndpointBuilders.direct(externalEndpointRouteId));
 
@@ -314,6 +322,30 @@ public final class AdapterBuilder extends RouteBuilder {
                         outboundConnector.getId(),
                         cdmModel,
                         TO_CDM_EXCEPTION_MESSAGE)));
+  }
+
+  private void buildConnectorExtensions(ConnectorDefinition connector) {
+    var connectorOrchestrator = connector.getOrchestrator();
+    if (connectorOrchestrator
+        instanceof ConnectorExtensionChainOrchestrator connectorExtensionChainOrchestrator) {
+      connectorExtensionChainOrchestrator
+          .getRequestExtensionsRegistry()
+          .forEach(buildConnectorExtensionRoute(connector, EXTENSION_ID_REQUEST));
+      connectorExtensionChainOrchestrator
+          .getResponseExtensionsRegistry()
+          .forEach(buildConnectorExtensionRoute(connector, EXTENSION_ID_RESPONSE));
+    }
+  }
+
+  private BiConsumer<String, ConnectorExtensionRegistryEntry> buildConnectorExtensionRoute(
+      ConnectorDefinition connectorDefinition, String idFormat) {
+    return (key, value) -> {
+      ConnectorExtension extension = value.getExtension();
+      String extensionId =
+          String.format(idFormat, connectorDefinition.getId(), extension.getExtensionName());
+      var extensionRoute = from(StaticEndpointBuilders.direct(extensionId)).routeId(extensionId);
+      value.getExtension().accept(extensionRoute);
+    };
   }
 
   @SuppressWarnings("unchecked")

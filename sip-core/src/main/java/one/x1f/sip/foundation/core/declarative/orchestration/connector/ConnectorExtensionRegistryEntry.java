@@ -20,7 +20,7 @@ import org.apache.logging.log4j.util.Strings;
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-class ConnectorExtensionRegistryEntry {
+public class ConnectorExtensionRegistryEntry {
 
   @ToString.Include @EqualsAndHashCode.Include ConnectorExtension extension;
   @EqualsAndHashCode.Include @ToString.Include AnnotatedElement definingElement;
