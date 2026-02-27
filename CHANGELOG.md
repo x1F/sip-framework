@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 For unreleased changelogs look into the [changelogs](./changelogs) directory
 
+## 4.3.1 - 2026-02-20
+
+### 🐞 Bugfixes
+- Update Spring Boot version to 3.5.11 and Apache Camel version to 4.14.5 [#345](https://github.com/IKOR-GmbH/sip-framework/pull/345) by [Nemikor](https://github.com/Nemikor)
+
+
 ## 4.3.0 - 2026-01-29
 
 ### ⭐ Features
