@@ -1,10 +1,13 @@
 package one.x1f.sip.foundation.core.declarative.connector;
 
+import one.x1f.sip.foundation.core.declarative.ConnectorRegistry;
 import one.x1f.sip.foundation.core.declarative.DeclarationsRegistry;
 import one.x1f.sip.foundation.core.declarative.RouteRole;
 import one.x1f.sip.foundation.core.declarative.RoutesRegistry;
 import one.x1f.sip.foundation.core.declarative.annotation.InboundConnector;
 import one.x1f.sip.foundation.core.declarative.annotation.rest.ParameterMapping;
+import one.x1f.sip.foundation.core.declarative.dto.ProcessorComponent;
+import one.x1f.sip.foundation.core.declarative.dto.ProcessorType;
 import one.x1f.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import org.apache.camel.model.ToDefinition;
 import org.apache.camel.model.rest.RestDefinition;
@@ -31,16 +34,26 @@ public abstract class RestInboundConnectorBase extends InboundConnectorBase
       final RestsDefinition definition,
       final String targetToBase,
       final RoutesRegistry routeRegistry,
-      final DeclarationsRegistry declarationsRegistry) {
+      final DeclarationsRegistry declarationsRegistry,
+      final ConnectorRegistry connectorRegistry) {
     var rest = definition.rest();
     configureRest(rest);
     SIPFrameworkInitializationException.throwIf(
         rest.getVerbs().size() > 1,
         "Using multiple REST endpoints in one Inbound connector is not allowed");
     for (VerbDefinition verb : rest.getVerbs()) {
-      verb.setId(routeRegistry.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, this));
+      String routeId = routeRegistry.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, this);
+      verb.setId(routeId);
       ToDefinition toDefinition = new ToDefinition("direct:" + targetToBase);
       verb.setTo(toDefinition);
+      connectorRegistry.registerProcessorExtension(
+          routeId,
+          getId() + "_inbound_entry",
+          0,
+          verb.asVerb() + ":" + verb.getPath(),
+          ProcessorComponent.FROM,
+          verb.getPath(),
+          ProcessorType.ENTRY);
     }
   }
 

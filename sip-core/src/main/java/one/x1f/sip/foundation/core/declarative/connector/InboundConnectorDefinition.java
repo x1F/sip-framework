@@ -1,5 +1,6 @@
 package one.x1f.sip.foundation.core.declarative.connector;
 
+import one.x1f.sip.foundation.core.declarative.ConnectorRegistry;
 import one.x1f.sip.foundation.core.declarative.DeclarationsRegistry;
 import one.x1f.sip.foundation.core.declarative.RoutesRegistry;
 import one.x1f.sip.foundation.core.declarative.annotation.InboundConnector;
@@ -43,7 +44,8 @@ public non-sealed interface InboundConnectorDefinition<T extends OptionalIdentif
       T definition,
       String targetToBase,
       RoutesRegistry routeRegistry,
-      DeclarationsRegistry declarationsRegistry);
+      DeclarationsRegistry declarationsRegistry,
+      ConnectorRegistry connectorRegistry);
 
   @Override
   default ConnectorType getConnectorType() {

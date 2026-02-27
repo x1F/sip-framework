@@ -18,6 +18,8 @@ import one.x1f.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import one.x1f.sip.foundation.core.declarative.connector.ConnectorExtension;
 import one.x1f.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import one.x1f.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
+import one.x1f.sip.foundation.core.declarative.dto.ProcessorComponent;
+import one.x1f.sip.foundation.core.declarative.dto.ProcessorType;
 import one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorExtensionChainOrchestrator;
 import one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorExtensionRegistryEntry;
 import one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
@@ -53,8 +55,16 @@ public final class AdapterBuilder extends RouteBuilder {
 
   private static final String PROCESS_HANDOFF_ROUTE_ID_PATTERN = "sip-process-handoff-%s";
   private static final String PROCESS_TAKEOVER_ROUTE_ID_PATTERN = "sip-process-takeover-%s";
+  public static final String HANDOFF_TO = "handoff to ";
+  public static final String DIRECT_PREFIX = "direct:";
+  public static final String TAKEOVER_FROM = "takeover from ";
+  public static final String UNMARSHALLING_SUFFIX = "_unmarshalling";
+  public static final String MARSHALLING_SUFFIX = "_marshalling";
+  public static final String MARSHALLING_LABEL = "marshalling";
+  public static final String UNMARSHALLING_LABEL = "unmarshalling";
   private final DeclarationsRegistry declarationsRegistry;
   private final RoutesRegistry routesRegistry;
+  private final ConnectorRegistry connectorRegistry;
 
   @SuppressWarnings("rawtypes")
   private final Map<IntegrationScenarioDefinition, List<InboundConnectorDefinition>>
@@ -70,9 +80,13 @@ public final class AdapterBuilder extends RouteBuilder {
     declarationsRegistry.getProcesses().forEach(this::buildCompositeProcess);
   }
 
-  public AdapterBuilder(DeclarationsRegistry declarationsRegistry, RoutesRegistry routesRegistry) {
+  public AdapterBuilder(
+      DeclarationsRegistry declarationsRegistry,
+      RoutesRegistry routesRegistry,
+      ConnectorRegistry connectorRegistry) {
     this.declarationsRegistry = declarationsRegistry;
     this.routesRegistry = routesRegistry;
+    this.connectorRegistry = connectorRegistry;
     this.inboundConnectors =
         declarationsRegistry.getInboundConnectors().stream()
             .collect(
@@ -182,7 +196,8 @@ public final class AdapterBuilder extends RouteBuilder {
         resolveConnectorDefinitionType(endpointDefinitionType),
         requestOrchestrationRouteId,
         routesRegistry,
-        declarationsRegistry);
+        declarationsRegistry,
+        connectorRegistry);
 
     // Build scenario handoff and response-route
     String routeConfigurationIds =
@@ -194,6 +209,14 @@ public final class AdapterBuilder extends RouteBuilder {
         from(StaticEndpointBuilders.direct(scenarioHandoffRouteId))
             .routeId(scenarioHandoffRouteId)
             .routeConfigurationId(routeConfigurationIds);
+    connectorRegistry.registerProcessorExtension(
+        scenarioHandoffRouteId,
+        scenarioHandoffRouteId,
+        0,
+        HANDOFF_TO + scenarioDefinition.getId(),
+        ProcessorComponent.FROM,
+        DIRECT_PREFIX + scenarioHandoffRouteId,
+        ProcessorType.SCENARIO_HANDOFF);
     appendOnException(inboundConnector, handoffRouteDefinition, declarationsRegistry);
     headerCleanupProcessor.ifPresent(
         proc -> handoffRouteDefinition.process(proc::cleanHeadersProcessor));
@@ -278,6 +301,14 @@ public final class AdapterBuilder extends RouteBuilder {
                 scenarioDefinition.getRequestModelClass(),
                 FROM_CDM_EXCEPTION_MESSAGE))
         .to(StaticEndpointBuilders.direct(requestOrchestrationRouteId));
+    connectorRegistry.registerProcessorExtension(
+        scenarioTakeoverRouteId,
+        scenarioTakeoverRouteId,
+        0,
+        TAKEOVER_FROM + scenarioDefinition.getId(),
+        ProcessorComponent.FROM,
+        DIRECT_PREFIX + scenarioTakeoverRouteId,
+        ProcessorType.SCENARIO_TAKEOVER);
 
     // Build endpoint route that connects to external system
     final var endpointRouteDefinition =
@@ -287,7 +318,7 @@ public final class AdapterBuilder extends RouteBuilder {
     appendOnException(outboundConnector, endpointRouteDefinition, declarationsRegistry);
     headerCleanupProcessor.ifPresent(
         proc -> endpointRouteDefinition.process(proc::cleanHeadersProcessor));
-    outboundConnector.defineOutboundEndpoints(endpointRouteDefinition);
+    outboundConnector.defineOutboundEndpoints(endpointRouteDefinition, connectorRegistry);
     headerCleanupProcessor.ifPresent(
         proc -> endpointRouteDefinition.process(proc::recreateHeadersProcessor));
     endpointRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));

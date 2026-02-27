@@ -1,5 +1,7 @@
 package one.x1f.sip.foundation.core.declarative.orchestration.connector;
 
+import static one.x1f.sip.foundation.core.declarative.AdapterBuilder.DIRECT_PREFIX;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -8,12 +10,14 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import one.x1f.sip.foundation.core.declarative.RoutesRegistry;
+import one.x1f.sip.foundation.core.declarative.ConnectorRegistry;
 import one.x1f.sip.foundation.core.declarative.annotation.UseRequestModelMapper;
 import one.x1f.sip.foundation.core.declarative.annotation.UseResponseModelMapper;
 import one.x1f.sip.foundation.core.declarative.annotation.connector.extension.*;
 import one.x1f.sip.foundation.core.declarative.annotation.rest.ParameterMapping;
 import one.x1f.sip.foundation.core.declarative.connector.*;
+import one.x1f.sip.foundation.core.declarative.dto.ProcessorComponent;
+import one.x1f.sip.foundation.core.declarative.dto.ProcessorType;
 import one.x1f.sip.foundation.core.declarative.model.ModelMapper;
 import one.x1f.sip.foundation.core.declarative.orchestration.Orchestrator;
 import one.x1f.sip.foundation.core.declarative.utils.DeclarativeHelper;
@@ -51,7 +55,7 @@ public final class ConnectorExtensionChainOrchestrator
     final var connector = relatedConnector.get();
     final var context = applicationContext.get();
 
-    RoutesRegistry routesRegistry = context.getBean(RoutesRegistry.class);
+    ConnectorRegistry connectorRegistry = context.getBean(ConnectorRegistry.class);
 
     buildExtensionRegistryForConnector(connector, context);
 
@@ -63,10 +67,19 @@ public final class ConnectorExtensionChainOrchestrator
         orderedRequestExtensions);
     if (!orderedRequestExtensions.isEmpty()) {
       var requestRoute = info.getRequestRouteDefinition();
-      for (var extension : orderedRequestExtensions) {
+      int bound = orderedRequestExtensions.size();
+      for (int order = 0; order < bound; order++) {
+        var extension = orderedRequestExtensions.get(order);
         String extensionId =
             String.format(EXTENSION_ID_REQUEST, connector.getId(), extension.getExtensionName());
-        routesRegistry.addProcessorExtension(connector.getId(), extensionId);
+        connectorRegistry.registerProcessorExtension(
+            requestRoute.getRouteId(),
+            extensionId,
+            order,
+            extension.getExtensionName(),
+            ProcessorComponent.TO,
+            DIRECT_PREFIX + extensionId,
+            ProcessorType.REQUEST);
         requestRoute.to(StaticEndpointBuilders.direct(extensionId));
       }
     }
@@ -82,10 +95,19 @@ public final class ConnectorExtensionChainOrchestrator
         logListOrder(
             String.format("Order of response-extensions for connector %s: ", connector.getId()),
             orderedResponseExtensions);
-        for (var extension : orderedResponseExtensions) {
+        int bound = orderedResponseExtensions.size();
+        for (int order = 0; order < bound; order++) {
+          var extension = orderedResponseExtensions.get(order);
           String extensionId =
               String.format(EXTENSION_ID_RESPONSE, connector.getId(), extension.getExtensionName());
-          routesRegistry.addProcessorExtension(connector.getId(), extensionId);
+          connectorRegistry.registerProcessorExtension(
+              responseRoute.getRouteId(),
+              extensionId,
+              order,
+              extension.getExtensionName(),
+              ProcessorComponent.TO,
+              DIRECT_PREFIX + extensionId,
+              ProcessorType.RESPONSE);
           responseRoute.to(StaticEndpointBuilders.direct(extensionId));
         }
       }
