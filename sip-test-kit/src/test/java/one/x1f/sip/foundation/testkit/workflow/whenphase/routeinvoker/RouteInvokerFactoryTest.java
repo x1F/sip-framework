@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Set;
 import one.x1f.sip.foundation.core.declarative.DeclarationsRegistry;
+import one.x1f.sip.foundation.testkit.config.AdapterConfigurationProperties;
 import one.x1f.sip.foundation.testkit.exception.NoRouteInvokerException;
 import one.x1f.sip.foundation.testkit.util.TestKitHelper;
 import one.x1f.sip.foundation.testkit.workflow.givenphase.Mock;
@@ -37,7 +38,11 @@ class RouteInvokerFactoryTest {
     CamelContext camelContext = mock(CamelContext.class);
     RestTemplateBuilder restTemplateBuilder = mock(RestTemplateBuilder.class);
     RestRouteInvoker restRouteInvoker =
-        new RestRouteInvoker(camelContext, mock(Environment.class), restTemplateBuilder);
+        new RestRouteInvoker(
+            camelContext,
+            mock(Environment.class),
+            restTemplateBuilder,
+            new AdapterConfigurationProperties());
     FileRouteInvoker fileRouteInvoker = new FileRouteInvoker(camelContext);
     FtpRouteInvoker ftpRouteInvoker = new FtpRouteInvoker(camelContext);
     JmsRouteInvoker jmsRouteInvoker = new JmsRouteInvoker(camelContext);

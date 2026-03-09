@@ -13,5 +13,9 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "sip.core.tracing")
 public class SIPTraceConfig {
+  /** Enable logging tracing in console */
   private boolean log;
+
+  /** Enable SIP tracing and trace history */
+  private boolean enabled;
 }

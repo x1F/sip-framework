@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import one.x1f.sip.foundation.core.proxies.ProcessorProxy;
+import one.x1f.sip.foundation.testkit.config.AdapterConfigurationProperties;
 import one.x1f.sip.foundation.testkit.workflow.givenphase.Mock;
 import one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import org.apache.camel.CamelContext;
@@ -43,7 +44,11 @@ class RestRouteInvokerTest {
     RestTemplateBuilder restTemplateBuilder = mock(RestTemplateBuilder.class);
     restTemplate = mock(RestTemplate.class);
     restRouteInvoker =
-        new RestRouteInvoker(camelContext, mock(Environment.class), restTemplateBuilder);
+        new RestRouteInvoker(
+            camelContext,
+            mock(Environment.class),
+            restTemplateBuilder,
+            createAdapterConfigurationProperties());
     exchange = mock(Exchange.class, RETURNS_DEEP_STUBS);
     ResponseEntity<String> routeExpectedResponse =
         new ResponseEntity<>(TEST_RESPONSE, HttpStatus.OK);
@@ -151,5 +156,12 @@ class RestRouteInvokerTest {
             eq(HttpMethod.GET),
             any(),
             ArgumentMatchers.<ParameterizedTypeReference<String>>any());
+  }
+
+  private AdapterConfigurationProperties createAdapterConfigurationProperties() {
+    var adapterConfigurationProperties = new AdapterConfigurationProperties();
+    adapterConfigurationProperties.setCamelCxfEndpointContextPath("");
+    adapterConfigurationProperties.setCamelEndpointContextPath("");
+    return adapterConfigurationProperties;
   }
 }

@@ -9,5 +9,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(value = "sip.core.metrics.gauge")
 public class HealthGaugeConfiguration {
+  /** Name of the configurable health gauge */
   private String name = "sip.core.metrics.health";
 }
