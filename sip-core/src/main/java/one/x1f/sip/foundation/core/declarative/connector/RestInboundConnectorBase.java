@@ -6,7 +6,6 @@ import one.x1f.sip.foundation.core.declarative.RouteRole;
 import one.x1f.sip.foundation.core.declarative.RoutesRegistry;
 import one.x1f.sip.foundation.core.declarative.annotation.InboundConnector;
 import one.x1f.sip.foundation.core.declarative.annotation.rest.ParameterMapping;
-import one.x1f.sip.foundation.core.declarative.dto.ProcessorComponent;
 import one.x1f.sip.foundation.core.declarative.dto.ProcessorType;
 import one.x1f.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import org.apache.camel.model.ToDefinition;
@@ -51,7 +50,6 @@ public abstract class RestInboundConnectorBase extends InboundConnectorBase
           getId() + "_inbound_entry",
           0,
           verb.asVerb() + ":" + verb.getPath(),
-          ProcessorComponent.FROM,
           verb.getPath(),
           ProcessorType.ENTRY);
     }

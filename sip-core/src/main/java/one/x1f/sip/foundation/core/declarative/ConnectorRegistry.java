@@ -1,7 +1,6 @@
 package one.x1f.sip.foundation.core.declarative;
 
 import java.util.*;
-import one.x1f.sip.foundation.core.declarative.dto.ProcessorComponent;
 import one.x1f.sip.foundation.core.declarative.dto.ProcessorInfo;
 import one.x1f.sip.foundation.core.declarative.dto.ProcessorType;
 import org.apache.commons.collections4.MultiValuedMap;
@@ -27,24 +26,16 @@ public class ConnectorRegistry {
    * @param extensionId if of the extension/processor
    * @param order order when it's used on the route
    * @param label label of the extension/processor
-   * @param component {@link ProcessorComponent}
    * @param uri raw uri of the processor/extension
    * @param type {@link ProcessorType}
    */
   public void registerProcessorExtension(
-      String routeId,
-      String extensionId,
-      int order,
-      String label,
-      ProcessorComponent component,
-      String uri,
-      ProcessorType type) {
+      String routeId, String extensionId, int order, String label, String uri, ProcessorType type) {
     var processorInfo =
         ProcessorInfo.builder()
             .order(order)
             .id(extensionId)
             .label(removeSuffix(label))
-            .component(component)
             .uri(uri)
             .type(type)
             .build();

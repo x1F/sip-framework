@@ -16,7 +16,6 @@ import one.x1f.sip.foundation.core.declarative.annotation.UseResponseModelMapper
 import one.x1f.sip.foundation.core.declarative.annotation.connector.extension.*;
 import one.x1f.sip.foundation.core.declarative.annotation.rest.ParameterMapping;
 import one.x1f.sip.foundation.core.declarative.connector.*;
-import one.x1f.sip.foundation.core.declarative.dto.ProcessorComponent;
 import one.x1f.sip.foundation.core.declarative.dto.ProcessorType;
 import one.x1f.sip.foundation.core.declarative.model.ModelMapper;
 import one.x1f.sip.foundation.core.declarative.orchestration.Orchestrator;
@@ -77,7 +76,6 @@ public final class ConnectorExtensionChainOrchestrator
             extensionId,
             order,
             extension.getExtensionName(),
-            ProcessorComponent.TO,
             DIRECT_PREFIX + extensionId,
             ProcessorType.REQUEST);
         requestRoute.to(StaticEndpointBuilders.direct(extensionId));
@@ -105,7 +103,6 @@ public final class ConnectorExtensionChainOrchestrator
               extensionId,
               order,
               extension.getExtensionName(),
-              ProcessorComponent.TO,
               DIRECT_PREFIX + extensionId,
               ProcessorType.RESPONSE);
           responseRoute.to(StaticEndpointBuilders.direct(extensionId));

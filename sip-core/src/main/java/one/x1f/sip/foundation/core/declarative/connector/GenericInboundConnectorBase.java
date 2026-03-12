@@ -10,7 +10,6 @@ import one.x1f.sip.foundation.core.declarative.DeclarationsRegistry;
 import one.x1f.sip.foundation.core.declarative.RouteRole;
 import one.x1f.sip.foundation.core.declarative.RoutesRegistry;
 import one.x1f.sip.foundation.core.declarative.annotation.InboundConnector;
-import one.x1f.sip.foundation.core.declarative.dto.ProcessorComponent;
 import one.x1f.sip.foundation.core.declarative.dto.ProcessorType;
 import one.x1f.sip.foundation.core.declarative.model.MarshallerDefinition;
 import one.x1f.sip.foundation.core.declarative.model.UnmarshallerDefinition;
@@ -59,7 +58,6 @@ public abstract class GenericInboundConnectorBase extends InboundConnectorBase
                   getId() + UNMARSHALLING_SUFFIX,
                   order.get(),
                   UNMARSHALLING_LABEL,
-                  ProcessorComponent.UNMARSHAL,
                   endpoint.getRawUri(),
                   ProcessorType.UNMARSHALLER);
               unmarshaller.accept(routeDef);
@@ -71,7 +69,6 @@ public abstract class GenericInboundConnectorBase extends InboundConnectorBase
         getId() + "_inbound_entry",
         order.get(),
         endpoint.getRawUri(),
-        ProcessorComponent.FROM,
         endpoint.getRawUri(),
         ProcessorType.ENTRY);
     order.getAndIncrement();
@@ -83,7 +80,6 @@ public abstract class GenericInboundConnectorBase extends InboundConnectorBase
                   getId() + MARSHALLING_SUFFIX,
                   order.get(),
                   MARSHALLING_LABEL,
-                  ProcessorComponent.MARSHAL,
                   endpoint.getRawUri(),
                   ProcessorType.MARSHALLER);
               marshaller.accept(routeDef);

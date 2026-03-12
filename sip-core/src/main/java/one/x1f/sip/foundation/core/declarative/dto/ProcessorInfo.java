@@ -10,7 +10,6 @@ public class ProcessorInfo {
   private String label;
   private String id;
   private String uri;
-  private ProcessorComponent component;
   private int order;
   private ProcessorType type;
 }

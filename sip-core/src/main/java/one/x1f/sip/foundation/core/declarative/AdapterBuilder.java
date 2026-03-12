@@ -18,7 +18,6 @@ import one.x1f.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import one.x1f.sip.foundation.core.declarative.connector.ConnectorExtension;
 import one.x1f.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import one.x1f.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
-import one.x1f.sip.foundation.core.declarative.dto.ProcessorComponent;
 import one.x1f.sip.foundation.core.declarative.dto.ProcessorType;
 import one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorExtensionChainOrchestrator;
 import one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorExtensionRegistryEntry;
@@ -214,7 +213,6 @@ public final class AdapterBuilder extends RouteBuilder {
         scenarioHandoffRouteId,
         0,
         HANDOFF_TO + scenarioDefinition.getId(),
-        ProcessorComponent.FROM,
         DIRECT_PREFIX + scenarioHandoffRouteId,
         ProcessorType.SCENARIO_HANDOFF);
     appendOnException(inboundConnector, handoffRouteDefinition, declarationsRegistry);
@@ -306,7 +304,6 @@ public final class AdapterBuilder extends RouteBuilder {
         scenarioTakeoverRouteId,
         0,
         TAKEOVER_FROM + scenarioDefinition.getId(),
-        ProcessorComponent.FROM,
         DIRECT_PREFIX + scenarioTakeoverRouteId,
         ProcessorType.SCENARIO_TAKEOVER);
 

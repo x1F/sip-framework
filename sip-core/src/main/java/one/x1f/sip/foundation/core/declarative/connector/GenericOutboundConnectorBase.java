@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import one.x1f.sip.foundation.core.declarative.ConnectorRegistry;
 import one.x1f.sip.foundation.core.declarative.annotation.OutboundConnector;
-import one.x1f.sip.foundation.core.declarative.dto.ProcessorComponent;
 import one.x1f.sip.foundation.core.declarative.dto.ProcessorType;
 import one.x1f.sip.foundation.core.declarative.model.MarshallerDefinition;
 import one.x1f.sip.foundation.core.declarative.model.UnmarshallerDefinition;
@@ -52,7 +51,6 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
                   getId() + MARSHALLING_SUFFIX,
                   order.get(),
                   MARSHALLING_LABEL,
-                  ProcessorComponent.MARSHAL,
                   "marshal",
                   ProcessorType.MARSHALLER);
               marshaller.accept(routeDefinition);
@@ -70,7 +68,6 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
         getId() + "_outbound_exit",
         order.get(),
         endpoint.getRawUri(),
-        ProcessorComponent.TO,
         endpoint.getRawUri(),
         ProcessorType.EXIT);
     order.getAndIncrement();
@@ -82,7 +79,6 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
                   getId() + UNMARSHALLING_SUFFIX,
                   order.get(),
                   UNMARSHALLING_LABEL,
-                  ProcessorComponent.UNMARSHAL,
                   "unmarshal",
                   ProcessorType.UNMARSHALLER);
               unmarshaller.accept(routeDefinition);
