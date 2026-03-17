@@ -1,6 +1,6 @@
 package one.x1f.sip.foundation.testkit.config;
 
-import static one.x1f.sip.foundation.testkit.util.TestKitHelper.parseExchangeProperties;
+import static one.x1f.sip.foundation.testkit.util.TestKitHelper.parseAndEvaluateExchangeProperties;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -86,7 +86,8 @@ public class TestCasesConfig {
             testCaseValidator,
             executionStatusFactory.generateTestReport(testCaseDefinition));
 
-    Exchange exchange = parseExchangeProperties(testCaseDefinition.getWhenExecute(), camelContext);
+    Exchange exchange =
+        parseAndEvaluateExchangeProperties(testCaseDefinition.getWhenExecute(), camelContext);
 
     try {
       RouteInvoker invoker = routeInvokerFactory.getInstance(exchange);
@@ -134,7 +135,8 @@ public class TestCasesConfig {
         .map(
             connectionProperties ->
                 mockFactory.newMockInstance(
-                    testName, parseExchangeProperties(connectionProperties, camelContext)))
+                    testName,
+                    parseAndEvaluateExchangeProperties(connectionProperties, camelContext)))
         .toList();
   }
 

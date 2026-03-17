@@ -1,46 +1,60 @@
 package one.x1f.sip.foundation.testkit.configurationproperties.models;
 
-import static one.x1f.sip.foundation.core.util.SIPExchangeHelper.filterNonSerializableHeaders;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.SneakyThrows;
-import org.apache.camel.Exchange;
-import org.apache.camel.support.MessageHelper;
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.ClassPathResource;
 
 /** Class that holds a single message used in test cases */
 @Data
 public class MessageProperties {
-  private static final String RESOURCE_FILE_PREFIX = "resource-file:";
-  private String body;
-  private Map<String, Object> headers = new HashMap<>();
+  private static final String RESOURCE_FILE_PREFIX = "classpath:";
+  private PayloadProperties body = new PayloadProperties();
+  private Map<String, PayloadProperties> headers = new HashMap<>();
 
-  /**
-   * Creates a {@link MessageProperties} from the {@link Exchange}
-   *
-   * @param exchange that should be mapped
-   * @return serializable message properties
-   */
-  public static MessageProperties mapToMessageProperties(Exchange exchange) {
-    MessageProperties messageProperties = new MessageProperties();
-    messageProperties.setBody(MessageHelper.extractBodyAsString(exchange.getMessage()));
-    messageProperties.setHeaders(filterNonSerializableHeaders(exchange));
-    return messageProperties;
+  public PayloadProperties getEvaluatedBody() {
+    var payload = new PayloadProperties();
+    payload.setValue(getBodyAsString());
+    payload.setEval(getEvalAsString());
+    return payload;
   }
 
   @SneakyThrows
-  public String getBody() {
-    if (isNotBlank(body) && body.startsWith(RESOURCE_FILE_PREFIX)) {
-      String bodyLocation = body.substring(RESOURCE_FILE_PREFIX.length());
-      body =
-          FileUtils.readFileToString(
-              new ClassPathResource(bodyLocation).getFile(), StandardCharsets.UTF_8);
+  public String getBodyAsString() {
+    return getPayloadOrReadFromFile(body.getValue());
+  }
+
+  @SneakyThrows
+  public String getEvalAsString() {
+    return getPayloadOrReadFromFile(body.getEval());
+  }
+
+  @SneakyThrows
+  private String getPayloadOrReadFromFile(String value) {
+    if (isNotBlank(value) && value.startsWith(RESOURCE_FILE_PREFIX)) {
+      String bodyLocation = value.substring(RESOURCE_FILE_PREFIX.length());
+      return FileUtils.readFileToString(
+          new ClassPathResource(bodyLocation).getFile(), StandardCharsets.UTF_8);
     }
-    return body;
+    return value;
+  }
+
+  public Map<String, PayloadProperties> getHeaders() {
+    return headers.entrySet().stream()
+        .collect(
+            Collectors.toMap(
+                Map.Entry::getKey,
+                e -> {
+                  var payload = new PayloadProperties();
+                  payload.setValue(getPayloadOrReadFromFile(e.getValue().getValue()));
+                  payload.setEval(getPayloadOrReadFromFile(e.getValue().getEval()));
+                  return payload;
+                }));
   }
 }

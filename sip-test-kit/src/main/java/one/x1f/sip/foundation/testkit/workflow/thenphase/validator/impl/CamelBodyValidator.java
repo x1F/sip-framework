@@ -2,6 +2,7 @@ package one.x1f.sip.foundation.testkit.workflow.thenphase.validator.impl;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.groupingBy;
+import static one.x1f.sip.foundation.testkit.util.TestKitHelper.EVAL_PREFIX;
 import static org.apache.camel.support.MessageHelper.extractBodyAsString;
 import static org.apache.camel.support.MessageHelper.resetStreamCache;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -74,7 +75,9 @@ public class CamelBodyValidator implements ExchangeValidator {
 
   @Override
   public boolean isApplicable(Exchange executionResult, Exchange expectedResponse) {
-    return expectedResponse != null && extractBodyAsString(expectedResponse.getMessage()) != null;
+    if (expectedResponse == null) return false;
+    String bodyAsString = extractBodyAsString(expectedResponse.getMessage());
+    return bodyAsString != null && !bodyAsString.startsWith(EVAL_PREFIX);
   }
 
   private ValidationResult toValidationResult(ComparatorResult comparatorResult) {

@@ -16,6 +16,8 @@ import java.util.Map;
 import one.x1f.sip.foundation.core.util.exception.SIPFrameworkException;
 import one.x1f.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
 import one.x1f.sip.foundation.testkit.configurationproperties.models.MessageProperties;
+import one.x1f.sip.foundation.testkit.configurationproperties.models.PayloadProperties;
+import one.x1f.sip.foundation.testkit.configurationproperties.models.ResultMessage;
 import one.x1f.sip.foundation.testkit.workflow.givenphase.Mock;
 import one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvokerTest;
 import org.apache.camel.*;
@@ -53,7 +55,7 @@ class TestKitHelperTest {
     when(message.getBody()).thenReturn(BODY);
     when(message.getHeaders()).thenReturn(headers);
 
-    MessageProperties actual = MessageProperties.mapToMessageProperties(mockExchange);
+    var actual = ResultMessage.mapToResultMessage(mockExchange);
 
     assertThat(actual.getBody()).isEqualTo(BODY);
     assertThat(actual.getHeaders()).isEqualTo(headers);
@@ -103,8 +105,12 @@ class TestKitHelperTest {
     EndpointProperties properties = new EndpointProperties();
     properties.setEndpointId("routeId");
     MessageProperties messageProperties = new MessageProperties();
-    messageProperties.setBody("body");
-    messageProperties.setHeaders(Map.of("headerKey", "value"));
+    var body = new PayloadProperties();
+    body.setValue("body");
+    messageProperties.setBody(body);
+    var header = new PayloadProperties();
+    header.setValue("value");
+    messageProperties.setHeaders(Map.of("headerKey", header));
     properties.setRequestMessage(messageProperties);
 
     // act

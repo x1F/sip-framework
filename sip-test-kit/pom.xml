@@ -15,6 +15,10 @@
     <name>SIP Test Kit</name>
     <description>Module providing test-kit functionality for SIP integration adapters</description>
 
+    <properties>
+        <graaljs.version>25.0.2</graaljs.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -126,6 +130,18 @@
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-kafka-starter</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.graalvm.polyglot</groupId>
+            <artifactId>polyglot</artifactId>
+            <version>${graaljs.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.graalvm.polyglot</groupId>
+            <artifactId>js</artifactId>
+            <version>${graaljs.version}</version>
+            <type>pom</type>
         </dependency>
     </dependencies>
 </project>
