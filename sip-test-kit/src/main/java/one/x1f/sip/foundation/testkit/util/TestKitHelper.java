@@ -140,7 +140,11 @@ public class TestKitHelper extends SIPExchangeHelper {
   }
 
   public static String evaluateScript(String jsScript) {
-    try (Context context = Context.newBuilder().allowAllAccess(false).build()) {
+    try (Context context =
+        Context.newBuilder()
+            .allowAllAccess(false)
+            .option("engine.WarnInterpreterOnly", "false")
+            .build()) {
       Value value = context.eval("js", jsScript);
       if (value == null || value.isNull()) {
         return null;
@@ -168,7 +172,11 @@ public class TestKitHelper extends SIPExchangeHelper {
   }
 
   public static ValidationResult evaluateValidationScript(String jsScript, String input) {
-    try (Context context = Context.newBuilder().allowAllAccess(false).build()) {
+    try (Context context =
+        Context.newBuilder()
+            .allowAllAccess(false)
+            .option("engine.WarnInterpreterOnly", "false")
+            .build()) {
       if (StringUtils.isNotEmpty(input)) {
         context.getBindings("js").putMember("input", input);
       }
