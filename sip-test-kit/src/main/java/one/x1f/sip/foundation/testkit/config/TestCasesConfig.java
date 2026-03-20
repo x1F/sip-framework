@@ -145,9 +145,6 @@ public class TestCasesConfig {
     testCaseDefinition
         .getWithMocks()
         .forEach(properties -> validateConnectorType(properties, ConnectorType.OUT, WITH_MOCKS));
-    testCaseDefinition
-        .getThenExpect()
-        .forEach(properties -> validateConnectorType(properties, ConnectorType.OUT, THEN_EXPECT));
   }
 
   private void validateConnectorType(
