@@ -103,7 +103,7 @@
         <spotless-maven-plugin.version>2.46.1</spotless-maven-plugin.version>
         <maven-gpg-plugin.version>3.2.6</maven-gpg-plugin.version>
         <sonatype-central-publishing-plugin.version>0.8.0</sonatype-central-publishing-plugin.version>
-        <license-maven-plugin.version>2.6.0</license-maven-plugin.version>
+        <license-maven-plugin.version>2.7.1</license-maven-plugin.version>
 
         <!-- sonar settings -->
         <sonar.organization>ikor-gmbh</sonar.organization>
@@ -694,6 +694,9 @@
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>license-maven-plugin</artifactId>
                         <version>${license-maven-plugin.version}</version>
+                        <configuration>
+                            <missingFile>${project.basedir}/licenses/missing-licenses.properties</missingFile>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
