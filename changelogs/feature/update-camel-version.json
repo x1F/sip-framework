@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "347",
+  "message": "Update Apache Camel version to 4.18.0 LTS. Adjust ids of endpoint processor to avoid conflicts with route ids."
+}

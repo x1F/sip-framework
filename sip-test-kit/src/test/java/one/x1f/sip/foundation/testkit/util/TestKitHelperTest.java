@@ -66,7 +66,8 @@ class TestKitHelperTest {
     Endpoint expectedEndpoint = mock(Endpoint.class);
     when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);
     when(route.getEndpoint()).thenReturn(expectedEndpoint);
-    when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY)).thenReturn(ROUTE_ID);
+    when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, String.class))
+        .thenReturn(ROUTE_ID);
 
     // act
     Endpoint actualEndpoint = resolveEndpoint(exchange, camelContext);
@@ -88,7 +89,8 @@ class TestKitHelperTest {
     Consumer expectedConsumer = mock(Consumer.class);
     when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);
     when(route.getConsumer()).thenReturn(expectedConsumer);
-    when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY)).thenReturn(ROUTE_ID);
+    when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, String.class))
+        .thenReturn(ROUTE_ID);
 
     // act
     Consumer actualConsumer = resolveConsumer(exchange, camelContext);

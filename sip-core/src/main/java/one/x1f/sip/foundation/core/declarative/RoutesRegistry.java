@@ -42,8 +42,8 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
   public static final String SIP_CONNECTOR_PREFIX = "sip-connector";
   public static final String SIP_SOAP_SERVICE_PREFIX = "sip-soap-service";
   public static final String SIP_SCENARIO_ORCHESTRATOR_PREFIX = "sip-scenario";
-
   public static final String SIP_COMPOSITE_ORCHESTRATOR_PREFIX = "sip-process";
+  public static final String SIP_ENDPOINT_PROCESSOR_SUFFIX = "_processor";
   private final DeclarationsRegistryApi declarationsRegistryApi;
 
   private final MultiValuedMap<ConnectorDefinition, String> routeIdsForConnectorRegister =
@@ -188,6 +188,12 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
 
   public String getConnectorIdByRouteId(String routeId) {
     ConnectorDefinition connector = connectorForRouteIdRegister.get(routeId);
+    return connector != null ? connector.getId() : null;
+  }
+
+  public String getConnectorIdByExternalEndpointId(String endpointId) {
+    ConnectorDefinition connector =
+        connectorForRouteIdRegister.get(endpointId.replace(SIP_ENDPOINT_PROCESSOR_SUFFIX, ""));
     return connector != null ? connector.getId() : null;
   }
 
