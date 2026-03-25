@@ -27,6 +27,7 @@ import one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvok
 import one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvokerFactory;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -112,7 +113,7 @@ public class TestCasesConfig {
   }
 
   private void setEndpointBasedOnConnectorId(EndpointProperties properties, RouteRole role) {
-    if (properties.getConnectorId() != null) {
+    if (StringUtils.isNotEmpty(properties.getConnectorId())) {
       String routeId =
           routesRegistry.get().getRouteIdByConnectorIdAndRole(properties.getConnectorId(), role);
       if (routeId == null) {
