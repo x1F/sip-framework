@@ -85,8 +85,8 @@
         <xmlsec.version>4.0.4</xmlsec.version>
 
         <!-- maven dependencies -->
-        <maven-core.version>3.9.14</maven-core.version>
-        <maven-project-dependecies.version>3.9.14</maven-project-dependecies.version>
+        <maven-core.version>3.9.9</maven-core.version>
+        <maven-project-dependecies.version>3.9.9</maven-project-dependecies.version>
         <maven-plugin-annotations.version>3.15.2</maven-plugin-annotations.version>
         <qdox.version>2.1.0</qdox.version>
 
