@@ -147,6 +147,8 @@
     <dependencyManagement>
         <dependencies>
 
+            <!-- ========== BEGIN TEMPORARY MODIFICATIONS SECTION ========== -->
+
             <!-- Temporary pins for CVEs-->
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -163,6 +165,18 @@
                 <artifactId>zookeeper</artifactId>
                 <version>3.9.5</version>
             </dependency>
+
+            <!-- override SNAPSHOT in camel-spring-boot-bom:4.18.0 dependencyManagement -->
+            <!-- camel-spring-bom erroneously points to SNAPSHOT, which sonatype central prohibits -->
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-test</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+
+            <!-- ========== END OF TEMPORARY MODIFICATIONS SECTION ========== -->
+
+
 
             <!-- spring dependencies -->
             <!-- Camel BOM -->
