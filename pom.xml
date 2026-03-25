@@ -146,6 +146,24 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <!-- Temporary pins for CVEs-->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.21.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.scala-lang</groupId>
+                <artifactId>scala-library</artifactId>
+                <version>2.13.9</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.zookeeper</groupId>
+                <artifactId>zookeeper</artifactId>
+                <version>3.9.5</version>
+            </dependency>
+
             <!-- spring dependencies -->
             <!-- Camel BOM -->
             <dependency>
