@@ -8,7 +8,7 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <!-- Attention! We need to keep this in sync with the spring-boot version set in sip-framework,
              which is transitively referenced in sip-integration-starter specified in the dependencymanagement section -->
-        <version>3.5.11</version>
+        <version>3.5.12</version>
     <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -64,7 +64,7 @@
         <cxf.version>4.1.4</cxf.version>                                            <!-- keep in sync with cxf version in framework pom -->
         <snakeyaml.version>2.4</snakeyaml.version>                                  <!-- keep in sync with snakeyaml version in framework pom -->
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
-        <maven-gpg-plugin.version>3.2.6</maven-gpg-plugin.version>                  <!-- keep in sync with framework, for maven central deployment -->
+        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>                  <!-- keep in sync with framework, for maven central deployment -->
         <sonatype-central-publishing-plugin.version>0.8.0</sonatype-central-publishing-plugin.version>  <!-- keep in sync with framework, for maven central deployment -->
         <spotless-maven-plugin.version>2.46.1</spotless-maven-plugin.version>       <!-- keep in sync with spotless version in framework pom -->
         <apache-commons-lang3.version>3.18.0</apache-commons-lang3.version>
