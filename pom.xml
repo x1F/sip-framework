@@ -132,6 +132,19 @@
         <module>sip-soap-starter</module>
     </modules>
 
+    <repositories>
+        <repository>
+            <id>shibboleth-releases</id>
+            <url>https://build.shibboleth.net/maven/releases/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <dependencyManagement>
         <dependencies>
             <!-- spring dependencies -->
@@ -694,9 +707,6 @@
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>license-maven-plugin</artifactId>
                         <version>${license-maven-plugin.version}</version>
-                        <configuration>
-                            <missingFile>${project.basedir}/licenses/missing-licenses.properties</missingFile>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>
