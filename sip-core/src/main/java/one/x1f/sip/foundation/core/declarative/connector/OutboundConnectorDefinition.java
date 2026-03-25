@@ -1,5 +1,6 @@
 package one.x1f.sip.foundation.core.declarative.connector;
 
+import one.x1f.sip.foundation.core.declarative.ConnectorRegistry;
 import one.x1f.sip.foundation.core.declarative.annotation.OutboundConnector;
 import one.x1f.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import org.apache.camel.model.RouteDefinition;
@@ -11,7 +12,7 @@ import org.apache.camel.model.RouteDefinition;
  *
  * <p>The outbound connector is responsible for defining the endpoint(s) that forwards the
  * integration call to the external system. The endpoint(s) are defined by the {@link
- * #defineOutboundEndpoints(RouteDefinition)} method.
+ * #defineOutboundEndpoints(RouteDefinition, ConnectorRegistry)} method.
  *
  * <p>Adapter developers should not implement this interface directly, but rather extend one of the
  * outbound {@link ConnectorBase} subclasses and annotate it with @{@link OutboundConnector}.
@@ -28,7 +29,8 @@ public non-sealed interface OutboundConnectorDefinition
    *
    * @param routeDefinition Route definition that the outbound endpoint(s) should be added to.
    */
-  void defineOutboundEndpoints(RouteDefinition routeDefinition);
+  void defineOutboundEndpoints(
+      RouteDefinition routeDefinition, ConnectorRegistry connectorRegistry);
 
   @Override
   default ConnectorType getConnectorType() {

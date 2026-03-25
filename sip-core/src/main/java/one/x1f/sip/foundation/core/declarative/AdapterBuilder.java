@@ -1,19 +1,26 @@
 package one.x1f.sip.foundation.core.declarative;
 
+import static one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorExtensionChainOrchestrator.EXTENSION_ID_REQUEST;
+import static one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorExtensionChainOrchestrator.EXTENSION_ID_RESPONSE;
 import static one.x1f.sip.foundation.core.declarative.utils.DeclarativeHelper.appendOnException;
 import static one.x1f.sip.foundation.core.declarative.utils.DeclarativeHelper.joinConfigurationIds;
 import static one.x1f.sip.foundation.core.declarative.validator.CDMValidator.FROM_CDM_EXCEPTION_MESSAGE;
 import static one.x1f.sip.foundation.core.declarative.validator.CDMValidator.TO_CDM_EXCEPTION_MESSAGE;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import one.x1f.sip.foundation.core.declarative.annotation.connector.CleanupHeaders;
 import one.x1f.sip.foundation.core.declarative.connector.ConnectorDefinition;
+import one.x1f.sip.foundation.core.declarative.connector.ConnectorExtension;
 import one.x1f.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import one.x1f.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
+import one.x1f.sip.foundation.core.declarative.dto.ProcessorType;
+import one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorExtensionChainOrchestrator;
+import one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorExtensionRegistryEntry;
 import one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
 import one.x1f.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import one.x1f.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
@@ -47,8 +54,16 @@ public final class AdapterBuilder extends RouteBuilder {
 
   private static final String PROCESS_HANDOFF_ROUTE_ID_PATTERN = "sip-process-handoff-%s";
   private static final String PROCESS_TAKEOVER_ROUTE_ID_PATTERN = "sip-process-takeover-%s";
+  public static final String HANDOFF_TO = "handoff to ";
+  public static final String DIRECT_PREFIX = "direct:";
+  public static final String TAKEOVER_FROM = "takeover from ";
+  public static final String UNMARSHALLING_SUFFIX = "_unmarshalling";
+  public static final String MARSHALLING_SUFFIX = "_marshalling";
+  public static final String MARSHALLING_LABEL = "marshalling";
+  public static final String UNMARSHALLING_LABEL = "unmarshalling";
   private final DeclarationsRegistry declarationsRegistry;
   private final RoutesRegistry routesRegistry;
+  private final ConnectorRegistry connectorRegistry;
 
   @SuppressWarnings("rawtypes")
   private final Map<IntegrationScenarioDefinition, List<InboundConnectorDefinition>>
@@ -64,9 +79,13 @@ public final class AdapterBuilder extends RouteBuilder {
     declarationsRegistry.getProcesses().forEach(this::buildCompositeProcess);
   }
 
-  public AdapterBuilder(DeclarationsRegistry declarationsRegistry, RoutesRegistry routesRegistry) {
+  public AdapterBuilder(
+      DeclarationsRegistry declarationsRegistry,
+      RoutesRegistry routesRegistry,
+      ConnectorRegistry connectorRegistry) {
     this.declarationsRegistry = declarationsRegistry;
     this.routesRegistry = routesRegistry;
+    this.connectorRegistry = connectorRegistry;
     this.inboundConnectors =
         declarationsRegistry.getInboundConnectors().stream()
             .collect(
@@ -176,7 +195,8 @@ public final class AdapterBuilder extends RouteBuilder {
         resolveConnectorDefinitionType(endpointDefinitionType),
         requestOrchestrationRouteId,
         routesRegistry,
-        declarationsRegistry);
+        declarationsRegistry,
+        connectorRegistry);
 
     // Build scenario handoff and response-route
     String routeConfigurationIds =
@@ -188,6 +208,13 @@ public final class AdapterBuilder extends RouteBuilder {
         from(StaticEndpointBuilders.direct(scenarioHandoffRouteId))
             .routeId(scenarioHandoffRouteId)
             .routeConfigurationId(routeConfigurationIds);
+    connectorRegistry.registerProcessorExtension(
+        scenarioHandoffRouteId,
+        scenarioHandoffRouteId,
+        0,
+        HANDOFF_TO + scenarioDefinition.getId(),
+        DIRECT_PREFIX + scenarioHandoffRouteId,
+        ProcessorType.SCENARIO_HANDOFF);
     appendOnException(inboundConnector, handoffRouteDefinition, declarationsRegistry);
     headerCleanupProcessor.ifPresent(
         proc -> handoffRouteDefinition.process(proc::cleanHeadersProcessor));
@@ -230,6 +257,7 @@ public final class AdapterBuilder extends RouteBuilder {
 
     if (inboundConnector.getOrchestrator().canOrchestrate(orchestrationInfo)) {
       inboundConnector.getOrchestrator().doOrchestrate(orchestrationInfo);
+      buildConnectorExtensions(inboundConnector);
     }
     requestRouteDefinition.to(StaticEndpointBuilders.direct(scenarioHandoffRouteId));
   }
@@ -271,6 +299,13 @@ public final class AdapterBuilder extends RouteBuilder {
                 scenarioDefinition.getRequestModelClass(),
                 FROM_CDM_EXCEPTION_MESSAGE))
         .to(StaticEndpointBuilders.direct(requestOrchestrationRouteId));
+    connectorRegistry.registerProcessorExtension(
+        scenarioTakeoverRouteId,
+        scenarioTakeoverRouteId,
+        0,
+        TAKEOVER_FROM + scenarioDefinition.getId(),
+        DIRECT_PREFIX + scenarioTakeoverRouteId,
+        ProcessorType.SCENARIO_TAKEOVER);
 
     // Build endpoint route that connects to external system
     final var endpointRouteDefinition =
@@ -280,7 +315,7 @@ public final class AdapterBuilder extends RouteBuilder {
     appendOnException(outboundConnector, endpointRouteDefinition, declarationsRegistry);
     headerCleanupProcessor.ifPresent(
         proc -> endpointRouteDefinition.process(proc::cleanHeadersProcessor));
-    outboundConnector.defineOutboundEndpoints(endpointRouteDefinition);
+    outboundConnector.defineOutboundEndpoints(endpointRouteDefinition, connectorRegistry);
     headerCleanupProcessor.ifPresent(
         proc -> endpointRouteDefinition.process(proc::recreateHeadersProcessor));
     endpointRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));
@@ -301,6 +336,7 @@ public final class AdapterBuilder extends RouteBuilder {
         new OrchestrationRoutes(requestRouteDefinition, Optional.of(responseRouteDefinition));
     if (outboundConnector.getOrchestrator().canOrchestrate(orchestrationInfo)) {
       outboundConnector.getOrchestrator().doOrchestrate(orchestrationInfo);
+      buildConnectorExtensions(outboundConnector);
     }
     requestRouteDefinition.to(StaticEndpointBuilders.direct(externalEndpointRouteId));
 
@@ -314,6 +350,30 @@ public final class AdapterBuilder extends RouteBuilder {
                         outboundConnector.getId(),
                         cdmModel,
                         TO_CDM_EXCEPTION_MESSAGE)));
+  }
+
+  private void buildConnectorExtensions(ConnectorDefinition connector) {
+    var connectorOrchestrator = connector.getOrchestrator();
+    if (connectorOrchestrator
+        instanceof ConnectorExtensionChainOrchestrator connectorExtensionChainOrchestrator) {
+      connectorExtensionChainOrchestrator
+          .getRequestExtensionsRegistry()
+          .forEach(buildConnectorExtensionRoute(connector, EXTENSION_ID_REQUEST));
+      connectorExtensionChainOrchestrator
+          .getResponseExtensionsRegistry()
+          .forEach(buildConnectorExtensionRoute(connector, EXTENSION_ID_RESPONSE));
+    }
+  }
+
+  private BiConsumer<String, ConnectorExtensionRegistryEntry> buildConnectorExtensionRoute(
+      ConnectorDefinition connectorDefinition, String idFormat) {
+    return (key, value) -> {
+      ConnectorExtension extension = value.getExtension();
+      String extensionId =
+          String.format(idFormat, connectorDefinition.getId(), extension.getExtensionName());
+      var extensionRoute = from(StaticEndpointBuilders.direct(extensionId)).routeId(extensionId);
+      value.getExtension().accept(extensionRoute);
+    };
   }
 
   @SuppressWarnings("unchecked")

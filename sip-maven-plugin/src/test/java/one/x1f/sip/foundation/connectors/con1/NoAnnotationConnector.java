@@ -3,6 +3,7 @@ package one.x1f.sip.foundation.connectors.con1;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
+import one.x1f.sip.foundation.core.declarative.ConnectorRegistry;
 import one.x1f.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import one.x1f.sip.foundation.core.declarative.orchestration.Orchestrator;
 import one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
@@ -11,7 +12,8 @@ import org.apache.camel.model.RouteDefinition;
 public class NoAnnotationConnector implements OutboundConnectorDefinition {
 
   @Override
-  public void defineOutboundEndpoints(RouteDefinition routeDefinition) {
+  public void defineOutboundEndpoints(
+      RouteDefinition routeDefinition, ConnectorRegistry connectorRegistry) {
     // test
   }
 

@@ -3,6 +3,7 @@ package one.x1f.sip.foundation.connectors.con1;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
+import one.x1f.sip.foundation.core.declarative.ConnectorRegistry;
 import one.x1f.sip.foundation.core.declarative.DeclarationsRegistry;
 import one.x1f.sip.foundation.core.declarative.RoutesRegistry;
 import one.x1f.sip.foundation.core.declarative.annotation.InboundConnector;
@@ -21,7 +22,8 @@ public class ValidConnector implements InboundConnectorDefinition {
       OptionalIdentifiedDefinition definition,
       String targetToBase,
       RoutesRegistry routeRegistry,
-      DeclarationsRegistry declarationsRegistry) {
+      DeclarationsRegistry declarationsRegistry,
+      ConnectorRegistry connectorRegistry) {
     // test
   }
 

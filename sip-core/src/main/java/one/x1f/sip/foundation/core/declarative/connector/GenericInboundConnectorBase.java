@@ -1,12 +1,16 @@
 package one.x1f.sip.foundation.core.declarative.connector;
 
+import static one.x1f.sip.foundation.core.declarative.AdapterBuilder.*;
 import static one.x1f.sip.foundation.core.declarative.utils.DeclarativeHelper.*;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import one.x1f.sip.foundation.core.declarative.ConnectorRegistry;
 import one.x1f.sip.foundation.core.declarative.DeclarationsRegistry;
 import one.x1f.sip.foundation.core.declarative.RouteRole;
 import one.x1f.sip.foundation.core.declarative.RoutesRegistry;
 import one.x1f.sip.foundation.core.declarative.annotation.InboundConnector;
+import one.x1f.sip.foundation.core.declarative.dto.ProcessorType;
 import one.x1f.sip.foundation.core.declarative.model.MarshallerDefinition;
 import one.x1f.sip.foundation.core.declarative.model.UnmarshallerDefinition;
 import org.apache.camel.builder.EndpointConsumerBuilder;
@@ -32,21 +36,54 @@ public abstract class GenericInboundConnectorBase extends InboundConnectorBase
       final RoutesDefinition definition,
       final String targetToBase,
       final RoutesRegistry routeRegistry,
-      final DeclarationsRegistry declarationsRegistry) {
+      final DeclarationsRegistry declarationsRegistry,
+      final ConnectorRegistry connectorRegistry) {
     String routeConfigurationIds =
         joinConfigurationIds(
             this.getId(),
             this.getConfigurationIds(),
             this.getScenario().get().getConfigurationIds());
+    AtomicInteger order = new AtomicInteger();
+    EndpointConsumerBuilder endpoint = resolveForbiddenEndpoint(defineInitiatingEndpoint());
+    String routeId = routeRegistry.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, this);
     final var routeDef =
-        definition
-            .from(resolveForbiddenEndpoint(defineInitiatingEndpoint()))
-            .routeId(routeRegistry.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, this))
-            .routeConfigurationId(routeConfigurationIds);
+        definition.from(endpoint).routeId(routeId).routeConfigurationId(routeConfigurationIds);
     appendOnException(this, routeDef, declarationsRegistry);
-    defineRequestUnmarshalling().ifPresent(unmarshaller -> unmarshaller.accept(routeDef));
+
+    defineRequestUnmarshalling()
+        .ifPresent(
+            unmarshaller -> {
+              connectorRegistry.registerProcessorExtension(
+                  routeId,
+                  getId() + UNMARSHALLING_SUFFIX,
+                  order.get(),
+                  UNMARSHALLING_LABEL,
+                  endpoint.getRawUri(),
+                  ProcessorType.UNMARSHALLER);
+              unmarshaller.accept(routeDef);
+              order.getAndIncrement();
+            });
     routeDef.to(StaticEndpointBuilders.direct(targetToBase));
-    defineResponseMarshalling().ifPresent(marshaller -> marshaller.accept(routeDef));
+    connectorRegistry.registerProcessorExtension(
+        routeId,
+        getId() + "_inbound_entry",
+        order.get(),
+        endpoint.getRawUri(),
+        endpoint.getRawUri(),
+        ProcessorType.ENTRY);
+    order.getAndIncrement();
+    defineResponseMarshalling()
+        .ifPresent(
+            marshaller -> {
+              connectorRegistry.registerProcessorExtension(
+                  routeId,
+                  getId() + MARSHALLING_SUFFIX,
+                  order.get(),
+                  MARSHALLING_LABEL,
+                  endpoint.getRawUri(),
+                  ProcessorType.MARSHALLER);
+              marshaller.accept(routeDef);
+            });
   }
 
   /**

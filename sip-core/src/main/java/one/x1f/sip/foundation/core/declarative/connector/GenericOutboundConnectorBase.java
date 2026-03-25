@@ -1,11 +1,15 @@
 package one.x1f.sip.foundation.core.declarative.connector;
 
+import static one.x1f.sip.foundation.core.declarative.AdapterBuilder.*;
 import static one.x1f.sip.foundation.core.declarative.RoutesRegistry.SIP_ENDPOINT_PROCESSOR_SUFFIX;
 import static one.x1f.sip.foundation.core.declarative.utils.DeclarativeHelper.doesUriContainPlaceholders;
 import static one.x1f.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import one.x1f.sip.foundation.core.declarative.ConnectorRegistry;
 import one.x1f.sip.foundation.core.declarative.annotation.OutboundConnector;
+import one.x1f.sip.foundation.core.declarative.dto.ProcessorType;
 import one.x1f.sip.foundation.core.declarative.model.MarshallerDefinition;
 import one.x1f.sip.foundation.core.declarative.model.UnmarshallerDefinition;
 import one.x1f.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
@@ -36,16 +40,50 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
           formatConnectorId(getConnectorType(), getScenarioId(), getConnectorGroupId()));
 
   @Override
-  public final void defineOutboundEndpoints(final RouteDefinition routeDefinition) {
+  public final void defineOutboundEndpoints(
+      final RouteDefinition routeDefinition, final ConnectorRegistry connectorRegistry) {
+    AtomicInteger order = new AtomicInteger();
     String routeId = routeDefinition.getRouteId();
-    defineRequestMarshalling().ifPresent(marshaller -> marshaller.accept(routeDefinition));
+    defineRequestMarshalling()
+        .ifPresent(
+            marshaller -> {
+              connectorRegistry.registerProcessorExtension(
+                  routeId,
+                  getId() + MARSHALLING_SUFFIX,
+                  order.get(),
+                  MARSHALLING_LABEL,
+                  "marshal",
+                  ProcessorType.MARSHALLER);
+              marshaller.accept(routeDefinition);
+              order.getAndIncrement();
+            });
     EndpointProducerBuilder endpoint = defineOutgoingEndpoint();
+
     if (doesUriContainPlaceholders(endpoint.getRawUri())) {
       routeDefinition.toD(endpoint).id(routeId + SIP_ENDPOINT_PROCESSOR_SUFFIX);
     } else {
       routeDefinition.to(endpoint).id(routeId + SIP_ENDPOINT_PROCESSOR_SUFFIX);
     }
-    defineResponseUnmarshalling().ifPresent(unmarshaller -> unmarshaller.accept(routeDefinition));
+    connectorRegistry.registerProcessorExtension(
+        routeId,
+        getId() + "_outbound_exit",
+        order.get(),
+        endpoint.getRawUri(),
+        endpoint.getRawUri(),
+        ProcessorType.EXIT);
+    order.getAndIncrement();
+    defineResponseUnmarshalling()
+        .ifPresent(
+            unmarshaller -> {
+              connectorRegistry.registerProcessorExtension(
+                  routeId,
+                  getId() + UNMARSHALLING_SUFFIX,
+                  order.get(),
+                  UNMARSHALLING_LABEL,
+                  "unmarshal",
+                  ProcessorType.UNMARSHALLER);
+              unmarshaller.accept(routeDefinition);
+            });
   }
 
   /**
