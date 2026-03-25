@@ -1,5 +1,6 @@
 package one.x1f.sip.foundation.testkit.config;
 
+import static one.x1f.sip.foundation.core.declarative.RoutesRegistry.SIP_ENDPOINT_PROCESSOR_SUFFIX;
 import static one.x1f.sip.foundation.testkit.util.TestKitHelper.parseExchangeProperties;
 
 import java.util.LinkedList;
@@ -118,9 +119,10 @@ public class TestCasesConfig {
         throw SIPFrameworkException.init(
             "There is no connector with id %s", properties.getConnectorId());
       }
-      properties.setEndpointId(routeId);
+      properties.setEndpointId(routeId + SIP_ENDPOINT_PROCESSOR_SUFFIX);
     } else {
-      String connectorId = routesRegistry.get().getConnectorIdByRouteId(properties.getEndpointId());
+      String connectorId =
+          routesRegistry.get().getConnectorIdByExternalEndpointId(properties.getEndpointId());
       if (connectorId == null) {
         throw SIPFrameworkException.init(
             "There is no connector for endpoint with id %s", properties.getEndpointId());

@@ -1,6 +1,7 @@
 package one.x1f.sip.foundation.core.declarative.connector;
 
 import static one.x1f.sip.foundation.core.declarative.AdapterBuilder.*;
+import static one.x1f.sip.foundation.core.declarative.RoutesRegistry.SIP_ENDPOINT_PROCESSOR_SUFFIX;
 import static one.x1f.sip.foundation.core.declarative.utils.DeclarativeHelper.doesUriContainPlaceholders;
 import static one.x1f.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
 
@@ -59,9 +60,9 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
     EndpointProducerBuilder endpoint = defineOutgoingEndpoint();
 
     if (doesUriContainPlaceholders(endpoint.getRawUri())) {
-      routeDefinition.toD(endpoint).id(routeId);
+      routeDefinition.toD(endpoint).id(routeId + SIP_ENDPOINT_PROCESSOR_SUFFIX);
     } else {
-      routeDefinition.to(endpoint).id(routeId);
+      routeDefinition.to(endpoint).id(routeId + SIP_ENDPOINT_PROCESSOR_SUFFIX);
     }
     connectorRegistry.registerProcessorExtension(
         routeId,
