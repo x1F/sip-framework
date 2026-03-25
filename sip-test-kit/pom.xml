@@ -104,10 +104,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.woodstox</groupId>
-            <artifactId>woodstox-core</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-ftp-starter</artifactId>
             <optional>true</optional>
