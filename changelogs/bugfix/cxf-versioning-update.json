@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "346",
-  "message": "Remove cxf versioning from dependencyManagement. Use versions provided by Apache Camel."
-}
