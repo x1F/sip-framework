@@ -423,7 +423,6 @@
           <name>Unicode-3.0</name>
           <url>https://raw.githubusercontent.com/unicode-org/icu/maint/maint-78/LICENSE</url>
           <distribution>repo</distribution>
-          <file>unicode-3.0 - license.txt</file>
         </license>
       </licenses>
     </dependency>
