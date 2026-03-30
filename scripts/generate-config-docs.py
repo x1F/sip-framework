@@ -2,14 +2,14 @@
 """
 generate_config_docs.py
 
-Scans a multi-module Maven/Spring Boot project for generated
+Scans all modules in SIP Framework project for generated
 spring-configuration-metadata.json files and produces a consolidated
 docs/configuration.md with all properties grouped by module and prefix.
 
 Usage:
-    python generate_config_docs.py                  # run from project root
-    python generate_config_docs.py --root /path/to/project
-    python generate_config_docs.py --root . --output docs/configuration.md
+    python scripts/generate-config-docs.py
+    python scripts/generate-config-docs.py --root /path/to/project
+    python scripts/generate-config-docs.py --root . --output docs/configuration.md
 """
 
 import argparse
@@ -175,7 +175,7 @@ def build_toc(modules_with_content: list[tuple[str, list[str]]]) -> list[str]:
 def render_document(modules_with_content: list[tuple[str, list[str]]]) -> str:
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
     header = [
-        "# Spring Boot Configuration Properties",
+        "# SIP Foundation Configuration Properties",
         "",
         "> Auto-generated from `spring-configuration-metadata.json`."
         f" Last updated: {now}.",
@@ -216,7 +216,7 @@ def main():
 
     if not metadata_files:
         print("⚠️  No spring-configuration-metadata.json files found.")
-        print("   Make sure you have run `mvn process-classes` or `mvn package` first.")
+        print("   Make sure you have run `mvn package` first.")
         return
 
     modules_with_content: list[tuple[str, list[str]]] = []
