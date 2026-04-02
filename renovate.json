@@ -5,8 +5,9 @@
   ],
   "vulnerabilityAlerts": {
     "enabled": true,
-    "labels": ["security"],
-    "transitiveRemediation": true
+    "labels": [
+      "security"
+    ]
   },
   "osvVulnerabilityAlerts": true,
   "packageRules": [
@@ -26,14 +27,22 @@
       "groupName": "minor dependencies"
     },
     {
-      "matchUpdateTypes": ["patch"],
+      "matchUpdateTypes": [
+        "patch"
+      ],
       "groupName": "patch/hotfix dependencies"
     },
     {
-      "matchManagers": ["github-actions", "gitlabci", "circleci"],
+      "matchManagers": [
+        "github-actions",
+        "gitlabci",
+        "circleci"
+      ],
       "groupName": "CI/CD configuration"
     }
   ],
-  "ignoreDeps": ["one.x1f.sip.cloud:sip-integration-starter"],
+  "ignoreDeps": [
+    "one.x1f.sip.cloud:sip-integration-starter"
+  ],
   "draftPR": true
 }

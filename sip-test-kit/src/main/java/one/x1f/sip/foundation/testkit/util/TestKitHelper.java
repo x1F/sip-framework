@@ -1,5 +1,6 @@
 package one.x1f.sip.foundation.testkit.util;
 
+import static one.x1f.sip.foundation.core.declarative.RoutesRegistry.SIP_ENDPOINT_PROCESSOR_SUFFIX;
 import static one.x1f.sip.foundation.core.proxies.ProcessorProxy.TEST_MODE_HEADER;
 import static one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker.TEST_NAME_HEADER;
 import static one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvoker.CONNECTOR_ID_EXCHANGE_PROPERTY;
@@ -34,7 +35,8 @@ public class TestKitHelper extends SIPExchangeHelper {
    * @return route id
    */
   public static String getRouteId(Exchange exchange) {
-    return (String) exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY);
+    var endpointId = exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, String.class);
+    return endpointId != null ? endpointId.replace(SIP_ENDPOINT_PROCESSOR_SUFFIX, "") : null;
   }
 
   /**

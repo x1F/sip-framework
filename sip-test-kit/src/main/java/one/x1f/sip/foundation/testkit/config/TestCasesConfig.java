@@ -1,5 +1,7 @@
 package one.x1f.sip.foundation.testkit.config;
 
+import static one.x1f.sip.foundation.core.declarative.RoutesRegistry.SIP_ENDPOINT_PROCESSOR_SUFFIX;
+import static one.x1f.sip.foundation.testkit.util.TestKitHelper.parseExchangeProperties;
 import static one.x1f.sip.foundation.testkit.util.TestKitHelper.parseAndEvaluateExchangeProperties;
 
 import java.util.LinkedList;
@@ -27,7 +29,6 @@ import one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvok
 import one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvokerFactory;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -120,9 +121,10 @@ public class TestCasesConfig {
         throw SIPFrameworkException.init(
             "There is no connector with id %s", properties.getConnectorId());
       }
-      properties.setEndpointId(routeId);
+      properties.setEndpointId(routeId + SIP_ENDPOINT_PROCESSOR_SUFFIX);
     } else {
-      String connectorId = routesRegistry.get().getConnectorIdByRouteId(properties.getEndpointId());
+      String connectorId =
+          routesRegistry.get().getConnectorIdByExternalEndpointId(properties.getEndpointId());
       if (connectorId == null) {
         throw SIPFrameworkException.init(
             "There is no connector for endpoint with id %s", properties.getEndpointId());
