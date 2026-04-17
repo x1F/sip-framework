@@ -379,6 +379,7 @@ public final class AdapterBuilder extends RouteBuilder {
           from(StaticEndpointBuilders.direct(extensionId))
               .routeId(extensionId)
               .routeConfigurationId(routeConfigurationIds);
+      appendOnException(connectorDefinition, extensionRoute, null);
       value.getExtension().accept(extensionRoute);
     };
   }

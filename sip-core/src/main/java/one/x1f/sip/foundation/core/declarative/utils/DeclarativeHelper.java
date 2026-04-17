@@ -193,8 +193,10 @@ public class DeclarativeHelper {
         try {
           var result = method.invoke(connectorDefinition);
           if (result instanceof ConnectorOnExceptionDefinition configurationDefinition) {
-            declarationsRegistry.registerClassForOnException(
-                onExceptionDefinition, connectorDefinition.getClass().getName());
+            if (declarationsRegistry != null) {
+              declarationsRegistry.registerClassForOnException(
+                  onExceptionDefinition, connectorDefinition.getClass().getName());
+            }
             configurationDefinition.define(onExceptionDefinition);
             onExceptionDefinition
                 .setProperty(ERROR_HANDLER, simple(connectorDefinition.getClass().getName()))
