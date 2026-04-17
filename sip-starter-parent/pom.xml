@@ -8,7 +8,7 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <!-- Attention! We need to keep this in sync with the spring-boot version set in sip-framework,
              which is transitively referenced in sip-integration-starter specified in the dependencymanagement section -->
-        <version>3.5.12</version>
+        <version>3.5.13</version>
     <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -165,6 +165,27 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${apache-commons-lang3.version}</version>
+            </dependency>
+            <!-- tomcat temporary, remove after spring boot 3.5.14 or above -->
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-core</artifactId>
+                <version>10.1.54</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-el</artifactId>
+                <version>10.1.54</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-websocket</artifactId>
+                <version>10.1.54</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat</groupId>
+                <artifactId>tomcat-annotations-api</artifactId>
+                <version>10.1.54</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -58,8 +58,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- manage all versions via properties, so that they can be overridden in a project if necessary -->
-        <spring.boot.version>3.5.12</spring.boot.version>
-        <camel.version>4.18.0</camel.version>
+        <spring.boot.version>3.5.13</spring.boot.version>
+        <camel.version>4.18.1</camel.version>
         <jackson-jsr310.version>2.21.2</jackson-jsr310.version>
         <springdoc-openapi-starter-common.version>2.8.16</springdoc-openapi-starter-common.version>
         <springdoc-openapi-starter-webmvc-ui.version>2.8.16</springdoc-openapi-starter-webmvc-ui.version>
@@ -166,12 +166,26 @@
                 <version>3.9.5</version>
             </dependency>
 
-            <!-- override SNAPSHOT in camel-spring-boot-bom:4.18.0 dependencyManagement -->
-            <!-- camel-spring-bom erroneously points to SNAPSHOT, which sonatype central prohibits -->
+            <!-- tomcat temporary, remove after spring boot 3.5.14 or above -->
             <dependency>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-test</artifactId>
-                <version>${camel.version}</version>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-core</artifactId>
+                <version>10.1.54</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-el</artifactId>
+                <version>10.1.54</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-websocket</artifactId>
+                <version>10.1.54</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat</groupId>
+                <artifactId>tomcat-annotations-api</artifactId>
+                <version>10.1.54</version>
             </dependency>
 
             <!-- ========== END OF TEMPORARY MODIFICATIONS SECTION ========== -->
