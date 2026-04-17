@@ -38,7 +38,7 @@ import org.springframework.context.ApplicationContext;
 public class DeclarativeHelper {
 
   public static final String CONNECTOR_ID_FORMAT = "%s-%s-%s";
-  public static final String ERROR_HANDLER = "errorHandler";
+  public static final String ERROR_HANDLER = "_SipErrorHandler";
   public static final String SIP_INTERNAL_SET_PROPERTY = "sip-internal-set-property";
   private static final Pattern DOLLAR_PLACEHOLDER_PATTERN = Pattern.compile("\\$\\{[^}]+\\}");
   private static final Pattern DOUBLE_CURLY_PLACEHOLDER_PATTERN =
