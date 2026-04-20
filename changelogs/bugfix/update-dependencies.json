@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "353",
-  "message": "Update Spring Boot to 3.5.13 and Apache camel to 4.18.1. Set tomcat version to 10.1.54"
-}
