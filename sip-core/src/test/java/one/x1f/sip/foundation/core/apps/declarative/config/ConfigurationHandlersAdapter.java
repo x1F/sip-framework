@@ -2,6 +2,7 @@ package one.x1f.sip.foundation.core.apps.declarative.config;
 
 import one.x1f.sip.foundation.core.annotation.SIPIntegrationAdapter;
 import one.x1f.sip.foundation.core.declarative.annotation.*;
+import one.x1f.sip.foundation.core.declarative.annotation.connector.extension.RequestProcessor;
 import one.x1f.sip.foundation.core.declarative.configuration.ConfigurationDefinition;
 import one.x1f.sip.foundation.core.declarative.configuration.ConnectorOnExceptionDefinition;
 import one.x1f.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
@@ -11,12 +12,12 @@ import one.x1f.sip.foundation.core.declarative.orchestration.connector.Connector
 import one.x1f.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
 import one.x1f.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import one.x1f.sip.foundation.core.util.exception.SIPAdapterException;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.model.OutputDefinition;
 import org.apache.camel.model.RouteConfigurationDefinition;
-import org.apache.camel.model.RouteDefinition;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -49,24 +50,16 @@ public class ConfigurationHandlersAdapter {
   public class ConfiguredInConnector extends GenericInboundConnectorBase {
     public static final String ID = "ConfiguredInConnector";
 
-    @Override
-    @Deprecated
-    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
-      return ConnectorOrchestrator.forConnector(this)
-          .setRequestRouteTransformer(this::defineRequestRoute);
-    }
+    @RequestProcessor
+    public void defineRequestRoute(Exchange exchange) {
 
-    protected void defineRequestRoute(final RouteDefinition definition) {
-      definition.process(
-          exchange -> {
-            String body = exchange.getMessage().getBody(String.class);
-            if (body.equals(MESSAGE_IN)) {
-              throw new RuntimeException("test");
-            }
-            if (body.equals(MESSAGE_SCENARIO)) {
-              throw new SIPAdapterException("test");
-            }
-          });
+      String body = exchange.getMessage().getBody(String.class);
+      if (body.equals(MESSAGE_IN)) {
+        throw new RuntimeException("test");
+      }
+      if (body.equals(MESSAGE_SCENARIO)) {
+        throw new SIPAdapterException("test");
+      }
     }
 
     @Override

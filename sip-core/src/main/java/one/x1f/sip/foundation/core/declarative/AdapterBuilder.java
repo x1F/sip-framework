@@ -257,7 +257,7 @@ public final class AdapterBuilder extends RouteBuilder {
 
     if (inboundConnector.getOrchestrator().canOrchestrate(orchestrationInfo)) {
       inboundConnector.getOrchestrator().doOrchestrate(orchestrationInfo);
-      buildConnectorExtensions(inboundConnector);
+      buildConnectorExtensions(inboundConnector, routeConfigurationIds);
     }
     requestRouteDefinition.to(StaticEndpointBuilders.direct(scenarioHandoffRouteId));
   }
@@ -336,7 +336,7 @@ public final class AdapterBuilder extends RouteBuilder {
         new OrchestrationRoutes(requestRouteDefinition, Optional.of(responseRouteDefinition));
     if (outboundConnector.getOrchestrator().canOrchestrate(orchestrationInfo)) {
       outboundConnector.getOrchestrator().doOrchestrate(orchestrationInfo);
-      buildConnectorExtensions(outboundConnector);
+      buildConnectorExtensions(outboundConnector, configIds);
     }
     requestRouteDefinition.to(StaticEndpointBuilders.direct(externalEndpointRouteId));
 
@@ -352,26 +352,34 @@ public final class AdapterBuilder extends RouteBuilder {
                         TO_CDM_EXCEPTION_MESSAGE)));
   }
 
-  private void buildConnectorExtensions(ConnectorDefinition connector) {
+  private void buildConnectorExtensions(
+      ConnectorDefinition connector, String routeConfigurationIds) {
     var connectorOrchestrator = connector.getOrchestrator();
     if (connectorOrchestrator
         instanceof ConnectorExtensionChainOrchestrator connectorExtensionChainOrchestrator) {
       connectorExtensionChainOrchestrator
           .getRequestExtensionsRegistry()
-          .forEach(buildConnectorExtensionRoute(connector, EXTENSION_ID_REQUEST));
+          .forEach(
+              buildConnectorExtensionRoute(connector, EXTENSION_ID_REQUEST, routeConfigurationIds));
       connectorExtensionChainOrchestrator
           .getResponseExtensionsRegistry()
-          .forEach(buildConnectorExtensionRoute(connector, EXTENSION_ID_RESPONSE));
+          .forEach(
+              buildConnectorExtensionRoute(
+                  connector, EXTENSION_ID_RESPONSE, routeConfigurationIds));
     }
   }
 
   private BiConsumer<String, ConnectorExtensionRegistryEntry> buildConnectorExtensionRoute(
-      ConnectorDefinition connectorDefinition, String idFormat) {
+      ConnectorDefinition connectorDefinition, String idFormat, String routeConfigurationIds) {
     return (key, value) -> {
       ConnectorExtension extension = value.getExtension();
       String extensionId =
           String.format(idFormat, connectorDefinition.getId(), extension.getExtensionName());
-      var extensionRoute = from(StaticEndpointBuilders.direct(extensionId)).routeId(extensionId);
+      var extensionRoute =
+          from(StaticEndpointBuilders.direct(extensionId))
+              .routeId(extensionId)
+              .routeConfigurationId(routeConfigurationIds);
+      appendOnException(connectorDefinition, extensionRoute, null);
       value.getExtension().accept(extensionRoute);
     };
   }
