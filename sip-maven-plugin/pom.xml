@@ -4,7 +4,7 @@
     <parent>
         <artifactId>sip-framework</artifactId>
         <groupId>one.x1f.sip.foundation</groupId>
-        <version>4.4.1-SNAPSHOT</version>
+        <version>4.4.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>sip-maven-plugin</artifactId>
