@@ -146,6 +146,31 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- ========== BEGIN TEMPORARY MODIFICATIONS SECTION ========== -->
+
+            <!-- tomcat temporary, remove after spring boot 3.5.14 or above -->
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-core</artifactId>
+                <version>10.1.55</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-el</artifactId>
+                <version>10.1.55</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-websocket</artifactId>
+                <version>10.1.55</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat</groupId>
+                <artifactId>tomcat-annotations-api</artifactId>
+                <version>10.1.55</version>
+            </dependency>
+
+            <!-- ========== END OF TEMPORARY MODIFICATIONS SECTION ========== -->
             <!-- spring dependencies -->
             <!-- Camel BOM -->
             <dependency>
