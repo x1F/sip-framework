@@ -220,7 +220,7 @@ jobs:
           mvn ${MAVEN_ARGS} versions:set -pl ${STARTER_POM} -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false -DprocessDependencies=false
           cd changelogs && ./update-changelog.sh ${RELEASE_VERSION}
           cd ..
-          sed -i "/.*JAVADOC_RELEASES.*/a \ \ \ \ - JavaDoc ${RELEASE_VERSION}: './javadoc/${RELEASE_VERSION}/index.html'" mkdocs.yml
+          sed -i "/.*JAVADOC_RELEASES.*/a \ \ \ \ - JavaDoc ${RELEASE_VERSION}: './javadoc/${RELEASE_VERSION}/apidocs/index.html'" mkdocs.yml
           git add .
           git mv -fk docs-snapshot/*.yaml docs
           git mv -fk docs-snapshot/*.md docs
