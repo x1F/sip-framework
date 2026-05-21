@@ -42,54 +42,296 @@
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="..">Introduction</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="..#what-is-sip">What is SIP</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="..#usage">Usage</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="..#framework-components">Framework components</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="..#framework-features">Framework features</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="..#getting-started">Getting started</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="..#framework-version-upgrade">Framework version upgrade</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="..#adding-additional-camel-starters-to-the-project">Adding additional Camel starters to the project</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="..#adding-new-connector-groups">Adding new Connector Groups</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="..#development-tips">Development Tips</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="..#docker">Docker</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="..#enabling-jib">Enabling Jib</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="..#building-the-image">Building the image</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="..#pushing-to-a-registry">Pushing to a registry</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="..#configuration-properties">Configuration properties</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation Guide</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../installation/#software-requirements">Software requirements</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../installation/#java-virtual-machine">Java Virtual Machine</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../installation/#maven">Maven</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../installation/#ide">IDE</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../installation/#plugins">Plugins</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../installation/#create-a-sip-adapter-using-sip-archetype">Create a SIP Adapter using SIP Archetype</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../archetype/">Archetype</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../archetype/#description">Description</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../archetype/#how-to-create-a-sip-adapter-using-sip-archetype">How to create a SIP Adapter using SIP Archetype</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../core/">Core</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../core/#description">Description</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../core/#usage">Usage</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../core/#features">Features</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../core/#actuator-health-check-and-metrics">Actuator health check and metrics</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../core/#adapter-lifecycle-manipulation-in-runtime">Adapter lifecycle manipulation in runtime</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../core/#logging-translation">Logging Translation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../core/#changing-log-level-programmatically">Changing log level programmatically</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../core/#tracing">Tracing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../core/#openapi-descriptor">OpenAPI Descriptor</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../core/#sip-details-in-actuator-info-endpoint">SIP Details in actuator info endpoint</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../core/#exception-handling">Exception handling</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../declarative/">Declarative Structure</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../declarative/#description">Description</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../declarative/#concepts">Concepts</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#common-domain-model-cdm">Common Domain Model (CDM)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#integration-scenario">Integration Scenario</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#connector-group">Connector group</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#connector">Connector</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#composite-process">Composite Process</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#orchestration">Orchestration</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../declarative/#configuration">Configuration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../declarative/#how-to-build">How to build</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#integration-scenarios">Integration Scenarios</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#connector-groups">Connector Groups</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#connectors">Connectors</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="../declarative/#inbound-connectors">Inbound Connectors</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="../declarative/#outbound-connectors">Outbound Connectors</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="../declarative/#header-cleanup">Header Cleanup</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#orchestration_1">Orchestration</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="../declarative/#connector-orchestration">Connector Orchestration</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="../declarative/#integration-scenario_1">Integration Scenario</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="../declarative/#composite-processes">Composite Processes</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../declarative/#configuration-and-exception-handling">Configuration and exception handling</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#scenario-and-connector-level-handlers">Scenario and connector level handlers</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#connector-level-exception-handlers">Connector level exception handlers</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../integration-starter/">Integration Starter</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../integration-starter/#description">Description</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../integration-starter/#includes">Includes</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../integration-starter/#usage">Usage</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../starter-parent/">Starter Parent</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../starter-parent/#description">Description</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../starter-parent/#usage">Usage</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../security/#introduction">Introduction</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../security/#installation">Installation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../security/#configuration">Configuration</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../security/#common-properties">Common properties</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../security/#ssl">SSL</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../security/#authentication">Authentication</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="../security/#definitions">Definitions</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="../security/#examples">Examples</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../security/#additional-information">Additional information</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../test-kit/">Test Kit</a>
+    <ul>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../test-kit-declarative/">Test Kit Declarative</a>
+    <ul>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../soap-starter/">SOAP Starter</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../soap-starter/#description">Description</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../soap-starter/#features">Features</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../soap-starter/#installation">Installation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../soap-starter/#usage">Usage</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../soap-starter/#inbound-connector">Inbound connector</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../soap-starter/#outbound-connector">Outbound connector</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../soap-starter/#bean-based-configuration">Bean based configuration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../soap-starter/#cxf-generator-plugin">CXF generator plugin</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../maven-plugin/">Maven Plugin</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../maven-plugin/#description">Description</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../maven-plugin/#goals-overview">Goals Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../maven-plugin/#usage">Usage</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../framework_version_upgrade/">Framework Version Upgrade</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../framework_version_upgrade/#upgrade-from-362-to-400">Upgrade from 3.6.2 to 4.0.0</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../framework_version_upgrade/#update-maven-dependencies-to-x1f-namespace">Update Maven dependencies to x1f namespace</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../framework_version_upgrade/#update-imported-framework-classes-to-x1f-namespace">Update imported framework classes to x1f namespace</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../framework_version_upgrade/#update-annotation-class-imports-due-to-typo">Update annotation class imports due to typo</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../framework_version_upgrade/#update-connector-processors-annotation-imports-to-extensions">Update connector processors annotation imports to extensions</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../framework_version_upgrade/#attribute-name-change-in-connectorprocessor-ordering-annotations">Attribute name change in ConnectorProcessor ordering annotations</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../framework_version_upgrade/#upgrade-from-361-to-362">Upgrade from 3.6.1 to 3.6.2</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../framework_version_upgrade/#upgrade-from-350-to-360">Upgrade from 3.5.0 to 3.6.0</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../framework_version_upgrade/#upgrade-from-340-to-350">Upgrade from 3.4.0 to 3.5.0</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../framework_version_upgrade/#upgrade-from-330-to-340">Upgrade from 3.3.0 to 3.4.0</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../framework_version_upgrade/#upgrade-from-320-to-330">Upgrade from 3.2.0 to 3.3.0</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../framework_version_upgrade/#upgrade-from-310-to-320">Upgrade from 3.1.0 to 3.2.0</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../framework_version_upgrade/#upgrade-from-100-to-200">Upgrade from 1.0.0 to 2.0.0</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
@@ -126,14 +368,234 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../CODE_OF_CONDUCT/">Code Of Conduct</a>
+    <ul>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Changelog</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#unreleased">[Unreleased]</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#441-2026-04-20">4.4.1 - 2026-04-20</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#440-2026-03-25">4.4.0 - 2026-03-25</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_1">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#431-2026-02-20">4.3.1 - 2026-02-20</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_2">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#430-2026-01-29">4.3.0 - 2026-01-29</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_1">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_3">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#420-2025-12-12">4.2.0 - 2025-12-12</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_2">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_4">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#410-2025-11-05">4.1.0 - 2025-11-05</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_3">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_5">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#401-2025-10-01">4.0.1 - 2025-10-01</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_6">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_1">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#400-2025-08-15">4.0.0 - 2025-08-15</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#major-changes">🚀 Major Changes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_4">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_7">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_2">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#362-2025-03-27">3.6.2 - 2025-03-27</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_8">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#361-2024-11-08">3.6.1 - 2024-11-08</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_9">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_3">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#360-2024-11-05">3.6.0 - 2024-11-05</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_5">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_10">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_4">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#350-2024-09-13">3.5.0 - 2024-09-13</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_6">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_11">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#340-2024-07-01">3.4.0 - 2024-07-01</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_7">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_12">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_5">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#330-2024-01-31">3.3.0 - 2024-01-31</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_8">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_13">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_6">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#320-2023-09-22">3.2.0 - 2023-09-22</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_9">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_14">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_7">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#310-2023-05-30">3.1.0 - 2023-05-30</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_10">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_15">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_8">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#300-2023-04-13">3.0.0 - 2023-04-13</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#major-changes_1">🚀 Major Changes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_11">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_16">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#240-2023-01-16">2.4.0 - 2023-01-16</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_12">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_17">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#230-2022-09-08">2.3.0 - 2022-09-08</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_13">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_18">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_9">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#220-2022-08-03">2.2.0 - 2022-08-03</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_14">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_19">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#210-2022-06-01">2.1.0 - 2022-06-01</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_15">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_20">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_10">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#202-2022-03-25">2.0.2 - 2022-03-25</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_21">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_11">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#200-2022-03-14">2.0.0 - 2022-03-14</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#major-changes_2">🚀 Major Changes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_16">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_22">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_12">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#100-2021-11-18">1.0.0 - 2021-11-18</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#major-changes_3">🚀 Major Changes</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/latest/index.html">JavaDoc Latest Development</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/4.4.1/index.html">JavaDoc 4.4.1</a>
                 </li>
               </ul>
               <ul>
@@ -260,7 +722,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="contributing-to-sip">Contributing to SIP<a class="headerlink" href="#contributing-to-sip" title="Permanent link">&para;</a></h1>
+                <h1 id="contributing-to-sip">Contributing to SIP</h1>
 <div class="toc">
 <ul>
 <li><a href="#contributing-to-sip">Contributing to SIP</a><ul>
@@ -279,29 +741,34 @@
 </li>
 </ul>
 </li>
+<li><a href="#put-the-id-of-the-pull-request-here-yes-that-means-you-will-need-to-create-the-pull">put the id of the pull request here (yes that means you will need to create the pull</a></li>
+<li><a href="#request-before-you-can-finish-writing-the-changelog-entry">request before you can finish writing the changelog entry)</a></li>
+<li><a href="#put-a-precise-and-short-description-of-your-changes-here">put a precise and short description of your changes here</a></li>
+<li><a href="#issue-id-is-optional-there-may-be-pull-requests-without-related-issues">issue id is optional, there may be pull requests without related issues,</a></li>
+<li><a href="#so-this-field-can-be-left-out-if-necessary">so this field can be left out if necessary</a></li>
 </ul>
 </div>
-<p>First off, thanks for your contribution! 👍</p>
+<p>First off, thanks for your contribution! :+1:</p>
 <p>SIP is released under the Apache 2.0 license. If you would like to contribute you are very welcome to do so and this document should help you having a good start.</p>
 <p>Please note we have a code of conduct, please follow it in all your interactions with the project.</p>
-<h2 id="code-of-conduct">Code of conduct<a class="headerlink" href="#code-of-conduct" title="Permanent link">&para;</a></h2>
+<h2 id="code-of-conduct">Code of conduct</h2>
 <p>This project adheres to the Contributor Covenant <a href="../CODE_OF_CONDUCT/">code of conduct</a>.</p>
 <p>By participating, you are expected to uphold this code. Please report unacceptable behavior to the given email address.</p>
-<h2 id="how-can-i-contribute">How can I contribute<a class="headerlink" href="#how-can-i-contribute" title="Permanent link">&para;</a></h2>
-<h3 id="reporting-bugs">Reporting bugs<a class="headerlink" href="#reporting-bugs" title="Permanent link">&para;</a></h3>
+<h2 id="how-can-i-contribute">How can I contribute</h2>
+<h3 id="reporting-bugs">Reporting bugs</h3>
 <p>We use GitHub issues to track bugs. Bug reports should be done by using and completing the bug tracking template.</p>
 <p>Please handle possibly security vulnerabilities with special care as described below.</p>
-<h3 id="reporting-security-vulnerabilities">Reporting security vulnerabilities<a class="headerlink" href="#reporting-security-vulnerabilities" title="Permanent link">&para;</a></h3>
+<h3 id="reporting-security-vulnerabilities">Reporting security vulnerabilities</h3>
 <p>If you think you have found a security vulnerability please <em>DO NOT</em> disclose it publicly until we've had a chance to fix it as this may result in an unnecessary security threat. We will handle these requests with special care.</p>
 <p>Please contact us with templated bug report via email at: sip@x1f.one</p>
-<h3 id="requesting-features">Requesting features<a class="headerlink" href="#requesting-features" title="Permanent link">&para;</a></h3>
+<h3 id="requesting-features">Requesting features</h3>
 <p>Feature requests can be done by creating a Github Issue using the feature request template.</p>
-<h3 id="pull-requests-to-get-your-contribution-merged">Pull requests (to get YOUR contribution merged)<a class="headerlink" href="#pull-requests-to-get-your-contribution-merged" title="Permanent link">&para;</a></h3>
-<p>Another option to contribute is to fix any bugs from the bug list, implement features, extend functionality, adapt the documentation or whatever else you can imagine! 👍</p>
+<h3 id="pull-requests-to-get-your-contribution-merged">Pull requests (to get YOUR contribution merged)</h3>
+<p>Another option to contribute is to fix any bugs from the bug list, implement features, extend functionality, adapt the documentation or whatever else you can imagine! :+1:</p>
 <p>To get your adaptions merged you need to create a pull request. You have to complete the provided pull request template. We will take care of the submitted pull requests and to mention this once again: Thank you very much for your contribution!</p>
-<h2 id="guidelines">Guidelines<a class="headerlink" href="#guidelines" title="Permanent link">&para;</a></h2>
+<h2 id="guidelines">Guidelines</h2>
 <p>We welcome everyone's work and engagement to evolve SIP. To make our life easier we defined a couple of guidelines to follow while working on the code, and we ask everyone to adhere to these points. During the pull request process the reviewer will check if the pull request adheres to the following rules. The rules are questions you should answer before creating a pull request:</p>
-<h3 id="coding">Coding<a class="headerlink" href="#coding" title="Permanent link">&para;</a></h3>
+<h3 id="coding">Coding</h3>
 <ul>
 <li>Have you avoided to use field based autowiring? (see <a href="http://odrotbohm.de/2013/11/why-field-injection-is-evil/">here</a> why we chose to use constructor autowiring)</li>
 <li>Are all your unit tests written with junit5 and assertions with assertj (<a href="https://assertj.github.io/doc/">see</a>)?</li>
@@ -311,7 +778,7 @@
 <li>Are all dependencies you added RELEASE versions?</li>
 <li>Did you change something in the documentation? Then run <code>./run-mkdocs-server.sh</code> and check that your changes look good (mkdocs server will be running on port 8000)</li>
 </ul>
-<h3 id="pull-request-process">Pull request process<a class="headerlink" href="#pull-request-process" title="Permanent link">&para;</a></h3>
+<h3 id="pull-request-process">Pull request process</h3>
 <ul>
 <li>Does your contribution follow the Google Java Coding style? (you can find it <a href="https://github.com/google/google-java-format">here</a>)</li>
 <li>Does your pull request only contain changes related to the topic the branch was intended for?</li>
@@ -320,28 +787,29 @@
 <li>Have you added a complete, valid and self explaining changelog?<ul>
 <li>Changelogs have to be put into one of these folders: <code>changelogs/bugfix</code>, <code>changelogs/documentation</code>, <code>changelogs/feature</code>, <code>changelogs/major</code></li>
 <li>The name of the changelog file has to end with the suffix <code>.json</code></li>
-<li>The format of a changelog file is as follow (don't copy the comments, only the real json key-value pairs):
-  <pre class="highlight"><code class="language-json">{
-  # put your github username here
-  "author": "stieglma",
-
-  # put the id of the pull request here (yes that means you will need to create the pull
-  # request before you can finish writing the changelog entry)
-  "pullrequestId": 1,
-
-  # put a precise and short description of your changes here
-  "message": "Update documentation, add information about changelog entries for contributors",
-
-  # issue id is optional, there may be pull requests without related issues,
-  # so this field can be left out if necessary
-  "issue": "123"
-}</code></pre></li>
+<li>
+<p>The format of a changelog file is as follow (don't copy the comments, only the real json key-value pairs):
+  ```json
+  {
+    # put your github username here
+    "author": "stieglma",</p>
+<h1 id="put-the-id-of-the-pull-request-here-yes-that-means-you-will-need-to-create-the-pull">put the id of the pull request here (yes that means you will need to create the pull</h1>
+<h1 id="request-before-you-can-finish-writing-the-changelog-entry">request before you can finish writing the changelog entry)</h1>
+<p>"pullrequestId": 1,</p>
+<h1 id="put-a-precise-and-short-description-of-your-changes-here">put a precise and short description of your changes here</h1>
+<p>"message": "Update documentation, add information about changelog entries for contributors",</p>
+<h1 id="issue-id-is-optional-there-may-be-pull-requests-without-related-issues">issue id is optional, there may be pull requests without related issues,</h1>
+<h1 id="so-this-field-can-be-left-out-if-necessary">so this field can be left out if necessary</h1>
+<p>"issue": "123"
+      }
+      ```
+- Is your pull request mergeable?
+- Was your branch deleted after merging the sources?
+- Does the pull request also contain necessary documentation changes or adaptions
+- Have you used and completed the pull request form provided?</p>
+</li>
 </ul>
 </li>
-<li>Is your pull request mergeable?</li>
-<li>Was your branch deleted after merging the sources?</li>
-<li>Does the pull request also contain necessary documentation changes or adaptions</li>
-<li>Have you used and completed the pull request form provided?</li>
 </ul>
               
             </div>

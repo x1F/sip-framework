@@ -42,42 +42,226 @@
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="..">Introduction</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="..#what-is-sip">What is SIP</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="..#usage">Usage</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="..#framework-components">Framework components</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="..#framework-features">Framework features</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="..#getting-started">Getting started</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="..#framework-version-upgrade">Framework version upgrade</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="..#adding-additional-camel-starters-to-the-project">Adding additional Camel starters to the project</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="..#adding-new-connector-groups">Adding new Connector Groups</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="..#development-tips">Development Tips</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="..#docker">Docker</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="..#enabling-jib">Enabling Jib</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="..#building-the-image">Building the image</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="..#pushing-to-a-registry">Pushing to a registry</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="..#configuration-properties">Configuration properties</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation Guide</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../installation/#software-requirements">Software requirements</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../installation/#java-virtual-machine">Java Virtual Machine</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../installation/#maven">Maven</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../installation/#ide">IDE</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../installation/#plugins">Plugins</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../installation/#create-a-sip-adapter-using-sip-archetype">Create a SIP Adapter using SIP Archetype</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../archetype/">Archetype</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../archetype/#description">Description</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../archetype/#how-to-create-a-sip-adapter-using-sip-archetype">How to create a SIP Adapter using SIP Archetype</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../core/">Core</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../core/#description">Description</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../core/#usage">Usage</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../core/#features">Features</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../core/#actuator-health-check-and-metrics">Actuator health check and metrics</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../core/#adapter-lifecycle-manipulation-in-runtime">Adapter lifecycle manipulation in runtime</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../core/#logging-translation">Logging Translation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../core/#changing-log-level-programmatically">Changing log level programmatically</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../core/#tracing">Tracing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../core/#openapi-descriptor">OpenAPI Descriptor</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../core/#sip-details-in-actuator-info-endpoint">SIP Details in actuator info endpoint</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../core/#exception-handling">Exception handling</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../declarative/">Declarative Structure</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../declarative/#description">Description</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../declarative/#concepts">Concepts</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#common-domain-model-cdm">Common Domain Model (CDM)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#integration-scenario">Integration Scenario</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#connector-group">Connector group</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#connector">Connector</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#composite-process">Composite Process</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#orchestration">Orchestration</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../declarative/#configuration">Configuration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../declarative/#how-to-build">How to build</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#integration-scenarios">Integration Scenarios</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#connector-groups">Connector Groups</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#connectors">Connectors</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="../declarative/#inbound-connectors">Inbound Connectors</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="../declarative/#outbound-connectors">Outbound Connectors</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="../declarative/#header-cleanup">Header Cleanup</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#orchestration_1">Orchestration</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="../declarative/#connector-orchestration">Connector Orchestration</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="../declarative/#integration-scenario_1">Integration Scenario</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="../declarative/#composite-processes">Composite Processes</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../declarative/#configuration-and-exception-handling">Configuration and exception handling</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#scenario-and-connector-level-handlers">Scenario and connector level handlers</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../declarative/#connector-level-exception-handlers">Connector level exception handlers</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../integration-starter/">Integration Starter</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../integration-starter/#description">Description</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../integration-starter/#includes">Includes</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../integration-starter/#usage">Usage</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../starter-parent/">Starter Parent</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../starter-parent/#description">Description</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../starter-parent/#usage">Usage</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../security/#introduction">Introduction</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../security/#installation">Installation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../security/#configuration">Configuration</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../security/#common-properties">Common properties</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../security/#ssl">SSL</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../security/#authentication">Authentication</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="../security/#definitions">Definitions</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="../security/#examples">Examples</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../security/#additional-information">Additional information</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../test-kit/">Test Kit</a>
+    <ul>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../test-kit-declarative/">Test Kit Declarative</a>
+    <ul>
+    </ul>
                 </li>
               </ul>
               <ul class="current">
@@ -106,10 +290,48 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../maven-plugin/">Maven Plugin</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../maven-plugin/#description">Description</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../maven-plugin/#goals-overview">Goals Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../maven-plugin/#usage">Usage</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../framework_version_upgrade/">Framework Version Upgrade</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../framework_version_upgrade/#upgrade-from-362-to-400">Upgrade from 3.6.2 to 4.0.0</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../framework_version_upgrade/#update-maven-dependencies-to-x1f-namespace">Update Maven dependencies to x1f namespace</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../framework_version_upgrade/#update-imported-framework-classes-to-x1f-namespace">Update imported framework classes to x1f namespace</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../framework_version_upgrade/#update-annotation-class-imports-due-to-typo">Update annotation class imports due to typo</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../framework_version_upgrade/#update-connector-processors-annotation-imports-to-extensions">Update connector processors annotation imports to extensions</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../framework_version_upgrade/#attribute-name-change-in-connectorprocessor-ordering-annotations">Attribute name change in ConnectorProcessor ordering annotations</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../framework_version_upgrade/#upgrade-from-361-to-362">Upgrade from 3.6.1 to 3.6.2</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../framework_version_upgrade/#upgrade-from-350-to-360">Upgrade from 3.5.0 to 3.6.0</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../framework_version_upgrade/#upgrade-from-340-to-350">Upgrade from 3.4.0 to 3.5.0</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../framework_version_upgrade/#upgrade-from-330-to-340">Upgrade from 3.3.0 to 3.4.0</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../framework_version_upgrade/#upgrade-from-320-to-330">Upgrade from 3.2.0 to 3.3.0</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../framework_version_upgrade/#upgrade-from-310-to-320">Upgrade from 3.1.0 to 3.2.0</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../framework_version_upgrade/#upgrade-from-100-to-200">Upgrade from 1.0.0 to 2.0.0</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
@@ -118,18 +340,262 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../CONTRIBUTING/">Contribution Guidelines</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../CONTRIBUTING/#code-of-conduct">Code of conduct</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../CONTRIBUTING/#how-can-i-contribute">How can I contribute</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../CONTRIBUTING/#reporting-bugs">Reporting bugs</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../CONTRIBUTING/#reporting-security-vulnerabilities">Reporting security vulnerabilities</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../CONTRIBUTING/#requesting-features">Requesting features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../CONTRIBUTING/#pull-requests-to-get-your-contribution-merged">Pull requests (to get YOUR contribution merged)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../CONTRIBUTING/#guidelines">Guidelines</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../CONTRIBUTING/#coding">Coding</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../CONTRIBUTING/#pull-request-process">Pull request process</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../CODE_OF_CONDUCT/">Code Of Conduct</a>
+    <ul>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../changelog/">Changelog</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#unreleased">[Unreleased]</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#441-2026-04-20">4.4.1 - 2026-04-20</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#440-2026-03-25">4.4.0 - 2026-03-25</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_1">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#431-2026-02-20">4.3.1 - 2026-02-20</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_2">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#430-2026-01-29">4.3.0 - 2026-01-29</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_1">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_3">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#420-2025-12-12">4.2.0 - 2025-12-12</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_2">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_4">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#410-2025-11-05">4.1.0 - 2025-11-05</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_3">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_5">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#401-2025-10-01">4.0.1 - 2025-10-01</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_6">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_1">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#400-2025-08-15">4.0.0 - 2025-08-15</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#major-changes">🚀 Major Changes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_4">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_7">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_2">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#362-2025-03-27">3.6.2 - 2025-03-27</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_8">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#361-2024-11-08">3.6.1 - 2024-11-08</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_9">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_3">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#360-2024-11-05">3.6.0 - 2024-11-05</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_5">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_10">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_4">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#350-2024-09-13">3.5.0 - 2024-09-13</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_6">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_11">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#340-2024-07-01">3.4.0 - 2024-07-01</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_7">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_12">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_5">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#330-2024-01-31">3.3.0 - 2024-01-31</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_8">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_13">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_6">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#320-2023-09-22">3.2.0 - 2023-09-22</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_9">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_14">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_7">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#310-2023-05-30">3.1.0 - 2023-05-30</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_10">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_15">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_8">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#300-2023-04-13">3.0.0 - 2023-04-13</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#major-changes_1">🚀 Major Changes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_11">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_16">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#240-2023-01-16">2.4.0 - 2023-01-16</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_12">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_17">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#230-2022-09-08">2.3.0 - 2022-09-08</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_13">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_18">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_9">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#220-2022-08-03">2.2.0 - 2022-08-03</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_14">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_19">🐞 Bugfixes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#210-2022-06-01">2.1.0 - 2022-06-01</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_15">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_20">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_10">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#202-2022-03-25">2.0.2 - 2022-03-25</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_21">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_11">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#200-2022-03-14">2.0.0 - 2022-03-14</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#major-changes_2">🚀 Major Changes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#features_16">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#bugfixes_22">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#documentation_12">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../changelog/#100-2021-11-18">1.0.0 - 2021-11-18</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../changelog/#major-changes_3">🚀 Major Changes</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/latest/index.html">JavaDoc Latest Development</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/4.4.1/index.html">JavaDoc 4.4.1</a>
                 </li>
               </ul>
               <ul>
@@ -256,7 +722,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="sip-soap-starter">SIP SOAP Starter<a class="headerlink" href="#sip-soap-starter" title="Permanent link">&para;</a></h1>
+                <h1 id="sip-soap-starter">SIP SOAP Starter</h1>
 <div class="toc">
 <ul>
 <li><a href="#sip-soap-starter">SIP SOAP Starter</a><ul>
@@ -274,71 +740,73 @@
 </li>
 </ul>
 </div>
-<h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
+<h2 id="description">Description</h2>
 <p>Starter project used to add necessary predefined dependencies for development of Adapters that use SOAP technology. It uses Apache CXF as an underlying library for SOAP implementation.
 It can be used on both Inbound and Outbound connectors (to publish SOAP service or to consume SOAP service).
 Usage of the soap-starter reduces boilerplate code and configuration needed to develop SOAP adapters. </p>
-<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
+<h2 id="features">Features</h2>
 <ul>
 <li>Inbound connector Base</li>
 <li>Outbound connector Base</li>
 <li>Bean based configuration</li>
 <li>CXF generator plugin</li>
 </ul>
-<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<h2 id="installation">Installation</h2>
 <p>If <strong><a href="../archetype/">SIP Archetype</a></strong> was used during the adapter creation and <strong>useSoap</strong> question was answered positively then there is no need
 to add any dependencies manually.</p>
 <p>If that is not the case, or if the adapter was made before the SOAP support was added to SIP Framework,
 then this manual steps are needed:
 1. Add SIP SOAP Starter dependency to project <em>pom.xml</em> (in the \&lt;dependencies&gt; section):</p>
-<pre class="highlight"><code class="language-xml">&lt;dependency&gt;
+<pre><code class="language-xml">&lt;dependency&gt;
   &lt;groupId&gt;one.x1f.sip.foundation&lt;/groupId&gt;
   &lt;artifactId&gt;sip-soap-starter&lt;/artifactId&gt;
-&lt;/dependency&gt;</code></pre>
-<ol start="2">
-<li>
-<p>Add Wsdl4j dependency to the project <em>pom.xml</em> (in the \&lt;dependencies&gt; section):
-<pre class="highlight"><code class="language-xml">&lt;dependency&gt;
+&lt;/dependency&gt;
+</code></pre>
+<ol>
+<li>Add Wsdl4j dependency to the project <em>pom.xml</em> (in the \&lt;dependencies&gt; section):</li>
+</ol>
+<pre><code class="language-xml">&lt;dependency&gt;
   &lt;groupId&gt;wsdl4j&lt;/groupId&gt;
   &lt;artifactId&gt;wsdl4j&lt;/artifactId&gt;
-&lt;/dependency&gt;</code></pre></p>
-</li>
-<li>
-<p>Add CXF Codegen Plugin to the project <em>pom.xml</em> (in the \&lt;build&gt;\&lt;plugins&gt; section):</p>
-</li>
+&lt;/dependency&gt;
+</code></pre>
+<ol>
+<li>Add CXF Codegen Plugin to the project <em>pom.xml</em> (in the \&lt;build&gt;\&lt;plugins&gt; section):</li>
 </ol>
-<pre class="highlight"><code class="language-xml">&lt;plugin&gt;
+<pre><code class="language-xml">&lt;plugin&gt;
   &lt;groupId&gt;org.apache.cxf&lt;/groupId&gt;
   &lt;artifactId&gt;cxf-codegen-plugin&lt;/artifactId&gt;
-&lt;/plugin&gt;</code></pre>
-<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+&lt;/plugin&gt;
+</code></pre>
+<h2 id="usage">Usage</h2>
 <p>Exposed SOAP services (and their respective WSDL) can be seen on the address: <strong>{base_url}/soap-ws</strong> </p>
-<h3 id="inbound-connector">Inbound connector<a class="headerlink" href="#inbound-connector" title="Permanent link">&para;</a></h3>
+<h3 id="inbound-connector">Inbound connector</h3>
 <p>One SOAP service has, potentially, multiple methods that are exposed. Each method is represented by a separate SIP connector.
 Prerequisite for the usage is to have a WSDL file that describes the service and generated necessary service classes.</p>
 <p>To define an Inbound SOAP Connector you need to extend the <code>SoapInboundConnectorBase&lt;&gt;</code> class and annotate the class with standard @InboundConnector annotation.
 SoapInboundConnectorBase&lt;&gt; class has a generic parameter which is the service class that is generated from the WSDL file.</p>
 <p>Besides defining the service class in the generic, you need to define the method that is exposed by the connector by overriding the <code>getServiceOperationName()</code> method.</p>
 <p>All the requests will be automatically handled by this connector and unmarshalled to the defined request model.</p>
-<p>Example:
-<pre class="highlight"><code class="language-java">@InboundConnector(
-    connectorGroup = "soap-customer-service",
+<p>Example:</p>
+<pre><code class="language-java">@InboundConnector(
+    connectorGroup = &quot;soap-customer-service&quot;,
     requestModel = UpdateCustomer.class,
     integrationScenario = UpdateCustomerScenario.ID)
 public class UpdateCustomerConnector extends SoapOperationInboundConnectorBase&lt;CustomerService&gt; {
 
   @Override
   public String getServiceOperationName() {
-    return "updateCustomer";
+    return &quot;updateCustomer&quot;;
   }
 
-}</code></pre></p>
-<h3 id="outbound-connector">Outbound connector<a class="headerlink" href="#outbound-connector" title="Permanent link">&para;</a></h3>
+}
+</code></pre>
+<h3 id="outbound-connector">Outbound connector</h3>
 <p>Similar rules apply to the Outbound connector as they do to the Inbound connector. You need to extend the <code>SoapOutboundConnectorBase&lt;&gt;</code> class and annotate the class with @OutboundConnector annotation.
 SoapOutboundConnectorBase&lt;&gt; class has a generic parameter which is the service class and you need to extend getServiceOperationName() method to define the method.</p>
-<p>Example:
-<pre class="highlight"><code class="language-java">@OutboundConnector(
-    connectorGroup = "soap-customer-service",
+<p>Example:</p>
+<pre><code class="language-java">@OutboundConnector(
+    connectorGroup = &quot;soap-customer-service&quot;,
     requestModel = GetCustomersByName.class,
     responseModel = GetCustomersByNameResponse.class,
     integrationScenario = GetCustomersByNameScenario.ID)
@@ -347,37 +815,41 @@ public class GetCustomersByNameOutboundConnector
 
   @Override
   public String getServiceOperationName() {
-    return "getCustomersByName";
+    return &quot;getCustomersByName&quot;;
   }
 
-}</code></pre></p>
-<p>If there is no configuration for the default address of the service (see <a href="./#bean-based-configuration">Bean based configuration</a>), you need to define the address of the service by overriding the <code>getAddress()</code> method.
-<pre class="highlight"><code class="language-java">  @Override
+}
+</code></pre>
+<p>If there is no configuration for the default address of the service (see <a href="./#bean-based-configuration">Bean based configuration</a>), you need to define the address of the service by overriding the <code>getAddress()</code> method.</p>
+<pre><code class="language-java">  @Override
   protected String getServiceAddress() {
-    return "http://localhost:8081/customerservice";
-  }</code></pre></p>
-<h3 id="bean-based-configuration">Bean based configuration<a class="headerlink" href="#bean-based-configuration" title="Permanent link">&para;</a></h3>
+    return &quot;http://localhost:8081/customerservice&quot;;
+  }
+</code></pre>
+<h3 id="bean-based-configuration">Bean based configuration</h3>
 <p>SOAP starter uses Apache CXF as an underlying library for SOAP implementation, and thus it has a lot of configuration options.</p>
 <p>All the configuration options are available in the <code>CxfEndpoint</code> class and can be overridden by defining a bean of that type with the name of the service class (see <a href="https://www.javadoc.io/doc/org.apache.camel/camel-cxf/3.2.0/org/apache/camel/component/cxf/CxfEndpoint.html">CxfEndpoint</a>).</p>
 <p>SIP Framework will automatically find the inbound and outbound connectors that use the same service class and will use the configuration defined in the bean.</p>
-<p>Example:
-<pre class="highlight"><code class="language-java">  @Bean("CustomerService")
+<p>Example:</p>
+<pre><code class="language-java">  @Bean(&quot;CustomerService&quot;)
   public CxfEndpoint createCustomerServiceEndpoint() throws ClassNotFoundException {
     CxfEndpoint serviceEndpoint = new CxfEndpoint();
-    serviceEndpoint.setAddress("http://localhost:8080/customerService");
-    serviceEndpoint.setUsername("admin");
-    serviceEndpoint.setPassword("admin");
+    serviceEndpoint.setAddress(&quot;http://localhost:8080/customerService&quot;);
+    serviceEndpoint.setUsername(&quot;admin&quot;);
+    serviceEndpoint.setPassword(&quot;admin&quot;);
 
     return serviceEndpoint;
-  }</code></pre></p>
-<h3 id="cxf-generator-plugin">CXF generator plugin<a class="headerlink" href="#cxf-generator-plugin" title="Permanent link">&para;</a></h3>
+  }
+</code></pre>
+<h3 id="cxf-generator-plugin">CXF generator plugin</h3>
 <p>If the SIP archetype is used to create a project that uses the SOAP starter, the CXF generator plugin is already configured and ready to use.</p>
 <p>Adding a .wsdl file to the adapter's resources and running <code>mvn compile</code> will generate all the CXF service classes.</p>
-<p>If the archetype isn't used, then this configuration can be added to the .pom file of the adapter to enable the CXF generator plugin:
-<pre class="highlight"><code class="language-xml">&lt;plugin&gt;
+<p>If the archetype isn't used, then this configuration can be added to the .pom file of the adapter to enable the CXF generator plugin:</p>
+<pre><code class="language-xml">&lt;plugin&gt;
   &lt;groupId&gt;org.apache.cxf&lt;/groupId&gt;
   &lt;artifactId&gt;cxf-codegen-plugin&lt;/artifactId&gt;
-&lt;/plugin&gt;</code></pre></p>
+&lt;/plugin&gt;
+</code></pre>
 <p><em>Note</em>: Please refer to the <em>sip-starter-parent</em> pom.xml for the default plugin configuration. By default, it scans only *.wsdl files inside <em>resources</em> folder.
 That can be overridden in the adapter's own <plugin> configuration by providing an alternative configuration.</p>
               
