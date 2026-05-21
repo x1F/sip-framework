@@ -434,8 +434,8 @@
                              and the hand-written javadoc would be redundant (e.g. getters/setters or most constructors) but on the
                              other hand by the use of lombok and mapstruct, we don't have javadoc everywhere, so we need to allow
                              missing javadoc by default -->
-                        <outputDirectory>${project.build.directory}/site/apidocs</outputDirectory>
-                        <reportOutputDirectory>${project.build.directory}/site/apidocs</reportOutputDirectory>
+                        <outputDirectory>${project.build.directory}/site</outputDirectory>
+                        <reportOutputDirectory>${project.build.directory}/site</reportOutputDirectory>
                         <doclint>all,-missing</doclint>
                         <show>package</show>
                         <failOnWarnings>true</failOnWarnings>
