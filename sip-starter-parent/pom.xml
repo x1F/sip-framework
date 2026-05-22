@@ -8,7 +8,7 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <!-- Attention! We need to keep this in sync with the spring-boot version set in sip-framework,
              which is transitively referenced in sip-integration-starter specified in the dependencymanagement section -->
-        <version>3.5.13</version>
+        <version>3.5.14</version>
     <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -60,7 +60,7 @@
 
         <sip-framework.version>4.4.2-SNAPSHOT</sip-framework.version>               <!-- keep in sync with framework version -->
         <mapstruct.version>1.6.3</mapstruct.version>                          <!-- keep in sync with mapstruct version in framework pom -->
-        <lombok.version>1.18.38</lombok.version>                                    <!-- keep in sync with lombok version in framework pom -->
+        <lombok.version>1.18.46</lombok.version>                                    <!-- keep in sync with lombok version in framework pom -->
         <cxf.version>4.1.4</cxf.version>                                            <!-- keep in sync with cxf version in framework pom -->
         <snakeyaml.version>2.4</snakeyaml.version>                                  <!-- keep in sync with snakeyaml version in framework pom -->
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
@@ -166,27 +166,32 @@
                 <artifactId>commons-lang3</artifactId>
                 <version>${apache-commons-lang3.version}</version>
             </dependency>
-            <!-- tomcat temporary, remove after spring boot 3.5.14 or above -->
+
+            <!-- ========== BEGIN TEMPORARY MODIFICATIONS SECTION ========== -->
+
+            <!-- tomcat temporary , remove after spring boot releases fixed version -->
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-core</artifactId>
-                <version>10.1.54</version>
+                <version>10.1.55</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-el</artifactId>
-                <version>10.1.54</version>
+                <version>10.1.55</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-websocket</artifactId>
-                <version>10.1.54</version>
+                <version>10.1.55</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-annotations-api</artifactId>
-                <version>10.1.54</version>
+                <version>10.1.55</version>
             </dependency>
+
+            <!-- ========== END OF TEMPORARY MODIFICATIONS SECTION ========== -->
         </dependencies>
     </dependencyManagement>
 

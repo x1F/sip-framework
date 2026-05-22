@@ -58,13 +58,13 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- manage all versions via properties, so that they can be overridden in a project if necessary -->
-        <spring.boot.version>3.5.13</spring.boot.version>
-        <camel.version>4.18.1</camel.version>
-        <jackson-jsr310.version>2.21.2</jackson-jsr310.version>
-        <springdoc-openapi-starter-common.version>2.8.16</springdoc-openapi-starter-common.version>
-        <springdoc-openapi-starter-webmvc-ui.version>2.8.16</springdoc-openapi-starter-webmvc-ui.version>
-        <swagger-annotation.version>2.2.45</swagger-annotation.version>
-        <lombok.version>1.18.44</lombok.version>
+        <spring.boot.version>3.5.14</spring.boot.version>
+        <camel.version>4.18.2</camel.version>
+        <jackson-jsr310.version>2.21.3</jackson-jsr310.version>
+        <springdoc-openapi-starter-common.version>2.8.17</springdoc-openapi-starter-common.version>
+        <springdoc-openapi-starter-webmvc-ui.version>2.8.17</springdoc-openapi-starter-webmvc-ui.version>
+        <swagger-annotation.version>2.2.50</swagger-annotation.version>
+        <lombok.version>1.18.46</lombok.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <commons-text.version>1.15.0</commons-text.version>
         <commons-collections4.version>4.5.0</commons-collections4.version>
@@ -78,15 +78,15 @@
         <guava.version>32.1.3-jre</guava.version> <!-- Maintain with protobuf-->
         <error_prone_annotations.version>2.48.0</error_prone_annotations.version>
         <j2objc-annotations.version>2.8</j2objc-annotations.version>
-        <java-parser.version>3.28.0</java-parser.version>
+        <java-parser.version>3.28.1</java-parser.version>
         <checher-qual.version>3.54.0</checher-qual.version> <!-- Maintain with java-parser -->
 
         <woodstox-core.version>7.1.1</woodstox-core.version>
         <xmlsec.version>4.0.4</xmlsec.version>
 
         <!-- maven dependencies -->
-        <maven-core.version>3.9.9</maven-core.version>
-        <maven-project-dependecies.version>3.9.9</maven-project-dependecies.version>
+        <maven-core.version>3.9.16</maven-core.version>
+        <maven-project-dependecies.version>3.9.16</maven-project-dependecies.version>
         <maven-plugin-annotations.version>3.15.2</maven-plugin-annotations.version>
         <qdox.version>2.2.0</qdox.version>
 
@@ -146,35 +146,31 @@
 
     <dependencyManagement>
         <dependencies>
-
             <!-- ========== BEGIN TEMPORARY MODIFICATIONS SECTION ========== -->
 
             <!-- tomcat temporary, remove after spring boot 3.5.14 or above -->
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-core</artifactId>
-                <version>10.1.54</version>
+                <version>10.1.55</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-el</artifactId>
-                <version>10.1.54</version>
+                <version>10.1.55</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-websocket</artifactId>
-                <version>10.1.54</version>
+                <version>10.1.55</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-annotations-api</artifactId>
-                <version>10.1.54</version>
+                <version>10.1.55</version>
             </dependency>
 
             <!-- ========== END OF TEMPORARY MODIFICATIONS SECTION ========== -->
-
-
-
             <!-- spring dependencies -->
             <!-- Camel BOM -->
             <dependency>
