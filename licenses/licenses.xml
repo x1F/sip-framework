@@ -1018,7 +1018,7 @@
     <dependency>
       <groupId>one.x1f.sip.foundation</groupId>
       <artifactId>sip-core</artifactId>
-      <version>4.4.2-SNAPSHOT</version>
+      <version>4.4.3-SNAPSHOT</version>
       <licenses>
         <license>
           <name>The Apache License, Version 2.0</name>
@@ -1030,7 +1030,7 @@
     <dependency>
       <groupId>one.x1f.sip.foundation</groupId>
       <artifactId>sip-integration-starter</artifactId>
-      <version>4.4.2-SNAPSHOT</version>
+      <version>4.4.3-SNAPSHOT</version>
       <licenses>
         <license>
           <name>The Apache License, Version 2.0</name>
@@ -1042,7 +1042,7 @@
     <dependency>
       <groupId>one.x1f.sip.foundation</groupId>
       <artifactId>sip-test-kit</artifactId>
-      <version>4.4.2-SNAPSHOT</version>
+      <version>4.4.3-SNAPSHOT</version>
       <licenses>
         <license>
           <name>The Apache License, Version 2.0</name>
