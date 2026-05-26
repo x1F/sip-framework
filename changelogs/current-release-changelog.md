@@ -1,6 +1,6 @@
-## 4.4.1 - 2026-04-20
+## 4.4.2 - 2026-05-26
 
 ### 🐞 Bugfixes
-- Add missing configuration IDs to processing/extension routes in connectors. [#352](https://github.com/IKOR-GmbH/sip-framework/pull/352) by [Nemikor](https://github.com/Nemikor)
-- Update Spring Boot to 3.5.13 and Apache camel to 4.18.1. Set tomcat version to 10.1.54 [#353](https://github.com/IKOR-GmbH/sip-framework/pull/353) by [Nemikor](https://github.com/Nemikor)
+- Add missing library when running mkdocs. Fix links to javadocs. [#356](https://github.com/IKOR-GmbH/sip-framework/pull/356) by [Nemikor](https://github.com/Nemikor)
+- Update Spring Boot to 3.5.14, Apache Camel to 4.18.2 and other minor dependency versions. [#354](https://github.com/IKOR-GmbH/sip-framework/pull/354) by [Nemikor](https://github.com/Nemikor)
 
