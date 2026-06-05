@@ -12,9 +12,9 @@ class MessagePropertiesTest {
 
   @Test
   void when_BodyReferencesFile_thenBodyContentIsReadFromFile() {
-    subject.setBody("resource-file:body.json");
+    subject.getBody().setValue("classpath:body.json");
     FileNotFoundException fileNotFoundException =
-        assertThrows(FileNotFoundException.class, () -> subject.getBody());
+        assertThrows(FileNotFoundException.class, () -> subject.getBodyAsString());
     assertThat(fileNotFoundException.getMessage()).contains("body.json");
   }
 }

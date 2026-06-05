@@ -7,7 +7,7 @@ import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
-import one.x1f.sip.foundation.testkit.configurationproperties.models.MessageProperties;
+import one.x1f.sip.foundation.testkit.configurationproperties.models.ResultMessage;
 import one.x1f.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
 import org.apache.camel.Exchange;
 
@@ -20,11 +20,11 @@ public class SIPAdapterExecutionReport {
   private String adapterExceptionMessage;
 
   @Setter(AccessLevel.PRIVATE)
-  private MessageProperties responseMessage;
+  private ResultMessage responseMessage;
 
   public void setActualResponse(Exchange actualResponse) {
     this.actualResponse = actualResponse;
-    this.setResponseMessage(MessageProperties.mapToMessageProperties(actualResponse));
+    this.setResponseMessage(ResultMessage.mapToResultMessage(actualResponse));
   }
 
   public SIPAdapterExecutionReport setAdapterExceptionMessage(Exception exception) {

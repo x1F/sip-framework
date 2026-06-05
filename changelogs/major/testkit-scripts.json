@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "357",
+  "message": "Change test case definition to allow usage of JS scripts for defining payloads and mock or validating results."
+}

@@ -12,13 +12,21 @@ import lombok.extern.slf4j.Slf4j;
 import one.x1f.sip.foundation.core.util.SIPExchangeHelper;
 import one.x1f.sip.foundation.core.util.exception.SIPFrameworkException;
 import one.x1f.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
+import one.x1f.sip.foundation.testkit.configurationproperties.models.PayloadProperties;
 import one.x1f.sip.foundation.testkit.workflow.givenphase.Mock;
+import one.x1f.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
 import org.apache.camel.*;
 import org.apache.camel.builder.ExchangeBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.PolyglotException;
+import org.graalvm.polyglot.Value;
 
 /** Utility class that changes the {@link Exchange} */
 @Slf4j
 public class TestKitHelper extends SIPExchangeHelper {
+
+  public static final String EVAL_PREFIX = "eval:";
 
   /**
    * Get route id from the {@link Exchange}
@@ -81,11 +89,108 @@ public class TestKitHelper extends SIPExchangeHelper {
       return anExchange(camelContext).build();
     }
     ExchangeBuilder exchangeBuilder =
-        anExchange(camelContext).withBody(properties.getRequestMessage().getBody());
-    properties.getRequestMessage().getHeaders().forEach(exchangeBuilder::withHeader);
+        anExchange(camelContext)
+            .withBody(getValueOrEval(properties.getRequestMessage().getEvaluatedBody()));
+    properties
+        .getRequestMessage()
+        .getHeaders()
+        .forEach(
+            (key, value) -> {
+              var evaluated = getValueOrEval(value);
+              exchangeBuilder.withHeader(key, evaluated);
+            });
     exchangeBuilder.withProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, properties.getEndpointId());
     exchangeBuilder.withProperty(CONNECTOR_ID_EXCHANGE_PROPERTY, properties.getConnectorId());
     return exchangeBuilder.build();
+  }
+
+  public static Exchange parseAndEvaluateExchangeProperties(
+      EndpointProperties properties, CamelContext camelContext) {
+    if (properties == null) {
+      return anExchange(camelContext).build();
+    }
+    ExchangeBuilder exchangeBuilder =
+        anExchange(camelContext)
+            .withBody(getValueOrEvaluateScript(properties.getRequestMessage().getEvaluatedBody()));
+    properties
+        .getRequestMessage()
+        .getHeaders()
+        .forEach(
+            (key, value) -> {
+              var evaluated = getValueOrEvaluateScript(value);
+              exchangeBuilder.withHeader(key, evaluated);
+            });
+    exchangeBuilder.withProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, properties.getEndpointId());
+    exchangeBuilder.withProperty(CONNECTOR_ID_EXCHANGE_PROPERTY, properties.getConnectorId());
+    return exchangeBuilder.build();
+  }
+
+  private static String getValueOrEval(PayloadProperties payloadProperties) {
+    String jsScript = payloadProperties.getEval();
+    if (StringUtils.isNotEmpty(jsScript)) {
+      return EVAL_PREFIX + jsScript;
+    }
+    return payloadProperties.getValue();
+  }
+
+  private static String getValueOrEvaluateScript(PayloadProperties payloadProperties) {
+    String jsScript = payloadProperties.getEval();
+    if (StringUtils.isNotEmpty(jsScript)) {
+      return evaluateScript(jsScript);
+    }
+    return payloadProperties.getValue();
+  }
+
+  public static String evaluateScript(String jsScript) {
+    try (Context context =
+        Context.newBuilder()
+            .allowAllAccess(false)
+            .option("engine.WarnInterpreterOnly", "false")
+            .build()) {
+      Value value = context.eval("js", jsScript);
+      if (value == null || value.isNull()) {
+        return null;
+      }
+      if (value.isBoolean()) {
+        return String.valueOf(value.asBoolean());
+      }
+      if (value.isNumber()) {
+        if (value.fitsInInt()) return String.valueOf(value.asInt());
+        if (value.fitsInLong()) return String.valueOf(value.asLong());
+        return String.valueOf(value.asDouble());
+      }
+      if (value.isString()) {
+        return value.asString();
+      }
+      return value.toString();
+
+    } catch (PolyglotException e) {
+      throw SIPFrameworkException.init(
+          "Script threw an exception [%s]: %s", e.getMessage(), jsScript, e);
+    } catch (ClassCastException | UnsupportedOperationException e) {
+      throw SIPFrameworkException.init(
+          "Script returned an unexpected type [%s]: %s", e.getMessage(), jsScript, e);
+    }
+  }
+
+  public static ValidationResult evaluateValidationScript(String jsScript, String input) {
+    try (Context context =
+        Context.newBuilder()
+            .allowAllAccess(false)
+            .option("engine.WarnInterpreterOnly", "false")
+            .build()) {
+      if (StringUtils.isNotEmpty(input)) {
+        context.getBindings("js").putMember("input", input);
+      }
+      Value value = context.eval("js", jsScript);
+      if (value.isBoolean()) {
+        return new ValidationResult(
+            value.asBoolean(), "Validation script was evaluated as a boolean");
+      }
+      return new ValidationResult(true, value.asString());
+    } catch (PolyglotException e) {
+      return new ValidationResult(false, e.getMessage());
+    }
   }
 
   /**

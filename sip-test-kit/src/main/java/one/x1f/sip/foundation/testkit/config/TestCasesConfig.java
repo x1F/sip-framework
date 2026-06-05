@@ -1,7 +1,7 @@
 package one.x1f.sip.foundation.testkit.config;
 
 import static one.x1f.sip.foundation.core.declarative.RoutesRegistry.SIP_ENDPOINT_PROCESSOR_SUFFIX;
-import static one.x1f.sip.foundation.testkit.util.TestKitHelper.parseExchangeProperties;
+import static one.x1f.sip.foundation.testkit.util.TestKitHelper.parseAndEvaluateExchangeProperties;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +28,7 @@ import one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvok
 import one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvokerFactory;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -87,7 +88,8 @@ public class TestCasesConfig {
             testCaseValidator,
             executionStatusFactory.generateTestReport(testCaseDefinition));
 
-    Exchange exchange = parseExchangeProperties(testCaseDefinition.getWhenExecute(), camelContext);
+    Exchange exchange =
+        parseAndEvaluateExchangeProperties(testCaseDefinition.getWhenExecute(), camelContext);
 
     try {
       RouteInvoker invoker = routeInvokerFactory.getInstance(exchange);
@@ -112,7 +114,7 @@ public class TestCasesConfig {
   }
 
   private void setEndpointBasedOnConnectorId(EndpointProperties properties, RouteRole role) {
-    if (properties.getConnectorId() != null) {
+    if (StringUtils.isNotEmpty(properties.getConnectorId())) {
       String routeId =
           routesRegistry.get().getRouteIdByConnectorIdAndRole(properties.getConnectorId(), role);
       if (routeId == null) {
@@ -136,7 +138,8 @@ public class TestCasesConfig {
         .map(
             connectionProperties ->
                 mockFactory.newMockInstance(
-                    testName, parseExchangeProperties(connectionProperties, camelContext)))
+                    testName,
+                    parseAndEvaluateExchangeProperties(connectionProperties, camelContext)))
         .toList();
   }
 
@@ -145,9 +148,6 @@ public class TestCasesConfig {
     testCaseDefinition
         .getWithMocks()
         .forEach(properties -> validateConnectorType(properties, ConnectorType.OUT, WITH_MOCKS));
-    testCaseDefinition
-        .getThenExpect()
-        .forEach(properties -> validateConnectorType(properties, ConnectorType.OUT, THEN_EXPECT));
   }
 
   private void validateConnectorType(

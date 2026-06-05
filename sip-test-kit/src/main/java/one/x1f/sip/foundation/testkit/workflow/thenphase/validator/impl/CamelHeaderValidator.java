@@ -1,5 +1,8 @@
 package one.x1f.sip.foundation.testkit.workflow.thenphase.validator.impl;
 
+import static one.x1f.sip.foundation.testkit.util.TestKitHelper.EVAL_PREFIX;
+import static one.x1f.sip.foundation.testkit.util.TestKitHelper.evaluateValidationScript;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.AllArgsConstructor;
 import one.x1f.sip.foundation.testkit.util.RegexUtil;
@@ -28,9 +31,18 @@ public class CamelHeaderValidator implements ExchangeValidator {
         .getHeaders()
         .forEach(
             (key, value) -> {
-              if (executionResult.getMessage().getHeader(key) == null
-                  || !RegexUtil.compare(
-                      (String) value, executionResult.getMessage().getHeader(key, String.class))) {
+              String expectedHeaderValue =
+                  expectedResponse.getMessage().getHeader(key, String.class);
+              String actualHeaderValue = executionResult.getMessage().getHeader(key, String.class);
+              if (expectedHeaderValue == null) {
+                result.set(false);
+              } else if (expectedHeaderValue.startsWith(EVAL_PREFIX)) {
+                var evaluationResult =
+                    evaluateValidationScript(
+                        expectedHeaderValue.substring(EVAL_PREFIX.length()), actualHeaderValue);
+
+                result.set(evaluationResult.isSuccess());
+              } else if (!RegexUtil.compare((String) value, actualHeaderValue)) {
                 result.set(false);
               }
             });

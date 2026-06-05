@@ -1,6 +1,6 @@
 package one.x1f.sip.foundation.testkit.workflow.givenphase;
 
-import static one.x1f.sip.foundation.testkit.configurationproperties.models.MessageProperties.mapToMessageProperties;
+import static one.x1f.sip.foundation.testkit.configurationproperties.models.ResultMessage.mapToResultMessage;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +27,7 @@ public class ReportActivityProxyExtension implements ProxyExtension {
     findTestReport(original)
         .getMockReport(proxy.getId())
         .setActual(original)
-        .setActualMessage(mapToMessageProperties(original));
+        .setActualMessage(mapToResultMessage(original));
   }
 
   private String getTestName(Exchange original) {

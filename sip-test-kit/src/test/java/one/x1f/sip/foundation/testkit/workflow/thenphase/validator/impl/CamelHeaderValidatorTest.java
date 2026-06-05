@@ -41,7 +41,7 @@ class CamelHeaderValidatorTest {
     when(expected.getMessage()).thenReturn(expectedMessage);
     when(resultMessage.getHeader(HEADER_KEY)).thenReturn(HEADER_VALUE);
     when(resultMessage.getHeader(HEADER_KEY, String.class)).thenReturn(HEADER_VALUE);
-    when(expectedMessage.getHeaders()).thenReturn(expectedHeaders);
+    when(expectedMessage.getHeader(HEADER_KEY, String.class)).thenReturn(HEADER_VALUE);
     ValidationResult validationResultSuccessful =
         new ValidationResult(true, "Header validation successful");
 
