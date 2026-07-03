@@ -1,8 +1,9 @@
 package one.x1f.sip.foundation.core.proxies;
 
+import com.google.common.collect.Iterables;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -22,13 +23,15 @@ import org.slf4j.LoggerFactory;
 public class ProcessorProxy extends AsyncProcessorSupport {
   private static final Logger logger = LoggerFactory.getLogger(ProcessorProxy.class);
   public static final String TEST_MODE_HEADER = "test-mode";
+  public static final UnaryOperator<Exchange> DEFAULT_MOCK_FUNCTION = exchange -> exchange;
 
   private final NamedNode nodeDefinition;
   private final Processor wrappedProcessor;
   // Processor can already be wrapped by Camel so we unwrap it and store it here
   @Getter private final Processor originalProcessor;
   private final List<ProxyExtension> extensions;
-  private Function<Exchange, Exchange> mockFunction;
+  private List<UnaryOperator<Exchange>> mockFunction;
+  private Iterator<UnaryOperator<Exchange>> mockCycle;
   @Getter private final boolean endpointProcessor;
   @Getter private final Class<? extends Processor> type;
 
@@ -46,13 +49,18 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     this.originalProcessor = CamelHelper.unwrapProcessor(wrappedProcessor);
     this.type = this.originalProcessor != null ? this.originalProcessor.getClass() : null;
     this.extensions = new ArrayList<>(extensions);
-    this.mockFunction = null;
+    this.mockFunction = new ArrayList<>();
     this.endpointProcessor = determineEndpointProcessor();
   }
 
   /** Resets the state of the proxy to default. */
   public synchronized void reset() {
-    mockFunction = null;
+    mockFunction = new ArrayList<>();
+    mockCycle = null;
+  }
+
+  public synchronized void initDefaultMock() {
+    mock(DEFAULT_MOCK_FUNCTION);
   }
 
   /**
@@ -62,7 +70,9 @@ public class ProcessorProxy extends AsyncProcessorSupport {
    * @param exchangeFunction callback function for mock behavior
    */
   public synchronized void mock(UnaryOperator<Exchange> exchangeFunction) {
-    this.mockFunction = exchangeFunction;
+    if (this.mockFunction.contains(DEFAULT_MOCK_FUNCTION))
+      this.mockFunction.remove(DEFAULT_MOCK_FUNCTION);
+    this.mockFunction.add(exchangeFunction);
   }
 
   /**
@@ -122,11 +132,14 @@ public class ProcessorProxy extends AsyncProcessorSupport {
   }
 
   private boolean hasMockFunction() {
-    return this.mockFunction != null;
+    return !this.mockFunction.isEmpty();
   }
 
   private void mockProcessing(Exchange exchange) {
     logger.trace("Processor: {}, Executing mocking logic for the {} ", getId(), exchange);
-    ExchangeHelper.copyResults(exchange, mockFunction.apply(exchange));
+    if (!mockFunction.isEmpty() && mockCycle == null) {
+      mockCycle = Iterables.cycle(mockFunction).iterator();
+    }
+    ExchangeHelper.copyResults(exchange, mockCycle.next().apply(exchange));
   }
 }

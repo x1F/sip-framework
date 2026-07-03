@@ -1,5 +1,6 @@
 package one.x1f.sip.foundation.testkit.workflow.thenphase.validator.impl;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,16 +27,17 @@ public class CamelTestCaseValidator implements TestCaseValidator {
   @Override
   public void validate(TestExecutionStatus testExecutionStatus) {
     SIPAdapterExecutionReport adapterReport = testExecutionStatus.getAdapterReport();
-    Map<String, MockReport> mockReports = testExecutionStatus.getMockReports();
+    Map<String, List<MockReport>> mockReports = testExecutionStatus.getMockReports();
 
     if (adapterReport.getActualResponse() != null) {
       this.validateAdapterResponse(adapterReport);
     }
-    this.validateMockReports(mockReports);
+    mockReports.values().forEach(this::validateMockReports);
 
     boolean isAdapterResultExpected =
         evaluateValidationResults(adapterReport.getValidationResults());
-    boolean areAllMocksExpected = mockReports.values().stream().noneMatch(this::isNotSuccess);
+    boolean areAllMocksExpected =
+        mockReports.values().stream().flatMap(Collection::stream).noneMatch(this::isNotSuccess);
 
     testExecutionStatus.setSuccessfulExecution(isAdapterResultExpected && areAllMocksExpected);
   }
@@ -50,8 +52,8 @@ public class CamelTestCaseValidator implements TestCaseValidator {
         .setAdapterExceptionMessage(actual.getException());
   }
 
-  private void validateMockReports(Map<String, MockReport> mockReportMap) {
-    mockReportMap.values().stream()
+  private void validateMockReports(List<MockReport> mockReportMap) {
+    mockReportMap.stream()
         .filter(mockReport -> mockReport.getExpected() != null)
         .forEach(this::fillMockReport);
   }

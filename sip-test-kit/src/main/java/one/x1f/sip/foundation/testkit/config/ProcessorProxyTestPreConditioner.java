@@ -23,7 +23,7 @@ public class ProcessorProxyTestPreConditioner {
         .forEach(
             (id, processorProxy) -> {
               if (processorProxy.isEndpointProcessor()) {
-                processorProxy.mock(exchange -> exchange);
+                processorProxy.initDefaultMock();
               }
             });
   }

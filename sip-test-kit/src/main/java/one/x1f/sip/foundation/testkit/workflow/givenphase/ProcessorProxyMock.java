@@ -48,7 +48,7 @@ public class ProcessorProxyMock extends Mock {
     // If execution is stopped by error before proxy is created, proxy reference can point to null
     if (proxy != null) {
       proxy.reset();
-      proxy.mock(exchange -> exchange);
+      proxy.initDefaultMock();
     }
   }
 

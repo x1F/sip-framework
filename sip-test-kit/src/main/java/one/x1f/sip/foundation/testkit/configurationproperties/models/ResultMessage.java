@@ -4,8 +4,8 @@ import static one.x1f.sip.foundation.core.util.SIPExchangeHelper.filterNonSerial
 
 import java.util.Map;
 import lombok.Data;
+import one.x1f.sip.foundation.testkit.util.TestKitHelper;
 import org.apache.camel.Exchange;
-import org.apache.camel.support.MessageHelper;
 
 @Data
 public class ResultMessage {
@@ -20,7 +20,7 @@ public class ResultMessage {
    */
   public static ResultMessage mapToResultMessage(Exchange exchange) {
     ResultMessage messageProperties = new ResultMessage();
-    messageProperties.setBody(MessageHelper.extractBodyAsString(exchange.getMessage()));
+    messageProperties.setBody(TestKitHelper.extractBodyAsJsonString(exchange.getMessage()));
     messageProperties.setHeaders(filterNonSerializableHeaders(exchange));
     return messageProperties;
   }

@@ -1,7 +1,6 @@
 package one.x1f.sip.foundation.testkit.workflow.thenphase.validator.impl;
 
 import static one.x1f.sip.foundation.testkit.util.TestKitHelper.*;
-import static org.apache.camel.support.MessageHelper.extractBodyAsString;
 import static org.apache.camel.support.MessageHelper.resetStreamCache;
 
 import lombok.RequiredArgsConstructor;
@@ -26,15 +25,15 @@ public class CamelBodyScriptValidator implements ExchangeValidator {
   @Override
   public ValidationResult execute(Exchange actualResult, Exchange expectedResponse) {
     resetStreamCache(actualResult.getMessage());
-    String expected = extractBodyAsString(expectedResponse.getMessage());
-    String actual = extractBodyAsString(actualResult.getMessage());
+    String expected = extractBodyAsJsonString(expectedResponse.getMessage());
+    String actual = extractBodyAsJsonString(actualResult.getMessage());
     return evaluateValidationScript(expected.substring(EVAL_PREFIX.length()), actual);
   }
 
   @Override
   public boolean isApplicable(Exchange executionResult, Exchange expectedResponse) {
     if (expectedResponse == null) return false;
-    String bodyAsString = extractBodyAsString(expectedResponse.getMessage());
+    String bodyAsString = extractBodyAsJsonString(expectedResponse.getMessage());
     return bodyAsString != null && bodyAsString.startsWith(EVAL_PREFIX);
   }
 }

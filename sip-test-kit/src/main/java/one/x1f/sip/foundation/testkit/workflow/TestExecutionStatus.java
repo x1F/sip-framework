@@ -1,9 +1,6 @@
 package one.x1f.sip.foundation.testkit.workflow;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -22,7 +19,10 @@ public class TestExecutionStatus {
 
   private Optional<Exception> workflowException = Optional.empty();
   private String workflowExceptionMessage;
-  private Map<String, MockReport> mockReports = new HashMap<>();
+  private Map<String, List<MockReport>> mockReports = new HashMap<>();
+
+  private Map<String, Integer> iterations = new HashMap<>();
+  private final Map<String, Integer> indexes = new HashMap<>();
 
   /**
    * Creates a new instance of TestReport
@@ -65,6 +65,16 @@ public class TestExecutionStatus {
   }
 
   public MockReport getMockReport(String mockId) {
-    return mockReports.computeIfAbsent(mockId, s -> new MockReport());
+    List<MockReport> reports = mockReports.computeIfAbsent(mockId, k -> new ArrayList<>());
+    int index = indexes.getOrDefault(mockId, 0);
+
+    if (index >= reports.size()) {
+      MockReport newReport = new MockReport();
+      reports.add(newReport);
+    }
+
+    MockReport report = reports.get(index);
+    indexes.put(mockId, index + 1);
+    return report;
   }
 }

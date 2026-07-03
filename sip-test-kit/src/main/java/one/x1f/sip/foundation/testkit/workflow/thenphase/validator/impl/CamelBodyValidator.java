@@ -3,7 +3,7 @@ package one.x1f.sip.foundation.testkit.workflow.thenphase.validator.impl;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.groupingBy;
 import static one.x1f.sip.foundation.testkit.util.TestKitHelper.EVAL_PREFIX;
-import static org.apache.camel.support.MessageHelper.extractBodyAsString;
+import static one.x1f.sip.foundation.testkit.util.TestKitHelper.extractBodyAsJsonString;
 import static org.apache.camel.support.MessageHelper.resetStreamCache;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNoneBlank;
@@ -37,8 +37,8 @@ public class CamelBodyValidator implements ExchangeValidator {
   @Override
   public ValidationResult execute(Exchange actualResult, Exchange expectedResponse) {
     resetStreamCache(actualResult.getMessage());
-    String expected = extractBodyAsString(expectedResponse.getMessage());
-    String actual = extractBodyAsString(actualResult.getMessage());
+    String expected = extractBodyAsJsonString(expectedResponse.getMessage());
+    String actual = extractBodyAsJsonString(actualResult.getMessage());
 
     if (areSurelyDifferent(actual, expected)) {
       return new ValidationResult(false, BODY_VALIDATION_UNSUCCESSFUL);
@@ -76,7 +76,7 @@ public class CamelBodyValidator implements ExchangeValidator {
   @Override
   public boolean isApplicable(Exchange executionResult, Exchange expectedResponse) {
     if (expectedResponse == null) return false;
-    String bodyAsString = extractBodyAsString(expectedResponse.getMessage());
+    String bodyAsString = extractBodyAsJsonString(expectedResponse.getMessage());
     return bodyAsString != null && !bodyAsString.startsWith(EVAL_PREFIX);
   }
 

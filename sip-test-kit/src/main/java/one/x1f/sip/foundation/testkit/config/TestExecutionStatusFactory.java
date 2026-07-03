@@ -29,16 +29,18 @@ public class TestExecutionStatusFactory {
         .setMockReports(getMockReports(testCaseDefinition));
   }
 
-  private Map<String, MockReport> getMockReports(TestCaseDefinition testCaseDefinition) {
+  private Map<String, List<MockReport>> getMockReports(TestCaseDefinition testCaseDefinition) {
     List<EndpointProperties> expectedEndpointResponses =
         expectedEndpointResponses(testCaseDefinition);
-    Map<String, MockReport> reportMap = new HashMap<>();
+    Map<String, List<MockReport>> reportMap = new HashMap<>();
     expectedEndpointResponses.forEach(
-        endpointProperty ->
-            reportMap.put(
-                endpointProperty.getEndpointId(),
-                new MockReport()
-                    .setExpected(parseExchangeProperties(endpointProperty, camelContext))));
+        endpointProperty -> {
+          var reports =
+              reportMap.computeIfAbsent(endpointProperty.getEndpointId(), k -> new ArrayList<>());
+          reports.add(
+              new MockReport()
+                  .setExpected(parseExchangeProperties(endpointProperty, camelContext)));
+        });
     return reportMap;
   }
 
