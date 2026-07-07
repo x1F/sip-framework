@@ -70,6 +70,9 @@ public class ProcessorProxy extends AsyncProcessorSupport {
    * @param exchangeFunction callback function for mock behavior
    */
   public synchronized void mock(UnaryOperator<Exchange> exchangeFunction) {
+      if(this.mockFunction == null) {
+          this.mockFunction = new ArrayList<>();
+      }
     if (this.mockFunction.contains(DEFAULT_MOCK_FUNCTION))
       this.mockFunction.remove(DEFAULT_MOCK_FUNCTION);
     this.mockFunction.add(exchangeFunction);
