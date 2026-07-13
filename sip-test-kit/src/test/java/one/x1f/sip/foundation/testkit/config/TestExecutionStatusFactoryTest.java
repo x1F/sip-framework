@@ -6,6 +6,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import one.x1f.sip.foundation.testkit.configurationproperties.TestCaseDefinition;
 import one.x1f.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
 import one.x1f.sip.foundation.testkit.workflow.TestExecutionStatus;
@@ -45,7 +47,7 @@ class TestExecutionStatusFactoryTest {
     testCaseDefinition.setThenExpect(thenExpect);
 
     // act
-    TestExecutionStatus testExecutionStatus = subject.generateTestReport(testCaseDefinition);
+    TestExecutionStatus testExecutionStatus = subject.generateTestReport(testCaseDefinition, UUID.randomUUID());
 
     // assert
     assertThat(testExecutionStatus.getTestName()).isEqualTo("title");
@@ -55,7 +57,7 @@ class TestExecutionStatusFactoryTest {
   @Test
   void When_generateTestReport_With_missingWhenExecute_Then_emptyExchange() {
     // act
-    TestExecutionStatus testExecutionStatus = subject.generateTestReport(testCaseDefinition);
+    TestExecutionStatus testExecutionStatus = subject.generateTestReport(testCaseDefinition, UUID.randomUUID());
 
     // assert
     assertThat(testExecutionStatus.getTestName()).isEqualTo("title");

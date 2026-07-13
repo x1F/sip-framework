@@ -36,6 +36,9 @@ public class DeclarativeStructureCheckMojo extends AbstractMojo {
   @Parameter(defaultValue = "${project}", required = true, readonly = true)
   MavenProject mavenProject;
 
+  @Parameter(defaultValue = "${project.groupId}")
+  private String packagePath;
+
   @Parameter(defaultValue = "${project.basedir}/src/main/java")
   private File sourceDir;
 
@@ -43,13 +46,17 @@ public class DeclarativeStructureCheckMojo extends AbstractMojo {
 
   @Override
   public void execute() throws MojoExecutionException {
-    declarativeClassAnalyser.setProjectGroupId(mavenProject.getGroupId());
+    declarativeClassAnalyser.setProjectGroupId(packagePath);
     try {
       CombinedTypeSolver typeSolver = new CombinedTypeSolver();
       typeSolver.add(new ReflectionTypeSolver());
       typeSolver.add(new JavaParserTypeSolver(sourceDir));
 
-      for (Artifact dep : mavenProject.getArtifacts()) {
+      Set<Artifact> artifacts = mavenProject.getArtifacts();
+      if (mavenProject.getParent() != null) {
+        artifacts.addAll(mavenProject.getParent().getArtifacts());
+      }
+      for (Artifact dep : artifacts) {
         if (!dep.getGroupId().startsWith(X1F_SIP_GROUP)
             && !dep.getGroupId().startsWith(APACHE_CAMEL_GROUP)) continue;
         File file = dep.getFile();

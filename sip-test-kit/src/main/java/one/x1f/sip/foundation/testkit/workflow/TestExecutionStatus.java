@@ -23,6 +23,7 @@ public class TestExecutionStatus {
 
   private Map<String, Integer> iterations = new HashMap<>();
   private final Map<String, Integer> indexes = new HashMap<>();
+  private UUID executionId;
 
   /**
    * Creates a new instance of TestReport

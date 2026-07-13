@@ -10,6 +10,8 @@ import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import one.x1f.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
@@ -30,12 +32,13 @@ public class CamelBodyValidator implements ExchangeValidator {
   /**
    * Invokes compare body content
    *
-   * @param actualResult Result of test execution
+   * @param actualResult     Result of test execution
    * @param expectedResponse Expected result of test execution
+   * @param executionId
    * @return {@link ValidationResult}
    */
   @Override
-  public ValidationResult execute(Exchange actualResult, Exchange expectedResponse) {
+  public ValidationResult execute(Exchange actualResult, Exchange expectedResponse, UUID executionId) {
     resetStreamCache(actualResult.getMessage());
     String expected = extractBodyAsJsonString(expectedResponse.getMessage());
     String actual = extractBodyAsJsonString(actualResult.getMessage());

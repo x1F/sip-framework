@@ -21,4 +21,6 @@ public class TestCaseDefinition {
 
   @JsonProperty("then-expect")
   private List<EndpointProperties> thenExpect = new ArrayList<>();
+
+  private Map<String, String> variables = new HashMap<>();
 }

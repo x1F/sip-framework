@@ -5,6 +5,9 @@ import static org.mockito.Mockito.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+
+import one.x1f.sip.foundation.testkit.TestRunnerContext;
 import one.x1f.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -28,7 +31,7 @@ class CamelHeaderValidatorTest {
     actualHeaders = new HashMap<>();
     expectedHeaders.put(HEADER_KEY, HEADER_VALUE);
     actualHeaders.put(HEADER_KEY, HEADER_VALUE);
-    headerValidator = new CamelHeaderValidator();
+    headerValidator = new CamelHeaderValidator(new TestRunnerContext());
     result = mock(Exchange.class, RETURNS_DEEP_STUBS);
     expected = mock(Exchange.class, RETURNS_DEEP_STUBS);
   }
@@ -45,7 +48,7 @@ class CamelHeaderValidatorTest {
     ValidationResult validationResultSuccessful =
         new ValidationResult(true, "Header validation successful");
 
-    ValidationResult validationResultSubject = headerValidator.execute(result, expected);
+    ValidationResult validationResultSubject = headerValidator.execute(result, expected, UUID.randomUUID());
 
     assertThat(validationResultSubject).isEqualTo(validationResultSuccessful);
   }
@@ -61,7 +64,7 @@ class CamelHeaderValidatorTest {
     ValidationResult validationResult =
         new ValidationResult(false, "Header validation unsuccessful");
 
-    ValidationResult validationResultSubject = headerValidator.execute(result, expected);
+    ValidationResult validationResultSubject = headerValidator.execute(result, expected, UUID.randomUUID());
 
     assertThat(validationResultSubject).isEqualTo(validationResult);
   }

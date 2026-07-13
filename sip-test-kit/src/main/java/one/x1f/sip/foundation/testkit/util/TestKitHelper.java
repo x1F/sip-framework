@@ -115,19 +115,19 @@ public class TestKitHelper extends SIPExchangeHelper {
   }
 
   public static Exchange parseAndEvaluateExchangeProperties(
-      EndpointProperties properties, CamelContext camelContext) {
+      EndpointProperties properties, CamelContext camelContext, Context context) {
     if (properties == null) {
       return anExchange(camelContext).build();
     }
     ExchangeBuilder exchangeBuilder =
         anExchange(camelContext)
-            .withBody(getValueOrEvaluateScript(properties.getRequestMessage().getEvaluatedBody()));
+            .withBody(getValueOrEvaluateScript(properties.getRequestMessage().getEvaluatedBody(), context));
     properties
         .getRequestMessage()
         .getHeaders()
         .forEach(
             (key, value) -> {
-              var evaluated = getValueOrEvaluateScript(value);
+              var evaluated = getValueOrEvaluateScript(value, context);
               exchangeBuilder.withHeader(key, evaluated);
             });
     exchangeBuilder.withProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, properties.getEndpointId());
@@ -143,20 +143,15 @@ public class TestKitHelper extends SIPExchangeHelper {
     return payloadProperties.getValue();
   }
 
-  private static String getValueOrEvaluateScript(PayloadProperties payloadProperties) {
+  private static String getValueOrEvaluateScript(PayloadProperties payloadProperties, Context context) {
     String jsScript = payloadProperties.getEval();
     if (StringUtils.isNotEmpty(jsScript)) {
-      return evaluateScript(jsScript);
+      return evaluateScript(jsScript, context);
     }
     return payloadProperties.getValue();
   }
 
-  public static String evaluateScript(String jsScript) {
-    try (Context context =
-        Context.newBuilder()
-            .allowAllAccess(false)
-            .option("engine.WarnInterpreterOnly", "false")
-            .build()) {
+  public static String evaluateScript(String jsScript, Context context) {
       Value value = context.eval("js", jsScript);
       if (value == null || value.isNull()) {
         return null;
@@ -174,21 +169,17 @@ public class TestKitHelper extends SIPExchangeHelper {
       }
       return value.toString();
 
-    } catch (PolyglotException e) {
-      throw SIPFrameworkException.init(
-          "Script threw an exception [%s]: %s", e.getMessage(), jsScript, e);
-    } catch (ClassCastException | UnsupportedOperationException e) {
-      throw SIPFrameworkException.init(
-          "Script returned an unexpected type [%s]: %s", e.getMessage(), jsScript, e);
-    }
+//    } catch (PolyglotException e) {
+//      throw SIPFrameworkException.init(
+//          "Script threw an exception [%s]: %s", e.getMessage(), jsScript, e);
+//    } catch (ClassCastException | UnsupportedOperationException e) {
+//      throw SIPFrameworkException.init(
+//          "Script returned an unexpected type [%s]: %s", e.getMessage(), jsScript, e);
+//    }
   }
 
-  public static ValidationResult evaluateValidationScript(String jsScript, String input) {
-    try (Context context =
-        Context.newBuilder()
-            .allowAllAccess(false)
-            .option("engine.WarnInterpreterOnly", "false")
-            .build()) {
+  public static ValidationResult evaluateValidationScript(String jsScript, String input, Context context) {
+
       if (StringUtils.isNotEmpty(input)) {
         context.getBindings("js").putMember("input", input);
       }
@@ -198,12 +189,17 @@ public class TestKitHelper extends SIPExchangeHelper {
             value.asBoolean(), "Validation script was evaluated as a boolean");
       }
       return new ValidationResult(true, value.asString());
-    } catch (PolyglotException e) {
-      return new ValidationResult(false, e.getMessage());
-    }
+
   }
 
-  /**
+    public static Context createGraalJSContext() {
+        return Context.newBuilder()
+                .allowAllAccess(false)
+                .option("engine.WarnInterpreterOnly", "false")
+                .build();
+    }
+
+    /**
    * Checks if header is Test Kit specific header
    *
    * @param key of header for checking

@@ -1,9 +1,7 @@
 package one.x1f.sip.foundation.testkit.workflow.thenphase.validator.impl;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import one.x1f.sip.foundation.testkit.workflow.TestExecutionStatus;
@@ -30,9 +28,10 @@ public class CamelTestCaseValidator implements TestCaseValidator {
     Map<String, List<MockReport>> mockReports = testExecutionStatus.getMockReports();
 
     if (adapterReport.getActualResponse() != null) {
-      this.validateAdapterResponse(adapterReport);
+      this.validateAdapterResponse(adapterReport, testExecutionStatus.getExecutionId());
     }
-    mockReports.values().forEach(this::validateMockReports);
+    mockReports.values().forEach(reports ->
+            validateMockReports(reports, testExecutionStatus.getExecutionId()));
 
     boolean isAdapterResultExpected =
         evaluateValidationResults(adapterReport.getValidationResults());
@@ -42,25 +41,25 @@ public class CamelTestCaseValidator implements TestCaseValidator {
     testExecutionStatus.setSuccessfulExecution(isAdapterResultExpected && areAllMocksExpected);
   }
 
-  private void validateAdapterResponse(SIPAdapterExecutionReport adapterExecutionReport) {
+  private void validateAdapterResponse(SIPAdapterExecutionReport adapterExecutionReport, UUID executionId) {
     Exchange actual = adapterExecutionReport.getActualResponse();
     Exchange expected = adapterExecutionReport.getExpectedResponse();
-    List<ValidationResult> adapterValidationResults = runValidators(actual, expected);
+    List<ValidationResult> adapterValidationResults = runValidators(actual, expected, executionId);
     adapterExecutionReport
         .setValidationResults(adapterValidationResults)
         .setValidatedHeaders(extractValidatedHeaders(actual, expected))
         .setAdapterExceptionMessage(actual.getException());
   }
 
-  private void validateMockReports(List<MockReport> mockReportMap) {
+  private void validateMockReports(List<MockReport> mockReportMap, UUID executionId) {
     mockReportMap.stream()
         .filter(mockReport -> mockReport.getExpected() != null)
-        .forEach(this::fillMockReport);
+        .forEach(mockReport -> fillMockReport(mockReport, executionId));
   }
 
-  private void fillMockReport(MockReport mockReport) {
+  private void fillMockReport(MockReport mockReport, UUID executionId) {
     List<ValidationResult> endpointValidationResultList =
-        runValidators(mockReport.getActual(), mockReport.getExpected());
+        runValidators(mockReport.getActual(), mockReport.getExpected(), executionId);
     mockReport.setValidated(
         evaluateValidationResults(endpointValidationResultList)
             ? EndpointValidationOutcome.SUCCESSFUL
@@ -99,10 +98,10 @@ public class CamelTestCaseValidator implements TestCaseValidator {
   }
 
   private List<ValidationResult> runValidators(
-      Exchange executionResult, Exchange expectedResponse) {
+          Exchange executionResult, Exchange expectedResponse, UUID executionId) {
     return this.exchangeValidators.stream()
         .filter(validator -> validator.isApplicable(executionResult, expectedResponse))
-        .map(validator -> validator.execute(executionResult, expectedResponse))
+        .map(validator -> validator.execute(executionResult, expectedResponse, executionId))
         .toList();
   }
 

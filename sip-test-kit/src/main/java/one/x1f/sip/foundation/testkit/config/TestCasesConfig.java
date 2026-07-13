@@ -2,10 +2,13 @@ package one.x1f.sip.foundation.testkit.config;
 
 import static one.x1f.sip.foundation.core.declarative.RoutesRegistry.SIP_ENDPOINT_PROCESSOR_SUFFIX;
 import static one.x1f.sip.foundation.testkit.util.TestKitHelper.parseAndEvaluateExchangeProperties;
+import static one.x1f.sip.foundation.testkit.workflow.TestRunner.TEST_EXECUTION_ID;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import one.x1f.sip.foundation.core.declarative.DeclarationsRegistryApi;
@@ -14,6 +17,7 @@ import one.x1f.sip.foundation.core.declarative.RoutesRegistry;
 import one.x1f.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import one.x1f.sip.foundation.core.declarative.connector.ConnectorType;
 import one.x1f.sip.foundation.core.util.exception.SIPFrameworkException;
+import one.x1f.sip.foundation.testkit.TestRunnerContext;
 import one.x1f.sip.foundation.testkit.configurationproperties.TestCaseBatchDefinition;
 import one.x1f.sip.foundation.testkit.configurationproperties.TestCaseDefinition;
 import one.x1f.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
@@ -27,8 +31,8 @@ import one.x1f.sip.foundation.testkit.workflow.whenphase.ExecutionWrapper;
 import one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvokerFactory;
 import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
 import org.apache.commons.lang3.StringUtils;
+import org.graalvm.polyglot.Context;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -51,6 +55,7 @@ public class TestCasesConfig {
   private final Optional<TestCaseBatchDefinition> testCaseBatchDefinition;
   private final TestCaseCollector testCaseCollector;
   private final Optional<RoutesRegistry> routesRegistry;
+  private final TestRunnerContext testRunnerContext;
 
   private final Optional<DeclarationsRegistryApi> declarationsRegistry;
 
@@ -79,17 +84,28 @@ public class TestCasesConfig {
     declarationsRegistry.ifPresent(registry -> validateConnectors(testCaseDefinition));
     routesRegistry.ifPresent(registry -> initTestCaseDefinitionEndpoints(testCaseDefinition));
 
-    List<Mock> mocks = getMocks(testName, testCaseDefinition);
+    var executionId = UUID.randomUUID();
 
-    TestCase testCase =
+    var context = testRunnerContext.getOrCreate(executionId);
+
+    testCaseDefinition.getVariables().entrySet().forEach(entry -> {
+        context.getBindings("js").putMember(entry.getKey(), entry.getValue());
+    });
+
+    var mocks = getMocks(testName, testCaseDefinition, context);
+
+    var testCase =
         new TestCase(
             testName,
             mocks,
             testCaseValidator,
-            executionStatusFactory.generateTestReport(testCaseDefinition));
+            executionStatusFactory.generateTestReport(testCaseDefinition, executionId),
+            executionId);
 
-    Exchange exchange =
-        parseAndEvaluateExchangeProperties(testCaseDefinition.getWhenExecute(), camelContext);
+
+    var exchange =
+        parseAndEvaluateExchangeProperties(testCaseDefinition.getWhenExecute(), camelContext, context);
+    exchange.setProperty(TEST_EXECUTION_ID, testCase.getExecutionId());
 
     try {
       RouteInvoker invoker = routeInvokerFactory.getInstance(exchange);
@@ -133,13 +149,13 @@ public class TestCasesConfig {
     }
   }
 
-  private List<Mock> getMocks(String testName, TestCaseDefinition testCaseDefinition) {
+  private List<Mock> getMocks(String testName, TestCaseDefinition testCaseDefinition, Context context) {
     return testCaseDefinition.getWithMocks().stream()
         .map(
             connectionProperties ->
                 mockFactory.newMockInstance(
                     testName,
-                    parseAndEvaluateExchangeProperties(connectionProperties, camelContext)))
+                    parseAndEvaluateExchangeProperties(connectionProperties, camelContext, context)))
         .toList();
   }
 

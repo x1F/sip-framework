@@ -1,9 +1,7 @@
 package one.x1f.sip.foundation.testkit.workflow.reporting.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -18,6 +16,7 @@ public class SIPAdapterExecutionReport {
   private Map<String, Object> validatedHeaders = new HashMap<>();
   private List<ValidationResult> validationResults = new ArrayList<>();
   private String adapterExceptionMessage;
+  private UUID executionId;
 
   @Setter(AccessLevel.PRIVATE)
   private ResultMessage responseMessage;

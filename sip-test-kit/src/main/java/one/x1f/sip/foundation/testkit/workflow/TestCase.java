@@ -2,6 +2,8 @@ package one.x1f.sip.foundation.testkit.workflow;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import lombok.Data;
 import one.x1f.sip.foundation.testkit.workflow.givenphase.Mock;
 import one.x1f.sip.foundation.testkit.workflow.thenphase.validator.TestCaseValidator;
@@ -16,16 +18,19 @@ public class TestCase {
   private ExecutionWrapper executionWrapper;
   private TestCaseValidator validator;
   private TestExecutionStatus testExecutionStatus;
+  private final UUID executionId;
 
   public TestCase(
       String testName,
       List<Mock> mocks,
       TestCaseValidator validator,
-      TestExecutionStatus testExecutionStatus) {
+      TestExecutionStatus testExecutionStatus,
+      UUID executionId) {
     this.testName = testName;
     this.mocks = mocks;
     this.validator = validator;
     this.testExecutionStatus = testExecutionStatus;
+    this.executionId = executionId;
   }
 
   /** Start Test execution */

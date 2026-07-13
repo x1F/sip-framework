@@ -6,6 +6,8 @@ import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import one.x1f.sip.foundation.testkit.workflow.givenphase.Mock;
 import one.x1f.sip.foundation.testkit.workflow.thenphase.validator.TestCaseValidator;
 import one.x1f.sip.foundation.testkit.workflow.whenphase.ExecutionWrapper;
@@ -33,7 +35,7 @@ class TestCaseTest {
     executionWrapper = mock(ExecutionWrapper.class);
     validator = mock(TestCaseValidator.class);
     testExecutionStatus = new TestExecutionStatus(TEST_NAME);
-    subject = new TestCase(TEST_NAME, mocks, validator, testExecutionStatus);
+    subject = new TestCase(TEST_NAME, mocks, validator, testExecutionStatus, UUID.randomUUID());
     subject.setExecutionWrapper(executionWrapper);
   }
 

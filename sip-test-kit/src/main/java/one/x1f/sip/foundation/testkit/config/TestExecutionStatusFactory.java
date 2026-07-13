@@ -2,10 +2,8 @@ package one.x1f.sip.foundation.testkit.config;
 
 import static one.x1f.sip.foundation.testkit.util.TestKitHelper.parseExchangeProperties;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import lombok.RequiredArgsConstructor;
 import one.x1f.sip.foundation.testkit.configurationproperties.TestCaseDefinition;
 import one.x1f.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
@@ -21,10 +19,11 @@ import org.springframework.stereotype.Component;
 public class TestExecutionStatusFactory {
   private final CamelContext camelContext;
 
-  TestExecutionStatus generateTestReport(TestCaseDefinition testCaseDefinition) {
+  TestExecutionStatus generateTestReport(TestCaseDefinition testCaseDefinition, UUID executionId) {
     String testName = testCaseDefinition.getTitle();
     return new TestExecutionStatus()
         .setTestName(testName)
+        .setExecutionId(executionId)
         .setExpectedAdapterResponse(getExpectedAdapterResponse(testCaseDefinition))
         .setMockReports(getMockReports(testCaseDefinition));
   }

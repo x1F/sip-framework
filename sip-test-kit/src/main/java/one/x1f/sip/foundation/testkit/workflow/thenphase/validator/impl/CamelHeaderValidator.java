@@ -3,8 +3,10 @@ package one.x1f.sip.foundation.testkit.workflow.thenphase.validator.impl;
 import static one.x1f.sip.foundation.testkit.util.TestKitHelper.EVAL_PREFIX;
 import static one.x1f.sip.foundation.testkit.util.TestKitHelper.evaluateValidationScript;
 
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.AllArgsConstructor;
+import one.x1f.sip.foundation.testkit.TestRunnerContext;
 import one.x1f.sip.foundation.testkit.util.RegexUtil;
 import one.x1f.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
 import one.x1f.sip.foundation.testkit.workflow.thenphase.validator.ExchangeValidator;
@@ -16,15 +18,18 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class CamelHeaderValidator implements ExchangeValidator {
 
+    private final TestRunnerContext context;
+
   /**
    * Invokes compare header content
    *
-   * @param executionResult Result of test execution
+   * @param executionResult  Result of test execution
    * @param expectedResponse Expected result of test execution
+   * @param executionId
    * @return {@link ValidationResult}
    */
   @Override
-  public ValidationResult execute(Exchange executionResult, Exchange expectedResponse) {
+  public ValidationResult execute(Exchange executionResult, Exchange expectedResponse, UUID executionId) {
     AtomicBoolean result = new AtomicBoolean(true);
     expectedResponse
         .getMessage()
@@ -39,7 +44,9 @@ public class CamelHeaderValidator implements ExchangeValidator {
               } else if (expectedHeaderValue.startsWith(EVAL_PREFIX)) {
                 var evaluationResult =
                     evaluateValidationScript(
-                        expectedHeaderValue.substring(EVAL_PREFIX.length()), actualHeaderValue);
+                        expectedHeaderValue.substring(EVAL_PREFIX.length()),
+                            actualHeaderValue,
+                            context.getOrCreate(executionId));
 
                 result.set(evaluationResult.isSuccess());
               } else if (!RegexUtil.compare((String) value, actualHeaderValue)) {

@@ -3,6 +3,7 @@ package one.x1f.sip.foundation.testkit.workflow;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import one.x1f.sip.foundation.testkit.TestRunnerContext;
 import one.x1f.sip.foundation.testkit.workflow.reporting.resultprocessor.ResultProcessor;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +12,9 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class TestRunner {
+    public static final String TEST_EXECUTION_ID = "_SipTestExecutionId";
   private final ResultProcessor resultProcessor;
+  private final TestRunnerContext testRunnerContext;
 
   /**
    * Run a single build test case.
@@ -21,6 +24,7 @@ public class TestRunner {
   public boolean run(TestCase testCase) {
     TestExecutionStatus testExecutionStatus = executeTest(testCase);
     resultProcessor.process(testExecutionStatus);
+    testRunnerContext.remove(testCase.getExecutionId());
     return testExecutionStatus.isSuccessfulExecution();
   }
 

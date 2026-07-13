@@ -46,33 +46,37 @@
     Endpoints:
       <#list report.mockReports?keys as key>
       Endpoint "${key}" was mocked
-      Validation ${report.mockReports[key].validated}
-      <#if report.mockReports[key].validationResults?has_content>
+      <#list report.mockReports[key] as endpointReport>
+      Validation ${endpointReport.validated}
+      <#if endpointReport.validationResults?has_content>
       Validation details:
-        <#list report.mockReports[key].validationResults as validationResult>
+        <#list endpointReport.validationResults as validationResult>
         ${validationResult.message}
         </#list>
+
       </#if>
-      <#if report.mockReports[key].actualMessage?has_content>
+      <#if endpointReport.actualMessage?has_content>
       Received:
-       Body: <#if report.mockReports[key].actualMessage.body??>${report.mockReports[key].actualMessage.body}</#if>
+       Body: <#if endpointReport.actualMessage.body??>${endpointReport.actualMessage.body}</#if>
       </#if>
-       <#if report.mockReports[key].validatedHeaders?has_content>
+       <#if endpointReport.validatedHeaders?has_content>
        Headers:
-       <#list report.mockReports[key].validatedHeaders?keys as mkey>
-        - ${mkey}: ${report.mockReports[key].validatedHeaders[mkey]}
+       <#list endpointReport.validatedHeaders?keys as mkey>
+        - ${mkey}: ${endpointReport.validatedHeaders[mkey]}
        </#list>
        </#if>
-      <#if report.mockReports[key].expectedMessage?has_content>
+      <#if endpointReport.expectedMessage?has_content>
       Expected:
-       Body: <#if report.mockReports[key].expectedMessage.body??>${report.mockReports[key].expectedMessage.body}</#if>
-      <#if report.mockReports[key].expectedMessage.headers?has_content>
+       Body: <#if endpointReport.expectedMessage.body??>${endpointReport.expectedMessage.body}</#if>
+      <#if endpointReport.expectedMessage.headers?has_content>
        Headers:
-        <#list report.mockReports[key].expectedMessage.headers?keys as mkey>
-        - ${mkey}: ${report.mockReports[key].expectedMessage.headers[mkey]}
+        <#list endpointReport.expectedMessage.headers?keys as mkey>
+        - ${mkey}: ${endpointReport.expectedMessage.headers[mkey]}
         </#list>
       </#if>
       </#if>
+      ---
+          </#list>
       </#list>
   </#if>
 

@@ -8,6 +8,8 @@ import static org.mockito.Mockito.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.UUID;
+
 import one.x1f.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
 import one.x1f.sip.foundation.testkit.workflow.thenphase.validator.impl.comparators.JsonComparator;
 import one.x1f.sip.foundation.testkit.workflow.thenphase.validator.impl.comparators.RegexComparator;
@@ -102,7 +104,7 @@ class CamelBodyValidatorTest {
       when(actual.getMessage().getBody()).thenReturn("some content");
       when(expected.getMessage().getBody()).thenReturn("some content");
 
-      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected);
+      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected, UUID.randomUUID());
 
       assertEquals(VALIDATION_RESULT_SUCCESSFUL, validationResult);
     }
@@ -113,7 +115,7 @@ class CamelBodyValidatorTest {
       when(actual.getMessage().getBody()).thenReturn(parseNull(actualValue));
       when(expected.getMessage().getBody()).thenReturn(EMPTY);
 
-      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected);
+      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected, UUID.randomUUID());
 
       assertThat(validationResult).isEqualTo(VALIDATION_RESULT_SUCCESSFUL);
     }
@@ -129,7 +131,7 @@ class CamelBodyValidatorTest {
       String xmlExampleWithChangedNamespacePrefixes = readFile("test data/xml/" + fileName);
       when(expected.getMessage().getBody()).thenReturn(xmlExampleWithChangedNamespacePrefixes);
 
-      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected);
+      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected, UUID.randomUUID());
 
       assertThat(validationResult).isEqualTo(VALIDATION_RESULT_SUCCESSFUL);
     }
@@ -140,7 +142,7 @@ class CamelBodyValidatorTest {
       when(actual.getMessage().getBody()).thenReturn(xmlExample);
       when(expected.getMessage().getBody()).thenReturn(xmlExample.replace("<h:td>", " <h:td> "));
 
-      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected);
+      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected, UUID.randomUUID());
 
       assertThat(validationResult).isEqualTo(VALIDATION_RESULT_SUCCESSFUL);
     }
@@ -150,7 +152,7 @@ class CamelBodyValidatorTest {
       String jsonExample = NAME_JOHN_AGE_30_CAR_NULL_EXAMPLE;
       when(actual.getMessage().getBody()).thenReturn(jsonExample);
       when(expected.getMessage().getBody()).thenReturn(jsonExample.replace(",", "  ,  "));
-      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected);
+      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected, UUID.randomUUID());
 
       assertThat(validationResult).isEqualTo(VALIDATION_RESULT_SUCCESSFUL);
     }
@@ -160,7 +162,7 @@ class CamelBodyValidatorTest {
       String jsonExampleReordered = "{\"car\":null,\"age\":30, \"name\":\"John\"}";
       when(actual.getMessage().getBody()).thenReturn(NAME_JOHN_AGE_30_CAR_NULL_EXAMPLE);
       when(expected.getMessage().getBody()).thenReturn(jsonExampleReordered);
-      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected);
+      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected, UUID.randomUUID());
 
       assertThat(validationResult).isEqualTo(VALIDATION_RESULT_SUCCESSFUL);
     }
@@ -173,7 +175,7 @@ class CamelBodyValidatorTest {
       when(actual.getMessage().getBody()).thenReturn("some content");
       when(expected.getMessage().getBody()).thenReturn("some other content");
 
-      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected);
+      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected, UUID.randomUUID());
 
       assertThat(validationResult).isEqualTo(VALIDATION_RESULT_UNSUCCESSFUL);
     }
@@ -183,7 +185,7 @@ class CamelBodyValidatorTest {
       when(actual.getMessage().getBody()).thenReturn(null);
       when(expected.getMessage().getBody()).thenReturn("test");
 
-      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected);
+      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected, UUID.randomUUID());
 
       assertThat(validationResult).isEqualTo(VALIDATION_RESULT_UNSUCCESSFUL);
     }
@@ -195,7 +197,7 @@ class CamelBodyValidatorTest {
       when(actual.getMessage().getBody()).thenReturn(xmlExample);
       when(expected.getMessage().getBody()).thenReturn(xmlExample.replace(":table>", ":mable>"));
 
-      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected);
+      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected, UUID.randomUUID());
 
       assertThat(validationResult.isSuccess()).isFalse();
       AssertionsForClassTypes.assertThat(validationResult.getMessage())
@@ -210,7 +212,7 @@ class CamelBodyValidatorTest {
       when(actual.getMessage().getBody()).thenReturn(jsonExample);
       when(expected.getMessage().getBody()).thenReturn(jsonExample.replace("car", "CAR"));
 
-      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected);
+      ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected, UUID.randomUUID());
 
       assertThat(validationResult.isSuccess()).isFalse();
       assertThat(validationResult.getMessage())
