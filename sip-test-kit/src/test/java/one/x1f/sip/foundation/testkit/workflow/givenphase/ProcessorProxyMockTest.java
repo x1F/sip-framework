@@ -9,9 +9,11 @@ import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import one.x1f.sip.foundation.core.declarative.DeclarationsRegistry;
 import one.x1f.sip.foundation.core.declarative.DeclarationsRegistryApi;
+import one.x1f.sip.foundation.core.declarative.RoutesRegistry;
 import one.x1f.sip.foundation.core.proxies.ProcessorProxy;
 import one.x1f.sip.foundation.core.proxies.ProcessorProxyRegistry;
 import one.x1f.sip.foundation.core.util.exception.SIPFrameworkException;
@@ -49,7 +51,7 @@ class ProcessorProxyMockTest {
     void setup() {
       proxy = mock(ProcessorProxy.class);
       Exchange returnExchange = mock(Exchange.class, RETURNS_DEEP_STUBS);
-      subject = new ProcessorProxyMock(proxyRegistry, mock(ObjectMapper.class), null);
+      subject = new ProcessorProxyMock(proxyRegistry, mock(ObjectMapper.class), null, null);
       subject.setReturnExchange(returnExchange);
       when(returnExchange.getProperty("connectionAlias", String.class)).thenReturn(PROXY_ID);
       when(returnExchange.getMessage().getBody()).thenReturn("body");
@@ -101,16 +103,21 @@ class ProcessorProxyMockTest {
 
     private ProcessorProxy proxySubject;
     private DeclarationsRegistryApi declarationsRegistry;
+    private RoutesRegistry routesRegistry;
     private Exchange actualExchange;
 
     @BeforeEach
     void setup() {
       declarationsRegistry = mock(DeclarationsRegistry.class);
+      routesRegistry = mock(RoutesRegistry.class);
       proxySubject =
           new ProcessorProxy(mock(NamedNode.class), mock(Processor.class), new ArrayList<>());
       ProcessorProxyMock processorProxyMock =
           new ProcessorProxyMock(
-              proxyRegistry, new ObjectMapper(), Optional.of(declarationsRegistry));
+              proxyRegistry,
+              new ObjectMapper(),
+              Optional.of(declarationsRegistry),
+              Optional.of(routesRegistry));
 
       when(proxyRegistry.getProxy(PROXY_ID)).thenReturn(Optional.of(proxySubject));
       CamelContext camelContext = mock(CamelContext.class);
@@ -146,6 +153,7 @@ class ProcessorProxyMockTest {
       DirectRouteInvokerTest.ConnectorMock connector =
           mock(DirectRouteInvokerTest.ConnectorMock.class);
       when(declarationsRegistry.getConnectorById(CONNECTOR_ID)).thenReturn(Optional.of(connector));
+      when(routesRegistry.getRoutesInfo(connector)).thenReturn(List.of());
       doReturn(Optional.of(DirectRouteInvokerTest.Person.class))
           .when(connector)
           .getResponseModelClass();
