@@ -25,6 +25,7 @@ nav:
     - Changelog: changelog.md
     - JavaDoc Latest Development: './javadoc/latest/index.html'
     # JAVADOC_RELEASES sed marker, do not delete
+    - JavaDoc 4.4.2: './javadoc/4.4.2/index.html'
     - JavaDoc 4.4.1: './javadoc/4.4.1/index.html'
     - JavaDoc 4.4.0: './javadoc/4.4.0/index.html'
     - JavaDoc 4.3.1: './javadoc/4.3.1/index.html'
@@ -52,12 +53,13 @@ nav:
     - Find out more about x1F: 'https://www.x1f.one'
     - Impressum: 'https://www.x1f.one/impressum/'
 
-collapse_navigation: false
+
 
 theme:
   name: 'readthedocs'
   language: 'en'
   include_homepage_in_sidebar: True
+  collapse_navigation: false
 
 docs_dir: 'docs'
 
@@ -69,13 +71,5 @@ extra_javascript:
     - javascript/copy_to_clipboard.js
 
 markdown_extensions:
-  - toc:
-      permalink: true
-  - sane_lists
-  - pymdownx.superfences
-  - pymdownx.emoji:
-      # with the unicode images provided by alt we should be safe regarding
-      # license attributions as we are not using pictures from a specific library
-      emoji_generator: !!python/name:pymdownx.emoji.to_alt
   - plantuml_markdown:
       server: https://www.plantuml.com/plantuml
