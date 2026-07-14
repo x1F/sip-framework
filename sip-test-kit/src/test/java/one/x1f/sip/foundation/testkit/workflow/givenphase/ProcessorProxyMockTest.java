@@ -13,7 +13,9 @@ import java.util.List;
 import java.util.Optional;
 import one.x1f.sip.foundation.core.declarative.DeclarationsRegistry;
 import one.x1f.sip.foundation.core.declarative.DeclarationsRegistryApi;
+import one.x1f.sip.foundation.core.declarative.RouteRole;
 import one.x1f.sip.foundation.core.declarative.RoutesRegistry;
+import one.x1f.sip.foundation.core.declarative.dto.RouteInfo;
 import one.x1f.sip.foundation.core.proxies.ProcessorProxy;
 import one.x1f.sip.foundation.core.proxies.ProcessorProxyRegistry;
 import one.x1f.sip.foundation.core.util.exception.SIPFrameworkException;
@@ -22,6 +24,9 @@ import one.x1f.sip.foundation.testkit.util.TestKitHelper;
 import one.x1f.sip.foundation.testkit.workflow.TestExecutionStatus;
 import one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvokerTest;
 import org.apache.camel.*;
+import org.apache.camel.component.jackson.JacksonDataFormat;
+import org.apache.camel.model.*;
+import org.apache.camel.model.dataformat.JsonDataFormat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -105,6 +110,7 @@ class ProcessorProxyMockTest {
     private DeclarationsRegistryApi declarationsRegistry;
     private RoutesRegistry routesRegistry;
     private Exchange actualExchange;
+    private CamelContext camelContext;
 
     @BeforeEach
     void setup() {
@@ -120,9 +126,8 @@ class ProcessorProxyMockTest {
               Optional.of(routesRegistry));
 
       when(proxyRegistry.getProxy(PROXY_ID)).thenReturn(Optional.of(proxySubject));
-      CamelContext camelContext = mock(CamelContext.class);
+      camelContext = mock(CamelContext.class);
       when(camelContext.getCamelContextExtension()).thenReturn(mock(ExtendedCamelContext.class));
-
       actualExchange = TestKitHelper.parseExchangeProperties(null, camelContext);
       actualExchange.setProperty(ENDPOINT_ID_EXCHANGE_PROPERTY, PROXY_ID);
       actualExchange.setProperty(TEST_MODE_HEADER, "true");
@@ -200,6 +205,121 @@ class ProcessorProxyMockTest {
           .isInstanceOf(SIPFrameworkException.class)
           .hasMessage(
               String.format("Response model class is not defined for connector: %s", CONNECTOR_ID));
+    }
+
+    @Test
+    void GIVEN_NoUnmarshallDefinition_WHEN_processorProxyProcess_Expect_jsonPojoObject() {
+      // arrange
+      actualExchange.setProperty(CONNECTOR_ID_EXCHANGE_PROPERTY, CONNECTOR_ID);
+      actualExchange.getMessage().setBody(JSON_MODEL_PAYLOAD_BODY);
+
+      Model modelContext = mock(Model.class);
+      RouteDefinition routeDef = mock(RouteDefinition.class);
+      when(modelContext.getRouteDefinition("routeId")).thenReturn(routeDef);
+      when(camelContext.getCamelContextExtension().getContextPlugin(Model.class))
+          .thenReturn(modelContext);
+      when(routeDef.getOutputs()).thenReturn(List.of());
+
+      DirectRouteInvokerTest.ConnectorMock connector =
+          mock(DirectRouteInvokerTest.ConnectorMock.class);
+      when(declarationsRegistry.getConnectorById(CONNECTOR_ID)).thenReturn(Optional.of(connector));
+      RouteInfo routeInfo =
+          RouteInfo.builder()
+              .routeId("routeId")
+              .routeRole(RouteRole.EXTERNAL_ENDPOINT.getExternalName())
+              .build();
+      when(routesRegistry.getRoutesInfo(connector)).thenReturn(List.of(routeInfo));
+      doReturn(Optional.of(DirectRouteInvokerTest.Person.class))
+          .when(connector)
+          .getResponseModelClass();
+
+      // act
+      proxySubject.process(actualExchange, mock(AsyncCallback.class));
+
+      // assert
+      assertThat(actualExchange.getMessage().getBody())
+          .isInstanceOf(DirectRouteInvokerTest.Person.class);
+    }
+
+    @Test
+    void GIVEN_JsonDataFormatUnmarshalling_WHEN_processorProxyProcess_Expect_jsonPojoObject() {
+      // arrange
+      actualExchange.setProperty(CONNECTOR_ID_EXCHANGE_PROPERTY, CONNECTOR_ID);
+      actualExchange.getMessage().setBody(JSON_MODEL_PAYLOAD_BODY);
+
+      Model modelContext = mock(Model.class);
+      RouteDefinition routeDef = mock(RouteDefinition.class);
+      when(modelContext.getRouteDefinition("routeId")).thenReturn(routeDef);
+      when(camelContext.getCamelContextExtension().getContextPlugin(Model.class))
+          .thenReturn(modelContext);
+      ChoiceDefinition choiceDef = mock(ChoiceDefinition.class);
+      when(routeDef.getOutputs()).thenReturn(List.of(choiceDef));
+      UnmarshalDefinition unmarshalDef = mock(UnmarshalDefinition.class);
+      when(choiceDef.getOutputs()).thenReturn(List.of(unmarshalDef));
+      JsonDataFormat jsonDataFormat = new JsonDataFormat();
+      jsonDataFormat.setUnmarshalType(DirectRouteInvokerTest.Person.class);
+      when(unmarshalDef.getDataFormatType()).thenReturn(jsonDataFormat);
+
+      DirectRouteInvokerTest.ConnectorMock connector =
+          mock(DirectRouteInvokerTest.ConnectorMock.class);
+      when(declarationsRegistry.getConnectorById(CONNECTOR_ID)).thenReturn(Optional.of(connector));
+      RouteInfo routeInfo =
+          RouteInfo.builder()
+              .routeId("routeId")
+              .routeRole(RouteRole.EXTERNAL_ENDPOINT.getExternalName())
+              .build();
+      when(routesRegistry.getRoutesInfo(connector)).thenReturn(List.of(routeInfo));
+      doReturn(Optional.of(DirectRouteInvokerTest.Person.class))
+          .when(connector)
+          .getResponseModelClass();
+
+      // act
+      proxySubject.process(actualExchange, mock(AsyncCallback.class));
+
+      // assert
+      assertThat(actualExchange.getMessage().getBody())
+          .isInstanceOf(DirectRouteInvokerTest.Person.class);
+    }
+
+    @Test
+    void GIVEN_JacksonDataFormatUnmarshalling_WHEN_processorProxyProcess_Expect_jsonPojoObject() {
+      // arrange
+      actualExchange.setProperty(CONNECTOR_ID_EXCHANGE_PROPERTY, CONNECTOR_ID);
+      actualExchange.getMessage().setBody(JSON_MODEL_PAYLOAD_BODY);
+
+      Model modelContext = mock(Model.class);
+      RouteDefinition routeDef = mock(RouteDefinition.class);
+      when(modelContext.getRouteDefinition("routeId")).thenReturn(routeDef);
+      when(camelContext.getCamelContextExtension().getContextPlugin(Model.class))
+          .thenReturn(modelContext);
+      ChoiceDefinition choiceDef = mock(ChoiceDefinition.class);
+      when(routeDef.getOutputs()).thenReturn(List.of(choiceDef));
+      UnmarshalDefinition unmarshalDef = mock(UnmarshalDefinition.class);
+      when(choiceDef.getOutputs()).thenReturn(List.of(unmarshalDef));
+      DataFormatDefinition dfDef = mock(DataFormatDefinition.class);
+      when(dfDef.getDataFormat())
+          .thenReturn(new JacksonDataFormat(DirectRouteInvokerTest.Person.class));
+      when(unmarshalDef.getDataFormatType()).thenReturn(dfDef);
+
+      DirectRouteInvokerTest.ConnectorMock connector =
+          mock(DirectRouteInvokerTest.ConnectorMock.class);
+      when(declarationsRegistry.getConnectorById(CONNECTOR_ID)).thenReturn(Optional.of(connector));
+      RouteInfo routeInfo =
+          RouteInfo.builder()
+              .routeId("routeId")
+              .routeRole(RouteRole.EXTERNAL_ENDPOINT.getExternalName())
+              .build();
+      when(routesRegistry.getRoutesInfo(connector)).thenReturn(List.of(routeInfo));
+      doReturn(Optional.of(DirectRouteInvokerTest.Person.class))
+          .when(connector)
+          .getResponseModelClass();
+
+      // act
+      proxySubject.process(actualExchange, mock(AsyncCallback.class));
+
+      // assert
+      assertThat(actualExchange.getMessage().getBody())
+          .isInstanceOf(DirectRouteInvokerTest.Person.class);
     }
   }
 }

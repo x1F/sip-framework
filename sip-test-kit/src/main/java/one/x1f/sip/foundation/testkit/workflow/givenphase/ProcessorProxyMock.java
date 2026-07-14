@@ -1,11 +1,11 @@
 package one.x1f.sip.foundation.testkit.workflow.givenphase;
 
+import static one.x1f.sip.foundation.testkit.util.TestKitHelper.extractUnmarshalClass;
 import static one.x1f.sip.foundation.testkit.util.TestKitHelper.unmarshallExchangeBodyFromJson;
 import static one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvoker.CONNECTOR_ID_EXCHANGE_PROPERTY;
 import static one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvoker.STRING_CLASS;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +21,7 @@ import one.x1f.sip.foundation.testkit.exception.ExceptionType;
 import one.x1f.sip.foundation.testkit.exception.TestCaseInitializationException;
 import one.x1f.sip.foundation.testkit.workflow.TestExecutionStatus;
 import org.apache.camel.Exchange;
-import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.apache.camel.model.*;
-import org.apache.camel.model.dataformat.JsonDataFormat;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -121,33 +119,5 @@ public class ProcessorProxyMock extends Mock {
       }
     }
     return connector.isPresent() ? connector.get().getResponseModelClass() : Optional.empty();
-  }
-
-  private Class<?> extractUnmarshalClass(RouteDefinition routeDef) {
-    for (ProcessorDefinition<?> output : routeDef.getOutputs()) {
-      if (output instanceof ChoiceDefinition choiceDef) {
-        return findUnmarshalType(choiceDef.getOutputs());
-      }
-    }
-    return null;
-  }
-
-  private Class<?> findUnmarshalType(List<ProcessorDefinition<?>> outputs) {
-    for (ProcessorDefinition<?> output : outputs) {
-      if (output instanceof UnmarshalDefinition unmarshalDef) {
-        return extractUnmarshalType(unmarshalDef.getDataFormatType());
-      }
-    }
-    return null;
-  }
-
-  private Class<?> extractUnmarshalType(DataFormatDefinition dfDef) {
-    if (dfDef instanceof JsonDataFormat jsonDf) {
-      return jsonDf.getUnmarshalType();
-    }
-    if (dfDef != null && dfDef.getDataFormat() instanceof JacksonDataFormat jacksonDf) {
-      return jacksonDf.getUnmarshalType();
-    }
-    return null;
   }
 }
