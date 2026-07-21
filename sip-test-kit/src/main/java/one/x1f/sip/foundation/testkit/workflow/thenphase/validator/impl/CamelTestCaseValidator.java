@@ -1,7 +1,6 @@
 package one.x1f.sip.foundation.testkit.workflow.thenphase.validator.impl;
 
 import java.util.*;
-
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import one.x1f.sip.foundation.testkit.workflow.TestExecutionStatus;
@@ -30,8 +29,9 @@ public class CamelTestCaseValidator implements TestCaseValidator {
     if (adapterReport.getActualResponse() != null) {
       this.validateAdapterResponse(adapterReport, testExecutionStatus.getExecutionId());
     }
-    mockReports.values().forEach(reports ->
-            validateMockReports(reports, testExecutionStatus.getExecutionId()));
+    mockReports
+        .values()
+        .forEach(reports -> validateMockReports(reports, testExecutionStatus.getExecutionId()));
 
     boolean isAdapterResultExpected =
         evaluateValidationResults(adapterReport.getValidationResults());
@@ -41,7 +41,8 @@ public class CamelTestCaseValidator implements TestCaseValidator {
     testExecutionStatus.setSuccessfulExecution(isAdapterResultExpected && areAllMocksExpected);
   }
 
-  private void validateAdapterResponse(SIPAdapterExecutionReport adapterExecutionReport, UUID executionId) {
+  private void validateAdapterResponse(
+      SIPAdapterExecutionReport adapterExecutionReport, UUID executionId) {
     Exchange actual = adapterExecutionReport.getActualResponse();
     Exchange expected = adapterExecutionReport.getExpectedResponse();
     List<ValidationResult> adapterValidationResults = runValidators(actual, expected, executionId);
@@ -98,7 +99,7 @@ public class CamelTestCaseValidator implements TestCaseValidator {
   }
 
   private List<ValidationResult> runValidators(
-          Exchange executionResult, Exchange expectedResponse, UUID executionId) {
+      Exchange executionResult, Exchange expectedResponse, UUID executionId) {
     return this.exchangeValidators.stream()
         .filter(validator -> validator.isApplicable(executionResult, expectedResponse))
         .map(validator -> validator.execute(executionResult, expectedResponse, executionId))

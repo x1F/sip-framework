@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class TestRunner {
-    public static final String TEST_EXECUTION_ID = "_SipTestExecutionId";
+  public static final String TEST_EXECUTION_ID = "_SipTestExecutionId";
   private final ResultProcessor resultProcessor;
   private final TestRunnerContext testRunnerContext;
 

@@ -1,7 +1,6 @@
 package one.x1f.sip.foundation.testkit.workflow.reporting.model;
 
 import java.util.*;
-
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;

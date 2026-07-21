@@ -18,18 +18,19 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class CamelHeaderValidator implements ExchangeValidator {
 
-    private final TestRunnerContext context;
+  private final TestRunnerContext context;
 
   /**
    * Invokes compare header content
    *
-   * @param executionResult  Result of test execution
+   * @param executionResult Result of test execution
    * @param expectedResponse Expected result of test execution
    * @param executionId
    * @return {@link ValidationResult}
    */
   @Override
-  public ValidationResult execute(Exchange executionResult, Exchange expectedResponse, UUID executionId) {
+  public ValidationResult execute(
+      Exchange executionResult, Exchange expectedResponse, UUID executionId) {
     AtomicBoolean result = new AtomicBoolean(true);
     expectedResponse
         .getMessage()
@@ -45,8 +46,8 @@ public class CamelHeaderValidator implements ExchangeValidator {
                 var evaluationResult =
                     evaluateValidationScript(
                         expectedHeaderValue.substring(EVAL_PREFIX.length()),
-                            actualHeaderValue,
-                            context.getOrCreate(executionId));
+                        actualHeaderValue,
+                        context.getOrCreate(executionId));
 
                 result.set(evaluationResult.isSuccess());
               } else if (!RegexUtil.compare((String) value, actualHeaderValue)) {

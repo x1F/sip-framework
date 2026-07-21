@@ -3,7 +3,6 @@ package one.x1f.sip.foundation.testkit.config;
 import static one.x1f.sip.foundation.testkit.util.TestKitHelper.parseExchangeProperties;
 
 import java.util.*;
-
 import lombok.RequiredArgsConstructor;
 import one.x1f.sip.foundation.testkit.configurationproperties.TestCaseDefinition;
 import one.x1f.sip.foundation.testkit.configurationproperties.models.EndpointProperties;

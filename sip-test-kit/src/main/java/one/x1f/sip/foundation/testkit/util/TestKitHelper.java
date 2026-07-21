@@ -23,7 +23,6 @@ import org.apache.camel.builder.ExchangeBuilder;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.graalvm.polyglot.Context;
-import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Value;
 
 /** Utility class that changes the {@link Exchange} */
@@ -121,7 +120,9 @@ public class TestKitHelper extends SIPExchangeHelper {
     }
     ExchangeBuilder exchangeBuilder =
         anExchange(camelContext)
-            .withBody(getValueOrEvaluateScript(properties.getRequestMessage().getEvaluatedBody(), context));
+            .withBody(
+                getValueOrEvaluateScript(
+                    properties.getRequestMessage().getEvaluatedBody(), context));
     properties
         .getRequestMessage()
         .getHeaders()
@@ -143,7 +144,8 @@ public class TestKitHelper extends SIPExchangeHelper {
     return payloadProperties.getValue();
   }
 
-  private static String getValueOrEvaluateScript(PayloadProperties payloadProperties, Context context) {
+  private static String getValueOrEvaluateScript(
+      PayloadProperties payloadProperties, Context context) {
     String jsScript = payloadProperties.getEval();
     if (StringUtils.isNotEmpty(jsScript)) {
       return evaluateScript(jsScript, context);
@@ -152,54 +154,46 @@ public class TestKitHelper extends SIPExchangeHelper {
   }
 
   public static String evaluateScript(String jsScript, Context context) {
-      Value value = context.eval("js", jsScript);
-      if (value == null || value.isNull()) {
-        return null;
-      }
-      if (value.isBoolean()) {
-        return String.valueOf(value.asBoolean());
-      }
-      if (value.isNumber()) {
-        if (value.fitsInInt()) return String.valueOf(value.asInt());
-        if (value.fitsInLong()) return String.valueOf(value.asLong());
-        return String.valueOf(value.asDouble());
-      }
-      if (value.isString()) {
-        return value.asString();
-      }
-      return value.toString();
-
-//    } catch (PolyglotException e) {
-//      throw SIPFrameworkException.init(
-//          "Script threw an exception [%s]: %s", e.getMessage(), jsScript, e);
-//    } catch (ClassCastException | UnsupportedOperationException e) {
-//      throw SIPFrameworkException.init(
-//          "Script returned an unexpected type [%s]: %s", e.getMessage(), jsScript, e);
-//    }
-  }
-
-  public static ValidationResult evaluateValidationScript(String jsScript, String input, Context context) {
-
-      if (StringUtils.isNotEmpty(input)) {
-        context.getBindings("js").putMember("input", input);
-      }
-      Value value = context.eval("js", jsScript);
-      if (value.isBoolean()) {
-        return new ValidationResult(
-            value.asBoolean(), "Validation script was evaluated as a boolean");
-      }
-      return new ValidationResult(true, value.asString());
-
-  }
-
-    public static Context createGraalJSContext() {
-        return Context.newBuilder()
-                .allowAllAccess(false)
-                .option("engine.WarnInterpreterOnly", "false")
-                .build();
+    Value value = context.eval("js", jsScript);
+    if (value == null || value.isNull()) {
+      return null;
     }
+    if (value.isBoolean()) {
+      return String.valueOf(value.asBoolean());
+    }
+    if (value.isNumber()) {
+      if (value.fitsInInt()) return String.valueOf(value.asInt());
+      if (value.fitsInLong()) return String.valueOf(value.asLong());
+      return String.valueOf(value.asDouble());
+    }
+    if (value.isString()) {
+      return value.asString();
+    }
+    return value.toString();
+  }
 
-    /**
+  public static ValidationResult evaluateValidationScript(
+      String jsScript, String input, Context context) {
+
+    if (StringUtils.isNotEmpty(input)) {
+      context.getBindings("js").putMember("input", input);
+    }
+    Value value = context.eval("js", jsScript);
+    if (value.isBoolean()) {
+      return new ValidationResult(
+          value.asBoolean(), "Validation script was evaluated as a boolean");
+    }
+    return new ValidationResult(true, value.asString());
+  }
+
+  public static Context createGraalJSContext() {
+    return Context.newBuilder()
+        .allowAllAccess(false)
+        .option("engine.WarnInterpreterOnly", "false")
+        .build();
+  }
+
+  /**
    * Checks if header is Test Kit specific header
    *
    * @param key of header for checking
