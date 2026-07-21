@@ -23,4 +23,7 @@ public class TestCaseDefinition {
   private List<EndpointProperties> thenExpect = new ArrayList<>();
 
   private Map<String, String> variables = new HashMap<>();
+
+  @JsonProperty("real-endpoints")
+  private List<String> realEndpoints = new ArrayList<>();
 }

@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import one.x1f.sip.foundation.core.declarative.DeclarationsRegistryApi;
@@ -80,17 +79,27 @@ public class TestCasesConfig {
    */
   public TestCase generateTestCase(TestCaseDefinition testCaseDefinition) {
     String testName = testCaseDefinition.getTitle();
-
+    List<String> realEndpoints = testCaseDefinition.getRealEndpoints();
     declarationsRegistry.ifPresent(registry -> validateConnectors(testCaseDefinition));
-    routesRegistry.ifPresent(registry -> initTestCaseDefinitionEndpoints(testCaseDefinition));
+    if (routesRegistry.isPresent()) {
+      initTestCaseDefinitionEndpoints(testCaseDefinition, routesRegistry.get());
+      realEndpoints =
+          testCaseDefinition.getRealEndpoints().stream()
+              .map(
+                  connectorId ->
+                      routesRegistry
+                          .get()
+                          .getRouteIdByConnectorIdAndRole(connectorId, RouteRole.EXTERNAL_ENDPOINT))
+              .toList();
+    }
 
     var executionId = UUID.randomUUID();
 
     var context = testRunnerContext.getOrCreate(executionId);
 
-    testCaseDefinition.getVariables().entrySet().forEach(entry -> {
-        context.getBindings("js").putMember(entry.getKey(), entry.getValue());
-    });
+    testCaseDefinition
+        .getVariables()
+        .forEach((key, value) -> context.getBindings("js").putMember(key, value));
 
     var mocks = getMocks(testName, testCaseDefinition, context);
 
@@ -102,53 +111,49 @@ public class TestCasesConfig {
             executionStatusFactory.generateTestReport(testCaseDefinition, executionId),
             executionId);
 
-
     var exchange =
-        parseAndEvaluateExchangeProperties(testCaseDefinition.getWhenExecute(), camelContext, context);
+        parseAndEvaluateExchangeProperties(
+            testCaseDefinition.getWhenExecute(), camelContext, context);
     exchange.setProperty(TEST_EXECUTION_ID, testCase.getExecutionId());
 
     try {
       RouteInvoker invoker = routeInvokerFactory.getInstance(exchange);
+
       testCase.setExecutionWrapper(
-          new ExecutionWrapper(
-              testName,
-              exchange,
-              invoker,
-              testCaseDefinition.getWithMocks().stream()
-                  .filter(EndpointProperties::isDisableMock)
-                  .map(EndpointProperties::getEndpointId)
-                  .toList()));
+          new ExecutionWrapper(testName, exchange, invoker, realEndpoints));
     } catch (NoRouteInvokerException e) {
       testCase.reportExecutionException(e);
     }
     return testCase;
   }
 
-  private void initTestCaseDefinitionEndpoints(TestCaseDefinition definition) {
+  private void initTestCaseDefinitionEndpoints(
+      TestCaseDefinition definition, RoutesRegistry registry) {
     setEndpointBasedOnConnectorId(
-        definition.getWhenExecute(), RouteRole.CONNECTOR_REQUEST_ORCHESTRATION);
+        definition.getWhenExecute(), RouteRole.CONNECTOR_REQUEST_ORCHESTRATION, registry);
     definition
         .getWithMocks()
         .forEach(
-            properties -> setEndpointBasedOnConnectorId(properties, RouteRole.EXTERNAL_ENDPOINT));
+            properties ->
+                setEndpointBasedOnConnectorId(properties, RouteRole.EXTERNAL_ENDPOINT, registry));
     definition
         .getThenExpect()
         .forEach(
-            properties -> setEndpointBasedOnConnectorId(properties, RouteRole.EXTERNAL_ENDPOINT));
+            properties ->
+                setEndpointBasedOnConnectorId(properties, RouteRole.EXTERNAL_ENDPOINT, registry));
   }
 
-  private void setEndpointBasedOnConnectorId(EndpointProperties properties, RouteRole role) {
+  private void setEndpointBasedOnConnectorId(
+      EndpointProperties properties, RouteRole role, RoutesRegistry registry) {
     if (StringUtils.isNotEmpty(properties.getConnectorId())) {
-      String routeId =
-          routesRegistry.get().getRouteIdByConnectorIdAndRole(properties.getConnectorId(), role);
+      String routeId = registry.getRouteIdByConnectorIdAndRole(properties.getConnectorId(), role);
       if (routeId == null) {
         throw SIPFrameworkException.init(
             "There is no connector with id %s", properties.getConnectorId());
       }
       properties.setEndpointId(routeId + SIP_ENDPOINT_PROCESSOR_SUFFIX);
     } else {
-      String connectorId =
-          routesRegistry.get().getConnectorIdByExternalEndpointId(properties.getEndpointId());
+      String connectorId = registry.getConnectorIdByExternalEndpointId(properties.getEndpointId());
       if (connectorId == null) {
         throw SIPFrameworkException.init(
             "There is no connector for endpoint with id %s", properties.getEndpointId());
@@ -157,13 +162,15 @@ public class TestCasesConfig {
     }
   }
 
-  private List<Mock> getMocks(String testName, TestCaseDefinition testCaseDefinition, Context context) {
+  private List<Mock> getMocks(
+      String testName, TestCaseDefinition testCaseDefinition, Context context) {
     return testCaseDefinition.getWithMocks().stream()
         .map(
             connectionProperties ->
                 mockFactory.newMockInstance(
                     testName,
-                    parseAndEvaluateExchangeProperties(connectionProperties, camelContext, context)))
+                    parseAndEvaluateExchangeProperties(
+                        connectionProperties, camelContext, context)))
         .toList();
   }
 

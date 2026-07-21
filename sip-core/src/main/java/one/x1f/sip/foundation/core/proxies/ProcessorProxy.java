@@ -4,7 +4,6 @@ import com.google.common.collect.Iterables;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import lombok.Getter;
@@ -78,8 +77,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     if (this.mockFunction == null) {
       this.mockFunction = new ArrayList<>();
     }
-    if (this.mockFunction.contains(DEFAULT_MOCK_FUNCTION))
-      this.mockFunction.remove(DEFAULT_MOCK_FUNCTION);
+    this.mockFunction.remove(DEFAULT_MOCK_FUNCTION);
     this.mockFunction.add(exchangeFunction);
   }
 
@@ -104,22 +102,21 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     if (isTestMode(exchange) && exchange.getProperty(TEST_MODE_HEADER) == null) {
       exchange.setProperty(TEST_MODE_HEADER, "true");
       exchange.setProperty("test-name", exchange.getMessage().getHeader("test-name"));
-//      exchange.setProperty(MOCK_IGNORE_LIST, exchange.getMessage().getHeader(MOCK_IGNORE_LIST));
-//    }
-//
-//    if (nodeDefinition instanceof ChoiceDefinition && isTestMode(exchange)) {
-//      Predicate<Exchange> predicate =
-//          e ->
-//              originalProcessor instanceof RouteIdAware idAware
-//                  && shouldNotSkipMock(e, idAware.getRouteId());
-//      exchange.setProperty(TEST_MODE_PREDICATE, predicate);
+      exchange.setProperty(MOCK_IGNORE_LIST, exchange.getMessage().getHeader(MOCK_IGNORE_LIST));
+    }
+
+    if (nodeDefinition instanceof ChoiceDefinition && isTestMode(exchange)) {
+      Predicate<Exchange> predicate =
+          e ->
+              originalProcessor instanceof RouteIdAware idAware
+                  && shouldNotSkipMock(e, idAware.getRouteId());
+      exchange.setProperty(TEST_MODE_PREDICATE, predicate);
     }
 
     Exchange originalExchange = exchange.copy();
-//      if (isTestMode(exchange)
-//              && hasMockFunction()
-//              && shouldNotSkipMock(exchange, nodeDefinition.getId())) {
-    if (isTestMode(exchange) && hasMockFunction()) {
+    if (isTestMode(exchange)
+        && hasMockFunction()
+        && shouldNotSkipMock(exchange, nodeDefinition.getId())) {
       mockProcessing(exchange);
     } else {
       processExchange(exchange);
@@ -167,6 +164,8 @@ public class ProcessorProxy extends AsyncProcessorSupport {
 
   private boolean shouldNotSkipMock(Exchange exchange, String id) {
     List<String> mockIgnoreList = exchange.getProperty(MOCK_IGNORE_LIST, List.class);
-    return mockIgnoreList == null || mockIgnoreList.isEmpty() || !mockIgnoreList.contains(id);
+    return mockIgnoreList == null
+        || mockIgnoreList.isEmpty()
+        || mockIgnoreList.stream().noneMatch(id::contains);
   }
 }
