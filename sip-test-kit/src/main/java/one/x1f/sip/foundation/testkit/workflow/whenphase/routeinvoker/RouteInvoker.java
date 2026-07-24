@@ -7,7 +7,7 @@ import org.apache.camel.Exchange;
 /** Route invoker interface */
 public interface RouteInvoker {
 
-  String TEST_NAME_HEADER = "test-name";
+  String TEST_NAME_HEADER = "_SipTestName";
 
   /**
    * Sends request to route

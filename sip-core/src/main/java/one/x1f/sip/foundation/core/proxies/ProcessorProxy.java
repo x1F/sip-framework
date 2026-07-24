@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 public class ProcessorProxy extends AsyncProcessorSupport {
   private static final Logger logger = LoggerFactory.getLogger(ProcessorProxy.class);
   public static final String TEST_MODE_HEADER = "_SipTestMode";
+  public static final String TEST_NAME_HEADER = "_SipTestName";
   public static final String MOCK_IGNORE_LIST = "_SipMockIgnoreList";
   public static final String TEST_MODE_PREDICATE = "_SipTestModePredicate";
   public static final UnaryOperator<Exchange> DEFAULT_MOCK_FUNCTION = exchange -> exchange;
@@ -101,7 +102,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
   public boolean process(Exchange exchange, AsyncCallback callback) {
     if (isTestMode(exchange) && exchange.getProperty(TEST_MODE_HEADER) == null) {
       exchange.setProperty(TEST_MODE_HEADER, "true");
-      exchange.setProperty("test-name", exchange.getMessage().getHeader("test-name"));
+      exchange.setProperty(TEST_NAME_HEADER, exchange.getMessage().getHeader(TEST_NAME_HEADER));
       exchange.setProperty(MOCK_IGNORE_LIST, exchange.getMessage().getHeader(MOCK_IGNORE_LIST));
     }
 
