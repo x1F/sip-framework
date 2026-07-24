@@ -65,7 +65,7 @@
         <snakeyaml.version>2.4</snakeyaml.version>                                  <!-- keep in sync with snakeyaml version in framework pom -->
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>                  <!-- keep in sync with framework, for maven central deployment -->
-        <sonatype-central-publishing-plugin.version>0.11.0</sonatype-central-publishing-plugin.version>  <!-- keep in sync with framework, for maven central deployment -->
+        <sonatype-central-publishing-plugin.version>0.10.0</sonatype-central-publishing-plugin.version>  <!-- keep in sync with framework, for maven central deployment -->
         <spotless-maven-plugin.version>3.8.0</spotless-maven-plugin.version>       <!-- keep in sync with spotless version in framework pom -->
         <apache-commons-lang3.version>3.20.0</apache-commons-lang3.version>
     </properties>
