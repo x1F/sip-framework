@@ -8,7 +8,7 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <!-- Attention! We need to keep this in sync with the spring-boot version set in sip-framework,
              which is transitively referenced in sip-integration-starter specified in the dependencymanagement section -->
-        <version>3.5.14</version>
+        <version>3.5.16</version>
     <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -61,12 +61,12 @@
         <sip-framework.version>4.4.3-SNAPSHOT</sip-framework.version>               <!-- keep in sync with framework version -->
         <mapstruct.version>1.6.3</mapstruct.version>                          <!-- keep in sync with mapstruct version in framework pom -->
         <lombok.version>1.18.46</lombok.version>                                    <!-- keep in sync with lombok version in framework pom -->
-        <cxf.version>4.1.4</cxf.version>                                            <!-- keep in sync with cxf version in framework pom -->
+        <cxf.version>4.1.7</cxf.version>                                            <!-- keep in sync with cxf version in framework pom -->
         <snakeyaml.version>2.4</snakeyaml.version>                                  <!-- keep in sync with snakeyaml version in framework pom -->
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>                  <!-- keep in sync with framework, for maven central deployment -->
-        <sonatype-central-publishing-plugin.version>0.10.0</sonatype-central-publishing-plugin.version>  <!-- keep in sync with framework, for maven central deployment -->
-        <spotless-maven-plugin.version>2.46.1</spotless-maven-plugin.version>       <!-- keep in sync with spotless version in framework pom -->
+        <sonatype-central-publishing-plugin.version>0.11.0</sonatype-central-publishing-plugin.version>  <!-- keep in sync with framework, for maven central deployment -->
+        <spotless-maven-plugin.version>3.8.0</spotless-maven-plugin.version>       <!-- keep in sync with spotless version in framework pom -->
         <apache-commons-lang3.version>3.20.0</apache-commons-lang3.version>
     </properties>
 
@@ -173,22 +173,22 @@
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-core</artifactId>
-                <version>10.1.55</version>
+                <version>10.1.57</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-el</artifactId>
-                <version>10.1.55</version>
+                <version>10.1.57</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-websocket</artifactId>
-                <version>10.1.55</version>
+                <version>10.1.57</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-annotations-api</artifactId>
-                <version>10.1.55</version>
+                <version>10.1.57</version>
             </dependency>
 
             <!-- ========== END OF TEMPORARY MODIFICATIONS SECTION ========== -->
@@ -242,6 +242,7 @@
                 <configuration>
                     <java>
                         <googleJavaFormat/>
+                        <toggleOffOn/>
                     </java>
                 </configuration>
             </plugin>
