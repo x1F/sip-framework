@@ -120,8 +120,17 @@ public class ProcessOrchestrationAdapter {
     public Orchestrator<CompositeProcessOrchestrationInfo> getOrchestrator() {
       return ProcessOrchestrator.forOrchestrationDsl(
           dsl -> {
-            dsl.callConsumer(getPartnerByName.class)
+            dsl.process(
+                    context -> {
+                      System.out.println("hello");
+                      context.getExchange().getMessage().setHeader("hello", "process");
+                    })
+                .callConsumer(getPartnerByName.class)
                 .withNoResponseHandling()
+                .process(
+                    context -> {
+                      context.getExchange();
+                    })
                 .callConsumer(getPartnerDebtById.class)
                 .withRequestPreparation(
                     context -> {

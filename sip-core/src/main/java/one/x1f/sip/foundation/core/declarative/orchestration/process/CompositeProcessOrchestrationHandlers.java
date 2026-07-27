@@ -51,6 +51,13 @@ public class CompositeProcessOrchestrationHandlers {
     return new ConditionalHandler(stepResultCloner, conditional).executeCondition(exchange);
   }
 
+  public static void handleProcess(
+      final Exchange exchange,
+      final Optional<StepResultCloner> stepResultCloner,
+      final Optional<CompositeProcessTransformer> processTransformer) {
+    new ProcessHandler(stepResultCloner, processTransformer).processTransformation(exchange);
+  }
+
   public static int handleIterations(
       final Exchange exchange, final Optional<CompositeProcessStepIterations> iterations) {
     return new IterationsHandler(iterations).determineIterations(exchange);
@@ -177,6 +184,20 @@ public class CompositeProcessOrchestrationHandlers {
         return conditional.get().determineCondition(context);
       }
       return true;
+    }
+  }
+
+  @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+  static class ProcessHandler {
+    private final Optional<StepResultCloner> stepResultCloner;
+    private final Optional<CompositeProcessTransformer> processor;
+
+    @Handler
+    public void processTransformation(final Exchange exchange) {
+      final CompositeProcessOrchestrationContext context = retrieveOrchestrationContext(exchange);
+      if (processor.isPresent()) {
+        processor.get().process(context);
+      }
     }
   }
 
