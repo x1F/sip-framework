@@ -1,6 +1,7 @@
 package one.x1f.sip.foundation.core.declarative.orchestration.scenario;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -48,6 +49,11 @@ public class ScenarioOrchestrationHandlers {
   public static <M> ContextPredicateHandler<M> handleContextPredicate(
       final Predicate<ScenarioOrchestrationContext<M>> predicate) {
     return new ContextPredicateHandler<>(predicate);
+  }
+
+  public static <M> ContextConsumerHandler<M> handleContextConsumer(
+          final Consumer<ScenarioOrchestrationContext<M>> consumer) {
+    return new ContextConsumerHandler<>(consumer);
   }
 
   public static ThrowErrorOnUnhandledRequestHandler handleErrorThrownIfNoConsumerWasCalled() {
@@ -140,6 +146,17 @@ public class ScenarioOrchestrationHandlers {
     public boolean testPredicate(final Exchange exchange) {
       final ScenarioOrchestrationContext<M> context = retrieveOrchestrationContext(exchange);
       return predicate.test(context);
+    }
+  }
+
+  @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+  static class ContextConsumerHandler<M> {
+    private final Consumer<ScenarioOrchestrationContext<M>> consumer;
+
+    @Handler
+    public void testPredicate(final Exchange exchange) {
+      final ScenarioOrchestrationContext<M> context = retrieveOrchestrationContext(exchange);
+      consumer.accept(context);
     }
   }
 

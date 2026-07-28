@@ -2,6 +2,7 @@ package one.x1f.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -123,5 +124,11 @@ public abstract sealed class ForScenarioProvidersBaseDefinition<
    */
   public R endDefinitionForThisProvider() {
     return getDslReturnDefinition();
+  }
+
+  public S process(final Consumer<ScenarioOrchestrationContext<M>> consumer) {
+    ProcessCallScenarioConsumerDefinition<S, M> def = new ProcessCallScenarioConsumerDefinition<>(self(), getIntegrationScenario());
+    nodes.add(def);
+    return def.process(consumer);
   }
 }
