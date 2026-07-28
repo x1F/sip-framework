@@ -52,7 +52,7 @@ public class ScenarioOrchestrationHandlers {
   }
 
   public static <M> ContextConsumerHandler<M> handleContextConsumer(
-          final Consumer<ScenarioOrchestrationContext<M>> consumer) {
+      final Consumer<ScenarioOrchestrationContext<M>> consumer) {
     return new ContextConsumerHandler<>(consumer);
   }
 

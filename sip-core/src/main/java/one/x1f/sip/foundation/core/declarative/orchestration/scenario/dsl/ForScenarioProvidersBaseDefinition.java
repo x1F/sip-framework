@@ -127,7 +127,8 @@ public abstract sealed class ForScenarioProvidersBaseDefinition<
   }
 
   public S process(final Consumer<ScenarioOrchestrationContext<M>> consumer) {
-    ProcessCallScenarioConsumerDefinition<S, M> def = new ProcessCallScenarioConsumerDefinition<>(self(), getIntegrationScenario());
+    ProcessCallScenarioConsumerDefinition<S, M> def =
+        new ProcessCallScenarioConsumerDefinition<>(self(), getIntegrationScenario());
     nodes.add(def);
     return def.process(consumer);
   }
