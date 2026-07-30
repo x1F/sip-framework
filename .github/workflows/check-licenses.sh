@@ -39,6 +39,7 @@ while read line; do
       [[ $line == *"(The BSD License)"* ]] ||
       [[ $line == *"(EDL 1.0)"* ]] ||
       [[ $line == *"(EPL 2.0)"* ]] ||
+      [[ $line == *"(EPL-2.0)"* ]] ||
       [[ $line == *"(Eclipse Public License v. 2.0)"* ]] ||
       [[ $line == *"(Eclipse Public License 2.0)"* ]] ||
       [[ $line == *"(CDDL/GPLv2+CE)"* ]] ||
