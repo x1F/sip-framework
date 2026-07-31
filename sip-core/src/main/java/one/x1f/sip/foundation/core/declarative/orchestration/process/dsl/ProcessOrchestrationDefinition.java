@@ -110,7 +110,7 @@ public class ProcessOrchestrationDefinition
   }
 
   public ProcessOrchestrationDefinition process(CompositeProcessTransformer requestPreparation) {
-    CallProcess<? extends CallProcess<?, ?>, ProcessOrchestrationDefinition> def =
+    CallProcess<ProcessOrchestrationDefinition> def =
         new CallProcess(self(), getCompositeProcess());
     steps.add(def);
     return def.process(requestPreparation);

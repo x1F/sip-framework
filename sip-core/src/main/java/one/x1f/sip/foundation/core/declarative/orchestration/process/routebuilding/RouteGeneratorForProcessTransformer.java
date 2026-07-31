@@ -19,7 +19,7 @@ import org.apache.camel.model.ProcessorDefinition;
 @SuppressWarnings("rawtypes")
 final class RouteGeneratorForProcessTransformer extends RouteGeneratorProcessBase {
 
-  private final CallProcess<?, ?> definitionElement;
+  private final CallProcess<?> definitionElement;
 
   RouteGeneratorForProcessTransformer(
       final CompositeProcessOrchestrationInfo orchestrationInfo,
@@ -37,11 +37,10 @@ final class RouteGeneratorForProcessTransformer extends RouteGeneratorProcessBas
           getCompositeProcessId());
     }
     routeDefinition.process(
-        exchange -> {
-          CompositeProcessOrchestrationHandlers.handleProcess(
-              exchange,
-              Optional.empty(),
-              RouteGeneratorInternalHelper.getProcess(definitionElement));
-        });
+        exchange ->
+            CompositeProcessOrchestrationHandlers.handleProcess(
+                exchange,
+                Optional.empty(),
+                RouteGeneratorInternalHelper.getProcess(definitionElement)));
   }
 }
