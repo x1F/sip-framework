@@ -68,11 +68,3 @@ camel:
   servlet:
     mapping:
       context-path: /adapter/*
-
-logging:
-  group:
-    connector: "ConnectorStepLogger"
-    extensions: "ConnectorExtensionStepLogger"
-  level:
-    connector: off
-    extensions: off
