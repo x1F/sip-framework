@@ -10,6 +10,7 @@ import one.x1f.sip.foundation.core.annotation.SIPIntegrationAdapter;
 import one.x1f.sip.foundation.core.declarative.annotation.InboundConnector;
 import one.x1f.sip.foundation.core.declarative.annotation.IntegrationScenario;
 import one.x1f.sip.foundation.core.declarative.annotation.OutboundConnector;
+import one.x1f.sip.foundation.core.declarative.annotation.connector.extension.ResponseProcessor;
 import one.x1f.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import one.x1f.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import one.x1f.sip.foundation.core.declarative.orchestration.Orchestrator;
@@ -19,6 +20,7 @@ import one.x1f.sip.foundation.core.declarative.orchestration.connector.Connector
 import one.x1f.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import one.x1f.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrator;
 import one.x1f.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
@@ -69,6 +71,13 @@ public class ScenarioOrchestrationAdapter {
           dsl -> {
             // first connector only calls first outbound connector
             dsl.forInboundConnectors(InboundConnectorOne.class, InboundConnectorTwo.class)
+                .process(
+                    context -> {
+                      context
+                          .getExchange()
+                          .getMessage()
+                          .setHeader("headerKey", "Header set in scenario orchestration");
+                    })
                 .callOutboundConnector(OutboundConnectorOne.ID)
                 .withRequestPreparation(
                     context -> context.getOriginalRequest() + "-scenarioprepared")
@@ -141,6 +150,11 @@ public class ScenarioOrchestrationAdapter {
     @Override
     protected EndpointConsumerBuilder defineInitiatingEndpoint() {
       return StaticEndpointBuilders.direct("dummyInputOne");
+    }
+
+    @ResponseProcessor
+    public void handleResponse(Exchange response) {
+      response.getMessage();
     }
   }
 

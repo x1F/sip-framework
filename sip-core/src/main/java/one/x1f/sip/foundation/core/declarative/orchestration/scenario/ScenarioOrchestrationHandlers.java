@@ -51,9 +51,9 @@ public class ScenarioOrchestrationHandlers {
     return new ContextPredicateHandler<>(predicate);
   }
 
-  public static <M> ContextConsumerHandler<M> handleContextConsumer(
-      final Consumer<ScenarioOrchestrationContext<M>> consumer) {
-    return new ContextConsumerHandler<>(consumer);
+  public static <M> void handleContextConsumer(
+      final Consumer<ScenarioOrchestrationContext<M>> consumer, Exchange exchange) {
+    new ContextConsumerHandler<>(consumer).acceptConsumer(exchange);
   }
 
   public static ThrowErrorOnUnhandledRequestHandler handleErrorThrownIfNoConsumerWasCalled() {
@@ -153,8 +153,7 @@ public class ScenarioOrchestrationHandlers {
   static class ContextConsumerHandler<M> {
     private final Consumer<ScenarioOrchestrationContext<M>> consumer;
 
-    @Handler
-    public void testPredicate(final Exchange exchange) {
+    public void acceptConsumer(final Exchange exchange) {
       final ScenarioOrchestrationContext<M> context = retrieveOrchestrationContext(exchange);
       consumer.accept(context);
     }

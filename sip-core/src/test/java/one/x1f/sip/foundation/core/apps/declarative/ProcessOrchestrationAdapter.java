@@ -122,15 +122,13 @@ public class ProcessOrchestrationAdapter {
           dsl -> {
             dsl.process(
                     context -> {
-                      System.out.println("hello");
-                      context.getExchange().getMessage().setHeader("hello", "process");
+                      context
+                          .getExchange()
+                          .getMessage()
+                          .setHeader("headerKey", "Header set in process");
                     })
                 .callConsumer(getPartnerByName.class)
                 .withNoResponseHandling()
-                .process(
-                    context -> {
-                      context.getExchange();
-                    })
                 .callConsumer(getPartnerDebtById.class)
                 .withRequestPreparation(
                     context -> {
