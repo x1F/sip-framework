@@ -19,7 +19,8 @@ final class RouteGeneratorForProcessCallScenarioConsumerDefinition<M> extends Ro
 
   <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {
     routeDefinition.process(
-        exchange -> ScenarioOrchestrationHandlers.handleContextConsumer(
-            processDefinition.getConsumer(), exchange));
+        exchange ->
+            ScenarioOrchestrationHandlers.handleContextConsumer(
+                processDefinition.getConsumer(), exchange));
   }
 }
