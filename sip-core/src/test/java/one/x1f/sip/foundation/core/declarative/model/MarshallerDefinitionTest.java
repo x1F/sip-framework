@@ -2,7 +2,7 @@ package one.x1f.sip.foundation.core.declarative.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.apache.camel.component.jackson.JacksonDataFormat;
+import org.apache.camel.component.jackson3.JacksonDataFormat;
 import org.apache.camel.model.MarshalDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.dataformat.JaxbDataFormat;

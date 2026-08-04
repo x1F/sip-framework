@@ -4,7 +4,6 @@ import static one.x1f.sip.foundation.testkit.util.TestKitHelper.unmarshallExchan
 import static one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvoker.CONNECTOR_ID_EXCHANGE_PROPERTY;
 import static one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvoker.STRING_CLASS;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +19,7 @@ import one.x1f.sip.foundation.testkit.workflow.TestExecutionStatus;
 import org.apache.camel.Exchange;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.json.JsonMapper;
 
 /** Creates and defines behaviour for Camel based external service mocks */
 @Slf4j
@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 public class ProcessorProxyMock extends Mock {
   private ProcessorProxy proxy;
   private final ProcessorProxyRegistry proxyRegistry;
-  private final ObjectMapper mapper;
+  private final JsonMapper mapper;
   private final Optional<DeclarationsRegistryApi> declarationsRegistry;
 
   /**

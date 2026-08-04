@@ -2,7 +2,6 @@ package one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
 import static one.x1f.sip.foundation.testkit.util.TestKitHelper.unmarshallExchangeBodyFromJson;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import one.x1f.sip.foundation.core.declarative.DeclarationsRegistryApi;
@@ -16,6 +15,7 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.direct.DirectEndpoint;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * Invoker class for triggering routes with Direct consumer. Used for tests which are being started
@@ -35,7 +35,7 @@ public class DirectRouteInvoker implements RouteInvoker {
 
   private final DeclarationsRegistryApi declarationsRegistry;
 
-  private final ObjectMapper mapper;
+  private final JsonMapper mapper;
 
   @Override
   public Optional<Exchange> invoke(Exchange inputExchange) {

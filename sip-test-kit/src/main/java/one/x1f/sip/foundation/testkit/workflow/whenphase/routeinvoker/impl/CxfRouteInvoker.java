@@ -15,13 +15,13 @@ import org.apache.camel.component.cxf.jaxws.CxfComponent;
 import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClient;
 
 /** Invoker class for triggering Camel CXF(SOAP) route */
 @Component
@@ -32,7 +32,7 @@ public class CxfRouteInvoker implements RouteInvoker {
 
   private final CamelContext camelContext;
   private final Environment environment;
-  private final RestTemplateBuilder restTemplateBuilder;
+  private final RestClient.Builder restClientBuilder;
 
   @Value("${sip.adapter.camel-cxf-endpoint-context-path}")
   private String cxfContextPath = "";
@@ -46,13 +46,13 @@ public class CxfRouteInvoker implements RouteInvoker {
     log.trace("sip.testkit.workflow.whenphase.routeinvoker.soap.request_{}", request);
 
     ResponseEntity<String> response =
-        restTemplateBuilder
+        restClientBuilder
             .build()
-            .exchange(
-                createAddressUri(endpoint),
-                HttpMethod.POST,
-                request,
-                new ParameterizedTypeReference<>() {});
+            .method(HttpMethod.POST)
+            .uri(createAddressUri(endpoint))
+            .body(request)
+            .retrieve()
+            .toEntity(new ParameterizedTypeReference<>() {});
     log.trace("sip.testkit.workflow.whenphase.routeinvoker.soap.response_{}", response);
 
     return Optional.of(createExchangeResponse(response, camelContext));

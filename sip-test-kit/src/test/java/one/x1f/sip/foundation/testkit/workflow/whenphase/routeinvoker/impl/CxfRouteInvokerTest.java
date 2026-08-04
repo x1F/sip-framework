@@ -13,12 +13,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.ArgumentMatchers;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.*;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 class CxfRouteInvokerTest {
 
@@ -26,25 +24,11 @@ class CxfRouteInvokerTest {
   private static final String RESPONSE_BODY =
       "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><ns2:AddBookResponse xmlns:ns2=\"http://www.cleverbuilder.com/BookService/\"><ns2:Book><ID>1</ID><Title>Camel in Action</Title><Author>Claus Ibsen</Author></ns2:Book></ns2:AddBookResponse></soap:Body></soap:Envelope>";
 
-  private CxfRouteInvoker subject;
-  private RestTemplate restTemplate;
   private CamelContext camelContext;
 
   @BeforeEach
   void setup() {
     camelContext = mock(CamelContext.class);
-    RestTemplateBuilder restTemplateBuilder = mock(RestTemplateBuilder.class);
-    restTemplate = mock(RestTemplate.class);
-    Environment environment = mock(Environment.class);
-    subject = new CxfRouteInvoker(camelContext, environment, restTemplateBuilder);
-
-    Route route = mock(Route.class);
-    when(camelContext.getCamelContextExtension()).thenReturn(mock(ExtendedCamelContext.class));
-    when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);
-    when(route.getEndpoint()).thenReturn(mock(Endpoint.class));
-
-    when(environment.getProperty("local.server.port")).thenReturn("8081");
-    when(restTemplateBuilder.build()).thenReturn(restTemplate);
   }
 
   @SuppressWarnings("unchecked")
@@ -53,16 +37,34 @@ class CxfRouteInvokerTest {
   @NullSource
   void GIVEN_emptyRequest_WHEN_executeTask_THEN_validateGoodResponse(String inputBody) {
     // arrange
+    RestClient.Builder restClientBuilder = mock(RestClient.Builder.class);
+    RestClient restClient = mock(RestClient.class);
+    RestClient.RequestBodyUriSpec requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
+    RestClient.RequestBodySpec requestBodySpec = mock(RestClient.RequestBodySpec.class);
+    RestClient.ResponseSpec responseSpec = mock(RestClient.ResponseSpec.class);
+    Environment environment = mock(Environment.class);
+    Route route = mock(Route.class);
+
+    ResponseEntity<String> routeExpectedResponse = new ResponseEntity<>(inputBody, HttpStatus.OK);
+
+    when(restClientBuilder.build()).thenReturn(restClient);
+    when(restClient.method(any(HttpMethod.class))).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.uri(anyString())).thenReturn(requestBodySpec);
+    when(requestBodySpec.body(any(HttpEntity.class))).thenReturn(requestBodySpec);
+    when(requestBodySpec.retrieve()).thenReturn(responseSpec);
+    when(responseSpec.toEntity(any(ParameterizedTypeReference.class)))
+        .thenReturn(routeExpectedResponse);
+    when(camelContext.getCamelContextExtension()).thenReturn(mock(ExtendedCamelContext.class));
+    when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);
+    when(route.getEndpoint()).thenReturn(mock(Endpoint.class));
+    when(environment.getProperty("local.server.port")).thenReturn("8081");
+    when(restClientBuilder.build()).thenReturn(restClient);
+
+    CxfRouteInvoker subject = new CxfRouteInvoker(camelContext, environment, restClientBuilder);
+
     Exchange exchange = createExchange(new HashMap<>());
     CxfRouteInvoker spySubject = spy(subject);
     doReturn("test").when(spySubject).getCxfEndpointAddress(any());
-    ResponseEntity<String> routeExpectedResponse = new ResponseEntity<>(inputBody, HttpStatus.OK);
-    when(restTemplate.exchange(
-            anyString(),
-            any(HttpMethod.class),
-            any(),
-            ArgumentMatchers.<ParameterizedTypeReference>any()))
-        .thenReturn(routeExpectedResponse);
 
     // act
     Optional<Exchange> actualExchange = spySubject.invoke(exchange);

@@ -12,7 +12,7 @@ import org.apache.camel.component.jms.JmsComponent;
 import org.apache.camel.component.jms.JmsEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.health.contributor.Health;
 
 /** JmsHealthIndicators */
 public class JmsHealthIndicators {

@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
 import one.x1f.sip.foundation.core.util.exception.SIPFrameworkException;
@@ -25,6 +24,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import tools.jackson.databind.json.JsonMapper;
 
 class TestKitHelperTest {
 
@@ -154,7 +154,7 @@ class TestKitHelperTest {
 
     // act
     unmarshallExchangeBodyFromJson(
-        mockExchange, new ObjectMapper(), DirectRouteInvokerTest.Person.class);
+        mockExchange, new JsonMapper(), DirectRouteInvokerTest.Person.class);
 
     // assert
     assertThat(mockExchange.getMessage().getBody())
@@ -172,7 +172,7 @@ class TestKitHelperTest {
     assertThatThrownBy(
             () -> {
               unmarshallExchangeBodyFromJson(
-                  mockExchange, new ObjectMapper(), DirectRouteInvokerTest.Person.class);
+                  mockExchange, new JsonMapper(), DirectRouteInvokerTest.Person.class);
             })
         .isInstanceOf(SIPFrameworkException.class);
   }

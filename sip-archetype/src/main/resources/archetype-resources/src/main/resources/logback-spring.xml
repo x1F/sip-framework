@@ -27,19 +27,6 @@
         <root level="TRACE"/>
     </springProfile>
 
-    <!-- Turn on debug logging for our HikariCP connection pool. -->
-    <logger name="com.zaxxer.hikari" level="DEBUG"/>
-
-    <!-- Turn on debug logging for all loggers under com.stubbornjava -->
-    <logger name="com.stubbornjava" level="DEBUG"/>
-
-    <!--
-    Assume we have a com.stubbornjava.secrets.MySecretPasswordClass.Java class.
-    This line will disable debug logging for only this class and set it to warn
-    so we don't log sensitive data. This is something we may want turned on in
-    our logback-test.xml file for local debugging but not in our production
-    configuration file.
-    -->
-    <logger name="com.stubbornjava.secrets.MySecretPasswordClass" level="WARN"/>
+    <logger name="sun.rmi.transport.tcp" level="OFF"/>
 
 </configuration>

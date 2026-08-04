@@ -11,7 +11,6 @@ import org.apache.camel.Exchange;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 
 /** Helper class with common methods for rest and soap invokers */
 public class HttpInvokerHelper {
@@ -24,8 +23,8 @@ public class HttpInvokerHelper {
    * @param exchange {@link Exchange} from which data is extracted
    * @return Map with test kit headers
    */
-  public static MultiValueMap<String, String> prepareHeaders(Exchange exchange) {
-    MultiValueMap<String, String> headers = new HttpHeaders();
+  public static HttpHeaders prepareHeaders(Exchange exchange) {
+    HttpHeaders headers = new HttpHeaders();
     Map<String, Object> existingHeaders = exchange.getMessage().getHeaders();
 
     existingHeaders.forEach(
@@ -44,8 +43,8 @@ public class HttpInvokerHelper {
   }
 
   private static void addHeaderIfAbsent(
-      MultiValueMap<String, String> headers, String headerName, String headerValue) {
-    if (!headers.containsKey(headerName) && headerValue != null) {
+      HttpHeaders headers, String headerName, String headerValue) {
+    if (!headers.containsHeader(headerName) && headerValue != null) {
       headers.add(headerName, headerValue);
     }
   }
