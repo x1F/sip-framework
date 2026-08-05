@@ -20,7 +20,7 @@ class DeclarativeStructureCheckMojoTest {
 
   @BeforeEach
   void setUpMocks() {
-    MavenProject mavenProject = mock(MavenProject.class);
+    MavenProject mavenProject = new MavenProject();
     log = mock(Log.class);
     subject.setLog(log);
     File sipCore = new File("../sip-core/src/main/java");
@@ -34,7 +34,7 @@ class DeclarativeStructureCheckMojoTest {
             "",
             new DefaultArtifactHandler("jar"));
     artifact.setFile(sipCore);
-    when(mavenProject.getArtifacts()).thenReturn(Set.of(artifact));
+    mavenProject.setArtifacts(Set.of(artifact));
 
     subject.setMavenProject(mavenProject);
   }
