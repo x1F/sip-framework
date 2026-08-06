@@ -11,14 +11,16 @@ import org.apache.camel.test.spring.junit5.DisableJmx;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.TestRestTemplate;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.annotation.DirtiesContext;
 
+@AutoConfigureTestRestTemplate
 @CamelSpringBootTest
 @SpringBootTest(
     classes = {HeaderCleanupAdapter.class},
@@ -65,11 +67,11 @@ class HeaderCleanupTest {
 
     assertThat(response).isNotNull();
     assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
-    assertThat(response.getHeaders()).containsEntry("firstHeader", List.of("firstModified"));
-    assertThat(response.getHeaders()).containsEntry("secondHeader", List.of("second"));
-    assertThat(response.getHeaders()).containsEntry("secondary", List.of("third"));
-    assertThat(response.getHeaders()).containsEntry("firstHiddenKey", List.of("hidden1"));
-    assertThat(response.getHeaders()).containsEntry("secondHiddenKey", List.of("hidden2"));
+    assertThat(response.getHeaders().get("firstHeader")).isEqualTo(List.of("firstModified"));
+    assertThat(response.getHeaders().get("secondHeader")).isEqualTo(List.of("second"));
+    assertThat(response.getHeaders().get("secondary")).isEqualTo(List.of("third"));
+    assertThat(response.getHeaders().get("firstHiddenKey")).isEqualTo(List.of("hidden1"));
+    assertThat(response.getHeaders().get("secondHiddenKey")).isEqualTo(List.of("hidden2"));
 
     mockedOutbound.assertIsSatisfied();
   }

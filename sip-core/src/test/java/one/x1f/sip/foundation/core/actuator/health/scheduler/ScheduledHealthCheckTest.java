@@ -11,7 +11,7 @@ import one.x1f.sip.foundation.core.actuator.health.CamelEndpointHealthMonitor;
 import one.x1f.sip.foundation.core.actuator.health.EndpointHealthIndicator;
 import org.apache.camel.Endpoint;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.health.contributor.Health;
 
 class ScheduledHealthCheckTest {
 
@@ -37,7 +37,7 @@ class ScheduledHealthCheckTest {
 
     // act
     scheduledHealthCheckSubject.scheduledExecution();
-    Health healthResult = healthIndicators.get(ENDPOINT).getHealth(false);
+    Health healthResult = healthIndicators.get(ENDPOINT).health(false);
 
     // assert
     assertThat(healthResult).isEqualTo(HEALTH_STATUS_UP);

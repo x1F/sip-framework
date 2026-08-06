@@ -3,7 +3,7 @@ package one.x1f.sip.foundation.core.actuator.health.scheduler;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import one.x1f.sip.foundation.core.actuator.health.CamelEndpointHealthMonitor;
-import org.springframework.boot.actuate.health.Status;
+import org.springframework.boot.health.contributor.Status;
 import org.springframework.context.annotation.Configuration;
 
 /**

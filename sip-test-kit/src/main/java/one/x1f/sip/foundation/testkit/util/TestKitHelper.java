@@ -6,8 +6,6 @@ import static one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.Rou
 import static one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvoker.CONNECTOR_ID_EXCHANGE_PROPERTY;
 import static org.apache.camel.builder.ExchangeBuilder.anExchange;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import one.x1f.sip.foundation.core.util.SIPExchangeHelper;
 import one.x1f.sip.foundation.core.util.exception.SIPFrameworkException;
@@ -21,6 +19,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Value;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 /** Utility class that changes the {@link Exchange} */
 @Slf4j
@@ -211,11 +211,11 @@ public class TestKitHelper extends SIPExchangeHelper {
    * @param requestModelClass model of the pojo class
    */
   public static void unmarshallExchangeBodyFromJson(
-      Exchange inputExchange, ObjectMapper mapper, Class<?> requestModelClass) {
-    String jsonPayload = inputExchange.getMessage().getBody(String.class);
+      Exchange inputExchange, JsonMapper mapper, Class<?> requestModelClass) {
     try {
+      String jsonPayload = inputExchange.getMessage().getBody(String.class);
       inputExchange.getMessage().setBody(mapper.readValue(jsonPayload, requestModelClass));
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw new SIPFrameworkException(e);
     }
   }

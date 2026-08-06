@@ -10,8 +10,8 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.processor.SendProcessor;
 import org.apache.commons.collections4.MapIterator;
-import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.boot.health.contributor.Health;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 

@@ -7,7 +7,6 @@ import static one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.imp
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Optional;
 import one.x1f.sip.foundation.core.declarative.DeclarationsRegistry;
@@ -24,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
+import tools.jackson.databind.json.JsonMapper;
 
 class ProcessorProxyMockTest {
 
@@ -49,7 +49,7 @@ class ProcessorProxyMockTest {
     void setup() {
       proxy = mock(ProcessorProxy.class);
       Exchange returnExchange = mock(Exchange.class, RETURNS_DEEP_STUBS);
-      subject = new ProcessorProxyMock(proxyRegistry, mock(ObjectMapper.class), null);
+      subject = new ProcessorProxyMock(proxyRegistry, mock(JsonMapper.class), null);
       subject.setReturnExchange(returnExchange);
       when(returnExchange.getProperty("connectionAlias", String.class)).thenReturn(PROXY_ID);
       when(returnExchange.getMessage().getBody()).thenReturn("body");
@@ -110,7 +110,7 @@ class ProcessorProxyMockTest {
           new ProcessorProxy(mock(NamedNode.class), mock(Processor.class), new ArrayList<>());
       ProcessorProxyMock processorProxyMock =
           new ProcessorProxyMock(
-              proxyRegistry, new ObjectMapper(), Optional.of(declarationsRegistry));
+              proxyRegistry, new JsonMapper(), Optional.of(declarationsRegistry));
 
       when(proxyRegistry.getProxy(PROXY_ID)).thenReturn(Optional.of(proxySubject));
       CamelContext camelContext = mock(CamelContext.class);

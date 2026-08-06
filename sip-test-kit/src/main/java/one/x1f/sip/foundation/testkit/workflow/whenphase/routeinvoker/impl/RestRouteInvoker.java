@@ -14,14 +14,14 @@ import org.apache.camel.Exchange;
 import org.apache.camel.component.rest.RestEndpoint;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /** Invoker class for triggering Camel REST route */
@@ -32,7 +32,7 @@ public class RestRouteInvoker implements RouteInvoker {
 
   private final CamelContext camelContext;
   private final Environment environment;
-  private final RestTemplateBuilder restTemplateBuilder;
+  private final RestClient.Builder restClientBuilder;
 
   @Value("${sip.adapter.camel-endpoint-context-path}")
   private String contextPath = "";
@@ -40,19 +40,19 @@ public class RestRouteInvoker implements RouteInvoker {
   @Override
   public Optional<Exchange> invoke(Exchange inputExchange) {
     Endpoint endpoint = TestKitHelper.resolveEndpoint(inputExchange, camelContext);
-    MultiValueMap<String, String> headers = prepareHeaders(inputExchange);
+    var headers = prepareHeaders(inputExchange);
     HttpEntity<String> testRequest =
         new HttpEntity<>(inputExchange.getMessage().getBody(String.class), headers);
     log.trace("sip.testkit.workflow.whenphase.routeinvoker.rest.request_{}", testRequest);
 
     ResponseEntity<String> response =
-        restTemplateBuilder
+        restClientBuilder
             .build()
-            .exchange(
-                createUri(endpoint, headers),
-                resolveHttpMethod(endpoint),
-                testRequest,
-                new ParameterizedTypeReference<>() {});
+            .method(resolveHttpMethod(endpoint))
+            .uri(createUri(endpoint, headers))
+            .body(testRequest)
+            .retrieve()
+            .toEntity(new ParameterizedTypeReference<>() {});
     log.trace("sip.testkit.workflow.whenphase.routeinvoker.rest.response_{}", response);
 
     return Optional.of(createExchangeResponse(response, camelContext));
@@ -63,7 +63,7 @@ public class RestRouteInvoker implements RouteInvoker {
     return endpoint instanceof RestEndpoint;
   }
 
-  private String createUri(Endpoint endpoint, MultiValueMap<String, String> headers) {
+  private String createUri(Endpoint endpoint, HttpHeaders headers) {
     String resolvedUrl =
         UriComponentsBuilder.fromUriString(((RestEndpoint) endpoint).getPath())
             .buildAndExpand(headers.toSingleValueMap())

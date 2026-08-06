@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Set;
 import one.x1f.sip.foundation.core.declarative.DeclarationsRegistry;
 import one.x1f.sip.foundation.testkit.exception.NoRouteInvokerException;
@@ -20,8 +19,9 @@ import org.apache.camel.component.jms.JmsEndpoint;
 import org.apache.camel.component.rest.RestEndpoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.env.Environment;
+import org.springframework.web.client.RestClient;
+import tools.jackson.databind.json.JsonMapper;
 
 class RouteInvokerFactoryTest {
 
@@ -35,9 +35,9 @@ class RouteInvokerFactoryTest {
   @BeforeEach
   void setup() {
     CamelContext camelContext = mock(CamelContext.class);
-    RestTemplateBuilder restTemplateBuilder = mock(RestTemplateBuilder.class);
+    RestClient.Builder restClientBuilder = mock(RestClient.Builder.class);
     RestRouteInvoker restRouteInvoker =
-        new RestRouteInvoker(camelContext, mock(Environment.class), restTemplateBuilder);
+        new RestRouteInvoker(camelContext, mock(Environment.class), restClientBuilder);
     FileRouteInvoker fileRouteInvoker = new FileRouteInvoker(camelContext);
     FtpRouteInvoker ftpRouteInvoker = new FtpRouteInvoker(camelContext);
     JmsRouteInvoker jmsRouteInvoker = new JmsRouteInvoker(camelContext);
@@ -46,7 +46,7 @@ class RouteInvokerFactoryTest {
             mock(ProducerTemplate.class),
             camelContext,
             mock(DeclarationsRegistry.class),
-            new ObjectMapper());
+            new JsonMapper());
     Set<RouteInvoker> invokers =
         Set.of(
             restRouteInvoker,

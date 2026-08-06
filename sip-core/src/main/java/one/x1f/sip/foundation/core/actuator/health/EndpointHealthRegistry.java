@@ -12,11 +12,12 @@ import org.apache.camel.Endpoint;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.commons.text.similarity.LevenshteinDistance;
-import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.health.contributor.Health;
+import org.springframework.boot.health.contributor.HealthIndicator;
 
 /**
- * {@link EndpointHealthRegistry} is responsible for creating {@link
- * org.springframework.boot.actuate.health.HealthIndicator}s for Camel Endpoints in the application.
+ * {@link EndpointHealthRegistry} is responsible for creating {@link HealthIndicator}s for Camel
+ * Endpoints in the application.
  *
  * <p>It offers dynamic rule evaluation - which HealthIndicator to use for which Endpoint, based on
  * its URI. Besides, it offers preconfigured rules for some frequently used Endpoints, such as JMS

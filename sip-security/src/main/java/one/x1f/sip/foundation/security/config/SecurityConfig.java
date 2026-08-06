@@ -23,7 +23,7 @@ import org.springframework.security.config.authentication.AuthenticationManagerB
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 /**
  * Central place of all configs related for spring-security settings regarding the sip
@@ -112,7 +112,7 @@ public class SecurityConfig {
    * @throws Exception if security isn't properly configured
    */
   @Bean
-  public SecurityFilterChain sipDefaultSecurityFilterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain sipDefaultSecurityFilterChain(HttpSecurity http) {
     http.securityMatcher(config.getMatcherPatterns());
     // disable sessions completely
     http.sessionManagement(
@@ -147,7 +147,7 @@ public class SecurityConfig {
           .forEach(
               endpoint ->
                   ignoredRequestConfigurer.requestMatchers(
-                      AntPathRequestMatcher.antMatcher(endpoint)));
+                      PathPatternRequestMatcher.withDefaults().matcher(endpoint)));
     });
   }
 }

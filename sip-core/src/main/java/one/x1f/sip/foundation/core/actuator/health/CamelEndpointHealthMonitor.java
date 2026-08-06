@@ -2,17 +2,15 @@ package one.x1f.sip.foundation.core.actuator.health;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
-import org.springframework.boot.actuate.health.CompositeHealthContributor;
-import org.springframework.boot.actuate.health.HealthContributor;
-import org.springframework.boot.actuate.health.HealthIndicator;
-import org.springframework.boot.actuate.health.NamedContributor;
+import org.springframework.boot.health.contributor.CompositeHealthContributor;
+import org.springframework.boot.health.contributor.HealthContributor;
+import org.springframework.boot.health.contributor.HealthIndicator;
 
 /**
  * {@link CamelEndpointHealthMonitor} is a central point in evaluating Health information of the
@@ -23,7 +21,7 @@ import org.springframework.boot.actuate.health.NamedContributor;
  *
  * <p>As endpoints are not available at the moment of construction, state design pattern has been
  * used in order to collect information about them after the first invocation of the {@link
- * CamelEndpointHealthMonitor#iterator()} method.
+ * CamelEndpointHealthMonitor#stream()} method.
  */
 @RequiredArgsConstructor
 public class CamelEndpointHealthMonitor implements CompositeHealthContributor {
@@ -37,7 +35,7 @@ public class CamelEndpointHealthMonitor implements CompositeHealthContributor {
   }
 
   @Override
-  public Iterator<NamedContributor<HealthContributor>> iterator() {
+  public Stream<Entry> stream() {
     return healthIndicators();
   }
 
@@ -45,7 +43,7 @@ public class CamelEndpointHealthMonitor implements CompositeHealthContributor {
     return healthIndicators;
   }
 
-  Iterator<NamedContributor<HealthContributor>> setupEndpointHealthIndicators() {
+  Stream<Entry> setupEndpointHealthIndicators() {
     Collection<Endpoint> endpoints = camelContext.getEndpoints();
     if (camelContext.getStatus().isStarted()) {
       this.healthIndicators =
@@ -59,10 +57,10 @@ public class CamelEndpointHealthMonitor implements CompositeHealthContributor {
     return healthIndicators();
   }
 
-  Iterator<NamedContributor<HealthContributor>> healthIndicators() {
+  Stream<Entry> healthIndicators() {
     return getHealthIndicators().values().stream()
-        .map(indicator -> NamedContributor.of(indicator.name(), (HealthContributor) indicator))
+        .map(indicator -> new Entry(indicator.name(), indicator))
         .collect(Collectors.toSet())
-        .iterator();
+        .stream();
   }
 }

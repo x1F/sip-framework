@@ -11,6 +11,7 @@ import one.x1f.sip.foundation.core.apps.declarative.mappingadapter.FrontEndTypes
 import one.x1f.sip.foundation.core.apps.declarative.mappingadapter.FrontEndTypes.UserRequest;
 import one.x1f.sip.foundation.core.apps.declarative.mappingadapter.FrontEndTypes.UserResponse;
 import one.x1f.sip.foundation.core.declarative.annotation.*;
+import one.x1f.sip.foundation.core.declarative.annotation.connector.extension.RequestProcessor;
 import one.x1f.sip.foundation.core.declarative.annotation.connector.extension.ResponseProcessor;
 import one.x1f.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import one.x1f.sip.foundation.core.declarative.connector.RestInboundConnectorBase;
@@ -21,6 +22,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.builder.DataFormatClause;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
+import org.apache.camel.component.jackson3.JacksonDataFormat;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.apache.camel.model.rest.RestDefinition;
 import org.springframework.context.annotation.Bean;
@@ -57,6 +59,16 @@ public class MappingAdapter {
           .type(UserRequest.class)
           .outType(UserResponse.class);
     }
+
+    @RequestProcessor
+    public void process(Exchange exchange) {
+      exchange.getMessage();
+    }
+
+    @ResponseProcessor
+    public void process2(Exchange exchange) {
+      exchange.getMessage();
+    }
   }
 
   @OutboundConnector(
@@ -74,8 +86,8 @@ public class MappingAdapter {
     @Override
     protected Optional<UnmarshallerDefinition> defineResponseUnmarshalling() {
       return Optional.of(
-          UnmarshallerDefinition.forClause(
-              unmarshaller -> unmarshaller.json(BackendResourceRequest.class)));
+          UnmarshallerDefinition.forDataFormat(
+              new JacksonDataFormat(BackendResourceRequest.class)));
     }
 
     @ResponseProcessor

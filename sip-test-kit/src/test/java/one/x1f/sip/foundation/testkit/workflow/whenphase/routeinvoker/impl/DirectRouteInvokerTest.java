@@ -4,7 +4,6 @@ import static one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.imp
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
 import one.x1f.sip.foundation.core.declarative.DeclarationsRegistry;
 import one.x1f.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
@@ -14,6 +13,7 @@ import org.apache.camel.*;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.json.JsonMapper;
 
 public class DirectRouteInvokerTest {
 
@@ -47,7 +47,7 @@ public class DirectRouteInvokerTest {
     CamelContext camelContext = mock(CamelContext.class);
     producerTemplate = mock(ProducerTemplate.class);
     declarationsRegistry = mock(DeclarationsRegistry.class);
-    ObjectMapper mapper = new ObjectMapper();
+    JsonMapper mapper = new JsonMapper();
     subject = new DirectRouteInvoker(producerTemplate, camelContext, declarationsRegistry, mapper);
 
     Route route = mock(Route.class);

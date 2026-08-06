@@ -15,14 +15,13 @@ import org.apache.camel.Route;
 import org.apache.camel.component.rest.RestEndpoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 class RestRouteInvokerTest {
 
@@ -32,7 +31,7 @@ class RestRouteInvokerTest {
   private RestRouteInvoker restRouteInvoker;
   private Exchange exchange;
 
-  private RestTemplate restTemplate;
+  private RestClient restClient;
 
   private RestEndpoint restEndpoint;
 
@@ -40,22 +39,25 @@ class RestRouteInvokerTest {
   void setUp() {
 
     CamelContext camelContext = mock(CamelContext.class);
-    RestTemplateBuilder restTemplateBuilder = mock(RestTemplateBuilder.class);
-    restTemplate = mock(RestTemplate.class);
+    RestClient.Builder restClientBuilder = mock(RestClient.Builder.class);
+    restClient = mock(RestClient.class);
     restRouteInvoker =
-        new RestRouteInvoker(camelContext, mock(Environment.class), restTemplateBuilder);
+        new RestRouteInvoker(camelContext, mock(Environment.class), restClientBuilder);
     exchange = mock(Exchange.class, RETURNS_DEEP_STUBS);
     ResponseEntity<String> routeExpectedResponse =
         new ResponseEntity<>(TEST_RESPONSE, HttpStatus.OK);
     restEndpoint = mock(RestEndpoint.class);
-    when(restTemplateBuilder.build()).thenReturn(restTemplate);
+    RestClient.RequestBodyUriSpec requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
+    RestClient.RequestBodySpec requestBodySpec = mock(RestClient.RequestBodySpec.class);
+    RestClient.ResponseSpec responseSpec = mock(RestClient.ResponseSpec.class);
+    when(restClientBuilder.build()).thenReturn(restClient);
     when(restEndpoint.getMethod()).thenReturn("post");
     when(restEndpoint.getPath()).thenReturn("test");
-    when(restTemplate.exchange(
-            anyString(),
-            any(HttpMethod.class),
-            any(),
-            ArgumentMatchers.<ParameterizedTypeReference<String>>any()))
+    when(restClient.method(any(HttpMethod.class))).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.uri(anyString())).thenReturn(requestBodySpec);
+    when(requestBodySpec.body(any(HttpEntity.class))).thenReturn(requestBodySpec);
+    when(requestBodySpec.retrieve()).thenReturn(responseSpec);
+    when(responseSpec.toEntity(any(ParameterizedTypeReference.class)))
         .thenReturn(routeExpectedResponse);
 
     when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, String.class))
@@ -89,12 +91,7 @@ class RestRouteInvokerTest {
 
     // assert
     assertThat(target).isPresent();
-    verify(restTemplate)
-        .exchange(
-            anyString(),
-            eq(HttpMethod.POST),
-            any(),
-            ArgumentMatchers.<ParameterizedTypeReference<String>>any());
+    verify(restClient).method(HttpMethod.POST);
   }
 
   @Test
@@ -106,12 +103,7 @@ class RestRouteInvokerTest {
 
     // assert
     assertThat(target).isPresent();
-    verify(restTemplate)
-        .exchange(
-            anyString(),
-            eq(HttpMethod.GET),
-            any(),
-            ArgumentMatchers.<ParameterizedTypeReference<String>>any());
+    verify(restClient).method(HttpMethod.GET);
   }
 
   @Test
@@ -123,12 +115,7 @@ class RestRouteInvokerTest {
 
     // assert
     assertThat(target).isPresent();
-    verify(restTemplate)
-        .exchange(
-            anyString(),
-            eq(HttpMethod.POST),
-            any(),
-            ArgumentMatchers.<ParameterizedTypeReference<String>>any());
+    verify(restClient).method(HttpMethod.POST);
   }
 
   @Test
@@ -146,11 +133,6 @@ class RestRouteInvokerTest {
 
     // assert
     assertThat(target).isPresent();
-    verify(restTemplate)
-        .exchange(
-            contains("headerValue"),
-            eq(HttpMethod.GET),
-            any(),
-            ArgumentMatchers.<ParameterizedTypeReference<String>>any());
+    verify(restClient).method(HttpMethod.GET);
   }
 }

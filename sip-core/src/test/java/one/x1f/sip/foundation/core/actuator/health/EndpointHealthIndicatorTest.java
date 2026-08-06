@@ -8,7 +8,7 @@ import java.util.function.Function;
 import org.apache.camel.Endpoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.health.contributor.Health;
 
 class EndpointHealthIndicatorTest {
 
@@ -61,7 +61,7 @@ class EndpointHealthIndicatorTest {
   void WHEN_executeHealthCheck_EXPECT_HealthIsCalculated() {
     // act
     subject.executeHealthCheck();
-    Health healthResult = subject.getHealth(false);
+    Health healthResult = subject.health(false);
 
     // assert
     assertThat(healthResult).isEqualTo(health);
