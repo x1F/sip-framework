@@ -6,6 +6,7 @@ import static one.x1f.sip.foundation.testkit.util.HttpInvokerHelper.prepareHeade
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import one.x1f.sip.foundation.testkit.config.AdapterConfigurationProperties;
 import one.x1f.sip.foundation.testkit.util.TestKitHelper;
 import one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import org.apache.camel.CamelContext;
@@ -13,7 +14,6 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.cxf.jaxws.CxfComponent;
 import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
@@ -33,9 +33,7 @@ public class CxfRouteInvoker implements RouteInvoker {
   private final CamelContext camelContext;
   private final Environment environment;
   private final RestTemplateBuilder restTemplateBuilder;
-
-  @Value("${sip.adapter.camel-cxf-endpoint-context-path}")
-  private String cxfContextPath = "";
+  private final AdapterConfigurationProperties adapterConfigurationProperties;
 
   @Override
   public Optional<Exchange> invoke(Exchange inputExchange) {
@@ -67,7 +65,7 @@ public class CxfRouteInvoker implements RouteInvoker {
     return String.format(
         "http://localhost:%s%s/%s",
         environment.getProperty("local.server.port"),
-        trimAddressSuffix(cxfContextPath),
+        trimAddressSuffix(adapterConfigurationProperties.getCamelCxfEndpointContextPath()),
         trimAddressPrefix(getCxfEndpointAddress(endpoint)));
   }
 

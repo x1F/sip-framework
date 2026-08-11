@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import one.x1f.sip.foundation.testkit.config.AdapterConfigurationProperties;
 import one.x1f.sip.foundation.testkit.workflow.givenphase.Mock;
 import org.apache.camel.*;
 import org.apache.camel.builder.ExchangeBuilder;
@@ -36,7 +37,9 @@ class CxfRouteInvokerTest {
     RestTemplateBuilder restTemplateBuilder = mock(RestTemplateBuilder.class);
     restTemplate = mock(RestTemplate.class);
     Environment environment = mock(Environment.class);
-    subject = new CxfRouteInvoker(camelContext, environment, restTemplateBuilder);
+    subject =
+        new CxfRouteInvoker(
+            camelContext, environment, restTemplateBuilder, createAdapterConfigurationProperties());
 
     Route route = mock(Route.class);
     when(camelContext.getCamelContextExtension()).thenReturn(mock(ExtendedCamelContext.class));
@@ -77,5 +80,12 @@ class CxfRouteInvokerTest {
     headers.forEach(exchangeBuilder::withHeader);
     exchangeBuilder.withProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, ROUTE_ID);
     return exchangeBuilder.build();
+  }
+
+  private AdapterConfigurationProperties createAdapterConfigurationProperties() {
+    var adapterConfigurationProperties = new AdapterConfigurationProperties();
+    adapterConfigurationProperties.setCamelCxfEndpointContextPath("");
+    adapterConfigurationProperties.setCamelEndpointContextPath("");
+    return adapterConfigurationProperties;
   }
 }

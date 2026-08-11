@@ -6,6 +6,7 @@ import static one.x1f.sip.foundation.testkit.util.HttpInvokerHelper.prepareHeade
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import one.x1f.sip.foundation.testkit.config.AdapterConfigurationProperties;
 import one.x1f.sip.foundation.testkit.util.TestKitHelper;
 import one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import org.apache.camel.CamelContext;
@@ -13,7 +14,6 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.rest.RestEndpoint;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
@@ -33,9 +33,7 @@ public class RestRouteInvoker implements RouteInvoker {
   private final CamelContext camelContext;
   private final Environment environment;
   private final RestTemplateBuilder restTemplateBuilder;
-
-  @Value("${sip.adapter.camel-endpoint-context-path}")
-  private String contextPath = "";
+  private final AdapterConfigurationProperties adapterConfigurationProperties;
 
   @Override
   public Optional<Exchange> invoke(Exchange inputExchange) {
@@ -74,7 +72,7 @@ public class RestRouteInvoker implements RouteInvoker {
   }
 
   private String resolveContextPath() {
-    return contextPath.replaceAll("/[*]$", "");
+    return adapterConfigurationProperties.getCamelEndpointContextPath().replaceAll("/[*]$", "");
   }
 
   private HttpMethod resolveHttpMethod(Endpoint endpoint) {

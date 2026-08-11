@@ -282,7 +282,7 @@ For additional information visit the official [documentation](https://github.com
 
 By default, the following properties are included in the SIP Framework. To override them, simply add them to your configuration file with your desired values.
 If you're using a YAML configuration file (typically found in the application module), make sure to adapt the properties to the correct YAML format.
-A complete YAML configuration file with all available properties can be found [here](../docs-snapshot/sip-config-properties.yaml).
+A complete YAML configuration file with all available properties can be found [here](../docs/sip-config-properties.yaml) or the auto-generated [spring configuration metadata](configuration.md).
 
 | Name                                                                    | Description                                                                                                                                                                                  | Value   | Default                                                                              |
 |-------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|--------------------------------------------------------------------------------------|

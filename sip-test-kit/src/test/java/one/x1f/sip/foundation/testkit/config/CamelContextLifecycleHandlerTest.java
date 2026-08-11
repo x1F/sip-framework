@@ -40,7 +40,10 @@ class CamelContextLifecycleHandlerTest {
 
     RestRouteInvoker restRouteInvoker =
         new RestRouteInvoker(
-            camelContext, mock(Environment.class), mock(RestTemplateBuilder.class));
+            camelContext,
+            mock(Environment.class),
+            mock(RestTemplateBuilder.class),
+            new AdapterConfigurationProperties());
     FileRouteInvoker fileRouteInvoker = new FileRouteInvoker(camelContext);
     FtpRouteInvoker ftpRouteInvoker = new FtpRouteInvoker(camelContext);
     JmsRouteInvoker jmsRouteInvoker = new JmsRouteInvoker(camelContext);

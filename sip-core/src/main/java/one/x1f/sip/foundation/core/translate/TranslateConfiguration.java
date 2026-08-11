@@ -17,11 +17,24 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 @Configuration
 @ConfigurationProperties(prefix = "sip.core.translation")
 public class TranslateConfiguration {
+  /** Enable SIP translation */
+  private boolean enabled = true;
+
+  /** Sets locations of translation bundles */
   private List<String> fileLocations = new LinkedList<>();
+
   private List<String> sipFileLocations;
+
+  /** Set language of log messages */
   private String lang = "en";
+
+  /** Sets default encoding */
   private String defaultEncoding = "UTF-8";
+
+  /** Use system language if none defined */
   private Boolean fallbackToSystemLocale = false;
+
+  /** If key is not assigned use it in message */
   private Boolean useCodeAsDefaultMessage = true;
 
   /**
