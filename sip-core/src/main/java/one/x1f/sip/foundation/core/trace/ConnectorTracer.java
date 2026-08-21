@@ -14,7 +14,6 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.NamedNode;
 import org.apache.camel.NamedRoute;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
 import org.springframework.stereotype.Service;
 
@@ -26,24 +25,22 @@ public class ConnectorTracer implements TraceSupport {
 
   private final RoutesRegistry routesRegistry;
   private final ConnectorRegistry connectorRegistry;
-
-  @Value("${sip.core.tracing.exchange-formatter.showExchangeId:false}")
-  private boolean showExchangeId;
-
-  @Value("${sip.core.tracing.exchange-formatter.showBody:false}")
-  private boolean showBody;
-
-  @Value("${sip.core.tracing.exchange-formatter.showHeaders:false}")
-  private boolean showHeaders;
+  private final SIPExchangeFormatter formatter;
 
   @Override
-  public void traceBeforeNode(NamedNode node, Exchange exchange) {}
+  public void traceBeforeNode(NamedNode node, Exchange exchange) {
+    // implementation not required
+  }
 
   @Override
-  public void traceAfterNode(NamedNode node, Exchange exchange) {}
+  public void traceAfterNode(NamedNode node, Exchange exchange) {
+    // implementation not required
+  }
 
   @Override
-  public void traceSentNode(NamedNode node, Exchange exchange, Endpoint endpoint, long elapsed) {}
+  public void traceSentNode(NamedNode node, Exchange exchange, Endpoint endpoint, long elapsed) {
+    // implementation not required
+  }
 
   @Override
   public void traceBeforeRoute(NamedRoute route, Exchange exchange) {
@@ -81,11 +78,11 @@ public class ConnectorTracer implements TraceSupport {
                   Stream.of(
                           "scenarioId=" + scenarioId,
                           "connectorId=" + connectorId,
-                          showExchangeId ? "exchangeId=" + exchangeId : null,
-                          showBody
+                          formatter.isShowExchangeId() ? "exchangeId=" + exchangeId : null,
+                          formatter.isShowBody()
                               ? "body=" + extractBodyAsJsonString(exchange.getMessage())
                               : null,
-                          showHeaders ? "headers=" + headers : null)
+                          formatter.isShowHeaders() ? "headers=" + headers : null)
                       .filter(Objects::nonNull)
                       .collect(Collectors.joining(", "));
 

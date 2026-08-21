@@ -43,13 +43,19 @@ public class ConnectorExtensionTracer implements TraceSupport {
   }
 
   @Override
-  public void traceSentNode(NamedNode node, Exchange exchange, Endpoint endpoint, long elapsed) {}
+  public void traceSentNode(NamedNode node, Exchange exchange, Endpoint endpoint, long elapsed) {
+    // implementation not required
+  }
 
   @Override
-  public void traceBeforeRoute(NamedRoute route, Exchange exchange) {}
+  public void traceBeforeRoute(NamedRoute route, Exchange exchange) {
+    // implementation not required
+  }
 
   @Override
-  public void traceAfterRoute(NamedRoute route, Exchange exchange) {}
+  public void traceAfterRoute(NamedRoute route, Exchange exchange) {
+    // implementation not required
+  }
 
   @Override
   public boolean shouldTrace(NamedNode node) {

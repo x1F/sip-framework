@@ -67,7 +67,9 @@ public class CompositeTracer implements Tracer {
   }
 
   @Override
-  public void resetTraceCounter() {}
+  public void resetTraceCounter() {
+    // implementation not required
+  }
 
   @Override
   public boolean isEnabled() {
@@ -75,7 +77,9 @@ public class CompositeTracer implements Tracer {
   }
 
   @Override
-  public void setEnabled(boolean enabled) {}
+  public void setEnabled(boolean enabled) {
+    // always true
+  }
 
   @Override
   public boolean isStandby() {
@@ -83,7 +87,9 @@ public class CompositeTracer implements Tracer {
   }
 
   @Override
-  public void setStandby(boolean standby) {}
+  public void setStandby(boolean standby) {
+    // always false
+  }
 
   @Override
   public boolean isTraceRests() {
@@ -91,7 +97,9 @@ public class CompositeTracer implements Tracer {
   }
 
   @Override
-  public void setTraceRests(boolean traceRests) {}
+  public void setTraceRests(boolean traceRests) {
+    // implementation not required
+  }
 
   @Override
   public boolean isTraceTemplates() {
@@ -99,7 +107,9 @@ public class CompositeTracer implements Tracer {
   }
 
   @Override
-  public void setTraceTemplates(boolean traceTemplates) {}
+  public void setTraceTemplates(boolean traceTemplates) {
+    // implementation not required
+  }
 
   @Override
   public String getTracePattern() {
@@ -107,7 +117,9 @@ public class CompositeTracer implements Tracer {
   }
 
   @Override
-  public void setTracePattern(String tracePattern) {}
+  public void setTracePattern(String tracePattern) {
+    // implementation not required
+  }
 
   @Override
   public boolean isTraceBeforeAndAfterRoute() {
@@ -115,7 +127,9 @@ public class CompositeTracer implements Tracer {
   }
 
   @Override
-  public void setTraceBeforeAndAfterRoute(boolean traceBeforeAndAfterRoute) {}
+  public void setTraceBeforeAndAfterRoute(boolean traceBeforeAndAfterRoute) {
+    // implementation not required
+  }
 
   @Override
   public ExchangeFormatter getExchangeFormatter() {
@@ -123,13 +137,19 @@ public class CompositeTracer implements Tracer {
   }
 
   @Override
-  public void setExchangeFormatter(ExchangeFormatter exchangeFormatter) {}
+  public void setExchangeFormatter(ExchangeFormatter exchangeFormatter) {
+    // implementation not required
+  }
 
   @Override
-  public void start() {}
+  public void start() {
+    // implementation not required
+  }
 
   @Override
-  public void stop() {}
+  public void stop() {
+    // implementation not required
+  }
 
   private Stream<TraceSupport> filteredTracers(NamedNode node) {
     return tracers.stream().filter(tracer -> tracer.shouldTrace(node));
