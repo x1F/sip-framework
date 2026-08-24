@@ -183,6 +183,26 @@ class TestKitHelperTest {
 
   @Test
   void
+      GIVEN_objectBody_WHEN_extractMarshalledBodyAsJsonString_THEN_stringBodyIsReturnedDirectlyWithConversion() {
+    // arrange
+    Message message = exchange.getMessage();
+    TypeConverter typeConverter = mock(TypeConverter.class);
+    DirectRouteInvokerTest.Person person = new DirectRouteInvokerTest.Person("John", 40);
+    when(message.getBody()).thenReturn(person);
+    when(message.getExchange()).thenReturn(exchange);
+    when(exchange.getContext()).thenReturn(camelContext);
+    when(camelContext.getTypeConverter()).thenReturn(typeConverter);
+    InputStreamCache streamCache = new InputStreamCache(BODY.getBytes(StandardCharsets.UTF_8));
+    when(typeConverter.tryConvertTo(eq(StreamCache.class), any(), any())).thenReturn(streamCache);
+    // act
+    String result = TestKitHelper.extractBodyAsJsonString(message);
+    // assert
+    assertThat(result).isEqualTo(BODY);
+    verify(message).setBody(streamCache);
+  }
+
+  @Test
+  void
       GIVEN_objectBody_WHEN_extractBodyAsJsonString_THEN_stringBodyIsReturnedDirectlyWithConversion() {
     // arrange
     Message message = exchange.getMessage();
@@ -192,11 +212,11 @@ class TestKitHelperTest {
     when(message.getExchange()).thenReturn(exchange);
     when(exchange.getContext()).thenReturn(camelContext);
     when(camelContext.getTypeConverter()).thenReturn(typeConverter);
-    when(typeConverter.tryConvertTo(any(Class.class), any(), any()))
-        .thenReturn(new InputStreamCache(BODY.getBytes(StandardCharsets.UTF_8)));
+    when(typeConverter.tryConvertTo(eq(StreamCache.class), any(), any())).thenReturn(null);
+
     // act
     String result = TestKitHelper.extractBodyAsJsonString(message);
     // assert
-    assertThat(result).isEqualTo(BODY);
+    assertThat(result).contains("name", "John", "year", "40");
   }
 }
