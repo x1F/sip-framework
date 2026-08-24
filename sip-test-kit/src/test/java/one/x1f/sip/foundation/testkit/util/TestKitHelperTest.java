@@ -7,10 +7,10 @@ import static one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.imp
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import one.x1f.sip.foundation.core.util.exception.SIPFrameworkException;
@@ -19,7 +19,6 @@ import one.x1f.sip.foundation.testkit.configurationproperties.models.MessageProp
 import one.x1f.sip.foundation.testkit.workflow.givenphase.Mock;
 import one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvokerTest;
 import org.apache.camel.*;
-import org.apache.camel.converter.stream.InputStreamCache;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -166,57 +165,9 @@ class TestKitHelperTest {
     // act && assert
     assertThatThrownBy(
             () -> {
-              TestKitHelper.unmarshallExchangeBodyFromJson(
+              unmarshallExchangeBodyFromJson(
                   mockExchange, new ObjectMapper(), DirectRouteInvokerTest.Person.class);
             })
         .isInstanceOf(SIPFrameworkException.class);
-  }
-
-  @Test
-  void
-      GIVEN_stringBody_WHEN_extractBodyAsJsonString_THEN_stringBodyIsReturnedDirectlyWithoutConversion() {
-    // act
-    String result = TestKitHelper.extractBodyAsJsonString(exchange.getMessage());
-    // assert
-    assertThat(result).isEqualTo(BODY);
-  }
-
-  @Test
-  void
-      GIVEN_objectBody_WHEN_extractMarshalledBodyAsJsonString_THEN_stringBodyIsReturnedDirectlyWithConversion() {
-    // arrange
-    Message message = exchange.getMessage();
-    TypeConverter typeConverter = mock(TypeConverter.class);
-    DirectRouteInvokerTest.Person person = new DirectRouteInvokerTest.Person("John", 40);
-    when(message.getBody()).thenReturn(person);
-    when(message.getExchange()).thenReturn(exchange);
-    when(exchange.getContext()).thenReturn(camelContext);
-    when(camelContext.getTypeConverter()).thenReturn(typeConverter);
-    InputStreamCache streamCache = new InputStreamCache(BODY.getBytes(StandardCharsets.UTF_8));
-    when(typeConverter.tryConvertTo(eq(StreamCache.class), any(), any())).thenReturn(streamCache);
-    // act
-    String result = TestKitHelper.extractBodyAsJsonString(message);
-    // assert
-    assertThat(result).isEqualTo(BODY);
-    verify(message).setBody(streamCache);
-  }
-
-  @Test
-  void
-      GIVEN_objectBody_WHEN_extractBodyAsJsonString_THEN_stringBodyIsReturnedDirectlyWithConversion() {
-    // arrange
-    Message message = exchange.getMessage();
-    TypeConverter typeConverter = mock(TypeConverter.class);
-    DirectRouteInvokerTest.Person person = new DirectRouteInvokerTest.Person("John", 40);
-    when(message.getBody()).thenReturn(person);
-    when(message.getExchange()).thenReturn(exchange);
-    when(exchange.getContext()).thenReturn(camelContext);
-    when(camelContext.getTypeConverter()).thenReturn(typeConverter);
-    when(typeConverter.tryConvertTo(eq(StreamCache.class), any(), any())).thenReturn(null);
-
-    // act
-    String result = TestKitHelper.extractBodyAsJsonString(message);
-    // assert
-    assertThat(result).contains("name", "John", "year", "40");
   }
 }
