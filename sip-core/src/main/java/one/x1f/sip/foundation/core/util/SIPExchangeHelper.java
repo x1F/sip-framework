@@ -1,12 +1,16 @@
 package one.x1f.sip.foundation.core.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.StreamCache;
 import org.apache.camel.support.DefaultExchangeHolder;
 
 /** Utility class that changes the {@link Exchange} */
@@ -14,6 +18,13 @@ import org.apache.camel.support.DefaultExchangeHolder;
 public class SIPExchangeHelper extends DefaultExchangeHolder {
 
   private static final String SERIALIZABLE_DEFAULT_VALUE = "This is non serializable value";
+
+  private static final ObjectMapper OBJECT_MAPPER;
+
+  static {
+    OBJECT_MAPPER = new ObjectMapper();
+    OBJECT_MAPPER.registerModule(new JavaTimeModule());
+  }
 
   /**
    * Filters out all non-serializable headers so they can be used in serializable environment
@@ -74,5 +85,52 @@ public class SIPExchangeHelper extends DefaultExchangeHolder {
       return SERIALIZABLE_DEFAULT_VALUE;
     }
     return value;
+  }
+
+  public static String extractBodyAsJsonString(Message message) {
+    if (message == null) {
+      return null;
+    }
+
+    Object body = message.getBody();
+
+    if (body == null) {
+      return null;
+    }
+
+    if (body instanceof String str) {
+      return str;
+    }
+
+    StreamCache streamCache =
+        message
+            .getExchange()
+            .getContext()
+            .getTypeConverter()
+            .tryConvertTo(StreamCache.class, message.getExchange(), body);
+
+    if (streamCache != null) {
+      try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+        streamCache.writeTo(baos);
+        byte[] content = baos.toByteArray();
+        return new String(content, StandardCharsets.UTF_8);
+      } catch (IOException e) {
+        return String.format("Failed to extract body: %s", e.getMessage());
+      } finally {
+        streamCache.reset();
+        message.setBody(streamCache); // Ensure original body is preserved
+      }
+    }
+
+    try {
+      String bodyAsString = OBJECT_MAPPER.writeValueAsString(message.getBody());
+      if (bodyAsString != null) {
+        return bodyAsString;
+      }
+    } catch (Exception ignored) {
+      // ignored
+    }
+
+    return "Unsupported body type or empty body.";
   }
 }
