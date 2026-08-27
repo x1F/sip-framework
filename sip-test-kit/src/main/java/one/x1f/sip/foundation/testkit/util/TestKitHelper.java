@@ -8,6 +8,7 @@ import static org.apache.camel.builder.ExchangeBuilder.anExchange;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import one.x1f.sip.foundation.core.util.SIPExchangeHelper;
 import one.x1f.sip.foundation.core.util.exception.SIPFrameworkException;
@@ -15,6 +16,9 @@ import one.x1f.sip.foundation.testkit.configurationproperties.models.EndpointPro
 import one.x1f.sip.foundation.testkit.workflow.givenphase.Mock;
 import org.apache.camel.*;
 import org.apache.camel.builder.ExchangeBuilder;
+import org.apache.camel.component.jackson.JacksonDataFormat;
+import org.apache.camel.model.*;
+import org.apache.camel.model.dataformat.JsonDataFormat;
 
 /** Utility class that changes the {@link Exchange} */
 @Slf4j
@@ -113,5 +117,33 @@ public class TestKitHelper extends SIPExchangeHelper {
     } catch (JsonProcessingException e) {
       throw new SIPFrameworkException(e);
     }
+  }
+
+  public static Class<?> extractUnmarshalClass(RouteDefinition routeDef) {
+    for (ProcessorDefinition<?> output : routeDef.getOutputs()) {
+      if (output instanceof ChoiceDefinition choiceDef) {
+        return findUnmarshalType(choiceDef.getOutputs());
+      }
+    }
+    return null;
+  }
+
+  private static Class<?> findUnmarshalType(List<ProcessorDefinition<?>> outputs) {
+    for (ProcessorDefinition<?> output : outputs) {
+      if (output instanceof UnmarshalDefinition unmarshalDef) {
+        return extractUnmarshalType(unmarshalDef.getDataFormatType());
+      }
+    }
+    return null;
+  }
+
+  private static Class<?> extractUnmarshalType(DataFormatDefinition dfDef) {
+    if (dfDef instanceof JsonDataFormat jsonDf) {
+      return jsonDf.getUnmarshalType();
+    }
+    if (dfDef != null && dfDef.getDataFormat() instanceof JacksonDataFormat jacksonDf) {
+      return jacksonDf.getUnmarshalType();
+    }
+    return null;
   }
 }

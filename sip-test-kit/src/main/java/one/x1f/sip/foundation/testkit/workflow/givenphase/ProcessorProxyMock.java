@@ -1,5 +1,6 @@
 package one.x1f.sip.foundation.testkit.workflow.givenphase;
 
+import static one.x1f.sip.foundation.testkit.util.TestKitHelper.extractUnmarshalClass;
 import static one.x1f.sip.foundation.testkit.util.TestKitHelper.unmarshallExchangeBodyFromJson;
 import static one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvoker.CONNECTOR_ID_EXCHANGE_PROPERTY;
 import static one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvoker.STRING_CLASS;
@@ -10,6 +11,8 @@ import java.util.function.UnaryOperator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import one.x1f.sip.foundation.core.declarative.DeclarationsRegistryApi;
+import one.x1f.sip.foundation.core.declarative.RouteRole;
+import one.x1f.sip.foundation.core.declarative.RoutesRegistry;
 import one.x1f.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import one.x1f.sip.foundation.core.proxies.ProcessorProxy;
 import one.x1f.sip.foundation.core.proxies.ProcessorProxyRegistry;
@@ -18,6 +21,7 @@ import one.x1f.sip.foundation.testkit.exception.ExceptionType;
 import one.x1f.sip.foundation.testkit.exception.TestCaseInitializationException;
 import one.x1f.sip.foundation.testkit.workflow.TestExecutionStatus;
 import org.apache.camel.Exchange;
+import org.apache.camel.model.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +35,7 @@ public class ProcessorProxyMock extends Mock {
   private final ProcessorProxyRegistry proxyRegistry;
   private final ObjectMapper mapper;
   private final Optional<DeclarationsRegistryApi> declarationsRegistry;
+  private final Optional<RoutesRegistry> routesRegistry;
 
   /**
    * Sets a mock operation on a proxy
@@ -81,7 +86,7 @@ public class ProcessorProxyMock extends Mock {
     Optional<ConnectorDefinition> connector =
         declarationsRegistry.flatMap(registry -> registry.getConnectorById(connectorId));
     if (connector.isPresent()) {
-      Optional<Class<?>> responseModelClass = connector.get().getResponseModelClass();
+      Optional<Class<?>> responseModelClass = getUnmarshalType(exchange, connector);
       if (responseModelClass.isPresent()) {
         if (!responseModelClass.get().equals(STRING_CLASS)) {
           unmarshallExchangeBodyFromJson(exchange, mapper, responseModelClass.get());
@@ -91,5 +96,28 @@ public class ProcessorProxyMock extends Mock {
             "Response model class is not defined for connector: %s", connectorId);
       }
     }
+  }
+
+  private Optional<Class<?>> getUnmarshalType(
+      Exchange exchange, Optional<ConnectorDefinition> connector) {
+    Model modelContext =
+        exchange.getContext().getCamelContextExtension().getContextPlugin(Model.class);
+    if (routesRegistry.isPresent() && connector.isPresent()) {
+      var routes = routesRegistry.get().getRoutesInfo(connector.get());
+      var external =
+          routes.stream()
+              .filter(
+                  route ->
+                      route.getRouteRole().equals(RouteRole.EXTERNAL_ENDPOINT.getExternalName()))
+              .findFirst();
+      if (external.isPresent()) {
+        var routeDef = modelContext.getRouteDefinition(external.get().getRouteId());
+        Class<?> unmarshalType = extractUnmarshalClass(routeDef);
+        if (unmarshalType != null) {
+          return Optional.of(unmarshalType);
+        }
+      }
+    }
+    return connector.isPresent() ? connector.get().getResponseModelClass() : Optional.empty();
   }
 }

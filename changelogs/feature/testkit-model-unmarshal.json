@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": 359,
+  "message": "Use model defined in the the unmarshal definition of a connector instead of response model from annotation to read objects while executing a test case."
+}

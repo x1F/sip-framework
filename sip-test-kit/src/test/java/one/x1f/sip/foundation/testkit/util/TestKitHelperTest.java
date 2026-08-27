@@ -11,7 +11,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import one.x1f.sip.foundation.core.util.exception.SIPFrameworkException;
 import one.x1f.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
@@ -19,6 +21,9 @@ import one.x1f.sip.foundation.testkit.configurationproperties.models.MessageProp
 import one.x1f.sip.foundation.testkit.workflow.givenphase.Mock;
 import one.x1f.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvokerTest;
 import org.apache.camel.*;
+import org.apache.camel.component.jackson.JacksonDataFormat;
+import org.apache.camel.model.*;
+import org.apache.camel.model.dataformat.JsonDataFormat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -169,5 +174,196 @@ class TestKitHelperTest {
                   mockExchange, new ObjectMapper(), DirectRouteInvokerTest.Person.class);
             })
         .isInstanceOf(SIPFrameworkException.class);
+  }
+
+  @Test
+  void
+      GIVEN_choiceContainingJsonDslUnmarshal_WHEN_extractUnmarshalClass_THEN_returnsUnmarshalType() {
+    JsonDataFormat jsonDf = mock(JsonDataFormat.class);
+    when(jsonDf.getUnmarshalType()).thenReturn((Class) MyModel.class);
+
+    UnmarshalDefinition unmarshalDef = mock(UnmarshalDefinition.class);
+    when(unmarshalDef.getDataFormatType()).thenReturn(jsonDf);
+
+    ChoiceDefinition choiceDef = mock(ChoiceDefinition.class);
+    when(choiceDef.getOutputs()).thenReturn(List.<ProcessorDefinition<?>>of(unmarshalDef));
+
+    RouteDefinition routeDef = mock(RouteDefinition.class);
+    when(routeDef.getOutputs()).thenReturn(List.<ProcessorDefinition<?>>of(choiceDef));
+
+    Class<?> result = TestKitHelper.extractUnmarshalClass(routeDef);
+
+    assertThat(result).isEqualTo(MyModel.class);
+  }
+
+  @Test
+  void
+      GIVEN_choiceContainingRawJacksonDataFormatUnmarshal_WHEN_extractUnmarshalClass_THEN_returnsUnmarshalType() {
+    JacksonDataFormat jacksonDf = mock(JacksonDataFormat.class);
+    when(jacksonDf.getUnmarshalType()).thenReturn((Class) MyModel.class);
+
+    DataFormatDefinition dfDef = mock(DataFormatDefinition.class);
+    when(dfDef.getDataFormat()).thenReturn(jacksonDf);
+
+    UnmarshalDefinition unmarshalDef = mock(UnmarshalDefinition.class);
+    when(unmarshalDef.getDataFormatType()).thenReturn(dfDef);
+
+    ChoiceDefinition choiceDef = mock(ChoiceDefinition.class);
+    when(choiceDef.getOutputs()).thenReturn(List.<ProcessorDefinition<?>>of(unmarshalDef));
+
+    RouteDefinition routeDef = mock(RouteDefinition.class);
+    when(routeDef.getOutputs()).thenReturn(List.<ProcessorDefinition<?>>of(choiceDef));
+
+    Class<?> result = TestKitHelper.extractUnmarshalClass(routeDef);
+
+    assertThat(result).isEqualTo(MyModel.class);
+  }
+
+  @Test
+  void GIVEN_routeWithoutChoice_WHEN_extractUnmarshalClass_THEN_returnsNull() {
+    LogDefinition logDef = mock(LogDefinition.class);
+
+    RouteDefinition routeDef = mock(RouteDefinition.class);
+    when(routeDef.getOutputs()).thenReturn(List.<ProcessorDefinition<?>>of(logDef));
+
+    Class<?> result = TestKitHelper.extractUnmarshalClass(routeDef);
+
+    assertThat(result).isNull();
+  }
+
+  @Test
+  void GIVEN_choiceWithoutUnmarshal_WHEN_extractUnmarshalClass_THEN_returnsNull() {
+    LogDefinition logDef = mock(LogDefinition.class);
+
+    ChoiceDefinition choiceDef = mock(ChoiceDefinition.class);
+    when(choiceDef.getOutputs()).thenReturn(List.<ProcessorDefinition<?>>of(logDef));
+
+    RouteDefinition routeDef = mock(RouteDefinition.class);
+    when(routeDef.getOutputs()).thenReturn(List.<ProcessorDefinition<?>>of(choiceDef));
+
+    Class<?> result = TestKitHelper.extractUnmarshalClass(routeDef);
+
+    assertThat(result).isNull();
+  }
+
+  @Test
+  void GIVEN_outputsContainingUnmarshalDefinition_WHEN_findUnmarshalType_THEN_returnsUnmarshalType()
+      throws Exception {
+    JsonDataFormat jsonDf = mock(JsonDataFormat.class);
+    when(jsonDf.getUnmarshalType()).thenReturn((Class) MyModel.class);
+
+    UnmarshalDefinition unmarshalDef = mock(UnmarshalDefinition.class);
+    when(unmarshalDef.getDataFormatType()).thenReturn(jsonDf);
+
+    List<ProcessorDefinition<?>> outputs = List.of(unmarshalDef);
+
+    Class<?> result = invokeFindUnmarshalType(outputs);
+
+    assertThat(result).isEqualTo(MyModel.class);
+  }
+
+  @Test
+  void GIVEN_emptyOutputs_WHEN_findUnmarshalType_THEN_returnsNull() throws Exception {
+    Class<?> result = invokeFindUnmarshalType(List.of());
+
+    assertThat(result).isNull();
+  }
+
+  @Test
+  void GIVEN_outputsWithoutUnmarshalDefinition_WHEN_findUnmarshalType_THEN_returnsNull()
+      throws Exception {
+    LogDefinition logDef = mock(LogDefinition.class);
+
+    List<ProcessorDefinition<?>> outputs = List.of(logDef);
+
+    Class<?> result = invokeFindUnmarshalType(outputs);
+
+    assertThat(result).isNull();
+  }
+
+  @Test
+  void GIVEN_jsonDataFormatModel_WHEN_extractUnmarshalType_THEN_returnsUnmarshalType()
+      throws Exception {
+    JsonDataFormat jsonDf = mock(JsonDataFormat.class);
+    when(jsonDf.getUnmarshalType()).thenReturn((Class) MyModel.class);
+
+    Class<?> result = invokeExtractUnmarshalType(jsonDf);
+
+    assertThat(result).isEqualTo(MyModel.class);
+  }
+
+  @Test
+  void
+      GIVEN_dataFormatDefinitionWrappingJacksonDataFormat_WHEN_extractUnmarshalType_THEN_returnsUnmarshalType()
+          throws Exception {
+    JacksonDataFormat jacksonDf = mock(JacksonDataFormat.class);
+    when(jacksonDf.getUnmarshalType()).thenReturn((Class) MyModel.class);
+
+    DataFormatDefinition dfDef = mock(DataFormatDefinition.class);
+    when(dfDef.getDataFormat()).thenReturn(jacksonDf);
+
+    Class<?> result = invokeExtractUnmarshalType(dfDef);
+
+    assertThat(result).isEqualTo(MyModel.class);
+  }
+
+  @Test
+  void
+      GIVEN_arrayUnmarshalType_WHEN_extractUnmarshalType_THEN_returnsArrayClassWithMatchingComponentType()
+          throws Exception {
+    JacksonDataFormat jacksonDf = mock(JacksonDataFormat.class);
+    when(jacksonDf.getUnmarshalType()).thenReturn((Class) MyModel[].class);
+
+    DataFormatDefinition dfDef = mock(DataFormatDefinition.class);
+    when(dfDef.getDataFormat()).thenReturn(jacksonDf);
+
+    Class<?> result = invokeExtractUnmarshalType(dfDef);
+
+    assertThat(result).isEqualTo(MyModel[].class);
+    assertThat(result.getComponentType()).isEqualTo(MyModel.class);
+  }
+
+  @Test
+  void GIVEN_nullDataFormatDefinition_WHEN_extractUnmarshalType_THEN_returnsNull()
+      throws Exception {
+    Class<?> result = invokeExtractUnmarshalType(null);
+
+    assertThat(result).isNull();
+  }
+
+  @Test
+  void GIVEN_unrelatedDataFormatDefinition_WHEN_extractUnmarshalType_THEN_returnsNull()
+      throws Exception {
+    DataFormatDefinition dfDef = mock(DataFormatDefinition.class);
+    when(dfDef.getDataFormat()).thenReturn(null);
+
+    Class<?> result = invokeExtractUnmarshalType(dfDef);
+
+    assertThat(result).isNull();
+  }
+
+  private Class<?> invokeFindUnmarshalType(List<ProcessorDefinition<?>> outputs) throws Exception {
+    Method m = TestKitHelper.class.getDeclaredMethod("findUnmarshalType", List.class);
+    m.setAccessible(true);
+    return (Class<?>) m.invoke(null, outputs);
+  }
+
+  private Class<?> invokeExtractUnmarshalType(DataFormatDefinition dfDef) throws Exception {
+    Method m =
+        TestKitHelper.class.getDeclaredMethod("extractUnmarshalType", DataFormatDefinition.class);
+    m.setAccessible(true);
+    return (Class<?>) m.invoke(null, dfDef);
+  }
+
+  static class MyModel {
+    private String field;
+
+    public String getField() {
+      return field;
+    }
+
+    public void setField(String field) {
+      this.field = field;
+    }
   }
 }
