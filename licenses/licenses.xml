@@ -27,32 +27,36 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.5.32</version>
+      <version>1.5.34</version>
       <licenses>
         <license>
-          <name>Eclipse Public License - v 2.0</name>
+          <name>EPL-2.0</name>
           <url>https://www.eclipse.org/legal/epl-v20.html</url>
-          <file>eclipse public license - v 2.0 - epl-v20.html</file>
+          <file>epl-2.0 - epl-v20.html</file>
+          <comments>Eclipse Public License 2.0</comments>
         </license>
         <license>
-          <name>GNU Lesser General Public License</name>
+          <name>LGPL-2.1-only</name>
           <url>https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
+          <comments>GNU Lesser General Public License v2.1 only</comments>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-core</artifactId>
-      <version>1.5.32</version>
+      <version>1.5.34</version>
       <licenses>
         <license>
-          <name>Eclipse Public License - v 2.0</name>
+          <name>EPL-2.0</name>
           <url>https://www.eclipse.org/legal/epl-v20.html</url>
-          <file>eclipse public license - v 2.0 - epl-v20.html</file>
+          <file>epl-2.0 - epl-v20.html</file>
+          <comments>Eclipse Public License 2.0</comments>
         </license>
         <license>
-          <name>GNU Lesser General Public License</name>
+          <name>LGPL-2.1-only</name>
           <url>https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
+          <comments>GNU Lesser General Public License v2.1 only</comments>
         </license>
       </licenses>
     </dependency>
@@ -85,7 +89,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
-      <version>2.21.2</version>
+      <version>2.21.4</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -98,7 +102,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.21.2</version>
+      <version>2.21.4</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -111,7 +115,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-yaml</artifactId>
-      <version>2.21.2</version>
+      <version>2.21.4</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -124,7 +128,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jdk8</artifactId>
-      <version>2.21.2</version>
+      <version>2.21.4</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -137,7 +141,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-joda</artifactId>
-      <version>2.21.2</version>
+      <version>2.21.4</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -163,7 +167,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.jakarta.rs</groupId>
       <artifactId>jackson-jakarta-rs-base</artifactId>
-      <version>2.21.2</version>
+      <version>2.21.4</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -176,7 +180,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.jakarta.rs</groupId>
       <artifactId>jackson-jakarta-rs-json-provider</artifactId>
-      <version>2.21.2</version>
+      <version>2.21.4</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -189,7 +193,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
-      <version>2.21.2</version>
+      <version>2.21.4</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -202,7 +206,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-jsonSchema</artifactId>
-      <version>2.21.2</version>
+      <version>2.21.4</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -215,7 +219,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-parameter-names</artifactId>
-      <version>2.21.2</version>
+      <version>2.21.4</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -241,7 +245,7 @@
     <dependency>
       <groupId>com.github.javaparser</groupId>
       <artifactId>javaparser-core</artifactId>
-      <version>3.28.1</version>
+      <version>3.28.2</version>
       <licenses>
         <license>
           <name>GNU Lesser General Public License</name>
@@ -260,7 +264,7 @@
     <dependency>
       <groupId>com.github.javaparser</groupId>
       <artifactId>javaparser-symbol-solver-core</artifactId>
-      <version>3.28.1</version>
+      <version>3.28.2</version>
       <licenses>
         <license>
           <name>GNU Lesser General Public License</name>
@@ -292,7 +296,7 @@
     <dependency>
       <groupId>com.github.mwiede</groupId>
       <artifactId>jsch</artifactId>
-      <version>2.28.0</version>
+      <version>2.28.2</version>
       <licenses>
         <license>
           <name>Revised BSD</name>
@@ -456,7 +460,7 @@
     <dependency>
       <groupId>com.sun.xml.messaging.saaj</groupId>
       <artifactId>saaj-impl</artifactId>
-      <version>3.0.4</version>
+      <version>3.0.6</version>
       <licenses>
         <license>
           <name>Eclipse Distribution License - v 1.0</name>
@@ -534,7 +538,7 @@
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-commons</artifactId>
-      <version>1.15.11</version>
+      <version>1.15.12</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -547,7 +551,7 @@
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-core</artifactId>
-      <version>1.15.11</version>
+      <version>1.15.12</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -560,7 +564,7 @@
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-jakarta9</artifactId>
-      <version>1.15.11</version>
+      <version>1.15.12</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -573,7 +577,7 @@
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-observation</artifactId>
-      <version>1.15.11</version>
+      <version>1.15.12</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -586,7 +590,7 @@
     <dependency>
       <groupId>io.swagger.core.v3</groupId>
       <artifactId>swagger-annotations</artifactId>
-      <version>2.2.50</version>
+      <version>2.2.54</version>
       <licenses>
         <license>
           <name>Apache License 2.0</name>
@@ -773,7 +777,7 @@
     <dependency>
       <groupId>jakarta.xml.bind</groupId>
       <artifactId>jakarta.xml.bind-api</artifactId>
-      <version>4.0.4</version>
+      <version>4.0.5</version>
       <licenses>
         <license>
           <name>Eclipse Distribution License - v 1.0</name>
@@ -1054,7 +1058,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-api</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1067,7 +1071,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-attachments</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1080,7 +1084,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-base</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1093,7 +1097,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-base-engine</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1106,7 +1110,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-bean</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1119,7 +1123,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-bean-validator</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1132,7 +1136,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-bindy</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1145,7 +1149,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-browse</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1158,7 +1162,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-cloud</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1171,7 +1175,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-cluster</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1184,7 +1188,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-controlbus</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1197,7 +1201,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1210,7 +1214,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-catalog</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1223,7 +1227,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-engine</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1236,7 +1240,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-languages</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1249,7 +1253,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-model</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1262,7 +1266,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-processor</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1275,7 +1279,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-reifier</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1288,7 +1292,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-xml</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1301,7 +1305,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-cxf-common</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1314,7 +1318,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-cxf-soap</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1327,7 +1331,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-cxf-spring-common</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1340,7 +1344,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-cxf-spring-soap</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1353,7 +1357,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-cxf-spring-transport</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1366,7 +1370,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-cxf-transport</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1379,7 +1383,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-dataformat</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1392,7 +1396,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-dataset</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1405,7 +1409,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-direct</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1418,7 +1422,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-endpointdsl</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1431,7 +1435,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-file</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1444,7 +1448,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-ftp</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1457,7 +1461,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-health</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1470,7 +1474,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-http</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1483,7 +1487,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-http-base</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1496,7 +1500,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-http-common</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1509,7 +1513,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-jackson</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1522,7 +1526,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-jaxb</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1535,7 +1539,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-jms</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1548,7 +1552,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-jmx</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1561,7 +1565,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-kafka</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1574,7 +1578,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-language</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1587,7 +1591,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-log</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1600,7 +1604,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-mail</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1613,7 +1617,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-main</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1626,7 +1630,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-management</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1639,7 +1643,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-management-api</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1652,7 +1656,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-mock</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1665,7 +1669,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-openapi-java</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1678,7 +1682,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-ref</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1691,7 +1695,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-rest</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1704,7 +1708,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-saga</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1717,7 +1721,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-scheduler</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1730,7 +1734,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-seda</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1743,7 +1747,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-servlet</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1756,7 +1760,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-spring</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1769,7 +1773,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-spring-main</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1782,7 +1786,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-spring-xml</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1795,7 +1799,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-stub</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1808,7 +1812,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-support</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1821,7 +1825,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-test-junit5</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1834,7 +1838,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-test-spring-junit5</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1847,7 +1851,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-timer</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1860,7 +1864,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-tooling-model</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1873,7 +1877,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-tooling-util</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1886,7 +1890,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-util</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1899,7 +1903,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-util-json</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1912,7 +1916,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-validator</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1925,7 +1929,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-xml-io</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1938,7 +1942,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-xml-io-util</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1951,7 +1955,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-xml-jaxb</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1964,7 +1968,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-xml-jaxp</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1977,7 +1981,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-xml-jaxp-util</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -1990,7 +1994,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-xpath</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2003,7 +2007,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-xslt</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2016,7 +2020,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-yaml-io</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2029,7 +2033,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-bean-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2042,7 +2046,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-bean-validator-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2055,7 +2059,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-bindy-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2068,7 +2072,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-browse-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2081,7 +2085,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-controlbus-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2094,7 +2098,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-core-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2107,7 +2111,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-cxf-soap-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2120,7 +2124,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-dataformat-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2133,7 +2137,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-dataset-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2146,7 +2150,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-direct-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2159,7 +2163,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-file-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2172,7 +2176,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-ftp-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2185,7 +2189,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-http-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2198,7 +2202,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-jackson-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2211,7 +2215,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-jaxb-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2224,7 +2228,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-jms-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2237,7 +2241,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-jmx-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2250,7 +2254,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-kafka-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2263,7 +2267,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-language-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2276,7 +2280,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-log-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2289,7 +2293,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-mail-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2302,7 +2306,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-mock-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2315,7 +2319,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-openapi-java-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2328,7 +2332,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-ref-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2341,7 +2345,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-rest-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2354,7 +2358,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-saga-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2367,7 +2371,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-scheduler-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2380,7 +2384,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-seda-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2393,7 +2397,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-servlet-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2406,7 +2410,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-spring-boot</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2419,7 +2423,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-spring-boot-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2432,7 +2436,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-stub-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2445,7 +2449,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-timer-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2458,7 +2462,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-validator-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2471,7 +2475,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-xml-jaxp-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2484,7 +2488,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-xpath-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -2497,7 +2501,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-xslt-starter</artifactId>
-      <version>4.18.2</version>
+      <version>4.18.4</version>
       <licenses>
         <license>
           <name>Apache-2.0</name>
@@ -3121,7 +3125,7 @@
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-core</artifactId>
-      <version>10.1.55</version>
+      <version>10.1.59</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3134,7 +3138,7 @@
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-el</artifactId>
-      <version>10.1.55</version>
+      <version>10.1.59</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3147,7 +3151,7 @@
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-websocket</artifactId>
-      <version>10.1.55</version>
+      <version>10.1.59</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3451,7 +3455,7 @@
           <name>Eclipse Public License, Version 2.0</name>
           <url>https://www.eclipse.org/legal/epl-v20.html</url>
           <distribution>repo</distribution>
-          <file>eclipse public license - v 2.0 - epl-v20.html</file>
+          <file>epl-2.0 - epl-v20.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3464,7 +3468,7 @@
           <name>Eclipse Public License, Version 2.0</name>
           <url>https://www.eclipse.org/legal/epl-v20.html</url>
           <distribution>repo</distribution>
-          <file>eclipse public license - v 2.0 - epl-v20.html</file>
+          <file>epl-2.0 - epl-v20.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3515,7 +3519,7 @@
     <dependency>
       <groupId>org.glassfish.jaxb</groupId>
       <artifactId>jaxb-core</artifactId>
-      <version>4.0.6</version>
+      <version>4.0.9</version>
       <licenses>
         <license>
           <name>Eclipse Distribution License - v 1.0</name>
@@ -3528,7 +3532,7 @@
     <dependency>
       <groupId>org.glassfish.jaxb</groupId>
       <artifactId>jaxb-runtime</artifactId>
-      <version>4.0.6</version>
+      <version>4.0.9</version>
       <licenses>
         <license>
           <name>Eclipse Distribution License - v 1.0</name>
@@ -3541,7 +3545,7 @@
     <dependency>
       <groupId>org.glassfish.jaxb</groupId>
       <artifactId>txw2</artifactId>
-      <version>4.0.6</version>
+      <version>4.0.9</version>
       <licenses>
         <license>
           <name>Eclipse Distribution License - v 1.0</name>
@@ -3649,7 +3653,6 @@
           <name>Apache License 2.0</name>
           <url>https://repository.jboss.org/licenses/apache-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license 2.0 - apache-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -3673,7 +3676,7 @@
         <license>
           <name>Eclipse Public License v2.0</name>
           <url>https://www.eclipse.org/legal/epl-v20.html</url>
-          <file>eclipse public license - v 2.0 - epl-v20.html</file>
+          <file>epl-2.0 - epl-v20.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3685,7 +3688,7 @@
         <license>
           <name>Eclipse Public License v2.0</name>
           <url>https://www.eclipse.org/legal/epl-v20.html</url>
-          <file>eclipse public license - v 2.0 - epl-v20.html</file>
+          <file>epl-2.0 - epl-v20.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3697,7 +3700,7 @@
         <license>
           <name>Eclipse Public License v2.0</name>
           <url>https://www.eclipse.org/legal/epl-v20.html</url>
-          <file>eclipse public license - v 2.0 - epl-v20.html</file>
+          <file>epl-2.0 - epl-v20.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3709,7 +3712,7 @@
         <license>
           <name>Eclipse Public License v2.0</name>
           <url>https://www.eclipse.org/legal/epl-v20.html</url>
-          <file>eclipse public license - v 2.0 - epl-v20.html</file>
+          <file>epl-2.0 - epl-v20.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3721,7 +3724,7 @@
         <license>
           <name>Eclipse Public License v2.0</name>
           <url>https://www.eclipse.org/legal/epl-v20.html</url>
-          <file>eclipse public license - v 2.0 - epl-v20.html</file>
+          <file>epl-2.0 - epl-v20.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3733,7 +3736,7 @@
         <license>
           <name>Eclipse Public License v2.0</name>
           <url>https://www.eclipse.org/legal/epl-v20.html</url>
-          <file>eclipse public license - v 2.0 - epl-v20.html</file>
+          <file>epl-2.0 - epl-v20.html</file>
         </license>
       </licenses>
     </dependency>
@@ -4076,7 +4079,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jul-to-slf4j</artifactId>
-      <version>2.0.17</version>
+      <version>2.0.18</version>
       <licenses>
         <license>
           <name>MIT</name>
@@ -4089,7 +4092,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>2.0.17</version>
+      <version>2.0.18</version>
       <licenses>
         <license>
           <name>MIT</name>
@@ -4138,7 +4141,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-aop</artifactId>
-      <version>6.2.18</version>
+      <version>6.2.19</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4151,7 +4154,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
-      <version>6.2.18</version>
+      <version>6.2.19</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4164,7 +4167,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>6.2.18</version>
+      <version>6.2.19</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4177,7 +4180,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context-support</artifactId>
-      <version>6.2.18</version>
+      <version>6.2.19</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4190,7 +4193,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
-      <version>6.2.18</version>
+      <version>6.2.19</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4203,7 +4206,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-expression</artifactId>
-      <version>6.2.18</version>
+      <version>6.2.19</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4216,7 +4219,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-jcl</artifactId>
-      <version>6.2.18</version>
+      <version>6.2.19</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4229,7 +4232,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-jms</artifactId>
-      <version>6.2.18</version>
+      <version>6.2.19</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4242,7 +4245,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-messaging</artifactId>
-      <version>6.2.18</version>
+      <version>6.2.19</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4255,7 +4258,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-      <version>6.2.18</version>
+      <version>6.2.19</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4268,7 +4271,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-tx</artifactId>
-      <version>6.2.18</version>
+      <version>6.2.19</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4281,7 +4284,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
-      <version>6.2.18</version>
+      <version>6.2.19</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4294,7 +4297,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
-      <version>6.2.18</version>
+      <version>6.2.19</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4307,7 +4310,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot</artifactId>
-      <version>3.5.14</version>
+      <version>3.5.16</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4319,7 +4322,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-actuator</artifactId>
-      <version>3.5.14</version>
+      <version>3.5.16</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4331,7 +4334,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-actuator-autoconfigure</artifactId>
-      <version>3.5.14</version>
+      <version>3.5.16</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4343,7 +4346,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-autoconfigure</artifactId>
-      <version>3.5.14</version>
+      <version>3.5.16</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4355,7 +4358,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
-      <version>3.5.14</version>
+      <version>3.5.16</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4367,7 +4370,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
-      <version>3.5.14</version>
+      <version>3.5.16</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4379,7 +4382,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
-      <version>3.5.14</version>
+      <version>3.5.16</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4391,7 +4394,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
-      <version>3.5.14</version>
+      <version>3.5.16</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4403,7 +4406,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-freemarker</artifactId>
-      <version>3.5.14</version>
+      <version>3.5.16</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4415,7 +4418,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-json</artifactId>
-      <version>3.5.14</version>
+      <version>3.5.16</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4427,7 +4430,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-logging</artifactId>
-      <version>3.5.14</version>
+      <version>3.5.16</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4439,7 +4442,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
-      <version>3.5.14</version>
+      <version>3.5.16</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4451,7 +4454,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
-      <version>3.5.14</version>
+      <version>3.5.16</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4463,7 +4466,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-tomcat</artifactId>
-      <version>3.5.14</version>
+      <version>3.5.16</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4475,7 +4478,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
-      <version>3.5.14</version>
+      <version>3.5.16</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4487,7 +4490,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-      <version>3.5.14</version>
+      <version>3.5.16</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4499,7 +4502,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-test</artifactId>
-      <version>3.5.14</version>
+      <version>3.5.16</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4511,7 +4514,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-test-autoconfigure</artifactId>
-      <version>3.5.14</version>
+      <version>3.5.16</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4523,7 +4526,7 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-config</artifactId>
-      <version>6.5.10</version>
+      <version>6.5.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4535,7 +4538,7 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-core</artifactId>
-      <version>6.5.10</version>
+      <version>6.5.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4547,7 +4550,7 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-crypto</artifactId>
-      <version>6.5.10</version>
+      <version>6.5.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4559,7 +4562,7 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-test</artifactId>
-      <version>6.5.10</version>
+      <version>6.5.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -4571,7 +4574,7 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-web</artifactId>
-      <version>6.5.10</version>
+      <version>6.5.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>

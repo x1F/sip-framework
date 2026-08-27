@@ -8,4 +8,5 @@ sealed interface CallableWithinProviderDefinition
     permits CallScenarioConsumerBaseDefinition,
         ConditionalCallScenarioConsumerDefinition,
         ForLoopCallScenarioConsumerDefinition,
+        ProcessCallScenarioConsumerDefinition,
         WhileLoopCallScenarioConsumerDefinition {}

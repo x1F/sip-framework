@@ -16,6 +16,10 @@ sip.core:
       showHeaders: true
       showExchangeId: true
     log: true
+    logging:
+      basic: true
+      connector: false
+      connector-extension: false
   actuator:
     endpoints: adapterroutes,tracing
     adapter-routes:

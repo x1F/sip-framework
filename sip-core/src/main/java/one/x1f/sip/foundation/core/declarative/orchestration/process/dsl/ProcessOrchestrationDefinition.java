@@ -6,9 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Delegate;
 import one.x1f.sip.foundation.core.declarative.orchestration.common.dsl.EndOfDsl;
-import one.x1f.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepConditional;
-import one.x1f.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepIterations;
-import one.x1f.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepSplitExpression;
+import one.x1f.sip.foundation.core.declarative.orchestration.process.*;
 import one.x1f.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 
 /** DSL class for specifying orchestration of complex processes with or without conditions */
@@ -109,5 +107,12 @@ public class ProcessOrchestrationDefinition
         new CallSplitStatement<>(self(), getCompositeProcess());
     steps.add(def);
     return def.parallelSplit(expression);
+  }
+
+  public ProcessOrchestrationDefinition process(CompositeProcessTransformer requestPreparation) {
+    CallProcess<ProcessOrchestrationDefinition> def =
+        new CallProcess(self(), getCompositeProcess());
+    steps.add(def);
+    return def.process(requestPreparation);
   }
 }

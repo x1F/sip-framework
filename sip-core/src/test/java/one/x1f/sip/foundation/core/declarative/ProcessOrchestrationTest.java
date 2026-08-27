@@ -104,5 +104,6 @@ class ProcessOrchestrationTest {
     assertThat(response.getAmount()).isEqualTo(new BigDecimal("100000.00"));
     assertThat(response.getRequestedPartnerName()).isEqualTo("MyOrchestratedPartner");
     assertThat(response.getRequestedBy()).isEqualTo("Process Orchestrator");
+    assertThat(exchange.getMessage().getHeader("headerKey")).isEqualTo("Header set in process");
   }
 }

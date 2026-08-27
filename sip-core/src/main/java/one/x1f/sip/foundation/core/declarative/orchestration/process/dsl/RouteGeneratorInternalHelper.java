@@ -6,6 +6,7 @@ import lombok.experimental.UtilityClass;
 import one.x1f.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
 import one.x1f.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepRequestExtractor;
 import one.x1f.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepResponseConsumer;
+import one.x1f.sip.foundation.core.declarative.orchestration.process.CompositeProcessTransformer;
 import one.x1f.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 
 /**
@@ -37,6 +38,10 @@ public class RouteGeneratorInternalHelper {
   public static Optional<CompositeProcessStepResponseConsumer> getResponseConsumer(
       CallProcessConsumer element) {
     return element.getResponseConsumer();
+  }
+
+  public static Optional<CompositeProcessTransformer> getProcess(CallProcess element) {
+    return element.getProcess();
   }
 
   public static List<CallNestedCondition.ProcessBranchStatements> getConditionalStatements(
