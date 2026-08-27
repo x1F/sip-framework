@@ -77,6 +77,8 @@ class ScenarioOrchestrationTest {
     assertThat(responseFirstConnector).isInstanceOf(ScenarioResponse.class);
     assertThat(responseFirstConnector.getValue()).isEqualTo(1);
     assertThat(responseSecondConnector).isEqualTo(responseFirstConnector);
+    assertThat(exchangeFirstConnector.getMessage().getHeader("headerKey"))
+        .isEqualTo("Header set in scenario orchestration");
   }
 
   @Test

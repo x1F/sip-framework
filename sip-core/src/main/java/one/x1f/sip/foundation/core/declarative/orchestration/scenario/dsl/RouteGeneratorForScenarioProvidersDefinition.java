@@ -142,6 +142,10 @@ final class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGenerat
         new RouteGeneratorForForLoopCallScenarioConsumerDefinition<M>(
                 getOrchestrationInfo(), loopDef, overallUnhandledScenarioConsumers)
             .generateRoute(routeDef);
+      } else if (element instanceof ProcessCallScenarioConsumerDefinition processDef) {
+        new RouteGeneratorForProcessCallScenarioConsumerDefinition<M>(
+                getOrchestrationInfo(), processDef)
+            .generateRoute(routeDef);
       } else {
         throw SIPFrameworkInitializationException.init(
             "No handling defined for type %s used in orchestration for scenario %s",
