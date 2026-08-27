@@ -1,5 +1,5 @@
 {
   "author": "Nemikor",
   "pullrequestId": 365,
-  "message": "Update minor versions of Apache Camel, Tomcat Embed and Swagger Annotations"
+  "message": "Update minor versions of Apache Camel, Tomcat Embed and Swagger Annotations that will close known vulnerabilities"
 }
