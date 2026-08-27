@@ -3,12 +3,12 @@ package one.x1f.sip.foundation.core.util;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
-import org.apache.camel.Message;
+import org.apache.camel.*;
 import org.apache.camel.builder.ExchangeBuilder;
+import org.apache.camel.converter.stream.InputStreamCache;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +20,8 @@ class SIPExchangeHelperTest {
   private Exchange exchange;
   private Map<String, Object> stringObjectMap;
   private CamelContext camelContext;
+
+  public record Person(String name, int years) {}
 
   @BeforeEach
   void setup() {
@@ -84,5 +86,53 @@ class SIPExchangeHelperTest {
 
     assertThat(result.get("empty")).isNull();
     assertThat(result.get("nonempty")).isNotNull();
+  }
+
+  @Test
+  void
+      GIVEN_stringBody_WHEN_extractBodyAsJsonString_THEN_stringBodyIsReturnedDirectlyWithoutConversion() {
+    // act
+    String result = SIPExchangeHelper.extractBodyAsJsonString(exchange.getMessage());
+    // assert
+    assertThat(result).isEqualTo(BODY);
+  }
+
+  @Test
+  void
+      GIVEN_objectBody_WHEN_extractMarshalledBodyAsJsonString_THEN_stringBodyIsReturnedDirectlyWithConversion() {
+    // arrange
+    Message message = exchange.getMessage();
+    TypeConverter typeConverter = mock(TypeConverter.class);
+    Person person = new Person("John", 40);
+    when(message.getBody()).thenReturn(person);
+    when(message.getExchange()).thenReturn(exchange);
+    when(exchange.getContext()).thenReturn(camelContext);
+    when(camelContext.getTypeConverter()).thenReturn(typeConverter);
+    InputStreamCache streamCache = new InputStreamCache(BODY.getBytes(StandardCharsets.UTF_8));
+    when(typeConverter.tryConvertTo(eq(StreamCache.class), any(), any())).thenReturn(streamCache);
+    // act
+    String result = SIPExchangeHelper.extractBodyAsJsonString(message);
+    // assert
+    assertThat(result).isEqualTo(BODY);
+    verify(message).setBody(streamCache);
+  }
+
+  @Test
+  void
+      GIVEN_objectBody_WHEN_extractBodyAsJsonString_THEN_stringBodyIsReturnedDirectlyWithConversion() {
+    // arrange
+    Message message = exchange.getMessage();
+    TypeConverter typeConverter = mock(TypeConverter.class);
+    Person person = new Person("John", 40);
+    when(message.getBody()).thenReturn(person);
+    when(message.getExchange()).thenReturn(exchange);
+    when(exchange.getContext()).thenReturn(camelContext);
+    when(camelContext.getTypeConverter()).thenReturn(typeConverter);
+    when(typeConverter.tryConvertTo(eq(StreamCache.class), any(), any())).thenReturn(null);
+
+    // act
+    String result = SIPExchangeHelper.extractBodyAsJsonString(message);
+    // assert
+    assertThat(result).contains("name", "John", "year", "40");
   }
 }
