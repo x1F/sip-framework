@@ -63,8 +63,8 @@
         <jackson-jsr310.version>2.21.3</jackson-jsr310.version>
         <springdoc-openapi-starter-common.version>2.8.17</springdoc-openapi-starter-common.version>
         <springdoc-openapi-starter-webmvc-ui.version>2.8.17</springdoc-openapi-starter-webmvc-ui.version>
-        <swagger-annotation.version>2.2.54</swagger-annotation.version>
-        <lombok.version>1.18.46</lombok.version>
+        <swagger-annotation.version>2.2.55</swagger-annotation.version>
+        <lombok.version>1.18.48</lombok.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <commons-text.version>1.15.0</commons-text.version>
         <commons-collections4.version>4.5.0</commons-collections4.version>
