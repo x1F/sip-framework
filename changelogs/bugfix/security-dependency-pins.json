@@ -1,0 +1,5 @@
+{
+  "author": "MartinBuchheim",
+  "pullrequestId": "368",
+  "message": "Update Apache Camel to 4.18.5. Pinned transitive dependencies to newer versions to mitigate relevant CVEs. Please read docs/security-notes.md"
+}
