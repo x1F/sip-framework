@@ -14,6 +14,7 @@ nav:
     - Integration Starter: integration-starter.md
     - Starter Parent: starter-parent.md
     - Security: security.md
+    - Security Notes: security-notes.md
     - Test Kit: test-kit.md
     - Test Kit Declarative: test-kit-declarative.md
     - SOAP Starter: soap-starter.md
