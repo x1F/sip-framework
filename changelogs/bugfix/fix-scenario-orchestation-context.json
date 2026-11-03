@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "319",
+  "message": "Add a mechanism that clears scenario orchestration context after execution and resets it to previous."
+}

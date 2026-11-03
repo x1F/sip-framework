@@ -16,6 +16,7 @@ import one.x1f.sip.foundation.core.declarative.scenario.IntegrationScenarioDefin
 import one.x1f.sip.foundation.core.util.exception.SIPFrameworkException;
 import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Various handlers use in scenario orchestration *
@@ -27,10 +28,16 @@ import org.apache.camel.Handler;
 public class ScenarioOrchestrationHandlers {
 
   private final String CALLED_CONSUMER_LIST_PROPERTY = "_SipCalledConsumersList";
+  private final String SCENARIO_ORCHESTRATION_CONTEXT_HISTORY_PROPERTY =
+      "_SipScenarioOrchestrationContextHistory";
 
   public static ContextInitializer handleContextInitialization(
       final IntegrationScenarioDefinition scenario) {
     return new ContextInitializer(scenario);
+  }
+
+  public static ContextCleaner handleContextClearing(final IntegrationScenarioDefinition scenario) {
+    return new ContextCleaner(scenario);
   }
 
   public static <M> ConsumerRequestHandler<M> handleRequestToConsumer(
@@ -87,16 +94,53 @@ public class ScenarioOrchestrationHandlers {
 
     @Handler
     public <T> void initializeOrchestrationContext(final T body, final Exchange exchange) {
+      String previousContextId = "";
+      var previousContext =
+          exchange.getProperty(
+              ScenarioOrchestrationContext.PROPERTY_NAME, ScenarioOrchestrationContext.class);
+      if (previousContext != null) {
+        previousContextId = previousContext.getIntegrationScenario().getId();
+      }
       exchange.setProperty(
           CALLED_CONSUMER_LIST_PROPERTY,
           Collections.synchronizedList(new ArrayList<IntegrationScenarioConsumerDefinition>()));
-      exchange.setProperty(
-          ScenarioOrchestrationContext.PROPERTY_NAME,
+      ScenarioOrchestrationContext<Object> orchestrationContext =
           ScenarioOrchestrationContext.builder()
               .integrationScenario(integrationScenario)
               .originalRequest(body)
               .exchange(exchange)
-              .build());
+              .previousScenarioContext(previousContextId)
+              .build();
+      exchange.setProperty(ScenarioOrchestrationContext.PROPERTY_NAME, orchestrationContext);
+      if (exchange.getProperty(SCENARIO_ORCHESTRATION_CONTEXT_HISTORY_PROPERTY) == null) {
+        Map<String, ScenarioOrchestrationContext<?>> contextHistory = new HashMap<>();
+        contextHistory.put(integrationScenario.getId(), orchestrationContext);
+        exchange.setProperty(SCENARIO_ORCHESTRATION_CONTEXT_HISTORY_PROPERTY, contextHistory);
+      } else {
+        Map<String, ScenarioOrchestrationContext<?>> contextHistory =
+            exchange.getProperty(SCENARIO_ORCHESTRATION_CONTEXT_HISTORY_PROPERTY, Map.class);
+        contextHistory.put(integrationScenario.getId(), orchestrationContext);
+      }
+    }
+  }
+
+  @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+  static class ContextCleaner {
+
+    private final IntegrationScenarioDefinition integrationScenario;
+
+    @Handler
+    public <T> void clearOrchestrationContext(final T body, final Exchange exchange) {
+      var providerContext =
+          exchange.getProperty(
+              ScenarioOrchestrationContext.PROPERTY_NAME, ScenarioOrchestrationContext.class);
+      if (StringUtils.isNotEmpty(providerContext.getPreviousScenarioContext())) {
+        Map<String, ScenarioOrchestrationContext<?>> contextHistory =
+            exchange.getProperty(SCENARIO_ORCHESTRATION_CONTEXT_HISTORY_PROPERTY, Map.class);
+        exchange.setProperty(
+            ScenarioOrchestrationContext.PROPERTY_NAME,
+            contextHistory.get(providerContext.getPreviousScenarioContext()));
+      }
     }
   }
 

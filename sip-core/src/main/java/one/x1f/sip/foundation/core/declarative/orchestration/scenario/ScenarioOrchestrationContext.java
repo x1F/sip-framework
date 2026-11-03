@@ -49,6 +49,8 @@ public class ScenarioOrchestrationContext<M> {
   @Setter(value = AccessLevel.PACKAGE)
   private Exchange exchange;
 
+  @Getter @Setter private String previousScenarioContext;
+
   /**
    * Returns the request as retrieved from the provider that initiated the integration call with the
    * given type.
